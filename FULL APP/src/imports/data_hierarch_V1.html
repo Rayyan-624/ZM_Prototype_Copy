@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZM Data Hierarchy</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+:root {
+  --bg-primary: #08101d;
+  --bg-secondary: #101b2d;
+  --bg-card: rgba(255,255,255,0.06);
+  --bg-card-hover: rgba(255,255,255,0.1);
+  --border: rgba(255,255,255,0.10);
+  --border-active: rgba(90,200,250,0.35);
+  --text-primary: #e9f2ff;
+  --text-secondary: #a4b5cc;
+  --text-muted: #7d8da3;
+  --accent-blue: #5ac8fa;
+  --accent-green: #5fd1a4;
+  --accent-amber: #f5b942;
+  --accent-red: #f36d72;
+  --accent-purple: #ad8cff;
+  --accent-teal: #40d6c7;
+  --shadow-lg: 0 24px 80px rgba(0,0,0,0.45);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --font-main: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; background: linear-gradient(180deg, #08101d 0%, #070e1a 52%, #091322 100%); color: var(--text-primary); font-family: var(--font-main); font-size: 14px; }
+button, select, input { transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+
+/* ── Layout ── */
+#app { display: flex; height: 100vh; overflow: hidden; }
+#sidebar { width: 220px; min-width: 220px; background: var(--bg-secondary); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10; }
+#main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+#topbar { height: 56px; min-height: 56px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding: 0 20px; z-index: 5; }
+#content { flex: 1; overflow: hidden; position: relative; }
+
+/* ── Sidebar ── */
+.sidebar-brand { padding: 20px 16px 16px; border-bottom: 1px solid var(--border); }
+.brand-logo { font-size: 18px; font-weight: 700; color: var(--accent-blue); letter-spacing: -0.5px; }
+.brand-sub { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 12px 8px; overflow-y: auto; }
+.nav-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; padding: 8px 8px 4px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--radius-sm); cursor: pointer; color: var(--text-secondary); transition: all 0.15s; font-size: 13px; margin-bottom: 2px; }
+.nav-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+.nav-item.active { background: rgba(99,179,237,0.12); color: var(--accent-blue); }
+.nav-icon { width: 18px; text-align: center; font-size: 15px; }
+.sidebar-stats { padding: 12px; border-top: 1px solid var(--border); }
+.stat-mini { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 11px; }
+.stat-mini-label { color: var(--text-muted); }
+.stat-mini-val { color: var(--accent-blue); font-weight: 600; font-family: var(--font-mono); }
+
+/* ── Topbar ── */
+.breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); flex: 1; }
+.breadcrumb span { cursor: pointer; }
+.breadcrumb span:hover { color: var(--accent-blue); }
+.breadcrumb span.active { color: var(--text-primary); }
+.breadcrumb-sep { color: var(--text-muted); }
+#search-box { display: flex; align-items: center; gap: 8px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; width: 260px; }
+#search-input { background: none; border: none; outline: none; color: var(--text-primary); font-size: 13px; width: 100%; }
+#search-input::placeholder { color: var(--text-muted); }
+#search-results { position: absolute; top: 60px; right: 20px; width: 340px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg); z-index: 100; max-height: 400px; overflow-y: auto; display: none; }
+.search-result-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border); }
+.search-result-item:hover { background: var(--bg-card-hover); }
+.search-result-type { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.search-result-name { font-size: 13px; color: var(--text-primary); }
+.search-result-sub { font-size: 11px; color: var(--text-secondary); }
+
+/* ── Views ── */
+.view { position: absolute; inset: 0; overflow: auto; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.view.active { opacity: 1; pointer-events: all; }
+
+/* ── Cards ── */
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; transition: all 0.2s; }
+.card:hover { border-color: var(--border-active); background: var(--bg-card-hover); }
+.card-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+.card-value { font-size: 28px; font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); }
+.card-sub { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+
+/* ── View 1: Overview ── */
+#view-overview { padding: 0; }
+#overview-grid { display: grid; grid-template-columns: 1fr 320px; grid-template-rows: auto 1fr; height: 100%; gap: 0; }
+#map-container { grid-row: 1/-1; background: var(--bg-primary); position: relative; min-height: 400px; }
+#pakistan-svg { width: 100%; height: 100%; }
+#overview-panel { grid-row: 1/-1; height: 100%; min-height: 0; background: var(--bg-secondary); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+#overview-stats { flex: 0 0 auto; padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-bottom: 1px solid var(--border); max-height: 46%; overflow-y: auto; }
+#overview-charts { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 16px; }
+.chart-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+.province-bar { margin-bottom: 12px; }
+.province-bar-label { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 12px; }
+.province-bar-track { height: 8px; background: var(--bg-card); border-radius: 4px; overflow: hidden; }
+.province-bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+.map-tooltip { position: absolute; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; pointer-events: none; z-index: 20; min-width: 180px; display: none; box-shadow: var(--shadow-lg); }
+.map-tooltip h4 { font-size: 13px; color: var(--text-primary); margin-bottom: 6px; }
+.map-tooltip p { font-size: 11px; color: var(--text-secondary); margin-bottom: 2px; }
+
+/* ── Province shapes ── */
+.province-shape { cursor: pointer; transition: opacity 0.2s; stroke: rgba(99,179,237,0.3); stroke-width: 1.5; }
+.province-shape:hover { opacity: 0.85; }
+.province-shape.selected { stroke: var(--accent-blue); stroke-width: 2.5; }
+.province-label { font-size: 13px; fill: rgba(255,255,255,0.85); font-family: var(--font-main); font-weight: 600; pointer-events: none; text-anchor: middle; }
+
+/* ── View 2: Drill Down ── */
+#view-drilldown { padding: 20px; }
+.drill-controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.drill-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); cursor: pointer; font-size: 12px; transition: all 0.15s; }
+.drill-btn:hover, .drill-btn.active { background: rgba(99,179,237,0.12); border-color: var(--accent-blue); color: var(--accent-blue); }
+.drill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.drill-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+.drill-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(99,179,237,0.05) 0%, transparent 60%); opacity: 0; transition: opacity 0.2s; }
+.drill-card:hover { border-color: var(--border-active); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+.drill-card:hover::before { opacity: 1; }
+.drill-card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+.drill-card-meta { font-size: 11px; color: var(--text-secondary); }
+.drill-card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+.tag { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+.tag-grain { background: rgba(104,211,145,0.15); color: var(--accent-green); }
+.tag-fruit { background: rgba(246,173,85,0.15); color: var(--accent-amber); }
+.tag-veg { background: rgba(99,179,237,0.15); color: var(--accent-blue); }
+.tag-live { background: rgba(252,129,129,0.15); color: var(--accent-red); }
+.tag-kir { background: rgba(183,148,244,0.15); color: var(--accent-purple); }
+.tag-fert { background: rgba(79,209,197,0.15); color: var(--accent-teal); }
+.tag-dry { background: rgba(246,173,85,0.15); color: #fbd38d; }
+.tag-mill { background: rgba(160,174,192,0.15); color: #a0aec0; }
+.tag-other { background: rgba(113,128,150,0.15); color: #718096; }
+.section-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+.section-sub { font-size: 12px; color: var(--text-secondary); margin-bottom: 20px; }
+
+/* ── View 3: Representative Detail ── */
+#view-rep { padding: 20px; }
+.rep-header { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 24px; }
+.rep-avatar { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; flex-shrink: 0; }
+.rep-info h1 { font-size: 24px; font-weight: 700; color: var(--text-primary); }
+.rep-info .rep-meta { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+.rep-info .rep-location { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.rep-body { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+.coverage-grid { display: flex; flex-direction: column; gap: 12px; }
+.vertical-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.vertical-header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+.vertical-header:hover { background: var(--bg-card-hover); }
+.vertical-name { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.vertical-covered { color: var(--accent-green); }
+.vertical-missing { color: var(--text-muted); }
+.coverage-pill { font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+.pill-covered { background: rgba(104,211,145,0.15); color: var(--accent-green); }
+.pill-missing { background: rgba(160,174,192,0.08); color: var(--text-muted); }
+.vertical-body { border-top: 1px solid var(--border); padding: 12px 16px; display: none; }
+.vertical-body.open { display: block; }
+.commodity-group { margin-bottom: 12px; }
+.commodity-name { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.byproduct-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.byproduct-tag { font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+.byproduct-yes { background: rgba(104,211,145,0.12); color: var(--accent-green); border: 1px solid rgba(104,211,145,0.2); }
+.byproduct-no { background: rgba(113,128,150,0.08); color: var(--text-muted); border: 1px solid rgba(113,128,150,0.12); }
+.rep-sidebar-panel { display: flex; flex-direction: column; gap: 14px; }
+.rep-stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+.rep-stat-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; border-bottom: 1px solid var(--border); }
+.rep-stat-row:last-child { border: none; }
+.rep-stat-label { color: var(--text-secondary); }
+.rep-stat-val { color: var(--text-primary); font-weight: 500; }
+.donut-wrap { display: flex; align-items: center; gap: 14px; }
+.donut-legend { flex: 1; }
+.donut-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; margin-bottom: 4px; }
+.donut-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── View 4: Commodity Explorer ── */
+#view-commodity { padding: 20px; display: grid; grid-template-columns: 280px 1fr; gap: 20px; height: 100%; overflow: hidden; }
+#commodity-tree { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow-y: auto; padding: 12px; }
+#commodity-detail { overflow-y: auto; }
+.tree-vertical { margin-bottom: 8px; }
+.tree-vertical-header { padding: 7px 10px; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.tree-vertical-header:hover { background: var(--bg-card-hover); }
+.tree-vertical-header.active { background: rgba(99,179,237,0.1); color: var(--accent-blue); }
+.tree-commodity-list { padding-left: 10px; display: none; }
+.tree-commodity-list.open { display: block; }
+.tree-commodity { padding: 5px 10px; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between; }
+.tree-commodity:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+.tree-commodity.active { color: var(--accent-blue); background: rgba(99,179,237,0.08); }
+.tree-count { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
+.byproduct-detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-top: 14px; }
+.byproduct-detail-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; cursor: pointer; transition: all 0.15s; }
+.byproduct-detail-card:hover { border-color: var(--border-active); }
+.byproduct-detail-name { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 6px; }
+.byproduct-suppliers { font-size: 11px; color: var(--text-secondary); }
+.supplier-list { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.supplier-chip { font-size: 10px; padding: 2px 8px; background: rgba(99,179,237,0.1); color: var(--accent-blue); border-radius: 10px; display: inline-block; cursor: pointer; }
+.supplier-chip:hover { background: rgba(99,179,237,0.2); }
+.no-supplier { font-size: 11px; color: var(--text-muted); font-style: italic; }
+.commodity-detail-header { margin-bottom: 16px; }
+.commodity-detail-header h2 { font-size: 20px; font-weight: 700; }
+.commodity-detail-header p { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+/* ── View 5: Relationship View ── */
+#view-relationship { padding: 20px; overflow: hidden; display: flex; flex-direction: column; height: 100%; }
+#rel-svg-container { width: 100%; flex: 1 1 auto; min-height: 0; background: var(--bg-primary); border-radius: var(--radius); border: 1px solid var(--border); overflow-y: auto; overflow-x: hidden; position: relative; }
+#rel-svg { width: 100%; display: block; }
+#rel-svg-container::-webkit-scrollbar { width: 8px; }
+#rel-svg-container::-webkit-scrollbar-track { background: transparent; }
+#rel-svg-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.rel-controls { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; flex: 0 0 auto; }
+.rel-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); cursor: pointer; font-size: 12px; transition: all 0.15s; }
+.rel-btn:hover, .rel-btn.active { background: rgba(99,179,237,0.16); color: var(--accent-blue); border-color: rgba(99,179,237,0.4); }
+.rel-info { margin-left: auto; font-size: 11px; color: var(--text-muted); }
+#rel-col-headers { display: flex; justify-content: space-between; padding: 6px 90px 6px; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: var(--text-muted); text-transform: uppercase; flex: 0 0 auto; }
+
+.rel-summary { display: grid; gap: 10px; padding: 12px 18px 0; color: var(--text-primary); flex: 0 0 auto; }
+.rel-summary-top { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+.rel-summary-title { font-size: 15px; font-weight: 700; }
+.rel-summary-note { font-size: 11px; color: var(--text-secondary); }
+.rel-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.rel-summary-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; }
+.rel-summary-card h3 { margin-bottom: 4px; font-size: 12px; color: var(--text-primary); }
+.rel-summary-card .summary-value { font-size: 20px; font-weight: 700; color: var(--accent-blue); font-family: var(--font-mono); }
+.rel-summary-card .summary-meta { margin-top: 2px; font-size: 11px; color: var(--text-secondary); line-height: 1.3; }
+.rel-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+.rel-table th, .rel-table td { padding: 5px 10px; border: 1px solid rgba(255,255,255,0.06); text-align: left; font-size: 11px; }
+.rel-table th { color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.7px; }
+.rel-table td { color: var(--text-primary); }
+.rel-count-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: rgba(99,179,237,0.12); color: var(--accent-blue); font-size: 11px; font-weight: 600; }
+.rel-province-chip { display: inline-flex; align-items: center; gap: 4px; margin: 4px 4px 0 0; padding: 4px 8px; border-radius: 999px; background: rgba(79,209,197,0.12); color: var(--accent-teal); font-size: 11px; }
+
+/* ── SVG Nodes ── */
+.node-rep { fill: rgba(99,179,237,0.15); stroke: var(--accent-blue); stroke-width: 1.5; rx: 6; cursor: pointer; transition: fill 0.2s; }
+.node-rep:hover, .node-rep.highlighted { fill: rgba(99,179,237,0.35); }
+.node-geo { fill: rgba(104,211,145,0.1); stroke: var(--accent-green); stroke-width: 1; rx: 4; }
+.node-commodity { fill: rgba(246,173,85,0.12); stroke: var(--accent-amber); stroke-width: 1.5; rx: 6; cursor: pointer; }
+.node-commodity:hover, .node-commodity.highlighted { fill: rgba(246,173,85,0.3); }
+.rel-link { stroke: rgba(99,179,237,0.2); stroke-width: 1; fill: none; }
+.rel-link.highlighted { stroke: rgba(99,179,237,0.7); stroke-width: 2; }
+.node-text { fill: var(--text-primary); font-size: 11px; font-family: var(--font-main); pointer-events: none; }
+.node-text-small { fill: var(--text-secondary); font-size: 9px; }
+
+/* ── Utility ── */
+.btn { padding: 7px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); cursor: pointer; font-size: 12px; transition: all 0.15s; }
+.btn:hover { background: var(--bg-card-hover); border-color: var(--border-active); }
+.btn-primary { background: rgba(99,179,237,0.15); border-color: var(--accent-blue); color: var(--accent-blue); }
+.btn-primary:hover { background: rgba(99,179,237,0.25); }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+.badge-green { background: rgba(104,211,145,0.15); color: var(--accent-green); }
+.badge-amber { background: rgba(246,173,85,0.15); color: var(--accent-amber); }
+.badge-red { background: rgba(252,129,129,0.15); color: var(--accent-red); }
+.badge-blue { background: rgba(99,179,237,0.15); color: var(--accent-blue); }
+.divider { height: 1px; background: var(--border); margin: 14px 0; }
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; color: var(--text-muted); text-align: center; }
+.empty-state .icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent-blue); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 40px auto; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.scrollable { overflow-y: auto; }
+.scrollable::-webkit-scrollbar { width: 5px; }
+.scrollable::-webkit-scrollbar-track { background: transparent; }
+.scrollable::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.close-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.15s; }
+.close-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+.toggle-chevron { font-size: 10px; transition: transform 0.2s; color: var(--text-muted); }
+.toggle-chevron.open { transform: rotate(90deg); }
+#filter-bar { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 20px; border-bottom: 1px solid var(--border); background: var(--bg-secondary); }
+.filter-select { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.06); color: var(--text-primary); font-size: 12px; cursor: pointer; outline: none; min-width: 150px; color-scheme: dark; }
+.filter-select:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 4px rgba(90,200,250,0.12); }
+.filter-select option { background-color: #101b2d; color: #e9f2ff; }
+.filter-select option:checked, .filter-select option:hover, .filter-select option:focus { background: #1b2c46; color: #e9f2ff; }
+.filter-label { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; }
+.filter-pill { display: inline-flex; align-items: center; gap: 6px; margin-right: 8px; margin-top: 6px; padding: 5px 10px; border-radius: 999px; background: rgba(90,200,250,0.12); color: var(--accent-blue); font-size: 11px; border: 1px solid rgba(90,200,250,0.16); }
+.filter-pill span { cursor: pointer; opacity: 0.7; }
+.filter-pill span:hover { opacity: 1; }
+#back-btn { display: none; padding: 5px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); cursor: pointer; font-size: 12px; transition: all 0.15s; align-items: center; gap: 6px; }
+#back-btn:hover { border-color: var(--border-active); color: var(--text-primary); }
+#back-btn.visible { display: flex; }
+.highlight-green { color: var(--accent-green); }
+.highlight-red { color: var(--accent-red); }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">ZM Data Hierarchy</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Views</div>
+      <div class="nav-item active" data-view="overview" onclick="switchView('overview')">
+        <span class="nav-icon">🗺️</span> Pakistan Overview
+      </div>
+      <div class="nav-item" data-view="drilldown" onclick="switchView('drilldown')">
+        <span class="nav-icon">📍</span> Geo Drill-Down
+      </div>
+      <div class="nav-item" data-view="commodity" onclick="switchView('commodity')">
+        <span class="nav-icon">🌾</span> Commodity Explorer
+      </div>
+      <div class="nav-item" data-view="relationship" onclick="switchView('relationship')">
+        <span class="nav-icon">🔗</span> Relationship View
+      </div>
+      <div class="nav-label" style="margin-top:8px;">Quick Jump</div>
+      <div class="nav-item" onclick="switchView('drilldown'); drillToLevel('province', 'Sindh')">
+        <span class="nav-icon">📌</span> Sindh
+      </div>
+      <div class="nav-item" onclick="switchView('drilldown'); drillToLevel('province', 'Punjab')">
+        <span class="nav-icon">📌</span> Punjab
+      </div>
+      <div class="nav-item" onclick="switchView('drilldown'); drillToLevel('province', 'Balochistan')">
+        <span class="nav-icon">📌</span> Balochistan
+      </div>
+      <div class="nav-item" onclick="switchView('drilldown'); drillToLevel('province', 'Khyber Pakhtunkhwa')">
+        <span class="nav-icon">📌</span> Khyber Pakhtunkhwa
+      </div>
+    </nav>
+    <div class="sidebar-stats" id="sidebar-stats-panel"></div>
+  </div>
+
+  <!-- Main -->
+  <div id="main">
+    <!-- Topbar -->
+    <div id="topbar">
+      <button id="back-btn" onclick="goBack()">← Back</button>
+      <div class="breadcrumb" id="breadcrumb">
+        <span class="active">Pakistan</span>
+      </div>
+      <div id="search-box">
+        <span style="color:var(--text-muted); font-size:13px;">🔍</span>
+        <input id="search-input" type="text" placeholder="Search reps, commodities, locations…" oninput="onSearch(this.value)" />
+      </div>
+      <div id="search-results"></div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div id="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <select class="filter-select" id="filter-province" onchange="applyFilters()">
+        <option value="">All Provinces</option>
+      </select>
+      <select class="filter-select" id="filter-vertical" onchange="applyFilters()">
+        <option value="">All Verticals</option>
+      </select>
+      <select class="filter-select" id="filter-reptype" onchange="applyFilters()">
+        <option value="">All Rep Types</option>
+        <option value="Farmer Rep">Farmer Rep</option>
+        <option value="Mill Rep">Mill Rep</option>
+        <option value="Faraz Rep">Faraz Rep</option>
+      </select>
+      <button class="btn" onclick="clearFilters()">Clear</button>
+    </div>
+
+    <!-- Content -->
+    <div id="content">
+      <!-- View 1: Overview Map -->
+      <div id="view-overview" class="view active">
+        <div id="overview-grid">
+          <div id="map-container">
+            <svg id="pakistan-svg" viewBox="0 0 800 700" preserveAspectRatio="xMidYMid meet"></svg>
+            <div class="map-tooltip" id="map-tooltip"></div>
+          </div>
+          <div id="overview-panel">
+            <div id="overview-stats"></div>
+            <div id="overview-charts" class="scrollable"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 2: Geo Drill Down -->
+      <div id="view-drilldown" class="view">
+        <div style="padding:20px; overflow-y:auto; height:100%;" id="drilldown-inner">
+          <div class="drill-controls" id="drill-controls"></div>
+          <div id="drilldown-header" style="margin-bottom:16px;"></div>
+          <div class="drill-grid" id="drill-grid"></div>
+        </div>
+      </div>
+
+      <!-- View 3: Representative Detail -->
+      <div id="view-rep" class="view scrollable">
+        <div id="rep-content"></div>
+      </div>
+
+      <!-- View 4: Commodity Explorer -->
+      <div id="view-commodity" class="view">
+        <div id="commodity-tree" class="scrollable"></div>
+        <div id="commodity-detail" class="scrollable"></div>
+      </div>
+
+      <!-- View 5: Relationship View -->
+      <div id="view-relationship" class="view">
+        <div class="rel-controls">
+          <button class="rel-btn" data-filter="all" onclick="renderRelationship('all')">Show All</button>
+          <button class="rel-btn" data-filter="grain" onclick="renderRelationship('grain')">Grains</button>
+          <button class="rel-btn" data-filter="fruit" onclick="renderRelationship('fruit')">Fruits</button>
+          <button class="rel-btn" data-filter="veg" onclick="renderRelationship('veg')">Vegetables</button>
+          <button class="rel-btn" data-filter="kiryana" onclick="renderRelationship('kiryana')">Kiryana</button>
+          <span class="rel-info">Choose a filter to simplify the relationships</span>
+        </div>
+        <div id="rel-summary" class="rel-summary"></div>
+        <div id="rel-col-headers"><span>Representatives</span><span>Commodity Verticals</span></div>
+        <div id="rel-svg-container">
+          <svg id="rel-svg"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// DATA — Parsed from the two markdown files
+// ════════════════════════════════════════════
+
+const COMMODITY_DATA = {
+  "Grains": {
+    icon: "🌾",
+    commodities: {
+      "Cotton": ["Cotton Grade A","Cotton Grade B","Cotton Grade C","Cotton Seed","Cotton Seed Oil","Cotton Seed Cake","Lint Cotton"],
+      "Dates": ["Ajwa Dates","Amber Dates","Aseel Dates","Begum Jangi Dates","Jamsor Dates","Karbala Dates","Kupra Dates","Mazafati Dates","Rabbi Dates","Sharifa Dates","Zahidi Dates","Aseel Dry Dates","Black Aseel Dry Dates","Dhaki Dry Dates","Nar Dry Dates","Rangkat Aseel Dry Dates","Rangkat Black Aseel Dry Dates","Rangkat Dhaki Dry Dates","Rangkat Nar Dry Dates"],
+      "Mustard": ["Mustard Seed","Mustard Oil","Mustard Cake"],
+      "Canola": ["Canola Seed","Canola Oil","Canola Meal"],
+      "Sunflower": ["Sunflower Seed","Sunflower Oil","Sunflower Meal"],
+      "Soybean": ["Soybean Oil","Soybean Meal","Soybean Seed","Soybean Oil Washed"],
+      "Arugula": ["Arugula Seed","Arugula Oil"],
+      "Castor": ["Castor Bean"],
+      "Maize": ["Maize Grade A","Maize Grade B","Maize Grade C","Corn Starch","Corn Silage","Popcorn","Maize Grade D"],
+      "Millet": ["Millet Grade A","Millet Grade B","Millet Grade C"],
+      "Paddy": ["Paddy Irri 6","Paddy Irri 9","Paddy 1509","Paddy Kainat-1121","Paddy Super 515","Paddy 386","Paddy Irri-fine","Paddy 1692","Paddy 1847","Paddy 86","Paddy 1718","Paddy Supri","Paddy Super","Paddy PP-7","Paddy LP-18","Paddy Diamond","Paddy C-9"],
+      "Pulses": ["Black Chickpea Large","Black Chickpea Small","Split Chickpea Large","Split Chickpea Small","Kabuli Chickpea 7mm","Kabuli Chickpea 9mm","Whole Black Gram Small","Split Black Gram Large","Split Black Gram Small","Split Black Gram Washed Large","Split Black Gram Washed Small","Red Lentil","Whole Red Lentil Large","Whole Red Lentil Small","Whole Green Gram Large","Whole Green Gram Small","Split Green Gram Large","Split Green Gram Washed Large","Split Green Gram Washed Small","Pigeon Pea Large","Pigeon Pea Small","Red Kidney Bean Large","Red Kidney Bean Small","White Kidney Bean Large"],
+      "Rice": ["PK-386","1121 Basmati-1","1121 Basmati-2","1509 Sella","1509 Steam","386 Basmati-New","386 Basmati-Old","386 Steam","386 Steam-Basmati","Basmati Punjab","Irri 6","Irri 6 Whole-1","Irri 6 Whole-2","Irri Tota","Kainat Double Steam","Punia 1121-1","Punia 1121-2","Punia Basmati-1","Punia Basmati-2","Irri 9","Punia Super","Sella 1121-1","Sella 1121-2","Sella 386","Sella Punia","Sella Punjab","Sella Super Basmati +7mm","Sella Super Punjab","Sella Super Tota","Sella Tota","Short Grain (Tota)","Super Basmati Sindh","Super Basmati Tota","Super Kernel","Super Kernel 1121-1","Super Kernel 1121-2","Tota Basmati","1509 Steam Sella","1509 Steam Basmati","C-9 Basmati","C-9 Steam","C-9 White","C-9 Sella","Lal 386 New","Lal 386 Old","Supri New","Supri Old","Silky & Sortex","Silky","1121 Steam","1718 Steam","1847 Steam","1509 Kacha","1121 Kacha","1718 Kacha","1847 Kacha","PP-7","1509 Rejection Steam","1121 B1","1121 B2","1121 Goli","1121 Naku","1121 White","1509 Steam","1121 Rejection Steam","1509 B1","1509 B2","1509 Goli","1509 Naku","Rice Polish","1509 White","Supri Sella","Irri 6 White","Broken Irri 6","Rice Husk","Rice Phak","Punjab Basmati 7"],
+      "Sesame": ["Sesame Grade A","Sesame Grade B","Sesame Grade C"],
+      "Spices": ["Black Pepper","Black Pepper Powder","Cinnamon","Clove","Coriander Seed","Coriander Seed Powder","Black Cumin","White Cumin","Fennel","Large Black Cardamom","Red Chilli Powder","Red Chilli","Small Cardamom","Turmeric","Longi Chilli","Hybrid Chilli","Rich Star Chilli","Shingri Chilli","Summer Queen Chilli","Jaifal"],
+      "Sugar": ["Sugarcane","Sugar (Mill)","Sugar (Wholesale)","Jaggery","Sugar (Retail)","Brown Sugar"],
+      "Wheat": ["Wheat","Fine Flour","Straw","Flour","Sorghum","Semolina","Bran","Special Flour","Barley","Oat"]
+    }
+  },
+  "Fruits": {
+    icon: "🍎",
+    commodities: {
+      "Mango": ["Mango White Chunsa","Mango Black Chunsa","Mango Anwer Ratul","Mango Sindhri","Mango Fajri","Mango Almas","Mango Saroli","Mango Dasheri"],
+      "Banana": ["Banana"],
+      "Citrus": ["Orange","Musambi","Fruiter","Sweet Lime","Grapefruit","Mandarin"],
+      "Melon": ["Watermelon","Melon"],
+      "Apple": ["Apple","Apple Kala Kullu"],
+      "Pomegranate": ["Pomegranate"],
+      "Grapes": ["Grapes"],
+      "Papaya": ["Papaya"],
+      "Cherry": ["Cherry"],
+      "Peach": ["Peach"],
+      "Falsa": ["Falsa"],
+      "Apricot": ["Apricot"],
+      "Plum": ["Plum"]
+    }
+  },
+  "Vegetables": {
+    icon: "🥦",
+    commodities: {
+      "Potatoes": ["Potato (Mozika)","Potato (Santa)","Potato (Red)","Potato (White)","Potato (Goli)","Potato (Raveera)","Potato (Stone)","Potato (LR)","Potato (Seed)"],
+      "Tomatoes": ["Tomato (Grade A)","Tomato (Grade B)","Tomato (Grade C)"],
+      "Onions": ["Onion (Grade A)","Onion (Grade B)","Onion (Grade C)"],
+      "Chillies": ["Desi Chilli","Green Chilli - Small","Green Chilli - Medium","Green Chilli - Large","Capsicum"],
+      "Brinjals": ["Brinjal Round","Brinjal Long"],
+      "Cabbage": ["Cabbage"],
+      "Peas": ["Peas"],
+      "Guar": ["Guar"],
+      "Spinach": ["Spinach"],
+      "Carrot": ["Carrot"],
+      "Sweet Potato": ["Sweet Potato"],
+      "Salad Leaves": ["Salad Leaves"],
+      "Ginger": ["Ginger"],
+      "Okra": ["Okra"],
+      "Broccoli": ["Broccoli"],
+      "Cauliflower": ["Cauliflower"],
+      "Garlic": ["Garlic Desi","Garlic Chinese","Garlic G1","Garlic Harnai"],
+      "Bottle Gourd": ["Bottle Gourd","Round Gourd"],
+      "Ridge Gourd": ["Ridge Gourd"],
+      "Bitter Gourd": ["Bitter Gourd"],
+      "Cucumber": ["Cucumber"],
+      "Turnip": ["Turnip"],
+      "Lemon": ["Lemon Desi","Lemon China"]
+    }
+  },
+  "Livestock": {
+    icon: "🐄",
+    commodities: {
+      "Feed": ["Alfalfa","Rhode Grass","Maize Grade A","Maize Grade B","Maize Grade C","Corn Silage","Canola Meal","Soybean Meal","Wheat Bran","Mustard Seed Cake","Cotton Seed Cake","Wheat Straw","Sorghum"],
+      "Cattle Market": ["Cow","Buffalo","Goat","Camel"],
+      "Slaughter House": ["Cow","Buffalo","Goat","Camel"],
+      "Poultry": ["Broiler","Layer"],
+      "Fisheries": ["Rohu","Catla","Tilapia"],
+      "Dairy": ["Milk","Yogurt","Butter"]
+    }
+  },
+  "Agri Inputs": {
+    icon: "🧪",
+    commodities: {
+      "Fertilizer": ["Ammonium Nitrate","DAP","MOP","NP","NPK","SOP-G","SSP","Urea","Ammonium Sulphate","CAN","Enrich","Zabardast Urea","Pak Arab Guara","TSP"],
+      "Pesticide": ["S-Metolachlor 960EC 800ML","Mesotrione + Atrazine 50% WP","Chlorphenapyr 36% SC","Mesotrione + Atrazine 55% WP","Clothianidin 20% EC"],
+      "Weedicide": ["S-Metolachlor 960EC 800ML","Mesotrione + Atrazine 50% WP","Chlorphenapyr 36% SC","Mesotrione + Atrazine 55% WP","Clothianidin 20% EC"]
+    }
+  },
+  "Dry Fruits": {
+    icon: "🥜",
+    commodities: {
+      "Almonds": ["Almond (American)","Almond (Australian)","Almond (Desi)"],
+      "Cashew": ["Cashew"],
+      "Walnut": ["Walnut"],
+      "Fig": ["Fig"],
+      "Pistachio": ["Pistachio"],
+      "Raisins": ["Dried Raisins"]
+    }
+  },
+  "Herbals": {
+    icon: "🌿",
+    commodities: {
+      "Honey": ["Honey"],
+      "Psyllium": ["Psyllium Seed","Psyllium Husk"],
+      "Black Seed": ["Black Seed","Black Seed Oil"],
+      "Carom Seed": ["Carom Seed"],
+      "Basil Seed": ["Basil Seed"],
+      "Chia Seed": ["Chia Seed"],
+      "Salep": ["Salab Misri","Salab Panja"],
+      "Asafoetida": ["Asafoetida"],
+      "Dry Lemon": ["Dry Lemon"],
+      "Saffron": ["Saffron"]
+    }
+  },
+  "Kiryana": {
+    icon: "🏪",
+    commodities: {
+      "Wheat": ["Wheat","Fine Flour","Flour","Semolina","Special Flour"],
+      "Maize": ["Maize Grade A"],
+      "Millet": ["Millet Grade A"],
+      "Rice": ["1121 Basmati-1","1121 Basmati-2","1509 Steam","386 Basmati-New","386 Basmati-Old","Irri 6","Sella 1121-1","Super Basmati Sindh","Irri 9","C-9 Basmati","C-9 Steam","C-9 White"],
+      "Sugar": ["Jaggery","Sugar"],
+      "Mustard": ["Mustard Oil"],
+      "Pulses": ["Black Chickpea Large","Black Chickpea Small","Red Lentil","Whole Green Gram Large","Split Green Gram Washed Small"],
+      "Spices": ["Black Pepper","Coriander Seed","Black Cumin","White Cumin","Red Chilli","Turmeric"],
+      "Eggs": ["Eggs"],
+      "Cigarettes": ["Cigarettes"]
+    }
+  }
+};
+
+// Representative data from rep_divisions.md
+const RAW_REPS = [
+  // Sindh
+  {name:'Awais',type:'Farmer Rep',province:'Sindh',district:'Ghotki',tehsil:'Ghotki',mandi:'Ghotki Mandi',verticals:["Grains"]},
+  {name:'Shahbaz',type:'Farmer Rep',province:'Sindh',district:'Shaheed Benazirabad',tehsil:'Nawabshah',mandi:'Nawabshah Mandi',verticals:["Grains"]},
+  {name:'Mumtaz',type:'Farmer Rep',province:'Sindh',district:'Shaheed Benazirabad',tehsil:'Nawabshah',mandi:'Nawabshah Mandi',verticals:["Kiryana","Agri Inputs"]},
+  {name:'Rauf',type:'Farmer Rep',province:'Sindh',district:'Sukkur',tehsil:'Sukkur',mandi:'Sukkur Mandi',verticals:["Grains"]},
+  {name:'Naveed',type:'Farmer Rep',province:'Sindh',district:'Sukkur',tehsil:'Sukkur',mandi:'Sukkur Mandi',verticals:["Kiryana"]},
+  {name:'Sabiq Kalwar',type:'Farmer Rep',province:'Sindh',district:'Sukkur',tehsil:'Pano Aqil',mandi:'Pano Aqil Mandi',verticals:["Grains","Kiryana","Agri Inputs"]},
+  {name:'Rauf',type:'Farmer Rep',province:'Sindh',district:'Shikarpur',tehsil:'Shikarpur',mandi:'Shikarpur Mandi',verticals:["Grains"]},
+  {name:'Saqib',type:'Farmer Rep',province:'Sindh',district:'Hyderabad',tehsil:'Hyderabad',mandi:'Hyderabad Mandi',verticals:["Grains"]},
+  {name:'Hamza',type:'Farmer Rep',province:'Sindh',district:'Hyderabad',tehsil:'Hyderabad',mandi:'Hyderabad Mandi',verticals:["Fruits","Vegetables"]},
+  {name:'Mahendar',type:'Mill Rep',province:'Sindh',district:'Mirpurkhas',tehsil:'Digri',mandi:'Digri Mandi',verticals:["Grains"]},
+  {name:'Abdullah',type:'Farmer Rep',province:'Sindh',district:'Naushahro Feroze',tehsil:'Naushahro Feroze',mandi:'Naushahro Feroze Mandi',verticals:["Grains"]},
+  {name:'Aakash',type:'Farmer Rep',province:'Sindh',district:'Khairpur',tehsil:'Khairpur',mandi:'Khairpur Mandi',verticals:["Grains"]},
+  {name:'Shakeel',type:'Faraz Rep',province:'Sindh',district:'Karachi',tehsil:'Karachi',mandi:'Karachi Mandi',verticals:["Grains"]},
+  {name:'Abu Bakar',type:'Farmer Rep',province:'Sindh',district:'Karachi',tehsil:'Karachi',mandi:'Karachi Mandi',verticals:["Grains"]},
+  {name:'Zafar Abbas',type:'Farmer Rep',province:'Sindh',district:'Karachi',tehsil:'Karachi',mandi:'Karachi Mandi',verticals:["Livestock"]},
+  {name:'Inzamam',type:'Farmer Rep',province:'Sindh',district:'Umerkot',tehsil:'Kunri',mandi:'Kunri Mandi',verticals:["Grains"]},
+  {name:'Inzamam',type:'Farmer Rep',province:'Sindh',district:'Thatta',tehsil:'Mirpur Sakro',mandi:'Mirpur Sakro Mandi',verticals:["Grains"]},
+  {name:'Inzamam',type:'Farmer Rep',province:'Sindh',district:'Thatta',tehsil:'Gharo',mandi:'Gharo Mandi',verticals:["Grains"]},
+  {name:'Shafique',type:'Farmer Rep',province:'Sindh',district:'Sanghar',tehsil:'Sanghar',mandi:'Sanghar Mandi',verticals:["Grains"]},
+  {name:'Shafique',type:'Farmer Rep',province:'Sindh',district:'Sanghar',tehsil:'Sinjhoro',mandi:'Sinjhoro Mandi',verticals:["Grains"]},
+  // Punjab
+  {name:'A. Ahmed',type:'Farmer Rep',province:'Punjab',district:'Okara',tehsil:'Okara',mandi:'Okara Mandi',verticals:["Grains"]},
+  {name:'Salman',type:'Farmer Rep',province:'Punjab',district:'Okara',tehsil:'Depalpur',mandi:'Depalpur Mandi',verticals:["Grains"]},
+  {name:'Asad',type:'Farmer Rep',province:'Punjab',district:'Pakpattan',tehsil:'Arifwala',mandi:'Arifwala Mandi',verticals:["Grains"]},
+  {name:'Naveed',type:'Farmer Rep',province:'Punjab',district:'Pakpattan',tehsil:'Pakpattan',mandi:'Pakpattan Mandi',verticals:["Grains","Agri Inputs","Vegetables"]},
+  {name:'Sabir',type:'Farmer Rep',province:'Punjab',district:'Kasur',tehsil:'Patoki',mandi:'Patoki Mandi',verticals:["Grains","Agri Inputs"]},
+  {name:'Amir',type:'Farmer Rep',province:'Punjab',district:'Sahiwal',tehsil:'Sahiwal',mandi:'Sahiwal Mandi',verticals:["Grains"]},
+  {name:'Younis',type:'Farmer Rep',province:'Punjab',district:'Sahiwal',tehsil:'Chichawatni',mandi:'Chichawatni Mandi',verticals:["Grains","Agri Inputs"]},
+  {name:'Malik Shahid',type:'Farmer Rep',province:'Punjab',district:'Vehari',tehsil:'Burewala',mandi:'Burewala Mandi',verticals:["Grains"]},
+  {name:'Abu Bakar',type:'Farmer Rep',province:'Punjab',district:'Vehari',tehsil:'Mailsi',mandi:'Mailsi Mandi',verticals:["Grains"]},
+  {name:'Tariq',type:'Farmer Rep',province:'Punjab',district:'Vehari',tehsil:'Vehari',mandi:'Vehari Mandi',verticals:["Grains"]},
+  {name:'Ansar',type:'Farmer Rep',province:'Punjab',district:'Khanewal',tehsil:'Mian Channu',mandi:'Mian Channu Mandi',verticals:["Grains"]},
+  {name:'Adnan',type:'Farmer Rep',province:'Punjab',district:'Khanewal',tehsil:'Khanewal',mandi:'Khanewal Mandi',verticals:["Grains"]},
+  {name:'Inam',type:'Farmer Rep',province:'Punjab',district:'Bahawalpur',tehsil:'Bahawalpur',mandi:'Bahawalpur Mandi',verticals:["Grains","Agri Inputs"]},
+  {name:'Zeeshan Raza',type:'Farmer Rep',province:'Punjab',district:'Bahawalpur',tehsil:'Bahawalpur',mandi:'Bahawalpur Mandi',verticals:["Vegetables"]},
+  {name:'Samad',type:'Farmer Rep',province:'Punjab',district:'Bahawalpur',tehsil:'Bahawalpur',mandi:'Bahawalpur Mandi',verticals:["Livestock"]},
+  {name:'Imran',type:'Farmer Rep',province:'Punjab',district:'Bahawalpur',tehsil:'Yazman',mandi:'Yazman Mandi',verticals:["Grains"]},
+  {name:'Abuzar',type:'Farmer Rep',province:'Punjab',district:'Bahawalnagar',tehsil:'Haroonabad',mandi:'Haroonabad Mandi',verticals:["Grains"]},
+  {name:'Shoukat',type:'Farmer Rep',province:'Punjab',district:'Bahawalnagar',tehsil:'Haroonabad',mandi:'Haroonabad Mandi',verticals:["Vegetables"]},
+  {name:'Abuzar',type:'Farmer Rep',province:'Punjab',district:'Bahawalnagar',tehsil:'Fort Abbas',mandi:'Fort Abbas Mandi',verticals:["Grains"]},
+  {name:'Javed',type:'Farmer Rep',province:'Punjab',district:'Bahawalnagar',tehsil:'Chishtian',mandi:'Chishtian Mandi',verticals:["Grains"]},
+  {name:'Sajid',type:'Farmer Rep',province:'Punjab',district:'Bahawalnagar',tehsil:'Minchinabad',mandi:'Minchinabad Mandi',verticals:["Vegetables"]},
+  {name:'Abid Ali',type:'Farmer Rep',province:'Punjab',district:'Bahawalnagar',tehsil:'Bahawalnagar',mandi:'Bahawalnagar Mandi',verticals:["Vegetables"]},
+  {name:'Imran',type:'Farmer Rep',province:'Punjab',district:'Rahim Yar Khan',tehsil:'Rahim Yar Khan',mandi:'Rahim Yar Khan Mandi',verticals:["Grains","Agri Inputs"]},
+  {name:'Ghulam Sarwar',type:'Mill Rep',province:'Punjab',district:'Rahim Yar Khan',tehsil:'Rahim Yar Khan',mandi:'Rahim Yar Khan Mandi',verticals:["Grains"]},
+  {name:'Imran',type:'Farmer Rep',province:'Punjab',district:'Rahim Yar Khan',tehsil:'Sadiqabad',mandi:'Sadiqabad Mandi',verticals:["Grains"]},
+  {name:'Safder',type:'Farmer Rep',province:'Punjab',district:'Rahim Yar Khan',tehsil:'Liaquatpur',mandi:'Liaquatpur Mandi',verticals:["Grains"]},
+  {name:'Rao Nazakat',type:'Farmer Rep',province:'Punjab',district:'Lodhran',tehsil:'Lodhran',mandi:'Lodhran Mandi',verticals:["Grains"]},
+  {name:'Rao Kashif',type:'Farmer Rep',province:'Punjab',district:'Lodhran',tehsil:'Lodhran',mandi:'Lodhran Mandi',verticals:["Vegetables"]},
+  {name:'Samad',type:'Farmer Rep',province:'Punjab',district:'Lodhran',tehsil:'Dunyapur',mandi:'Dunyapur Mandi',verticals:["Livestock"]},
+  {name:'Tehseen',type:'Farmer Rep',province:'Punjab',district:'Multan',tehsil:'Multan',mandi:'Multan Mandi',verticals:["Grains","Dry Fruits","Kiryana"]},
+  {name:'Samad',type:'Farmer Rep',province:'Punjab',district:'Multan',tehsil:'Multan',mandi:'Multan Mandi',verticals:["Livestock"]},
+  {name:'Amir Shehzad',type:'Farmer Rep',province:'Punjab',district:'Muzaffargarh',tehsil:'Muzaffargarh',mandi:'Muzaffargarh Mandi',verticals:["Vegetables"]},
+  {name:'Sohail Nadeem',type:'Farmer Rep',province:'Punjab',district:'Layyah',tehsil:'Chowk Azam',mandi:'Chowk Azam Mandi',verticals:["Grains"]},
+  {name:'Ch. Iftikhar',type:'Farmer Rep',province:'Punjab',district:'Rajanpur',tehsil:'Rajanpur',mandi:'Rajanpur Mandi',verticals:["Agri Inputs"]},
+  {name:'Abdul Sattar',type:'Farmer Rep',province:'Punjab',district:'Dera Ghazi Khan',tehsil:'DG Khan',mandi:'DG Khan Mandi',verticals:["Grains"]},
+  {name:'Malik Tanveer',type:'Farmer Rep',province:'Punjab',district:'Bhakkar',tehsil:'Bhakkar',mandi:'Bhakkar Mandi',verticals:["Grains"]},
+  {name:'Malik Tanveer',type:'Farmer Rep',province:'Punjab',district:'Mianwali',tehsil:'Mianwali',mandi:'Mianwali Mandi',verticals:["Grains"]},
+  {name:'Ikram',type:'Farmer Rep',province:'Punjab',district:'Khushab',tehsil:'Khushab',mandi:'Khushab Mandi',verticals:["Grains","Kiryana"]},
+  {name:'Ikram',type:'Farmer Rep',province:'Punjab',district:'Khushab',tehsil:'Quaidabad',mandi:'Quaidabad Mandi',verticals:["Grains"]},
+  {name:'Munawar',type:'Farmer Rep',province:'Punjab',district:'Jhang',tehsil:'Jhang',mandi:'Jhang Mandi',verticals:["Kiryana"]},
+  {name:'Munawar',type:'Farmer Rep',province:'Punjab',district:'Jhang',tehsil:'Shorkot',mandi:'Shorkot Mandi',verticals:["Grains"]},
+  {name:'Qasim',type:'Farmer Rep',province:'Punjab',district:'Chiniot',tehsil:'Chiniot',mandi:'Chiniot Mandi',verticals:["Grains"]},
+  {name:'Malik Azam',type:'Farmer Rep',province:'Punjab',district:'Faisalabad',tehsil:'Faisalabad',mandi:'Faisalabad Mandi',verticals:["Grains"]},
+  {name:'Zaman',type:'Farmer Rep',province:'Punjab',district:'Faisalabad',tehsil:'Samundri',mandi:'Samundri Mandi',verticals:["Grains"]},
+  {name:'Malik Azam',type:'Farmer Rep',province:'Punjab',district:'Faisalabad',tehsil:'Jaranwala',mandi:'Jaranwala Mandi',verticals:["Grains"]},
+  {name:'Farhan',type:'Farmer Rep',province:'Punjab',district:'Toba Tek Singh',tehsil:'Toba Tek Singh',mandi:'Toba Tek Singh Mandi',verticals:["Grains","Agri Inputs"]},
+  {name:'Farhan',type:'Farmer Rep',province:'Punjab',district:'Toba Tek Singh',tehsil:'Gojra',mandi:'Gojra Mandi',verticals:["Grains","Agri Inputs"]},
+  {name:'Zul Noorain',type:'Farmer Rep',province:'Punjab',district:'Toba Tek Singh',tehsil:'Kamalia',mandi:'Kamalia Mandi',verticals:["Grains"]},
+  {name:'Farhan',type:'Farmer Rep',province:'Punjab',district:'Sargodha',tehsil:'Sargodha',mandi:'Sargodha Mandi',verticals:["Grains","Agri Inputs"]},
+  {name:'Afzal',type:'Farmer Rep',province:'Punjab',district:'Gujranwala',tehsil:'Siranwali',mandi:'Siranwali Mandi',verticals:["Grains"]},
+  {name:'Malik Asim',type:'Farmer Rep',province:'Punjab',district:'Sialkot',tehsil:'Sialkot',mandi:'Sialkot Mandi',verticals:["Grains"]},
+  {name:'Mir Hamza',type:'Farmer Rep',province:'Punjab',district:'Sialkot',tehsil:'Daska',mandi:'Daska Mandi',verticals:["Grains"]},
+  {name:'Malik Asim',type:'Farmer Rep',province:'Punjab',district:'Sialkot',tehsil:'Pasrur',mandi:'Pasrur Mandi',verticals:["Grains"]},
+  {name:'Malik Azam',type:'Farmer Rep',province:'Punjab',district:'Sheikhupura',tehsil:'Sheikhupura',mandi:'Sheikhupura Mandi',verticals:["Grains"]},
+  {name:'Malik Asim',type:'Farmer Rep',province:'Punjab',district:'Sheikhupura',tehsil:'Muridke',mandi:'Muridke Mandi',verticals:["Grains"]},
+  {name:'Abdul Rehman',type:'Farmer Rep',province:'Punjab',district:'Sheikhupura',tehsil:'Sharqpur',mandi:'Sharqpur Mandi',verticals:["Grains"]},
+  {name:'Aslam',type:'Farmer Rep',province:'Punjab',district:'Sheikhupura',tehsil:'Faqirwali',mandi:'Faqirwali Mandi',verticals:["Grains"]},
+  {name:'Abdul Rehman',type:'Farmer Rep',province:'Punjab',district:'Nankana Sahib',tehsil:'Nankana Sahib',mandi:'Nankana Sahib Mandi',verticals:["Grains"]},
+  {name:'Abdul Rehman',type:'Farmer Rep',province:'Punjab',district:'Nankana Sahib',tehsil:'Bucheki',mandi:'Bucheki Mandi',verticals:["Grains"]},
+  {name:'Arham',type:'Mill Rep',province:'Punjab',district:'Nankana Sahib',tehsil:'Bucheki',mandi:'Bucheki Mandi',verticals:["Grains"]},
+  {name:'Irfan Ali',type:'Mill Rep',province:'Punjab',district:'Nankana Sahib',tehsil:'Bucheki',mandi:'Bucheki Mandi',verticals:["Grains"]},
+  {name:'M. Jameel',type:'Mill Rep',province:'Punjab',district:'Nankana Sahib',tehsil:'Bucheki',mandi:'Bucheki Mandi',verticals:["Grains"]},
+  {name:'Qayum',type:'Mill Rep',province:'Punjab',district:'Nankana Sahib',tehsil:'Bucheki',mandi:'Bucheki Mandi',verticals:["Grains"]},
+  {name:'Ali Raza',type:'Mill Rep',province:'Punjab',district:'Nankana Sahib',tehsil:'Bucheki',mandi:'Bucheki Mandi',verticals:["Grains"]},
+  {name:'Ahsan',type:'Farmer Rep',province:'Punjab',district:'Hafizabad',tehsil:'Hafizabad',mandi:'Hafizabad Mandi',verticals:["Grains"]},
+  {name:'Malik Azam',type:'Farmer Rep',province:'Punjab',district:'Hafizabad',tehsil:'Jalalpur Bhattian',mandi:'Jalalpur Bhattian Mandi',verticals:["Grains"]},
+  {name:'Boota',type:'Farmer Rep',province:'Punjab',district:'Lahore',tehsil:'Lahore',mandi:'Lahore Mandi',verticals:["Vegetables"]},
+  {name:'Usman',type:'Farmer Rep',province:'Punjab',district:'Lahore',tehsil:'Lahore',mandi:'Lahore Mandi',verticals:["Kiryana"]},
+  {name:'Anser',type:'Farmer Rep',province:'Punjab',district:'Mandi Bahauddin',tehsil:'Mandi Bahauddin',mandi:'Mandi Bahauddin Mandi',verticals:["Vegetables"]},
+  {name:'Nadeem',type:'Farmer Rep',province:'Punjab',district:'Hasilpur',tehsil:'Hasilpur',mandi:'Hasilpur Mandi',verticals:["Grains"]},
+  {name:'Sajid',type:'Farmer Rep',province:'Punjab',district:'Hasilpur',tehsil:'Hasilpur',mandi:'Hasilpur Mandi',verticals:["Fruits"]},
+  {name:'Asif Ali',type:'Farmer Rep',province:'Punjab',district:'Kahror Pacca',tehsil:'Kahror Pacca',mandi:'Kahror Pacca Mandi',verticals:["Grains"]},
+  {name:'Malik Muqeet',type:'Farmer Rep',province:'Punjab',district:'Ellahabad',tehsil:'Ellahabad',mandi:'Ellahabad Mandi',verticals:["Grains"]},
+  {name:'Abdul Qadeer',type:'Farmer Rep',province:'Punjab',district:'Haveli Lakha',tehsil:'Haveli Lakha',mandi:'Haveli Lakha Mandi',verticals:["Grains"]},
+  {name:'Haji Rafiq',type:'Farmer Rep',province:'Punjab',district:'Dunga Bunga',tehsil:'Dunga Bunga',mandi:'Dunga Bunga Mandi',verticals:["Grains"]},
+  {name:'Samad',type:'Farmer Rep',province:'Punjab',district:'Luddan',tehsil:'Luddan',mandi:'Luddan Mandi',verticals:["Livestock"]},
+  {name:'Mohsin',type:'Farmer Rep',province:'Punjab',district:'Qabula',tehsil:'Qabula',mandi:'Qabula Mandi',verticals:["Grains","Agri Inputs"]},
+  // Balochistan
+  {name:'Naeem',type:'Farmer Rep',province:'Balochistan',district:'Quetta',tehsil:'Quetta',mandi:'Quetta Mandi',verticals:["Grains"]},
+  // Khyber Pakhtunkhwa
+  {name:'Wajid',type:'Farmer Rep',province:'Khyber Pakhtunkhwa',district:'Khyber',tehsil:'Landi Kotal',mandi:'Landi Kotal Mandi',verticals:["Grains"]},
+  {name:'Wajid',type:'Farmer Rep',province:'Khyber Pakhtunkhwa',district:'Peshawar',tehsil:'Peshawar',mandi:'Peshawar Mandi',verticals:["Grains"]},
+  {name:'Nabi Gul',type:'Farmer Rep',province:'Khyber Pakhtunkhwa',district:'Peshawar',tehsil:'Peshawar',mandi:'Peshawar Mandi',verticals:["Livestock"]},
+  {name:'Sahir',type:'Farmer Rep',province:'Khyber Pakhtunkhwa',district:'Peshawar',tehsil:'Peshawar',mandi:'Peshawar Mandi',verticals:["Fruits"]},
+  {name:'Wajid',type:'Farmer Rep',province:'Khyber Pakhtunkhwa',district:'Mansehra',tehsil:'Mansehra',mandi:'Mansehra Mandi',verticals:["Grains"]},
+  {name:'Kalim',type:'Farmer Rep',province:'Khyber Pakhtunkhwa',district:'Dera Ismail Khan',tehsil:'Dera Ismail Khan',mandi:'Dera Ismail Khan Mandi',verticals:["Grains"]},
+  {name:'Zakir Rehman',type:'Farmer Rep',province:'Khyber Pakhtunkhwa',district:'Buner',tehsil:'Buner',mandi:'Buner Mandi',verticals:["Grains"]},
+  {name:'Yasir',type:'Farmer Rep',province:'Khyber Pakhtunkhwa',district:'Mardan',tehsil:'Mardan',mandi:'Mardan Mandi',verticals:["Grains"]},
+  // Last 4 entries from the table
+  {name:'Usman',type:'Farmer Rep',province:'Punjab',district:'Lahore',tehsil:'Lahore',mandi:'Lahore Mandi',verticals:["Kiryana"]},
+  {name:'Ghulam Sarwar',type:'Mill Rep',province:'Punjab',district:'Rahim Yar Khan',tehsil:'Rahim Yar Khan',mandi:'Rahim Yar Khan Mandi',verticals:["Grains"]},
+  {name:'Usman',type:'Farmer Rep',province:'Punjab',district:'Lahore',tehsil:'Lahore',mandi:'Lahore Mandi',verticals:["Kiryana"]},
+  {name:'Ghulam Sarwar',type:'Mill Rep',province:'Punjab',district:'Rahim Yar Khan',tehsil:'Rahim Yar Khan',mandi:'Rahim Yar Khan Mandi',verticals:["Grains"]},
+];
+
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+let state = {
+  currentView: 'overview',
+  drillLevel: 'province',   // province | district | tehsil | mandi | rep
+  drillPath: [],            // [{level, name}]
+  selectedRep: null,
+  selectedVertical: null,
+  selectedCommodity: null,
+  relationshipFilter: 'all',
+  filters: { province: '', vertical: '', reptype: '' }
+};
+
+// ════════════════════════════════════════════
+// COMPUTED STATS
+// ════════════════════════════════════════════
+function computeStats() {
+  const provinces = [...new Set(RAW_REPS.map(r => r.province))];
+  const districts = [...new Set(RAW_REPS.map(r => r.district))];
+  const tehsils   = [...new Set(RAW_REPS.map(r => r.tehsil))];
+  const mandis    = [...new Set(RAW_REPS.map(r => r.mandi))];
+  const verticals = Object.keys(COMMODITY_DATA);
+  const totalCommodities = verticals.reduce((s, v) => s + Object.keys(COMMODITY_DATA[v].commodities).length, 0);
+  const totalByproducts  = verticals.reduce((s, v) => Object.values(COMMODITY_DATA[v].commodities).reduce((a, bp) => a + bp.length, s), 0);
+  const coveredVerticals = [...new Set(RAW_REPS.flatMap(r => r.verticals))];
+  return { provinces, districts, tehsils, mandis, totalReps: RAW_REPS.length, verticals, totalCommodities, totalByproducts, coveredVerticals };
+}
+
+const STATS = computeStats();
+
+// ════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════
+function getTagClass(v) {
+  const m = {
+    Grains: 'tag-grain', Fruits: 'tag-fruit', Vegetables: 'tag-veg',
+    Livestock: 'tag-live', Kiryana: 'tag-kir', 'Agri Inputs': 'tag-fert',
+    'Dry Fruits': 'tag-dry', Herbals: 'tag-fert', Mills: 'tag-mill'
+  };
+  return m[v] || 'tag-other';
+}
+function getVerticalColor(v) {
+  const m = {
+    Grains: '#68d391', Fruits: '#f6ad55', Vegetables: '#63b3ed',
+    Livestock: '#fc8181', Kiryana: '#b794f4', 'Agri Inputs': '#4fd1c5',
+    'Dry Fruits': '#fbd38d', Herbals: '#76e4f7', Mills: '#a0aec0'
+  };
+  return m[v] || '#718096';
+}
+function getProvinceColor(province, repCount) {
+  const max = 80;
+  const intensity = Math.min((repCount || 0) / max, 1);
+  return `rgba(90,200,250,${0.16 + intensity * 0.46})`;
+}
+function filteredReps() {
+  return RAW_REPS.filter(r => {
+    if (state.filters.province && r.province !== state.filters.province) return false;
+    if (state.filters.reptype && r.type !== state.filters.reptype) return false;
+    if (state.filters.vertical && !r.verticals.includes(state.filters.vertical)) return false;
+    return true;
+  });
+}
+
+// ════════════════════════════════════════════
+// VIEW SWITCHING
+// ════════════════════════════════════════════
+function switchView(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`view-${view}`).classList.add('active');
+  document.querySelector(`[data-view="${view}"]`)?.classList.add('active');
+  state.currentView = view;
+  if (view === 'overview') renderOverview();
+  if (view === 'drilldown') renderDrilldown();
+  if (view === 'commodity') renderCommodityExplorer();
+  if (view === 'relationship') renderRelationship(state.relationshipFilter);
+}
+
+// ════════════════════════════════════════════
+// BREADCRUMB
+// ════════════════════════════════════════════
+function updateBreadcrumb(items) {
+  const bc = document.getElementById('breadcrumb');
+  bc.innerHTML = items.map((item, i) => {
+    const isLast = i === items.length - 1;
+    return `${i > 0 ? '<span class="breadcrumb-sep">›</span>' : ''}<span class="${isLast ? 'active' : ''}" onclick="${item.onclick || ''}">${item.label}</span>`;
+  }).join('');
+  const backBtn = document.getElementById('back-btn');
+  if (items.length > 1) backBtn.classList.add('visible');
+  else backBtn.classList.remove('visible');
+}
+
+function goBack() {
+  if (state.drillPath.length > 0) {
+    state.drillPath.pop();
+    renderDrilldown();
+  } else {
+    switchView('overview');
+  }
+}
+
+// ════════════════════════════════════════════
+// VIEW 1: OVERVIEW MAP
+// ════════════════════════════════════════════
+function renderOverview() {
+  updateBreadcrumb([{label: 'Pakistan'}]);
+  const reps = filteredReps();
+  renderPakistanMap(reps);
+  renderOverviewStats(reps);
+  renderOverviewCharts(reps);
+}
+
+function renderPakistanMap(reps) {
+  const svg = document.getElementById('pakistan-svg');
+  svg.innerHTML = '';
+  
+  // Pakistan province outlines (simplified polygons as viewBox 0 0 800 700)
+  const provinces = {
+    "Punjab": {
+      path: "M320,180 L420,140 L500,160 L530,200 L520,300 L480,380 L420,400 L360,380 L310,340 L290,280 L300,220 Z",
+      labelX: 410, labelY: 275
+    },
+    "Sindh": {
+      path: "M290,340 L360,380 L420,400 L440,460 L430,540 L400,600 L360,640 L300,660 L250,640 L220,600 L210,540 L230,460 L260,400 Z",
+      labelX: 330, labelY: 510
+    },
+    "Khyber Pakhtunkhwa": {
+      path: "M220,100 L300,80 L370,100 L420,140 L380,180 L320,180 L280,160 L240,140 Z",
+      labelX: 310, labelY: 130
+    },
+    "Balochistan": {
+      path: "M100,200 L200,160 L290,180 L310,220 L300,340 L260,400 L230,460 L200,500 L160,520 L110,500 L80,440 L70,360 L80,280 Z",
+      labelX: 190, labelY: 350
+    },
+    "Gilgit-Baltistan": {
+      path: "M280,40 L360,20 L430,40 L460,80 L420,140 L370,100 L300,80 L260,60 Z",
+      labelX: 365, labelY: 70
+    },
+    "AJK": {
+      path: "M420,80 L460,60 L510,80 L520,120 L500,160 L460,140 L430,110 Z",
+      labelX: 473, labelY: 110
+    },
+    "ICT": {
+      path: "M370,100 L400,90 L420,100 L420,130 L400,140 L380,130 Z",
+      labelX: 400, labelY: 115
+    }
+  };
+
+  const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+  
+  // Drop shadow filter
+  const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  defs.innerHTML = `<filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+  svg.appendChild(defs);
+
+  const tooltip = document.getElementById('map-tooltip');
+  
+  Object.entries(provinces).forEach(([name, data]) => {
+    const provinceReps = reps.filter(r => r.province === name);
+    const districts = [...new Set(provinceReps.map(r => r.district))];
+    const mandis = [...new Set(provinceReps.map(r => r.mandi))];
+    const allV = [...new Set(provinceReps.flatMap(r => r.verticals))];
+    const color = getProvinceColor(name, provinceReps.length);
+    
+    const pathEl = document.createElementNS('http://www.w3.org/2000/svg','path');
+    pathEl.setAttribute('d', data.path);
+    pathEl.setAttribute('class', 'province-shape');
+    pathEl.setAttribute('fill', color);
+    pathEl.setAttribute('data-province', name);
+    
+    pathEl.addEventListener('mouseenter', (e) => {
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.offsetX + 15) + 'px';
+      tooltip.style.top = (e.offsetY - 10) + 'px';
+      tooltip.innerHTML = `
+        <h4>${name}</h4>
+        <p>📍 Districts: <strong>${districts.length}</strong></p>
+        <p>🏪 Mandis: <strong>${mandis.length}</strong></p>
+        <p>👤 Representatives: <strong>${provinceReps.length}</strong></p>
+        <p>🌾 Verticals: <strong>${allV.join(', ') || 'None'}</strong></p>
+      `;
+    });
+    pathEl.addEventListener('mousemove', (e) => {
+      tooltip.style.left = (e.offsetX + 15) + 'px';
+      tooltip.style.top = (e.offsetY - 10) + 'px';
+    });
+    pathEl.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+    pathEl.addEventListener('click', () => {
+      state.filters.province = name;
+      document.getElementById('filter-province').value = name;
+      renderFilterPills();
+      switchView('drilldown');
+      drillToLevel('province', name);
+    });
+    
+    g.appendChild(pathEl);
+    
+    // Label
+    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x', data.labelX);
+    text.setAttribute('y', data.labelY);
+    text.setAttribute('class', 'province-label');
+    text.textContent = name;
+    g.appendChild(text);
+    
+    // Rep count circle
+    if (provinceReps.length > 0) {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      circle.setAttribute('cx', data.labelX + 30);
+      circle.setAttribute('cy', data.labelY + 14);
+      circle.setAttribute('r', '12');
+      circle.setAttribute('fill', 'rgba(99,179,237,0.3)');
+      circle.setAttribute('stroke', '#63b3ed');
+      circle.setAttribute('stroke-width', '1');
+      g.appendChild(circle);
+      const ct = document.createElementNS('http://www.w3.org/2000/svg','text');
+      ct.setAttribute('x', data.labelX + 30);
+      ct.setAttribute('y', data.labelY + 18);
+      ct.setAttribute('text-anchor', 'middle');
+      ct.setAttribute('fill', '#63b3ed');
+      ct.setAttribute('font-size', '10');
+      ct.setAttribute('font-weight', '700');
+      ct.textContent = provinceReps.length;
+      g.appendChild(ct);
+    }
+  });
+  
+  svg.appendChild(g);
+  
+  // Legend
+  const legend = document.createElementNS('http://www.w3.org/2000/svg','g');
+  legend.setAttribute('transform','translate(560, 550)');
+  const legendBg = document.createElementNS('http://www.w3.org/2000/svg','rect');
+  legendBg.setAttribute('x',0); legendBg.setAttribute('y',0);
+  legendBg.setAttribute('width',190); legendBg.setAttribute('height',100);
+  legendBg.setAttribute('rx',8); legendBg.setAttribute('fill','rgba(13,21,37,0.9)');
+  legendBg.setAttribute('stroke','rgba(255,255,255,0.08)');
+  legend.appendChild(legendBg);
+  const lt = document.createElementNS('http://www.w3.org/2000/svg','text');
+  lt.setAttribute('x',10); lt.setAttribute('y',18); lt.setAttribute('fill','#8896ab');
+  lt.setAttribute('font-size','10'); lt.textContent = 'REPRESENTATIVE DENSITY';
+  legend.appendChild(lt);
+  [[0.15,'Low (0-20)'],[0.35,'Medium (20-50)'],[0.65,'High (50+)']].forEach(([op,label],i) => {
+    const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x',10); rect.setAttribute('y', 28 + i*22); rect.setAttribute('width',16); rect.setAttribute('height',14);
+    rect.setAttribute('rx',3); rect.setAttribute('fill',`rgba(99,179,237,${op})`);
+    rect.setAttribute('stroke','rgba(99,179,237,0.4)');
+    legend.appendChild(rect);
+    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x',32); txt.setAttribute('y', 28 + i*22 + 11);
+    txt.setAttribute('fill','#8896ab'); txt.setAttribute('font-size','11');
+    txt.textContent = label;
+    legend.appendChild(txt);
+  });
+  svg.appendChild(legend);
+}
+
+function renderOverviewStats(reps) {
+  const el = document.getElementById('overview-stats');
+  const provinces = [...new Set(reps.map(r => r.province))].length;
+  const districts = [...new Set(reps.map(r => r.district))].length;
+  const mandis = [...new Set(reps.map(r => r.mandi))].length;
+  const verticals = Object.keys(COMMODITY_DATA).length;
+  const totalByproducts = STATS.totalByproducts;
+  const coveredVerticals = [...new Set(reps.flatMap(r => r.verticals))].length;
+  const stats = [
+    {label:'Provinces', value: provinces, color:'var(--accent-blue)'},
+    {label:'Districts', value: districts, color:'var(--accent-green)'},
+    {label:'Mandis', value: mandis, color:'var(--accent-amber)'},
+    {label:'Reps', value: reps.length, color:'var(--accent-purple)'},
+    {label:'Total Verticals', value: verticals, color:'var(--accent-teal)'},
+    {label:'Commodities', value: STATS.totalCommodities, color:'var(--accent-red)'},
+    {label:'By-products', value: totalByproducts, color:'var(--accent-blue)'},
+    {label:'Verticals in filter', value: coveredVerticals, color:'var(--accent-green)'}
+  ];
+  el.innerHTML = stats.map(s => `
+    <div class="card" style="padding:12px;">
+      <div class="card-title">${s.label}</div>
+      <div style="font-size:22px;font-weight:700;color:${s.color};font-family:var(--font-mono)">${s.value}</div>
+    </div>
+  `).join('');
+}
+
+function renderOverviewCharts(reps) {
+  const el = document.getElementById('overview-charts');
+  const provinceData = [...new Set(reps.map(r => r.province))].map(p => ({
+    name: p,
+    reps: reps.filter(r => r.province === p).length
+  })).sort((a,b) => b.reps - a.reps);
+  const maxReps = provinceData[0]?.reps || 1;
+  
+  const verticalData = Object.keys(COMMODITY_DATA).map(v => ({
+    name: v,
+    count: reps.filter(r => r.verticals.includes(v)).length
+  }));
+  
+  const totalReps = Math.max(reps.length, 1);
+  el.innerHTML = `
+    <div class="chart-title">Representatives by Province</div>
+    ${provinceData.map(p => `
+      <div class="province-bar">
+        <div class="province-bar-label">
+          <span style="color:var(--text-primary)">${p.name}</span>
+          <span style="color:var(--accent-blue);font-family:var(--font-mono)">${p.reps}</span>
+        </div>
+        <div class="province-bar-track">
+          <div class="province-bar-fill" style="width:${(p.reps/maxReps*100).toFixed(1)}%;background:linear-gradient(90deg,var(--accent-blue),var(--accent-teal))"></div>
+        </div>
+      </div>
+    `).join('')}
+    <div class="divider"></div>
+    <div class="chart-title">Vertical Coverage</div>
+    ${verticalData.map(v => `
+      <div class="province-bar">
+        <div class="province-bar-label">
+          <span style="color:var(--text-primary)">${COMMODITY_DATA[v.name]?.icon || ''} ${v.name}</span>
+          <span style="color:${getVerticalColor(v.name)};font-family:var(--font-mono)">${v.count} reps</span>
+        </div>
+        <div class="province-bar-track">
+          <div class="province-bar-fill" style="width:${(v.count/totalReps*100).toFixed(1)}%;background:${getVerticalColor(v.name)}"></div>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+// ════════════════════════════════════════════
+// VIEW 2: GEO DRILL DOWN
+// ════════════════════════════════════════════
+function drillToLevel(level, name) {
+  // Clear path to given level
+  const levelOrder = ['province','district','tehsil','mandi','rep'];
+  const idx = levelOrder.indexOf(level);
+  state.drillPath = state.drillPath.slice(0, idx);
+  state.drillPath.push({level, name});
+  renderDrilldown();
+}
+
+function renderDrilldown() {
+  const path = state.drillPath;
+  const level = path.length === 0 ? 'root' : path[path.length-1].level;
+  
+  // Build breadcrumb
+  const bcItems = [{label:'Pakistan', onclick:"switchView('overview')"}];
+  path.forEach((p, i) => {
+    bcItems.push({label: p.name, onclick: i < path.length-1 ? `drillToLevel('${p.level}','${p.name}')` : ''});
+  });
+  updateBreadcrumb(bcItems);
+  
+  // Determine what to show
+  const reps = filteredReps();
+  let items = [], nextLevel = '', header = '';
+  
+  if (path.length === 0) {
+    // Show all provinces
+    const provinces = [...new Set(reps.map(r => r.province))];
+    items = provinces.map(p => {
+      const pr = reps.filter(r => r.province === p);
+      const ds = [...new Set(pr.map(r => r.district))];
+      const mn = [...new Set(pr.map(r => r.mandi))];
+      const vt = [...new Set(pr.flatMap(r => r.verticals))];
+      return {name: p, meta: `${ds.length} districts · ${mn.length} mandis · ${pr.length} reps`, tags: vt, onclick: `drillToLevel('province','${p}')`};
+    });
+    nextLevel = 'province';
+    header = `<div class="section-title">🇵🇰 Pakistan</div><div class="section-sub">Select a province to drill down</div>`;
+  } else if (level === 'province') {
+    const province = path.find(p => p.level === 'province')?.name;
+    const pr = reps.filter(r => r.province === province);
+    const districts = [...new Set(pr.map(r => r.district))];
+    items = districts.map(d => {
+      const dr = pr.filter(r => r.district === d);
+      const ts = [...new Set(dr.map(r => r.tehsil))];
+      const mn = [...new Set(dr.map(r => r.mandi))];
+      const vt = [...new Set(dr.flatMap(r => r.verticals))];
+      return {name: d, meta: `${ts.length} tehsils · ${mn.length} mandis · ${dr.length} reps`, tags: vt, onclick: `drillToLevel('district','${d}')`};
+    });
+    header = `<div class="section-title">📍 ${province}</div><div class="section-sub">${districts.length} districts</div>`;
+  } else if (level === 'district') {
+    const province = path.find(p => p.level === 'province')?.name;
+    const district = path.find(p => p.level === 'district')?.name;
+    const dr = reps.filter(r => r.province === province && r.district === district);
+    const tehsils = [...new Set(dr.map(r => r.tehsil))];
+    items = tehsils.map(t => {
+      const tr = dr.filter(r => r.tehsil === t);
+      const mn = [...new Set(tr.map(r => r.mandi))];
+      const vt = [...new Set(tr.flatMap(r => r.verticals))];
+      return {name: t, meta: `${mn.length} mandis · ${tr.length} reps`, tags: vt, onclick: `drillToLevel('tehsil','${t}')`};
+    });
+    header = `<div class="section-title">🏘️ ${district}</div><div class="section-sub">${tehsils.length} tehsils</div>`;
+  } else if (level === 'tehsil') {
+    const province = path.find(p => p.level === 'province')?.name;
+    const district = path.find(p => p.level === 'district')?.name;
+    const tehsil   = path.find(p => p.level === 'tehsil')?.name;
+    const tr = reps.filter(r => r.province === province && r.district === district && r.tehsil === tehsil);
+    const mandis = [...new Set(tr.map(r => r.mandi))];
+    items = mandis.map(m => {
+      const mr = tr.filter(r => r.mandi === m);
+      const vt = [...new Set(mr.flatMap(r => r.verticals))];
+      return {name: m, meta: `${mr.length} representatives`, tags: vt, onclick: `drillToLevel('mandi','${m}')`};
+    });
+    header = `<div class="section-title">📌 ${tehsil}</div><div class="section-sub">${mandis.length} mandis</div>`;
+  } else if (level === 'mandi') {
+    const province = path.find(p => p.level === 'province')?.name;
+    const district = path.find(p => p.level === 'district')?.name;
+    const tehsil   = path.find(p => p.level === 'tehsil')?.name;
+    const mandi    = path.find(p => p.level === 'mandi')?.name;
+    const mr = reps.filter(r => r.mandi === mandi && r.province === province);
+    items = mr.map(rep => ({
+      name: rep.name, meta: `${rep.type} · ${rep.mandi}`, tags: rep.verticals,
+      onclick: `showRepDetail('${rep.name.replace(/'/g,"\\'")}','${rep.mandi.replace(/'/g,"\\'")}')`,
+      isRep: true
+    }));
+    header = `<div class="section-title">🏪 ${mandi}</div><div class="section-sub">${mr.length} representatives</div>`;
+  }
+  
+  const grid = document.getElementById('drill-grid');
+  const hdr = document.getElementById('drilldown-header');
+  hdr.innerHTML = header;
+  grid.innerHTML = items.map(item => `
+    <div class="drill-card" onclick="${item.onclick}">
+      ${item.isRep ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">👤 Representative</div>` : ''}
+      <div class="drill-card-title">${item.name}</div>
+      <div class="drill-card-meta">${item.meta}</div>
+      <div class="drill-card-tags">
+        ${item.tags.map(t => `<span class="tag ${getTagClass(t)}">${t}</span>`).join('')}
+      </div>
+    </div>
+  `).join('') || '<div class="empty-state"><div class="icon">📭</div><p>No data found for applied filters</p></div>';
+}
+
+// ════════════════════════════════════════════
+// VIEW 3: REP DETAIL
+// ════════════════════════════════════════════
+function showRepDetail(name, mandi) {
+  const rep = RAW_REPS.find(r => r.name === name && r.mandi === mandi) || RAW_REPS.find(r => r.name === name);
+  if (!rep) return;
+  state.selectedRep = rep;
+  switchView('rep');
+  
+  const bcItems = [
+    {label:'Pakistan', onclick:"switchView('overview')"},
+    {label: rep.province, onclick:`switchView('drilldown');drillToLevel('province','${rep.province}')`},
+    {label: rep.district, onclick:`switchView('drilldown');drillToLevel('district','${rep.district}')`},
+    {label: rep.mandi, onclick:`switchView('drilldown');drillToLevel('mandi','${rep.mandi}')`},
+    {label: rep.name}
+  ];
+  updateBreadcrumb(bcItems);
+  
+  const colors = ['#63b3ed','#68d391','#f6ad55','#fc8181','#b794f4','#4fd1c5'];
+  const initials = rep.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const colorIdx = rep.name.charCodeAt(0) % colors.length;
+  
+  // Coverage stats
+  const totalV = Object.keys(COMMODITY_DATA).length;
+  const coveredV = rep.verticals.length;
+  const totalByp = rep.verticals.reduce((s,v) => {
+    const cd = COMMODITY_DATA[v];
+    if (!cd) return s;
+    return s + Object.values(cd.commodities).reduce((a,bp) => a + bp.length, 0);
+  }, 0);
+  
+  const content = document.getElementById('rep-content');
+  content.innerHTML = `
+    <div class="rep-header">
+      <div class="rep-avatar" style="background:${colors[colorIdx]}22;border:2px solid ${colors[colorIdx]};color:${colors[colorIdx]}">${initials}</div>
+      <div class="rep-info">
+        <h1>${rep.name}</h1>
+        <div class="rep-meta">
+          <span class="badge badge-blue">${rep.type}</span>
+        </div>
+        <div class="rep-location" style="margin-top:6px">📍 ${rep.mandi} · ${rep.tehsil} · ${rep.district} · ${rep.province}</div>
+      </div>
+    </div>
+    <div class="rep-body">
+      <div class="coverage-grid" id="rep-coverage"></div>
+      <div class="rep-sidebar-panel">
+        <div class="rep-stat-card">
+          <div class="card-title">Coverage Summary</div>
+          <div class="rep-stat-row"><span class="rep-stat-label">Verticals Covered</span><span class="rep-stat-val highlight-green">${coveredV} / ${totalV}</span></div>
+          <div class="rep-stat-row"><span class="rep-stat-label">By-Products Active</span><span class="rep-stat-val">${totalByp}</span></div>
+          <div class="rep-stat-row"><span class="rep-stat-label">Coverage %</span><span class="rep-stat-val highlight-green">${Math.round(coveredV/totalV*100)}%</span></div>
+          <div class="rep-stat-row"><span class="rep-stat-label">Rep Type</span><span class="rep-stat-val">${rep.type}</span></div>
+          <div class="rep-stat-row"><span class="rep-stat-label">Province</span><span class="rep-stat-val">${rep.province}</span></div>
+          <div class="rep-stat-row"><span class="rep-stat-label">District</span><span class="rep-stat-val">${rep.district}</span></div>
+          <div class="rep-stat-row"><span class="rep-stat-label">Mandi</span><span class="rep-stat-val">${rep.mandi}</span></div>
+        </div>
+        <div class="rep-stat-card">
+          <div class="card-title">Vertical Coverage</div>
+          ${Object.keys(COMMODITY_DATA).map(v => {
+            const covered = rep.verticals.includes(v);
+            return `<div class="rep-stat-row">
+              <span class="rep-stat-label">${COMMODITY_DATA[v].icon} ${v}</span>
+              <span style="color:${covered?'var(--accent-green)':'var(--text-muted)'}">${covered?'✔ Covered':'✖ Missing'}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Render vertical blocks
+  const coverageEl = document.getElementById('rep-coverage');
+  Object.entries(COMMODITY_DATA).forEach(([vname, vdata]) => {
+    const isCovered = rep.verticals.includes(vname);
+    const block = document.createElement('div');
+    block.className = 'vertical-block';
+    block.innerHTML = `
+      <div class="vertical-header" onclick="toggleVerticalBlock(this)">
+        <div class="vertical-name">
+          <span>${vdata.icon}</span>
+          <span style="color:${isCovered ? 'var(--text-primary)' : 'var(--text-muted)'}">${vname}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="coverage-pill ${isCovered ? 'pill-covered' : 'pill-missing'}">${isCovered ? '✔ Active' : '✖ Not covered'}</span>
+          <span class="toggle-chevron">›</span>
+        </div>
+      </div>
+      <div class="vertical-body">
+        ${Object.entries(vdata.commodities).map(([comm, byps]) => `
+          <div class="commodity-group">
+            <div class="commodity-name">${comm}</div>
+            <div class="byproduct-list">
+              ${byps.map(bp => `<span class="byproduct-tag ${isCovered ? 'byproduct-yes' : 'byproduct-no'}">${bp}</span>`).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    coverageEl.appendChild(block);
+  });
+}
+
+function toggleVerticalBlock(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.toggle-chevron');
+  body.classList.toggle('open');
+  chevron.classList.toggle('open');
+}
+
+// ════════════════════════════════════════════
+// VIEW 4: COMMODITY EXPLORER
+// ════════════════════════════════════════════
+function renderCommodityExplorer() {
+  updateBreadcrumb([{label:'Pakistan', onclick:"switchView('overview')"}, {label:'Commodity Explorer'}]);
+  const tree = document.getElementById('commodity-tree');
+  tree.innerHTML = '<div style="font-size:11px;color:var(--text-muted);padding:4px 8px 8px;text-transform:uppercase;letter-spacing:0.8px">Verticals</div>';
+  
+  Object.entries(COMMODITY_DATA).forEach(([vname, vdata]) => {
+    const totalBP = Object.values(vdata.commodities).reduce((s,bp) => s + bp.length, 0);
+    const totalCommodities = Object.keys(vdata.commodities).length;
+    const div = document.createElement('div');
+    div.className = 'tree-vertical';
+    div.innerHTML = `
+      <div class="tree-vertical-header" onclick="toggleTreeVertical(this,'${vname.replace(/'/g,"\\'")}')">
+        <span>${vdata.icon} ${vname}</span>
+        <span class="tree-count">${totalCommodities} commodities · ${totalBP} by-products</span>
+      </div>
+      <div class="tree-commodity-list" id="tree-${vname.replace(/\s/g,'-')}">
+        ${Object.entries(vdata.commodities).map(([cname, byps]) => `
+          <div class="tree-commodity" onclick="showCommodityDetail('${vname.replace(/'/g,"\\'")}','${cname.replace(/'/g,"\\'")}')">
+            <span>${cname}</span>
+            <span class="tree-count">${byps.length}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    tree.appendChild(div);
+  });
+  
+  // Default: show first vertical and first commodity
+  const firstVertical = Object.keys(COMMODITY_DATA)[0];
+  const firstCommodity = Object.keys(COMMODITY_DATA[firstVertical].commodities)[0];
+  showCommodityDetail(firstVertical, firstCommodity);
+}
+
+function toggleTreeVertical(header, vname) {
+  const list = document.getElementById(`tree-${vname.replace(/\s/g,'-')}`);
+  list.classList.toggle('open');
+  header.classList.toggle('active');
+}
+
+function showCommodityDetail(vertical, commodity) {
+  // Mark active
+  document.querySelectorAll('.tree-commodity').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tree-vertical-header').forEach(h => {
+    if (h.textContent.includes(vertical)) { h.classList.add('active'); h.nextElementSibling.classList.add('open'); }
+  });
+  
+  const byproducts = COMMODITY_DATA[vertical]?.commodities[commodity] || [];
+  const det = document.getElementById('commodity-detail');
+  
+  // For each byproduct, find who supplies it (vertical match)
+  const byproductWithSuppliers = byproducts.map(bp => ({
+    name: bp,
+    suppliers: RAW_REPS.filter(r => r.verticals.includes(vertical))
+  }));
+  
+  det.innerHTML = `
+    <div class="commodity-detail-header">
+      <h2>${COMMODITY_DATA[vertical]?.icon} ${commodity}</h2>
+      <p>${vertical} vertical · ${byproducts.length} by-products · ${RAW_REPS.filter(r=>r.verticals.includes(vertical)).length} suppliers</p>
+    </div>
+    <div class="byproduct-detail-grid">
+      ${byproductWithSuppliers.map(bp => `
+        <div class="byproduct-detail-card">
+          <div class="byproduct-detail-name">${bp.name}</div>
+          <div class="byproduct-suppliers">
+            ${bp.suppliers.length === 0
+              ? '<span class="no-supplier">No representative assigned</span>'
+              : `<span style="color:var(--accent-green);font-size:11px">${bp.suppliers.length} supplier${bp.suppliers.length>1?'s':''}</span>
+                 <div class="supplier-list">${bp.suppliers.slice(0,3).map(s => `
+                   <span class="supplier-chip" onclick="showRepDetail('${s.name.replace(/'/g,"\\'")}','${s.mandi.replace(/'/g,"\\'")}')">
+                     ${s.name} · ${s.province}
+                   </span>
+                 `).join('')}${bp.suppliers.length > 3 ? `<span style="font-size:10px;color:var(--text-muted)">+${bp.suppliers.length-3} more</span>` : ''}</div>`
+            }
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ════════════════════════════════════════════
+// VIEW 5: RELATIONSHIP VIEW
+// ════════════════════════════════════════════
+function renderRelationship(filter) {
+  state.relationshipFilter = filter;
+  updateBreadcrumb([{label:'Pakistan', onclick:"switchView('overview')"}, {label:'Relationship View'}]);
+  const relSummary = document.getElementById('rel-summary');
+  const container = document.getElementById('rel-svg-container');
+  const svg = document.getElementById('rel-svg');
+  const W = container.clientWidth || 900;
+  const H = container.clientHeight || 600;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = '';
+  relSummary.innerHTML = '';
+  document.querySelectorAll('.rel-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.filter === filter));
+  
+  // Filter reps by vertical
+  let reps = RAW_REPS;
+  let verticals = Object.keys(COMMODITY_DATA);
+  if (filter !== 'all') {
+    const vmap = {grain:'Grains',fruit:'Fruits',veg:'Vegetables',kiryana:'Kiryana'};
+    const vname = vmap[filter];
+    reps = RAW_REPS.filter(r => r.verticals.includes(vname));
+    verticals = [vname];
+  }
+  
+  const verticalStats = verticals.map(v => ({
+    name: v,
+    reps: RAW_REPS.filter(r => r.verticals.includes(v)).length,
+    commodities: Object.keys(COMMODITY_DATA[v]?.commodities || {}).length,
+    byProducts: Object.values(COMMODITY_DATA[v]?.commodities || {}).reduce((s,bp) => s + bp.length, 0)
+  }));
+  relSummary.innerHTML = `
+    <div class="rel-summary-top">
+      <div>
+        <div class="rel-summary-title">${filter === 'all' ? 'Representative to Vertical Relationships' : verticalStats[0].name + ' Relationships'}</div>
+        <div class="rel-summary-note">Filtered by: ${filter === 'all' ? 'All verticals' : verticalStats[0].name}</div>
+      </div>
+      <div class="rel-count-pill">${reps.length} total reps</div>
+    </div>
+    <div class="rel-summary-grid">
+      <div class="rel-summary-card">
+        <h3>Representatives shown</h3>
+        <div class="summary-value">${reps.length}</div>
+        <div class="summary-meta">Distinct representative records matched the selected filter.</div>
+      </div>
+      <div class="rel-summary-card">
+        <h3>Vertical count</h3>
+        <div class="summary-value">${verticals.length}</div>
+        <div class="summary-meta">${verticals.length} verticals are in this view.</div>
+      </div>
+      <div class="rel-summary-card">
+        <h3>Commodity totals</h3>
+        <div class="summary-value">${verticalStats.reduce((a,v) => a + v.commodities,0)}</div>
+        <div class="summary-meta">Commodities counted across the selected verticals.</div>
+      </div>
+      <div class="rel-summary-card">
+        <h3>By-product totals</h3>
+        <div class="summary-value">${verticalStats.reduce((a,v) => a + v.byProducts,0)}</div>
+        <div class="summary-meta">Total by-products available for the selected verticals.</div>
+      </div>
+    </div>
+    <table class="rel-table">
+      <thead>
+        <tr><th>Vertical</th><th>Reps</th><th>Commodities</th><th>By-products</th></tr>
+      </thead>
+      <tbody>
+        ${verticalStats.map(v => `
+          <tr>
+            <td>${COMMODITY_DATA[v.name]?.icon || ''} ${v.name}</td>
+            <td>${v.reps}</td>
+            <td>${v.commodities}</td>
+            <td>${v.byProducts}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+  
+  // Show every representative — no cap, no truncated list.
+  const displayReps = reps;
+  // Always show every commodity vertical, even ones with zero reps in this filter,
+  // so the right-hand column stays complete and just shows nothing extra when empty.
+  const displayVerticals = verticals.slice(0, 8);
+  
+  const pad = 60;
+  const leftX = pad + 30;
+  const rightX = W - pad - 30;
+  const centerX = W / 2;
+  
+  // Fixed row height per rep keeps names legible no matter how many there are.
+  const ROW_H = 40;
+  const contentH = Math.max(H, pad*2 + Math.max(displayReps.length - 1, 0) * ROW_H);
+  
+  // Grow the SVG canvas to fit everyone, and let the container scroll to it.
+  svg.setAttribute('viewBox', `0 0 ${W} ${contentH}`);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMin meet');
+  svg.style.height = contentH + 'px';
+  
+  // Left column: Reps — one evenly-spaced row each
+  const repY = (i) => pad + i * ROW_H;
+  
+  // Right column: Verticals / commodities — spread across the full (possibly taller) canvas
+  const vY = (i) => pad + (i * (contentH - 2*pad) / Math.max(displayVerticals.length-1, 1));
+  
+  // Draw connections first (behind nodes)
+  const linkGroup = document.createElementNS('http://www.w3.org/2000/svg','g');
+  linkGroup.id = 'rel-links';
+  svg.appendChild(linkGroup);
+  
+  const nodeGroup = document.createElementNS('http://www.w3.org/2000/svg','g');
+  nodeGroup.id = 'rel-nodes';
+  svg.appendChild(nodeGroup);
+  
+  // Draw links
+  displayReps.forEach((rep, ri) => {
+    const y1 = repY(ri);
+    displayVerticals.forEach((vname, vi) => {
+      if (rep.verticals.includes(vname)) {
+        const y2 = vY(vi);
+        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+        const cx1 = leftX + 80, cx2 = rightX - 80;
+        path.setAttribute('d', `M${leftX+60},${y1} C${cx1},${y1} ${cx2},${y2} ${rightX-60},${y2}`);
+        path.setAttribute('class', 'rel-link');
+        path.setAttribute('data-rep', rep.name);
+        path.setAttribute('data-vertical', vname);
+        linkGroup.appendChild(path);
+      }
+    });
+  });
+  
+  // Draw rep nodes
+  displayReps.forEach((rep, ri) => {
+    const y = repY(ri);
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','rel-rep-node');
+    g.setAttribute('data-name', rep.name);
+    g.style.cursor = 'pointer';
+    
+    const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x', leftX - 65); rect.setAttribute('y', y - 12);
+    rect.setAttribute('width', 130); rect.setAttribute('height', 24);
+    rect.setAttribute('rx', 6);
+    rect.setAttribute('class','node-rep');
+    
+    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x', leftX); txt.setAttribute('y', y + 4);
+    txt.setAttribute('text-anchor','middle'); txt.setAttribute('class','node-text');
+    txt.textContent = rep.name.length > 18 ? rep.name.slice(0,16)+'…' : rep.name;
+    
+    const sub = document.createElementNS('http://www.w3.org/2000/svg','text');
+    sub.setAttribute('x', leftX); sub.setAttribute('y', y + 22);
+    sub.setAttribute('text-anchor','middle'); sub.setAttribute('class','node-text-small');
+    sub.textContent = rep.province;
+    
+    g.appendChild(rect); g.appendChild(txt); g.appendChild(sub);
+    
+    g.addEventListener('mouseenter', () => {
+      document.querySelectorAll('.rel-link').forEach(l => {
+        l.style.opacity = l.getAttribute('data-rep') === rep.name ? '1' : '0.05';
+        l.style.strokeWidth = l.getAttribute('data-rep') === rep.name ? '2' : '0.5';
+        l.style.stroke = l.getAttribute('data-rep') === rep.name ? 'rgba(99,179,237,0.8)' : 'rgba(99,179,237,0.1)';
+      });
+    });
+    g.addEventListener('mouseleave', () => {
+      document.querySelectorAll('.rel-link').forEach(l => {
+        l.style.opacity = '1'; l.style.strokeWidth = '1'; l.style.stroke = 'rgba(99,179,237,0.2)';
+      });
+    });
+    g.addEventListener('click', () => showRepDetail(rep.name, rep.mandi));
+    
+    nodeGroup.appendChild(g);
+  });
+  
+  // Draw vertical nodes
+  displayVerticals.forEach((vname, vi) => {
+    const y = vY(vi);
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','rel-vertical-node');
+    g.setAttribute('data-name', vname);
+    g.style.cursor = 'pointer';
+    
+    const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x', rightX - 65); rect.setAttribute('y', y - 14);
+    rect.setAttribute('width', 130); rect.setAttribute('height', 28);
+    rect.setAttribute('rx', 6);
+    rect.setAttribute('class','node-commodity');
+    
+    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x', rightX); txt.setAttribute('y', y + 5);
+    txt.setAttribute('text-anchor','middle'); txt.setAttribute('class','node-text');
+    txt.textContent = `${COMMODITY_DATA[vname]?.icon || ''} ${vname}`;
+    
+    const suppCount = displayReps.filter(r => r.verticals.includes(vname)).length;
+    const sub = document.createElementNS('http://www.w3.org/2000/svg','text');
+    sub.setAttribute('x', rightX); sub.setAttribute('y', y + 28);
+    sub.setAttribute('text-anchor','middle'); sub.setAttribute('class','node-text-small');
+    sub.textContent = suppCount > 0 ? `${suppCount} reps` : '';
+    
+    g.appendChild(rect); g.appendChild(txt); g.appendChild(sub);
+    
+    g.addEventListener('mouseenter', () => {
+      document.querySelectorAll('.rel-link').forEach(l => {
+        l.style.opacity = l.getAttribute('data-vertical') === vname ? '1' : '0.05';
+        l.style.strokeWidth = l.getAttribute('data-vertical') === vname ? '2' : '0.5';
+        l.style.stroke = l.getAttribute('data-vertical') === vname ? 'rgba(246,173,85,0.8)' : 'rgba(99,179,237,0.1)';
+      });
+    });
+    g.addEventListener('mouseleave', () => {
+      document.querySelectorAll('.rel-link').forEach(l => {
+        l.style.opacity = '1'; l.style.strokeWidth = '1'; l.style.stroke = 'rgba(99,179,237,0.2)';
+      });
+    });
+    
+    nodeGroup.appendChild(g);
+  });
+  
+}
+
+// ════════════════════════════════════════════
+// SEARCH
+// ════════════════════════════════════════════
+function onSearch(query) {
+  const results = document.getElementById('search-results');
+  if (!query || query.length < 2) { results.style.display = 'none'; return; }
+  query = query.toLowerCase();
+  
+  const items = [];
+  
+  // Search reps
+  RAW_REPS.forEach(r => {
+    if (r.name.toLowerCase().includes(query) || r.mandi.toLowerCase().includes(query) || r.district.toLowerCase().includes(query)) {
+      items.push({type:'Representative', name: r.name, sub: `${r.mandi} · ${r.district} · ${r.province}`, onclick: `showRepDetail('${r.name.replace(/'/g,"\\'")}','${r.mandi.replace(/'/g,"\\'")}');closeSearch()`});
+    }
+  });
+  
+  // Search commodities
+  Object.entries(COMMODITY_DATA).forEach(([vname, vdata]) => {
+    Object.entries(vdata.commodities).forEach(([cname, byps]) => {
+      if (cname.toLowerCase().includes(query)) {
+        items.push({type:'Commodity', name: cname, sub: `${vname} vertical · ${byps.length} by-products`, onclick: `switchView('commodity');showCommodityDetail('${vname.replace(/'/g,"\\'")}','${cname.replace(/'/g,"\\'")}');closeSearch()`});
+      }
+      byps.forEach(bp => {
+        if (bp.toLowerCase().includes(query)) {
+          items.push({type:'By-product', name: bp, sub: `${cname} → ${vname}`, onclick: `switchView('commodity');showCommodityDetail('${vname.replace(/'/g,"\\'")}','${cname.replace(/'/g,"\\'")}');closeSearch()`});
+        }
+      });
+    });
+  });
+  
+  // Search locations
+  const locs = [...new Set(RAW_REPS.map(r => r.province))];
+  locs.forEach(l => {
+    if (l.toLowerCase().includes(query)) {
+      items.push({type:'Province', name: l, sub: `${RAW_REPS.filter(r=>r.province===l).length} representatives`, onclick: `switchView('drilldown');drillToLevel('province','${l}');closeSearch()`});
+    }
+  });
+  
+  if (items.length === 0) {
+    results.innerHTML = '<div class="search-result-item"><div class="search-result-type">No results</div></div>';
+  } else {
+    results.innerHTML = items.slice(0, 10).map(item => `
+      <div class="search-result-item" onclick="${item.onclick}">
+        <div class="search-result-type">${item.type}</div>
+        <div class="search-result-name">${item.name}</div>
+        <div class="search-result-sub">${item.sub}</div>
+      </div>
+    `).join('');
+  }
+  results.style.display = 'block';
+}
+
+function closeSearch() {
+  document.getElementById('search-results').style.display = 'none';
+  document.getElementById('search-input').value = '';
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#search-box') && !e.target.closest('#search-results')) closeSearch();
+});
+
+// ════════════════════════════════════════════
+// FILTERS
+// ════════════════════════════════════════════
+function initFilters() {
+  const prov = document.getElementById('filter-province');
+  STATS.provinces.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p; opt.textContent = p;
+    prov.appendChild(opt);
+  });
+  const vert = document.getElementById('filter-vertical');
+  Object.keys(COMMODITY_DATA).forEach(v => {
+    const opt = document.createElement('option');
+    opt.value = v; opt.textContent = `${COMMODITY_DATA[v].icon} ${v}`;
+    vert.appendChild(opt);
+  });
+}
+function applyFilters() {
+  state.filters.province = document.getElementById('filter-province').value;
+  state.filters.vertical = document.getElementById('filter-vertical').value;
+  state.filters.reptype  = document.getElementById('filter-reptype').value;
+  if (state.currentView === 'drilldown') renderDrilldown();
+  if (state.currentView === 'overview') renderOverview();
+  if (state.currentView === 'relationship') renderRelationship(state.relationshipFilter);
+  renderFilterPills();
+}
+function clearFilters() {
+  document.getElementById('filter-province').value = '';
+  document.getElementById('filter-vertical').value = '';
+  document.getElementById('filter-reptype').value = '';
+  state.filters = {province:'',vertical:'',reptype:''};
+  if (state.currentView === 'drilldown') renderDrilldown();
+  if (state.currentView === 'overview') renderOverview();
+  if (state.currentView === 'relationship') renderRelationship(state.relationshipFilter);
+  renderFilterPills();
+}
+function renderFilterPills() {
+  const container = document.getElementById('filter-bar');
+  const existing = container.querySelectorAll('.filter-pill');
+  existing.forEach(el => el.remove());
+  const labels = [];
+  if (state.filters.province) labels.push({text: `Province: ${state.filters.province}`, key:'province'});
+  if (state.filters.vertical) labels.push({text: `Vertical: ${state.filters.vertical}`, key:'vertical'});
+  if (state.filters.reptype) labels.push({text: `Rep Type: ${state.filters.reptype}`, key:'reptype'});
+  labels.forEach(label => {
+    const pill = document.createElement('span');
+    pill.className = 'filter-pill';
+    pill.innerHTML = `${label.text} <span onclick="removeFilter('${label.key}')">×</span>`;
+    container.insertBefore(pill, container.querySelector('button.btn'));
+  });
+}
+function removeFilter(key) {
+  if (key === 'province') document.getElementById('filter-province').value = '';
+  if (key === 'vertical') document.getElementById('filter-vertical').value = '';
+  if (key === 'reptype') document.getElementById('filter-reptype').value = '';
+  applyFilters();
+}
+
+// ════════════════════════════════════════════
+// SIDEBAR STATS
+// ════════════════════════════════════════════
+function renderSidebarStats() {
+  const el = document.getElementById('sidebar-stats-panel');
+  el.innerHTML = `
+    <div class="stat-mini"><span class="stat-mini-label">Total Reps</span><span class="stat-mini-val">${STATS.totalReps}</span></div>
+    <div class="stat-mini"><span class="stat-mini-label">Provinces</span><span class="stat-mini-val">${STATS.provinces.length}</span></div>
+    <div class="stat-mini"><span class="stat-mini-label">Districts</span><span class="stat-mini-val">${STATS.districts.length}</span></div>
+    <div class="stat-mini"><span class="stat-mini-label">Mandis</span><span class="stat-mini-val">${STATS.mandis.length}</span></div>
+    <div class="stat-mini"><span class="stat-mini-label">By-products</span><span class="stat-mini-val">${STATS.totalByproducts}</span></div>
+  `;
+}
+
+// ════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ════════════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && !e.target.matches('input')) {
+    e.preventDefault();
+    document.getElementById('search-input').focus();
+  }
+  if (e.key === 'Escape') { closeSearch(); }
+  if (e.key === 'Backspace' && e.altKey) goBack();
+  if (e.key === '1') switchView('overview');
+  if (e.key === '2') switchView('drilldown');
+  if (e.key === '3') switchView('commodity');
+  if (e.key === '4') switchView('relationship');
+});
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+function init() {
+  initFilters();
+  renderSidebarStats();
+  renderOverview();
+  // Default drill state
+  state.drillPath = [];
+}
+
+init();
+</script>
+</body>
+</html>

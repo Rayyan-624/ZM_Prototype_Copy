@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zarai Mandi — Product Workflow & UI Research Documentation</title>
+<style>
+  :root{
+    --ink:#1f2420; --sub:#5b6158; --muted:#8a8f85;
+    --line:#e2e2da; --bg:#fbfbf8; --card:#ffffff;
+    --teal:#0f6e56; --teal-bg:#e1f5ee; --teal-dk:#04342c;
+    --amber:#854f0b; --amber-bg:#faeeda;
+    --coral:#993c1d; --coral-bg:#faece7;
+    --blue:#185fa5; --blue-bg:#e6f1fb;
+    --gray-bg:#f1efe8;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.6;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:48px 24px 100px}
+  header.doc-header{margin-bottom:56px}
+  header.doc-header h1{font-size:30px; font-weight:600; margin:0 0 8px}
+  header.doc-header p{color:var(--sub); font-size:15px; margin:0}
+  nav.toc{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 24px; margin-bottom:56px;
+  }
+  nav.toc h2{font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin:0 0 12px; font-weight:600}
+  nav.toc ol{margin:0; padding-left:20px; columns:2; column-gap:32px}
+  nav.toc li{margin-bottom:6px; font-size:14px}
+  nav.toc a{color:var(--ink); text-decoration:none}
+  nav.toc a:hover{color:var(--teal)}
+  section{margin-bottom:64px; scroll-margin-top:24px}
+  section > h2{
+    font-size:22px; font-weight:600; margin:0 0 6px;
+    padding-bottom:14px; border-bottom:2px solid var(--ink);
+  }
+  section > .section-intro{color:var(--sub); font-size:14.5px; margin:14px 0 28px}
+  h3{font-size:17px; font-weight:600; margin:32px 0 12px}
+  h3:first-child{margin-top:0}
+  p{font-size:15px; margin:0 0 14px}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 24px; margin-bottom:16px;
+  }
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  @media (max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+
+  /* Persona cards */
+  .persona{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:18px 22px; margin-bottom:14px; display:grid;
+    grid-template-columns:150px 1fr; gap:20px; align-items:start;
+  }
+  @media (max-width:640px){.persona{grid-template-columns:1fr; gap:8px}}
+  .persona .p-name{font-weight:600; font-size:15px}
+  .persona .p-layer{
+    display:inline-block; font-size:11px; font-weight:600; margin-top:6px;
+    padding:3px 9px; border-radius:6px; letter-spacing:.02em;
+  }
+  .persona .p-sub{font-size:12px; color:var(--muted); margin-top:6px}
+  .layer1{background:var(--teal-bg); color:var(--teal-dk)}
+  .layer2{background:var(--blue-bg); color:var(--blue)}
+  .layer3{background:var(--amber-bg); color:var(--amber)}
+  .layer4{background:var(--coral-bg); color:var(--coral)}
+  .persona .p-story{font-size:14px; color:var(--sub)}
+  .persona .p-story b{color:var(--ink); font-weight:600}
+
+  /* Query taxonomy table */
+  table{width:100%; border-collapse:collapse; font-size:14px; margin-bottom:8px}
+  th{
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.03em;
+    color:var(--muted); font-weight:600; padding:10px 14px; border-bottom:1px solid var(--ink);
+  }
+  td{padding:12px 14px; border-bottom:1px solid var(--line); vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  .example{font-style:italic; color:var(--sub); font-size:13px}
+  .tag{
+    display:inline-block; font-size:11px; font-weight:600; padding:2px 8px;
+    border-radius:5px; background:var(--gray-bg); color:var(--sub); margin:2px 4px 2px 0;
+  }
+
+  /* Flow steps */
+  .flow{display:flex; align-items:center; flex-wrap:wrap; gap:0; font-size:13.5px; margin:14px 0}
+  .flow .step{
+    background:var(--gray-bg); border-radius:8px; padding:8px 14px; font-weight:500;
+  }
+  .flow .arrow{color:var(--muted); padding:0 10px; font-size:14px}
+  .flow.app .step{background:var(--teal-bg); color:var(--teal-dk)}
+
+  /* Subscription split */
+  .sub-split{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0}
+  @media (max-width:640px){.sub-split{grid-template-columns:1fr}}
+  .sub-card{border-radius:12px; padding:20px 22px}
+  .sub-general{background:var(--gray-bg)}
+  .sub-private{background:var(--teal-bg)}
+  .sub-card h4{margin:0 0 8px; font-size:15px; font-weight:600}
+  .sub-private h4{color:var(--teal-dk)}
+  .sub-card ul{margin:8px 0 0; padding-left:18px; font-size:13.5px}
+
+  /* UI research cards */
+  .finding{
+    border-left:3px solid var(--teal); background:var(--card); border:1px solid var(--line);
+    border-left:3px solid var(--teal); border-radius:0 12px 12px 0; padding:16px 20px; margin-bottom:14px;
+  }
+  .finding .f-label{font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.03em; color:var(--teal); margin-bottom:6px}
+  .finding p{margin:0; font-size:14px}
+
+  .principle-box{
+    background:var(--teal-dk); color:#fff; border-radius:12px; padding:28px 32px; margin:24px 0;
+    text-align:center;
+  }
+  .principle-box .p-eyebrow{font-size:11px; text-transform:uppercase; letter-spacing:.06em; opacity:.7; margin-bottom:10px}
+  .principle-box .p-text{font-size:19px; font-weight:500; line-height:1.5}
+
+  .nav-final{display:flex; gap:10px; flex-wrap:wrap; margin:16px 0}
+  .nav-item{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:10px 18px; font-size:13.5px; font-weight:500; flex:1; text-align:center; min-width:110px;
+  }
+  .nav-item.voice{background:var(--teal-bg); color:var(--teal-dk); border-color:var(--teal)}
+
+  .decided{
+    display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600;
+    color:var(--teal-dk); background:var(--teal-bg); padding:2px 9px; border-radius:5px; margin-left:8px;
+  }
+  .open{
+    display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600;
+    color:var(--coral); background:var(--coral-bg); padding:2px 9px; border-radius:5px; margin-left:8px;
+  }
+
+  footer{margin-top:80px; padding-top:20px; border-top:1px solid var(--line); font-size:12.5px; color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc-header">
+  <h1>Zarai Mandi — workflows, personas & UI research</h1>
+  <p>Working documentation for the mandi rate platform: how customers query today, how the app answers, and why the design holds up for low-literacy, high-frequency users.</p>
+</header>
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#foundation">1. Product foundation</a></li>
+    <li><a href="#subscriptions">2. General vs private subscriptions</a></li>
+    <li><a href="#layers">3. The layer model</a></li>
+    <li><a href="#personas">4. Personas & their stories</a></li>
+    <li><a href="#queries">5. Query taxonomy — what customers actually ask</a></li>
+    <li><a href="#filters">6. Filter logic</a></li>
+    <li><a href="#flows">7. Primary & secondary workflows</a></li>
+    <li><a href="#screens">8. Screen inventory by layer</a></li>
+    <li><a href="#nav">9. Navigation structure</a></li>
+    <li><a href="#research">10. UI research & analysis</a></li>
+    <li><a href="#open">11. Open decisions</a></li>
+  </ol>
+</nav>
+
+<section id="foundation">
+  <h2>1. Product foundation</h2>
+  <p class="section-intro">What Zarai Mandi actually is, stated plainly, before any screen gets designed.</p>
+
+  <div class="principle-box">
+    <div class="p-eyebrow">Core identity</div>
+    <div class="p-text">Zarai Mandi is not an AI assistant or an analytics dashboard.<br>It is a digital version of messaging a real Zarai Mandi representative.</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0">What it replaces</h3>
+      <p>Today, users get mandi prices by messaging WhatsApp groups — general community groups for open rate drops, and private one-to-one threads with a Zarai Mandi operator for a specific ask. The app digitizes both patterns without changing what the user is actually doing.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">What it is not</h3>
+      <p>Not a chatbot. Not "Ask Assistant." Voice input works like sending a WhatsApp voice note — but the reply comes back as a structured visual rate card, not a spoken answer or a conversational thread.</p>
+    </div>
+  </div>
+
+  <div class="principle-box">
+    <div class="p-eyebrow">Design philosophy</div>
+    <div class="p-text">Every screen should help the user make one agricultural decision in under 30 seconds.</div>
+  </div>
+</section>
+
+<section id="subscriptions">
+  <h2>2. General vs private subscriptions</h2>
+  <p class="section-intro">The business model behind the data — this determines what a query is allowed to return.</p>
+
+  <div class="sub-split">
+    <div class="sub-card sub-general">
+      <h4>General subscription</h4>
+      <p style="font-size:13.5px; margin:0">All-mandi rate data dropped at once, no personalization. Matches today's general WhatsApp community groups.</p>
+      <ul>
+        <li>Browsing behavior</li>
+        <li>Fixed, shallow filter stack</li>
+        <li>Maps to Layer 1–2 usage</li>
+      </ul>
+    </div>
+    <div class="sub-card sub-private">
+      <h4>Private subscription</h4>
+      <p style="font-size:13.5px; margin:0">One customer, one Zarai Mandi operations contact, satisfying a specific need. Matches today's private WhatsApp threads.</p>
+      <ul>
+        <li>Targeted, filter-stacked query</li>
+        <li>Detailed reply — arrival, largest buyer, trend, recommendation</li>
+        <li>Maps to Layer 3–4 usage</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="f-label">Worked example — private query</div>
+    <p>A stockist in Okara messages asking whether he should buy wheat today. The reply includes the date, the day's arrival volume, who the largest buyer was, and a trend-based read on whether price is likely to rise or fall — this full shape is what Layer 3's recommendation card is built to reproduce.</p>
+  </div>
+</section>
+
+<section id="layers">
+  <h2>3. The layer model</h2>
+  <p class="section-intro">One dashboard, one homepage, for everyone. Depth of use is what differs — not the interface.</p>
+
+  <table>
+    <tr><th>Layer</th><th>What it adds</th><th>Subscription pattern</th></tr>
+    <tr><td><b>1 — Quick decision</b></td><td>Rate card, done</td><td>General</td></tr>
+    <tr><td><b>2 — Comparison</b></td><td>+ Compare mandis, rate-type filter</td><td>General / mixed</td></tr>
+    <tr><td><b>3 — Analysis</b></td><td>+ Trends, arrivals, history, recommendation</td><td>Private</td></tr>
+    <tr><td><b>4 — Professional intelligence</b></td><td>+ Regional / export analysis</td><td>Private</td></tr>
+  </table>
+  <p style="font-size:13px; color:var(--sub); margin-top:10px">Nobody gets a different starting point — every persona opens the same home screen and either stops or goes deeper.</p>
+</section>
+
+<section id="personas">
+  <h2>4. Personas & their stories</h2>
+  <p class="section-intro">Same question format for everyone — mandi, price, product, min/max, arrival — differing only in depth and filter combination.</p>
+
+  <div class="persona">
+    <div><div class="p-name">Farmer</div><span class="p-layer layer1">Layer 1 · general</span></div>
+    <div class="p-story">Messages the general wheat group most mornings to know what his own crop is worth locally before deciding to sell or hold. <b>No mandi comparison, no rate-type filter</b> — one number, fast, in his own mandi.</div>
+  </div>
+  <div class="persona">
+    <div><div class="p-name">Retailer</div><span class="p-layer layer1">Layer 1 · general</span></div>
+    <div class="p-story">Checks the general group for wholesale rate on 2-3 commodities he restocks often. <b>Narrow, fixed filter</b> — same commodities, same rate-type, every time. Price-checking, not deciding whether to trade.</div>
+  </div>
+  <div class="persona">
+    <div><div class="p-name">Commission agent</div><span class="p-layer layer1">Layer 1 · general</span></div>
+    <div class="p-story">Sits at the mandi floor itself. Uses the general group as a <b>sanity check</b> — confirming today's official numbers match floor activity, not discovering anything new.</div>
+  </div>
+  <div class="persona">
+    <div><div class="p-name">Broker</div><span class="p-layer layer2">Layer 2 · mixed</span></div>
+    <div class="p-story">Trades across mandis — needs <b>3-5 mandis side by side</b> on one commodity to spot a worthwhile spread. Occasionally goes private to confirm a specific rate-type (broker vs mandi rate) for a live deal.</div>
+  </div>
+  <div class="persona">
+    <div><div class="p-name">Dealer</div><span class="p-layer layer2">Layer 2 · mixed</span></div>
+    <div class="p-story">Buys from mills, sells to retailers — <b>needs two rate-types at once</b> (mill rate + dealer rate) to know his margin. The clearest case of stacked filters at this layer.</div>
+  </div>
+  <div class="persona">
+    <div><div class="p-name">Wholesaler</div><span class="p-layer layer2">Layer 2 · mixed</span></div>
+    <div class="p-story">Volume-driven — checks <b>wholesale rate across a handful of mandis</b> to decide where to source from this week.</div>
+  </div>
+  <div class="persona">
+    <div><div class="p-name">Stockist</div><span class="p-layer layer3">Layer 3 · private</span></div>
+    <div class="p-story">The reference case for private queries: "should I buy wheat today?" Expects arrival volume, largest buyer, trend direction, and a hold/buy/sell read — <b>paying for judgment</b>, not just numbers.</div>
+  </div>
+  <div class="persona">
+    <div><div class="p-name">Mill owner</div><span class="p-layer layer3">Layer 3 · private</span></div>
+    <div class="p-story">Needs <b>arrival and trend over weeks</b>, not one day — milling decisions depend on supply consistency, not a single price point.</div>
+  </div>
+  <div class="persona">
+    <div><div class="p-name">Exporter</div><span class="p-layer layer4">Layer 4 · private</span></div>
+    <div class="p-story">Needs stockist-level analysis <b>multiplied across regions or provinces</b> at once — export decisions depend on comparing supply and pricing nationally, not locally.</div>
+  </div>
+
+  <div class="finding">
+    <div class="f-label">Important nuance</div>
+    <p>The layer isn't fixed to the persona — it's fixed to the query. A stockist can ask a Layer-1-style question ("today's rate") or a Layer-3 one ("should I buy") depending on what he actually taps or types. The persona table shows typical depth, not a hard ceiling.</p>
+  </div>
+</section>
+
+<section id="queries">
+  <h2>5. Query taxonomy — what customers actually ask</h2>
+  <p class="section-intro">Every persona asks in the same underlying format: mandi location, price, product, min/max, arrival. Complexity comes from how many of these are combined, not from different question types.</p>
+
+  <table>
+    <tr><th>Query type</th><th>Shape</th><th>Example</th><th>Typical layer</th></tr>
+    <tr><td>Single rate lookup</td><td>1 commodity, 1 mandi, today</td><td class="example">"Aaj gandum ka rate kya hai?"</td><td><span class="tag">Layer 1</span></td></tr>
+    <tr><td>Nearby check</td><td>1 commodity, nearest mandi, today</td><td class="example">"Pakpattan mandi mein cotton ka rate?"</td><td><span class="tag">Layer 1</span></td></tr>
+    <tr><td>Mandi comparison</td><td>1 commodity, 3-5 mandis, today</td><td class="example">"Wheat rates in Pakpattan, Sahiwal, Okara?"</td><td><span class="tag">Layer 2</span></td></tr>
+    <tr><td>Rate-type comparison</td><td>1 commodity, 1 mandi, 2+ rate types</td><td class="example">"Mill rate aur dealer rate dono batao"</td><td><span class="tag">Layer 2</span></td></tr>
+    <tr><td>Decision query</td><td>1 commodity, 1 mandi, + arrival + trend</td><td class="example">"Should I buy wheat today?"</td><td><span class="tag">Layer 3</span></td></tr>
+    <tr><td>Historical trend</td><td>1 commodity, 1 mandi, multi-week</td><td class="example">"Last month ka trend dikhao"</td><td><span class="tag">Layer 3</span></td></tr>
+    <tr><td>Regional / export view</td><td>1 commodity, all regions, trend</td><td class="example">"Compare wheat supply across provinces"</td><td><span class="tag">Layer 4</span></td></tr>
+  </table>
+</section>
+
+<section id="filters">
+  <h2>6. Filter logic</h2>
+  <p class="section-intro">Four dimensions combine to form any query. The layer determines how much of each gets stacked — not which dimensions exist.</p>
+
+  <div class="grid3">
+    <div class="card"><b>Commodity</b><p style="margin:6px 0 0; font-size:13.5px; color:var(--sub)">wheat, cotton, onion...</p></div>
+    <div class="card"><b>Mandi</b><p style="margin:6px 0 0; font-size:13.5px; color:var(--sub)">one, several, or all</p></div>
+    <div class="card"><b>Rate type</b><p style="margin:6px 0 0; font-size:13.5px; color:var(--sub)">farm, broker, mandi, mill, dealer, wholesale, retail</p></div>
+  </div>
+
+  <div class="finding" style="margin-top:16px">
+    <div class="f-label">Rate-type default</div>
+    <p>Rate-type filters show <b>all types by default</b> rather than requiring the user to build a selection from empty. A dealer narrows from "all rate types" to "mill + dealer only" in two taps — consistent with how Layer 1's rate list already shows everything with nothing pre-filtered out.</p>
+  </div>
+</section>
+
+<section id="flows">
+  <h2>7. Primary & secondary workflows</h2>
+  <p class="section-intro">Today's WhatsApp pattern vs the app pattern, at each layer. Every flow stays 4-5 plain steps — simple enough to hand to a family that has never used the app.</p>
+
+  <h3>Primary flow — universal, all personas</h3>
+  <div class="flow"><div class="step">Open WhatsApp group</div><div class="arrow">→</div><div class="step">Send msg / wait for drop</div><div class="arrow">→</div><div class="step">Read rate</div><div class="arrow">→</div><div class="step">Decision made</div></div>
+  <div class="flow app"><div class="step">Open app, home loads</div><div class="arrow">→</div><div class="step">View rate card</div><div class="arrow">→</div><div class="step">Search commodity if needed</div><div class="arrow">→</div><div class="step">Decision made</div></div>
+
+  <h3>Layer 1 secondary — Farmer, Retailer, Commission agent</h3>
+  <div class="flow app"><div class="step">On commodity page</div><div class="arrow">→</div><div class="step">Tap nearby mandis</div><div class="arrow">→</div><div class="step">Rate shown instantly</div><div class="arrow">→</div><div class="step">Decision made</div></div>
+
+  <h3>Layer 2 secondary — Broker, Dealer, Wholesaler</h3>
+  <div class="flow app"><div class="step">Open commodity page</div><div class="arrow">→</div><div class="step">Compare mandis, pick rate-type(s)</div><div class="arrow">→</div><div class="step">All mandis in one table</div><div class="arrow">→</div><div class="step">Decision made</div></div>
+
+  <h3>Layer 3 secondary — Stockist, Mill owner</h3>
+  <div class="flow app"><div class="step">Open commodity, tap insights</div><div class="arrow">→</div><div class="step">View arrival + trend</div><div class="arrow">→</div><div class="step">See buy/hold/sell signal</div><div class="arrow">→</div><div class="step">Decision made</div></div>
+
+  <h3>Layer 4 secondary — Exporter</h3>
+  <div class="flow app"><div class="step">Open commodity, tap regional view</div><div class="arrow">→</div><div class="step">All regions shown together</div><div class="arrow">→</div><div class="step">Compare supply + pricing</div><div class="arrow">→</div><div class="step">Decision made</div></div>
+</section>
+
+<section id="screens">
+  <h2>8. Screen inventory by layer</h2>
+  <p class="section-intro">What each layer's screen adds — reusing the same visual components throughout.</p>
+
+  <table>
+    <tr><th>Layer</th><th>Screen contents</th><th>Reused component</th><th>New component</th></tr>
+    <tr><td>1</td><td>Location, search, 2 action tiles, today's rates list</td><td>Icon + row</td><td>—</td></tr>
+    <tr><td>2</td><td>Mandi comparison rows, rate-type filter chips (all selected by default)</td><td>Icon + row</td><td>Filter chip row</td></tr>
+    <tr><td>3</td><td>Trend bar, arrival + largest buyer, hold/buy/sell recommendation card</td><td>Icon + row, chip</td><td>Bar chart</td></tr>
+    <tr><td>4</td><td>Regional comparison rows, supply signal bar</td><td>Icon + row, bar chart</td><td>—</td></tr>
+  </table>
+
+  <div class="finding">
+    <div class="f-label">Why this matters for literacy</div>
+    <p>A user who has only ever opened Layer 1 already recognizes every element on Layer 4 — the row and the bar. Complexity increases in <b>what's shown</b>, never in <b>how it's shown</b>. This is the same principle that makes Facebook, Instagram, and Easypaisa usable without a manual: one visual vocabulary, reused everywhere, meaning carried by icon, color, and position rather than text density.</p>
+  </div>
+</section>
+
+<section id="nav">
+  <h2>9. Navigation structure</h2>
+  <div class="nav-final">
+    <div class="nav-item">Home</div>
+    <div class="nav-item">Graphs</div>
+    <div class="nav-item">News & updates</div>
+    <div class="nav-item voice">Voice</div>
+  </div>
+  <p style="font-size:13.5px; color:var(--sub)">Voice sits separately on the right, not as a fifth equal tab — it behaves like sending a WhatsApp voice note, returning a structured visual card rather than a spoken reply.</p>
+</section>
+
+<section id="research">
+  <h2>10. UI research & analysis</h2>
+  <p class="section-intro">Why the design choices hold up against how the target users already behave online.</p>
+
+  <h3>Baseline behavior of the target user</h3>
+  <div class="finding">
+    <div class="f-label">Observed pattern</div>
+    <p>The ~400 crore agri-family user base is already fluent in Facebook, Instagram, WhatsApp, and Easypaisa — apps built on big tappable tiles, icon recognition, and minimal reading, not dashboards or dense data tables.</p>
+  </div>
+  <div class="finding">
+    <div class="f-label">Implication</div>
+    <p>The product should not teach a new interaction model. It should reuse the interaction model these apps already taught the user — action tiles that go somewhere, not information cards that display data.</p>
+  </div>
+
+  <h3>Design decisions and their rationale</h3>
+  <table>
+    <tr><th>Decision</th><th>Rationale</th></tr>
+    <tr><td>Big action tiles, not data cards</td><td>Matches Easypaisa-style shortcut tiles the user already navigates daily; tiles take the user somewhere rather than displaying information upfront.</td></tr>
+    <tr><td>Fully responsive by one component system</td><td>1 column phone / 2 tablet / 4 desktop — never designed twice, so the same visual language holds across every device a user or professional might use.</td></tr>
+    <tr><td>No "AI Assistant" framing</td><td>Users are not asking an AI — they're messaging Zarai Mandi. Framing it as an assistant introduces an unfamiliar mental model; framing it as a rep they already message keeps the trust and behavior intact.</td></tr>
+    <tr><td>Weather/PAR forecasts kept off Home</td><td>These are real, valuable, and already delivered informally via WhatsApp — but they are a secondary decision layer, not the primary one. Placing them on Home would break the "decision in under 30 seconds" rule.</td></tr>
+    <tr><td>Icon + row over table grid for rate data</td><td>Faster comparison scanning once more than 2-3 rows are shown, while photo tiles remain reserved for category entry points where recognition (not comparison) is the job.</td></tr>
+    <tr><td>Rate-type filter defaults to all-selected</td><td>Avoids requiring an illiterate or low-literacy user to build a selection from an empty state — narrowing down is a simpler mental action than building up.</td></tr>
+  </table>
+
+  <h3>Cross-app pattern references</h3>
+  <table>
+    <tr><th>Reference app</th><th>Pattern borrowed</th></tr>
+    <tr><td>Easypaisa</td><td>Large shortcut tiles for entry points; big buttons over dense menus</td></tr>
+    <tr><td>Google Maps</td><td>Home asks one question ("where do you want to go") instead of showing everything at once</td></tr>
+    <tr><td>WhatsApp</td><td>The core interaction metaphor — messaging a known contact, general vs private groups</td></tr>
+    <tr><td>Linear / Notion / Stripe</td><td>One responsive component system that reflows by breakpoint rather than being redesigned per device</td></tr>
+  </table>
+
+  <h3>Validated against existing behavior</h3>
+  <div class="finding">
+    <div class="f-label">Why WhatsApp already works, despite being a poor interface</div>
+    <p>Users succeed on WhatsApp today because it gets them to needed information quickly, not because the interface is good. The app's job is to preserve that speed while making comparison and deeper analysis easier than juggling multiple chat threads by hand.</p>
+  </div>
+</section>
+
+<section id="open">
+  <h2>11. Open decisions</h2>
+  <div class="card">
+    <p><b>Home for saved commodities, alerts, profile, subscription settings</b><span class="open">Open</span></p>
+    <p style="font-size:13.5px; color:var(--sub); margin:0">The trimmed nav (Home / Graphs / News & Updates / Voice) has no obvious tab for these. Likely candidate: tucked behind a profile icon in the header rather than a fifth nav tab — needs explicit confirmation rather than deciding by omission.</p>
+  </div>
+  <div class="card">
+    <p><b>Rate-type multi-select interaction</b><span class="decided">Decided</span></p>
+    <p style="font-size:13.5px; color:var(--sub); margin:0">All rate types shown by default; user narrows with a two-tap filter rather than building a selection from empty.</p>
+  </div>
+</section>
+
+<footer>
+  Zarai Mandi — internal product documentation. Compiled from design discussion covering workflow mapping, persona research, and UI rationale.
+</footer>
+
+</div>
+</body>
+</html>

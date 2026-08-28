@@ -1,0 +1,1694 @@
+{
+  "frames": {
+    "Lint-Cotton": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "livestock": {
+      "frame": {
+        "x": 200,
+        "y": 0,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "maize": {
+      "frame": {
+        "x": 1200,
+        "y": 0,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Maize-A": {
+      "frame": {
+        "x": 2200,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Maize-B": {
+      "frame": {
+        "x": 2400,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Maize-C": {
+      "frame": {
+        "x": 2600,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Maize-D": {
+      "frame": {
+        "x": 2800,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "mango": {
+      "frame": {
+        "x": 3000,
+        "y": 0,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Mango-Anwar-Ratul": {
+      "frame": {
+        "x": 4000,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mango-Black-Chaunsa": {
+      "frame": {
+        "x": 4200,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mango-Fajri": {
+      "frame": {
+        "x": 4400,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mango-Sindhri": {
+      "frame": {
+        "x": 4600,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mango-White-Chaunsa": {
+      "frame": {
+        "x": 4800,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mash-Shell": {
+      "frame": {
+        "x": 5000,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mash-Washed": {
+      "frame": {
+        "x": 5200,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mash-Whole": {
+      "frame": {
+        "x": 5400,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mausambi": {
+      "frame": {
+        "x": 5600,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mazafati": {
+      "frame": {
+        "x": 5800,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "melon": {
+      "frame": {
+        "x": 6000,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mesotrione-Atrazine-50WP": {
+      "frame": {
+        "x": 6200,
+        "y": 0,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Mesotrione-Atrazine-55WP": {
+      "frame": {
+        "x": 7200,
+        "y": 0,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "milk": {
+      "frame": {
+        "x": 0,
+        "y": 1000,
+        "w": 512,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 512,
+        "h": 512
+      }
+    },
+    "millet": {
+      "frame": {
+        "x": 512,
+        "y": 1000,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "MOP": {
+      "frame": {
+        "x": 1512,
+        "y": 1000,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Mung-Shell": {
+      "frame": {
+        "x": 2512,
+        "y": 1000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mung-Washed": {
+      "frame": {
+        "x": 2712,
+        "y": 1000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mung-Whole": {
+      "frame": {
+        "x": 2912,
+        "y": 1000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "mustard": {
+      "frame": {
+        "x": 3112,
+        "y": 1000,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Mustard-Cake": {
+      "frame": {
+        "x": 4112,
+        "y": 1000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mustard-Oil": {
+      "frame": {
+        "x": 4312,
+        "y": 1000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Mustard-Seed": {
+      "frame": {
+        "x": 4512,
+        "y": 1000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Nar-Dried": {
+      "frame": {
+        "x": 4712,
+        "y": 1000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "NP": {
+      "frame": {
+        "x": 4912,
+        "y": 1000,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "NPK": {
+      "frame": {
+        "x": 5912,
+        "y": 1000,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Oat": {
+      "frame": {
+        "x": 6912,
+        "y": 1000,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "okra": {
+      "frame": {
+        "x": 7912,
+        "y": 1000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "onion": {
+      "frame": {
+        "x": 0,
+        "y": 2000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Oranges": {
+      "frame": {
+        "x": 200,
+        "y": 2000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "paddy": {
+      "frame": {
+        "x": 400,
+        "y": 2000,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Pak-Arab-Guara": {
+      "frame": {
+        "x": 1400,
+        "y": 2000,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "papaya": {
+      "frame": {
+        "x": 2400,
+        "y": 2000,
+        "w": 360,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 360,
+        "h": 360
+      }
+    },
+    "peach": {
+      "frame": {
+        "x": 2760,
+        "y": 2000,
+        "w": 2500,
+        "h": 2500
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 2500,
+        "h": 2500
+      }
+    },
+    "peas": {
+      "frame": {
+        "x": 5260,
+        "y": 2000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "pesticide": {
+      "frame": {
+        "x": 5460,
+        "y": 2000,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Pigeon": {
+      "frame": {
+        "x": 6460,
+        "y": 2000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "pistachio": {
+      "frame": {
+        "x": 6660,
+        "y": 2000,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "plum": {
+      "frame": {
+        "x": 6860,
+        "y": 2000,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Plum": {
+      "frame": {
+        "x": 0,
+        "y": 4500,
+        "w": 1109,
+        "h": 980
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1109,
+        "h": 980
+      }
+    },
+    "pomegranate": {
+      "frame": {
+        "x": 1109,
+        "y": 4500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Popcorn": {
+      "frame": {
+        "x": 1309,
+        "y": 4500,
+        "w": 722,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 722,
+        "h": 360
+      }
+    },
+    "Popcorn-2": {
+      "frame": {
+        "x": 2031,
+        "y": 4500,
+        "w": 800,
+        "h": 453
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 800,
+        "h": 453
+      }
+    },
+    "potato": {
+      "frame": {
+        "x": 2831,
+        "y": 4500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Potato-Goli": {
+      "frame": {
+        "x": 3831,
+        "y": 4500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Potato-LR": {
+      "frame": {
+        "x": 4031,
+        "y": 4500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Potato-Mozika": {
+      "frame": {
+        "x": 4231,
+        "y": 4500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Potato-Raveera": {
+      "frame": {
+        "x": 4431,
+        "y": 4500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Potato-Red": {
+      "frame": {
+        "x": 4631,
+        "y": 4500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Potato-Santa": {
+      "frame": {
+        "x": 4831,
+        "y": 4500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Potato-Seed": {
+      "frame": {
+        "x": 5031,
+        "y": 4500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Potato-Stone": {
+      "frame": {
+        "x": 5231,
+        "y": 4500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Potato-White": {
+      "frame": {
+        "x": 5431,
+        "y": 4500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "poultry": {
+      "frame": {
+        "x": 5631,
+        "y": 4500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "psyllium": {
+      "frame": {
+        "x": 6631,
+        "y": 4500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "pulses": {
+      "frame": {
+        "x": 0,
+        "y": 5500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Rabbi-Dates": {
+      "frame": {
+        "x": 1000,
+        "y": 5500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "raisin": {
+      "frame": {
+        "x": 1200,
+        "y": 5500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Rangkat-Aseel-Dried": {
+      "frame": {
+        "x": 2200,
+        "y": 5500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Rangkat-Black-Aseel-Dried": {
+      "frame": {
+        "x": 2400,
+        "y": 5500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Rangkat-Dhaki-Dried": {
+      "frame": {
+        "x": 2600,
+        "y": 5500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Red-Chilli": {
+      "frame": {
+        "x": 2800,
+        "y": 5500,
+        "w": 400,
+        "h": 400
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 400,
+        "h": 400
+      }
+    },
+    "Red-Chilli-Powder": {
+      "frame": {
+        "x": 3200,
+        "y": 5500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Red-Kidney-Bean": {
+      "frame": {
+        "x": 3400,
+        "y": 5500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Red-Lentils": {
+      "frame": {
+        "x": 3600,
+        "y": 5500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Red-Lentils-Whole": {
+      "frame": {
+        "x": 3800,
+        "y": 5500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "rhode-grass": {
+      "frame": {
+        "x": 4000,
+        "y": 5500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "rice": {
+      "frame": {
+        "x": 5000,
+        "y": 5500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Ridge-Gourd": {
+      "frame": {
+        "x": 6000,
+        "y": 5500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Round-Gourd": {
+      "frame": {
+        "x": 6200,
+        "y": 5500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "saffron": {
+      "frame": {
+        "x": 6400,
+        "y": 5500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "salad-leaves": {
+      "frame": {
+        "x": 0,
+        "y": 6500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "salep": {
+      "frame": {
+        "x": 1000,
+        "y": 6500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "seed": {
+      "frame": {
+        "x": 2000,
+        "y": 6500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Semolina": {
+      "frame": {
+        "x": 3000,
+        "y": 6500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "sesame": {
+      "frame": {
+        "x": 4000,
+        "y": 6500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Sharifa-Dates": {
+      "frame": {
+        "x": 5000,
+        "y": 6500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "slaughter": {
+      "frame": {
+        "x": 5200,
+        "y": 6500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "slaughter-house": {
+      "frame": {
+        "x": 6200,
+        "y": 6500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Small-Cardamom": {
+      "frame": {
+        "x": 7200,
+        "y": 6500,
+        "w": 400,
+        "h": 400
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 400,
+        "h": 400
+      }
+    },
+    "S-metolachlor": {
+      "frame": {
+        "x": 0,
+        "y": 7500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "SOP-G": {
+      "frame": {
+        "x": 1000,
+        "y": 7500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Sorghum": {
+      "frame": {
+        "x": 2000,
+        "y": 7500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "soybean": {
+      "frame": {
+        "x": 2200,
+        "y": 7500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Special-Flour": {
+      "frame": {
+        "x": 2400,
+        "y": 7500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "spices": {
+      "frame": {
+        "x": 3400,
+        "y": 7500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "spinach": {
+      "frame": {
+        "x": 4400,
+        "y": 7500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "SSP": {
+      "frame": {
+        "x": 4600,
+        "y": 7500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Straw": {
+      "frame": {
+        "x": 5600,
+        "y": 7500,
+        "w": 400,
+        "h": 400
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 400,
+        "h": 400
+      }
+    },
+    "sugar": {
+      "frame": {
+        "x": 6000,
+        "y": 7500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Sugar": {
+      "frame": {
+        "x": 7000,
+        "y": 7500,
+        "w": 980,
+        "h": 980
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 980,
+        "h": 980
+      }
+    },
+    "Sugarcane": {
+      "frame": {
+        "x": 0,
+        "y": 8500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "sunflower": {
+      "frame": {
+        "x": 1000,
+        "y": 8500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Sunflower-Meal": {
+      "frame": {
+        "x": 2000,
+        "y": 8500,
+        "w": 612,
+        "h": 319
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 612,
+        "h": 319
+      }
+    },
+    "Sunflower-Oil": {
+      "frame": {
+        "x": 2612,
+        "y": 8500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Sunflower-Seed": {
+      "frame": {
+        "x": 2812,
+        "y": 8500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Sweet-Lime": {
+      "frame": {
+        "x": 3012,
+        "y": 8500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "sweet-potato": {
+      "frame": {
+        "x": 3212,
+        "y": 8500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "tomato": {
+      "frame": {
+        "x": 4212,
+        "y": 8500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "TSP": {
+      "frame": {
+        "x": 4412,
+        "y": 8500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Turmeric": {
+      "frame": {
+        "x": 5412,
+        "y": 8500,
+        "w": 400,
+        "h": 400
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 400,
+        "h": 400
+      }
+    },
+    "turnip": {
+      "frame": {
+        "x": 5812,
+        "y": 8500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Urea": {
+      "frame": {
+        "x": 6012,
+        "y": 8500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "vegetables": {
+      "frame": {
+        "x": 7012,
+        "y": 8500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "walnut": {
+      "frame": {
+        "x": 8012,
+        "y": 8500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Watermelon": {
+      "frame": {
+        "x": 0,
+        "y": 9500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "weedicide": {
+      "frame": {
+        "x": 200,
+        "y": 9500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "wheat": {
+      "frame": {
+        "x": 1200,
+        "y": 9500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "White-Cumin": {
+      "frame": {
+        "x": 1400,
+        "y": 9500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "White-Kidney-Bean": {
+      "frame": {
+        "x": 1600,
+        "y": 9500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    },
+    "Zabardast-Urea": {
+      "frame": {
+        "x": 1800,
+        "y": 9500,
+        "w": 1000,
+        "h": 1000
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      }
+    },
+    "Zahidi-Dates": {
+      "frame": {
+        "x": 2800,
+        "y": 9500,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      }
+    }
+  },
+  "meta": {
+    "app": "https://codeshack.io/images-sprite-sheet-generator/",
+    "image": "spritesheet.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 8212,
+      "h": 10500
+    },
+    "scale": "1"
+  }
+}

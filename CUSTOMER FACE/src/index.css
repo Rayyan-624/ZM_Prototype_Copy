@@ -1,0 +1,259 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+/* ── Jameel Noori Nastaleeq Font Definition ───────────────────────────────── */
+@font-face {
+  font-family: 'NotoNastaliqUrdu';
+  src: url('/fonts/NotoNastaliqUrdu-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── ZM Canonical Palette & --base Fluid Design Tokens ──────────────────── */
+:root {
+  /* Palette */
+  --zm-deep: #07332F;
+  --zm-primary: #0E645C;
+  --zm-teal: #0B7F70;
+  --zm-bright: #32BA46;
+  --zm-mint: #E6ECE9;
+  --zm-surface: #EDF2EF;
+  --zm-card: #F4FAF7;
+  --zm-border: #D5E2DD;
+  --zm-text: #183B34;
+  --zm-muted: #52635F;
+  --zm-gold: #B9822E;
+  --zm-gold-bg: #FBF1DD;
+  --zm-red: #C94A43;
+  --zm-red-bg: #F9E1DE;
+
+  /* --base: set by JS in AppInner, default 1 for 390×844 */
+  --base: 1;
+  --vw: 390px;
+  --vh: 844px;
+
+  /* Fluid Spacing & Sizing Tokens (all driven by --base) */
+  --zm-page-pad: calc(var(--base) * 16px);
+  --zm-card-pad: calc(var(--base) * 12px);
+  --zm-card-radius: calc(var(--base) * 20px);
+  --zm-card-fav-w: calc(var(--base) * 130px);
+  --zm-card-fav-h: calc(var(--base) * 170px);
+  --zm-search-h: calc(var(--base) * 52px);
+  --zm-btn-h: calc(var(--base) * 38px);
+  --zm-bottom-nav-h: calc(var(--base) * 68px);
+  --zm-header-h: calc(var(--base) * 120px);
+  --zm-icon-sm: calc(var(--base) * 18px);
+  --zm-icon-md: calc(var(--base) * 24px);
+  --zm-icon-lg: calc(var(--base) * 32px);
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+html,
+body {
+  height: 100%;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  background: #C0D0CC;
+  font-family: 'Inter', 'Poppins', sans-serif;
+  color: var(--zm-text);
+  overflow-x: hidden;
+}
+
+#root {
+  height: 100%;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  background: #C0D0CC;
+  overflow-x: hidden;
+}
+
+.zm-app-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  background: #F1F7F4;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+/* ── Urdu Font & Alignment Support ────────────────────────────────────────── */
+.urdu,
+[dir="rtl"],
+.lang-ur {
+  font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', -apple-system, sans-serif;
+}
+
+[dir="rtl"] {
+  text-align: right;
+  --urdu-body-size: calc(var(--base) * 16px);
+  --urdu-label-size: calc(var(--base) * 14px);
+  --urdu-button-size: calc(var(--base) * 15px);
+  --urdu-heading-size: calc(var(--base) * 24px);
+}
+
+[dir="rtl"] * {
+  letter-spacing: 0 !important;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3 {
+  line-height: 1.25;
+}
+
+[dir="rtl"] .ltr-only {
+  direction: ltr;
+  text-align: left;
+}
+
+.heading {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ── Placeholder styling ──────────────────────────────────────────────────── */
+input::placeholder {
+  color: rgba(130, 150, 144, 0.7);
+}
+
+/* ── FULL-WIDTH BOTTOM SHEETS ────────────────────────────────────────────── */
+.zm-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.zm-sheet {
+  width: 100%;
+  max-width: 100%;
+  border-radius: calc(var(--base) * 24px) calc(var(--base) * 24px) 0 0;
+  overflow: hidden;
+  background: var(--zm-card);
+  flex-shrink: 0;
+}
+
+.zm-sheet-high {
+  width: 100%;
+  max-width: 100%;
+  border-radius: calc(var(--base) * 24px) calc(var(--base) * 24px) 0 0;
+  overflow: hidden;
+  background: var(--zm-card);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+/* ── Ticker marquee ───────────────────────────────────────────────────────── */
+@keyframes tickerScroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  display: flex;
+  white-space: nowrap;
+  animation: tickerScroll 38s linear infinite;
+  will-change: transform;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* ── Slide-up entry ───────────────────────────────────────────────────────── */
+.screen-enter {
+  animation: slideUp 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ── WhatsApp bubble pulse ────────────────────────────────────────────────── */
+@keyframes bubbleIn {
+  from {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.bubble-in {
+  animation: bubbleIn 0.18s ease;
+}
+
+/* ── Pulse for live badge ─────────────────────────────────────────────────── */
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* ── Tap feedback ─────────────────────────────────────────────────────────── */
+.tap-target {
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  transition: transform 0.09s ease, opacity 0.09s ease;
+}
+
+.tap-target:active {
+  transform: scale(0.96);
+  opacity: 0.85;
+}
+
+/* ── Hide scrollbars ──────────────────────────────────────────────────────── */
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Drag handle ──────────────────────────────────────────────────────────── */
+.zm-drag-handle {
+  width: calc(var(--base) * 40px);
+  height: calc(var(--base) * 4px);
+  border-radius: 2px;
+  background: #C7D6D0;
+  margin: 0 auto calc(var(--base) * 12px);
+}
