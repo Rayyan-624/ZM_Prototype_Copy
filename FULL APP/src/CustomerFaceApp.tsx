@@ -6,15 +6,15 @@ import {
   useMemo,
   createContext,
   useContext,
-} from "react"
+} from "react";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
-} from "react-native-responsive-screen"
+} from "react-native-responsive-screen";
 
-import farmHeroBg from "./assets/farm_hero_bg.jpg"
+import farmHeroBg from "./assets/farm_hero_bg.jpg";
 
-import agriForegroundImg from "./assets/agri_foreground.png"
+import agriForegroundImg from "./assets/agri_foreground.png";
 
 const ZM_THEME_CSS = `
   @font-face {
@@ -84,16 +84,16 @@ const ZM_THEME_CSS = `
     direction: ltr;
     text-align: left;
   }
-`
+`;
 
 // ─── COMPREHENSIVE URDU DICTIONARY & TRANSLATION SYSTEM ────────────────────────
 
 const AUTO_URDU_DICT: Record<string, string> = {
   // Navigation & Core
-  "Home": "ہوم",
-  "Analytics": "تجزیات",
-  "News": "خبریں",
-  "Voice": "آواز",
+  Home: "ہوم",
+  Analytics: "تجزیات",
+  News: "خبریں",
+  Voice: "آواز",
   "Voice On": "آواز آن",
   "Voice Off": "آواز آف",
   "Voice Query": "آواز سے تلاش",
@@ -101,157 +101,157 @@ const AUTO_URDU_DICT: Record<string, string> = {
   "Live Market": "لائیو مارکیٹ",
   "My Products": "میری مصنوعات",
   "MY PRODUCTS": "میری مصنوعات",
-  "Favorites": "پسندیدہ",
-  "FAVORITES": "پسندیدہ",
+  Favorites: "پسندیدہ",
+  FAVORITES: "پسندیدہ",
   "Today's Rates": "آج کے نرخ",
-  "Subscribe": "سبسکرائب",
+  Subscribe: "سبسکرائب",
   "+ Subscribe": "+ سبسکرائب",
-  "ACTIVE": "فعال",
-  "Active": "فعال",
-  "Search": "تلاش",
-  "Search commodity or byproduct...": "اجناس یا ضمنی مصنوع تلاش کریں…",
-  "Search commodity or byproduct…": "اجناس یا ضمنی مصنوع تلاش کریں…",
+  ACTIVE: "فعال",
+  Active: "فعال",
+  Search: "تلاش",
+  "Search product or byproduct...": "اجناس یا ضمنی مصنوع تلاش کریں…",
+  "Search product or byproduct…": "اجناس یا ضمنی مصنوع تلاش کریں…",
   "Search product or byproduct…": "اجناس یا ضمنی مصنوع تلاش کریں…",
   "Search Mandis, Cities...": "منڈیاں یا شہر تلاش کریں…",
   "Search byproducts...": "ضمنی مصنوعات تلاش کریں…",
   "Search products...": "مصنوعات تلاش کریں…",
   "Muhammad Arif": "محمد عارف",
   "Pakpattan Mandi": "پاکپتن منڈی",
-  "Pakpattan": "پاکپتن",
-  "Today": "آج",
-  "Yesterday": "گزشتہ کل",
-  "All": "سب",
+  Pakpattan: "پاکپتن",
+  Today: "آج",
+  Yesterday: "گزشتہ کل",
+  All: "سب",
   "All Mandis": "تمام منڈیاں",
   "All Verticals": "تمام شعبے",
   "All Pakistan": "پورا پاکستان",
-  "Pakistan": "پاکستان",
-  "Punjab": "پنجاب",
-  "Sindh": "سندھ",
-  "KPK": "خیبر پختونخوا",
-  "Balochistan": "بلوچستان",
-  "Islamabad": "اسلام آباد",
-  "Lahore": "لاہور",
-  "Faisalabad": "فیصل آباد",
-  "Multan": "ملتان",
-  "Okara": "اوکاڑہ",
-  "Sahiwal": "ساہیوال",
-  "Sargodha": "سرگودھا",
-  "Bahawalpur": "بہاولپور",
+  Pakistan: "پاکستان",
+  Punjab: "پنجاب",
+  Sindh: "سندھ",
+  KPK: "خیبر پختونخوا",
+  Balochistan: "بلوچستان",
+  Islamabad: "اسلام آباد",
+  Lahore: "لاہور",
+  Faisalabad: "فیصل آباد",
+  Multan: "ملتان",
+  Okara: "اوکاڑہ",
+  Sahiwal: "ساہیوال",
+  Sargodha: "سرگودھا",
+  Bahawalpur: "بہاولپور",
   "Rahim Yar Khan": "رحیم یار خان",
-  "Gujranwala": "گوجرانوالہ",
-  "Rawalpindi": "راولپنڈی",
-  "Peshawar": "پشاور",
-  "Quetta": "کوئٹہ",
-  "Karachi": "کراچی",
-  "Hyderabad": "حیدرآباد",
-  "Sukkur": "سکھر",
-  "Jhang": "جھنگ",
-  "Kasur": "قصور",
-  "Vehari": "وہاڑی",
-  "Khanewal": "خانیوال",
-  "Chiniot": "چنیوٹ",
-  "Sheikhupura": "شیخوپورہ",
-  "Burewala": "بورے والا",
+  Gujranwala: "گوجرانوالہ",
+  Rawalpindi: "راولپنڈی",
+  Peshawar: "پشاور",
+  Quetta: "کوئٹہ",
+  Karachi: "کراچی",
+  Hyderabad: "حیدرآباد",
+  Sukkur: "سکھر",
+  Jhang: "جھنگ",
+  Kasur: "قصور",
+  Vehari: "وہاڑی",
+  Khanewal: "خانیوال",
+  Chiniot: "چنیوٹ",
+  Sheikhupura: "شیخوپورہ",
+  Burewala: "بورے والا",
   "D.G. Khan": "ڈیرہ غازی خان",
   "D.I. Khan": "ڈیرہ اسماعیل خان",
   "Mandi Bahauddin": "منڈی بہاؤالدین",
-  "Bahawalnagar": "بہاولنگر",
-  "Muzaffargarh": "مظفر گڑھ",
-  "Layyah": "لیہ",
-  "Lodhran": "لودھراں",
+  Bahawalnagar: "بہاولنگر",
+  Muzaffargarh: "مظفر گڑھ",
+  Layyah: "لیہ",
+  Lodhran: "لودھراں",
   "Toba Tek Singh": "ٹوبہ ٹیک سنگھ",
-  "Hafizabad": "حافظ آباد",
+  Hafizabad: "حافظ آباد",
   "Nankana Sahib": "ننکانہ صاحب",
-  "Attock": "اٹک",
-  "Chakwal": "چکوال",
-  "Jhelum": "جہلم",
-  "Mianwali": "میانوالی",
-  "Bhakkar": "بھکر",
-  "Khushab": "خوشاب",
-  "Sialkot": "سیالکوٹ",
-  "Narowal": "نارووال",
-  "Gujrat": "گجرات",
+  Attock: "اٹک",
+  Chakwal: "چکوال",
+  Jhelum: "جہلم",
+  Mianwali: "میانوالی",
+  Bhakkar: "بھکر",
+  Khushab: "خوشاب",
+  Sialkot: "سیالکوٹ",
+  Narowal: "نارووال",
+  Gujrat: "گجرات",
 
   // Verticals / Categories
-  "Grains": "اجناس و اناج",
-  "Fruits": "پھل",
-  "Vegetables": "سبزیاں",
-  "Livestock": "مویشی",
+  Grains: "اجناس و اناج",
+  Fruits: "پھل",
+  Vegetables: "سبزیاں",
+  Livestock: "مویشی",
   "Agri-Inputs": "زرعی کھاد و ادویات",
-  "Fertilizer": "کھاد",
+  Fertilizer: "کھاد",
   "Dry-Fruits": "خشک میوہ جات",
-  "Herbals": "جڑی بوٹیاں",
-  "Kiryana": "کریانہ",
-  "Oilseeds": "تیل دار اجناس",
-  "Fodder": "چارہ",
+  Herbals: "جڑی بوٹیاں",
+  Kiryana: "کریانہ",
+  Oilseeds: "تیل دار اجناس",
+  Fodder: "چارہ",
   "Cotton & Fiber": "کپاس و ریشہ",
   "Sugar & Sweeteners": "چینی و میٹھا",
 
-  // Commodities
-  "Wheat": "گندم",
-  "Maize": "مکئی",
-  "Cotton": "کپاس",
-  "Rice": "چاول",
-  "Paddy": "دھان",
-  "Millet": "باجرہ",
-  "Sesame": "تل",
+  // products
+  Wheat: "گندم",
+  Maize: "مکئی",
+  Cotton: "کپاس",
+  Rice: "چاول",
+  Paddy: "دھان",
+  Millet: "باجرہ",
+  Sesame: "تل",
   "Edible Oil": "خوردنی تیل",
-  "Canola": "کینولا",
-  "Soybean": "سویا بین",
-  "Sunflower": "سورج مکھی",
-  "Sugarcane": "گنا",
-  "Sugar": "چینی",
-  "Mustard": "سرسوں",
-  "Raya": "رایا",
-  "Barley": "جو",
-  "Sorghum": "جوار",
-  "Oat": "جئی",
-  "Gram": "چنا",
-  "Pulses": "دالیں",
-  "Moong": "مونگ",
-  "Mash": "ماش",
-  "Masoor": "مسور",
-  "Dates": "کھجور",
-  "Mango": "آم",
-  "Citrus": "کنو",
-  "Guava": "امرود",
-  "Apple": "سیب",
-  "Banana": "کیلا",
-  "Potato": "آلو",
-  "Tomato": "ٹماٹر",
-  "Onion": "پیاز",
-  "Garlic": "لہسن",
-  "Ginger": "ادرک",
-  "Chili": "مرچ",
-  "Milk": "دودھ",
-  "Meat": "گوشت",
-  "Eggs": "انڈے",
-  "Wool": "اون",
-  "Cattle": "گائے بیل",
-  "Buffalo": "بھینس",
-  "Goat": "بکرا / بکری",
-  "Sheep": "دنبہ / بھیڑ",
-  "Urea": "یوریا",
-  "DAP": "ڈی اے پی",
-  "NP": "این پی",
-  "Potash": "پوٹاش",
+  Canola: "کینولا",
+  Soybean: "سویا بین",
+  Sunflower: "سورج مکھی",
+  Sugarcane: "گنا",
+  Sugar: "چینی",
+  Mustard: "سرسوں",
+  Raya: "رایا",
+  Barley: "جو",
+  Sorghum: "جوار",
+  Oat: "جئی",
+  Gram: "چنا",
+  Pulses: "دالیں",
+  Moong: "مونگ",
+  Mash: "ماش",
+  Masoor: "مسور",
+  Dates: "کھجور",
+  Mango: "آم",
+  Citrus: "کنو",
+  Guava: "امرود",
+  Apple: "سیب",
+  Banana: "کیلا",
+  Potato: "آلو",
+  Tomato: "ٹماٹر",
+  Onion: "پیاز",
+  Garlic: "لہسن",
+  Ginger: "ادرک",
+  Chili: "مرچ",
+  Milk: "دودھ",
+  Meat: "گوشت",
+  Eggs: "انڈے",
+  Wool: "اون",
+  Cattle: "گائے بیل",
+  Buffalo: "بھینس",
+  Goat: "بکرا / بکری",
+  Sheep: "دنبہ / بھیڑ",
+  Urea: "یوریا",
+  DAP: "ڈی اے پی",
+  NP: "این پی",
+  Potash: "پوٹاش",
 
   // Byproducts
   "Fine Flour": "باریک آٹا",
   "Fine-Flour": "باریک آٹا",
-  "Flour": "آٹا",
-  "Atta": "آٹا",
-  "Bran": "چوکر",
+  Flour: "آٹا",
+  Atta: "آٹا",
+  Bran: "چوکر",
   "Wheat Bran": "گندم چوکر",
-  "Semolina": "سوجی",
-  "Straw": "بھوسہ",
+  Semolina: "سوجی",
+  Straw: "بھوسہ",
   "Wheat Straw": "گندم کا بھوسہ",
   "Maize Grain": "مکئی دانہ",
   "Corn Silage": "مکئی سائیلج",
   "Corn Gluten": "کارن گلوٹن",
   "Corn Oil": "مکئی کا تیل",
-  "Popcorn": "پاپ کارن",
-  "Phutti": "پھٹی",
+  Popcorn: "پاپ کارن",
+  Phutti: "پھٹی",
   "Seed Cotton": "کپاس (پھٹی)",
   "Lint Cotton": "روئی",
   "Cotton Seed": "بنولہ",
@@ -260,21 +260,21 @@ const AUTO_URDU_DICT: Record<string, string> = {
   "Cotton Waste": "کپاس ویسٹ",
   "Basmati Super": "سپر باسمتی",
   "Basmati 1121": "باسمتی ۱۱۲۱",
-  "Kainat": "کائنات چاول",
+  Kainat: "کائنات چاول",
   "IRRI-6": "ارری-۶",
   "IRRI-9": "ارری-۹",
   "Broken Rice": "ٹوٹا چاول",
   "Rice Bran": "چاول چوکر",
   "Rice Husk": "چاول بھوسی",
   "Rice Polish": "چاول پالش",
-  "Husk": "بھوسی",
-  "Oil": "تیل",
-  "Cake": "کھل",
-  "Molasses": "شیرہ",
-  "Bagasse": "کھوئی / بگاس",
-  "Gur": "گڑ",
-  "Jaggery": "گڑ",
-  "Shakar": "شکر",
+  Husk: "بھوسی",
+  Oil: "تیل",
+  Cake: "کھل",
+  Molasses: "شیرہ",
+  Bagasse: "کھوئی / بگاس",
+  Gur: "گڑ",
+  Jaggery: "گڑ",
+  Shakar: "شکر",
   "Brown Sugar": "شکر",
   "White Sugar": "سفید چینی",
 
@@ -285,110 +285,111 @@ const AUTO_URDU_DICT: Record<string, string> = {
   "Retail Rate": "پرچون ریٹ",
   "Market Rate": "مارکیٹ ریٹ",
   "Mandi Rate": "منڈی ریٹ",
-  "Mill": "مل",
-  "Farm": "فارم",
-  "Wholesale": "تھوک",
-  "Retail": "پرچون",
-  "Market": "مارکیٹ",
-  "Arrival": "آمد",
-  "Arrivals": "آمد",
-  "Rate": "ریٹ",
-  "Rates": "نرخ / ریٹس",
-  "Price": "قیمت",
-  "Prices": "قیمتیں",
-  "Min": "کم از کم",
-  "Max": "زیادہ سے زیادہ",
-  "Avg": "اوسط",
-  "Average": "اوسط",
-  "Change": "تبدیلی",
-  "Trend": "رجحان",
-  "Stable": "مستحکم",
-  "Up": "اضافہ",
-  "Down": "کمی",
-  "Volume": "حجم",
-  "High": "زیادہ",
-  "Low": "کم",
-  "Rs": "روپے",
-  "PKR": "روپے",
+  Mill: "مل",
+  Farm: "فارم",
+  Wholesale: "تھوک",
+  Retail: "پرچون",
+  Market: "مارکیٹ",
+  Arrival: "آمد",
+  Arrivals: "آمد",
+  Rate: "ریٹ",
+  Rates: "نرخ / ریٹس",
+  Price: "قیمت",
+  Prices: "قیمتیں",
+  Min: "کم از کم",
+  Max: "زیادہ سے زیادہ",
+  Avg: "اوسط",
+  Average: "اوسط",
+  Change: "تبدیلی",
+  Trend: "رجحان",
+  Stable: "مستحکم",
+  Up: "اضافہ",
+  Down: "کمی",
+  Volume: "حجم",
+  High: "زیادہ",
+  Low: "کم",
+  Rs: "روپے",
+  PKR: "روپے",
   "Rs.": "روپے",
-  "Maund": "من",
+  Maund: "من",
   "40kg": "۴۰ کلو",
   "100kg": "۱۰۰ کلو",
   "50kg": "۵۰ کلو",
   "40 kg": "۴۰ کلو",
-  "Bag": "بوری",
-  "Bags": "بوریاں",
-  "Ton": "ٹن",
-  "MT": "میٹرک ٹن",
-  "Kilo": "کلو",
-  "Kg": "کلو",
+  Bag: "بوری",
+  Bags: "بوریاں",
+  Ton: "ٹن",
+  MT: "میٹرک ٹن",
+  Kilo: "کلو",
+  Kg: "کلو",
 
   // Deep View, Attributes & Quality
-  "Overview": "جائزہ",
-  "Trends": "رجحانات",
+  Overview: "جائزہ",
+  Trends: "رجحانات",
   "Price Trends": "قیمت کے رجحانات",
   "Price Trend": "قیمت کا رجحان",
   "Arrival Trend": "آمد کا رجحان",
   "Today's Overview": "آج کا جائزہ",
   "Overview in Pakistan": "پاکستان میں جائزہ",
-  "National": "قومی",
+  National: "قومی",
   "RATE TYPE": "نرخ کی قسم",
   "Rate Type": "نرخ کی قسم",
   "Price Type": "نرخ کی قسم",
   "Price Types": "نرخ کی اقسام",
-  "VARIETY": "قسم",
-  "Variety": "قسم",
+  VARIETY: "قسم",
+  Variety: "قسم",
   "NEW/OLD": "نیا / پرانا",
   "New / Old": "نیا / پرانا",
-  "New": "نیا",
-  "Old": "پرانا",
-  "COLOR": "رنگ",
-  "Color": "رنگ",
-  "SPEC": "خصوصیت",
-  "Specifications": "خصوصیات",
-  "Specification": "خصوصیت",
-  "CONDITION": "حالت",
-  "Condition": "حالت",
-  "Quality": "معیار",
-  "Station": "منڈی / اسٹیشن",
+  New: "نیا",
+  Old: "پرانا",
+  COLOR: "رنگ",
+  Color: "رنگ",
+  SPEC: "خصوصیت",
+  Specifications: "خصوصیات",
+  Specification: "خصوصیت",
+  CONDITION: "حالت",
+  Condition: "حالت",
+  Quality: "معیار",
+  Station: "منڈی / اسٹیشن",
   "Min – Max": "کم – زیادہ",
   "Seed Quality": "بیج کا معیار",
-  "Damage": "خراب",
+  Damage: "خراب",
   "Export Grade": "ایکسپورٹ گریڈ",
-  "Wet": "گیلا",
-  "Dry": "خشک",
-  "Mix": "ملا جلا",
-  "Golden": "سنہری",
-  "White": "سفید",
-  "Yellow": "زرد",
-  "Cleaned": "صاف شدہ",
-  "Uncleaned": "غیر صاف شدہ",
+  Wet: "گیلا",
+  Dry: "خشک",
+  Mix: "ملا جلا",
+  Golden: "سنہری",
+  White: "سفید",
+  Yellow: "زرد",
+  Cleaned: "صاف شدہ",
+  Uncleaned: "غیر صاف شدہ",
   "Sona Moti": "سونا موتی",
   "TD-1": "ٹی ڈی-۱",
-  "SurSabz": "سرسسبز",
-  "Akbar": "اکبر",
-  "Anaj": "اناج",
-  "Ujala": "اجالا",
-  "Galaxy": "گلیکسی",
-  "Dilkush": "دلکش",
-  "Arooj": "عروج",
-  "Subham": "سبھم",
+  SurSabz: "سرسسبز",
+  Akbar: "اکبر",
+  Anaj: "اناج",
+  Ujala: "اجالا",
+  Galaxy: "گلیکسی",
+  Dilkush: "دلکش",
+  Arooj: "عروج",
+  Subham: "سبھم",
   "Special Flour": "خصوصی آٹا",
   "All Provinces": "تمام صوبے",
   "Clear (Today)": "ہٹائیں (آج)",
   "Clear date": "تاریخ ہٹائیں",
   "Clear selection": "انتخاب ہٹائیں",
   "Not in mandi": "منڈی میں نہیں",
-  "Mandi": "منڈی",
-  "Mandis": "منڈیاں",
-  "mandis": "منڈیاں",
-  "mandi": "منڈی",
+  Mandi: "منڈی",
+  Mandis: "منڈیاں",
+  mandis: "منڈیاں",
+  mandi: "منڈی",
   "tap row to view details": "تفصیل کے لیے منتخب کریں",
   "No data available.": "ڈیٹا دستیاب نہیں۔",
   "No mandi data": "منڈی ڈیٹا دستیاب نہیں",
   "No matching rows": "کوئی مماثل ریکارڈ نہیں",
   "Need older data?": "پرانا ڈیٹا درکار ہے؟",
-  "Ask our team for history beyond what's shown.": "مزید تاریخی ڈیٹا کے لیے ہماری ٹیم سے رابطہ کریں۔",
+  "Ask our team for history beyond what's shown.":
+    "مزید تاریخی ڈیٹا کے لیے ہماری ٹیم سے رابطہ کریں۔",
   "Request →": "درخواست کریں ←",
   "Select Date": "تاریخ منتخب کریں",
   "Filter comparison by date or range": "تاریخ یا مدت کے لحاظ سے فلٹر کریں",
@@ -397,65 +398,66 @@ const AUTO_URDU_DICT: Record<string, string> = {
   "Latest available rates": "تازہ ترین دستیاب نرخ",
   "Previous day rates": "پچھلے دن کے نرخ",
   "Unit = Rs. · Unit = (40 kg)": "اکائی = روپے · وزن = (۴۰ کلو)",
-  "Days": "دن",
+  Days: "دن",
   "Price (Rs/40kg)": "قیمت (روپے / ۴۰ کلو)",
   "Arrivals (MT)": "آمد (میٹرک ٹن)",
-  "Jan": "جنوری",
-  "Feb": "فروری",
-  "Mar": "مارچ",
-  "Apr": "اپریل",
-  "May": "مئی",
-  "Jun": "جون",
-  "Jul": "جولائی",
-  "Aug": "اگست",
-  "Sep": "ستمبر",
-  "Oct": "اکتوبر",
-  "Nov": "نومبر",
-  "Dec": "دسمبر",
-  "January": "جنوری",
-  "February": "فروری",
-  "March": "مارچ",
-  "April": "اپریل",
-  "June": "جون",
-  "July": "جولائی",
-  "August": "اگست",
-  "September": "ستمبر",
-  "October": "اکتوبر",
-  "November": "نومبر",
-  "December": "دسمبر",
-  "Sunday": "اتوار",
-  "Monday": "پیر",
-  "Tuesday": "منگل",
-  "Wednesday": "بدھ",
-  "Thursday": "جمعرات",
-  "Friday": "جمعہ",
-  "Saturday": "ہفتہ",
-  "Sun": "اتوار",
-  "Mon": "پیر",
-  "Tue": "منگل",
-  "Wed": "بدھ",
-  "Thu": "جمعرات",
-  "Fri": "جمعہ",
-  "Sat": "ہفتہ",
-  "week": "ہفتہ",
-  "month": "مہینہ",
-  "quarter": "سہ ماہی",
-  "Week": "ہفتہ",
-  "Month": "مہینہ",
-  "Quarter": "سہ ماہی",
+  Jan: "جنوری",
+  Feb: "فروری",
+  Mar: "مارچ",
+  Apr: "اپریل",
+  May: "مئی",
+  Jun: "جون",
+  Jul: "جولائی",
+  Aug: "اگست",
+  Sep: "ستمبر",
+  Oct: "اکتوبر",
+  Nov: "نومبر",
+  Dec: "دسمبر",
+  January: "جنوری",
+  February: "فروری",
+  March: "مارچ",
+  April: "اپریل",
+  June: "جون",
+  July: "جولائی",
+  August: "اگست",
+  September: "ستمبر",
+  October: "اکتوبر",
+  November: "نومبر",
+  December: "دسمبر",
+  Sunday: "اتوار",
+  Monday: "پیر",
+  Tuesday: "منگل",
+  Wednesday: "بدھ",
+  Thursday: "جمعرات",
+  Friday: "جمعہ",
+  Saturday: "ہفتہ",
+  Sun: "اتوار",
+  Mon: "پیر",
+  Tue: "منگل",
+  Wed: "بدھ",
+  Thu: "جمعرات",
+  Fri: "جمعہ",
+  Sat: "ہفتہ",
+  week: "ہفتہ",
+  month: "مہینہ",
+  quarter: "سہ ماہی",
+  Week: "ہفتہ",
+  Month: "مہینہ",
+  Quarter: "سہ ماہی",
 
   // UI Actions & Labels
   "Select Products": "مصنوعات منتخب کریں",
   "Select Product": "مصنوع منتخب کریں",
-  "Products": "مصنوعات",
-  "Product": "مصنوعات",
+  Products: "مصنوعات",
+  Product: "مصنوعات",
   "By Products": "ضمنی مصنوعات",
-  "Byproducts": "ضمنی مصنوعات",
+  Byproducts: "ضمنی مصنوعات",
   "By Product": "ضمنی مصنوع",
-  "Byproduct": "ضمنی مصنوع",
+  Byproduct: "ضمنی مصنوع",
   "Your Picks": "آپ کی پسند",
   "Select Your Picks": "اپنی پسند منتخب کریں",
-  "Choose byproducts to track on your home screen": "ہوم اسکرین پر دیکھنے کے لیے ضمنی مصنوعات منتخب کریں",
+  "Choose byproducts to track on your home screen":
+    "ہوم اسکرین پر دیکھنے کے لیے ضمنی مصنوعات منتخب کریں",
   "Tap products to add them": "شامل کرنے کے لیے ٹیپ کریں",
   "Tap a product · + add more": "ٹیپ کریں · مزید شامل کریں",
   "View 1 Product →": "۱ مصنوع دیکھیں ←",
@@ -467,22 +469,22 @@ const AUTO_URDU_DICT: Record<string, string> = {
   "No by-products found": "کوئی ضمنی مصنوعات نہیں ملیں",
   "No results found": "کوئی نتیجہ نہیں ملا",
   "Loading...": "لوڈ ہو رہا ہے…",
-  "Close": "بند کریں",
-  "Cancel": "منسوخ",
-  "Apply": "لاگو کریں",
-  "Done": "مکمل",
-  "Save": "محفوظ کریں",
-  "Back": "واپس",
-  "Next": "اگلا",
-  "Reset": "ری سیٹ",
+  Close: "بند کریں",
+  Cancel: "منسوخ",
+  Apply: "لاگو کریں",
+  Done: "مکمل",
+  Save: "محفوظ کریں",
+  Back: "واپس",
+  Next: "اگلا",
+  Reset: "ری سیٹ",
   "Clear all": "سب صاف کریں",
-  "Filter": "فلٹر",
-  "Filters": "فلٹرز",
+  Filter: "فلٹر",
+  Filters: "فلٹرز",
   "Sort by": "ترتیب دیں",
   "Highest Price": "سب سے زیادہ قیمت",
   "Lowest Price": "سب سے کم قیمت",
   "Highest Arrival": "سب سے زیادہ آمد",
-  "Notifications": "اطلاعات",
+  Notifications: "اطلاعات",
   "Market Updates": "مارکیٹ اپڈیٹس",
   "Live Ticker": "لائیو ٹکر",
   "Historical Data": "تاریخی ڈیٹا",
@@ -495,12 +497,13 @@ const AUTO_URDU_DICT: Record<string, string> = {
   "↺ Reset Price Filter": "↺ قیمت فلٹر ہٹائیں",
   "Tap to hear it": "سننے کے لیے ٹیپ کریں",
   "byproducts selected": "ضمنی مصنوعات منتخب ہیں",
-  "selected": "منتخب",
+  selected: "منتخب",
   "Unlock Full Access": "مکمل رسائی حاصل کریں",
-  "Upgrade your account to unlock all commodities and detailed market analytics.": "تمام اجناس اور تفصیلی مارکیٹ تجزیات تک رسائی کے لیے اکاؤنٹ اپگریڈ کریں۔",
+  "Upgrade your account to unlock all products and detailed market analytics.":
+    "تمام اجناس اور تفصیلی مارکیٹ تجزیات تک رسائی کے لیے اکاؤنٹ اپگریڈ کریں۔",
   "Upgrade Now": "ابھی اپگریڈ کریں",
   "Not Now": "بعد میں",
-}
+};
 
 const TRANS: Record<string, { en: string; ur: string }> = {
   // Navigation
@@ -530,7 +533,7 @@ const TRANS: Record<string, { en: string; ur: string }> = {
 
   // Home screen
   "home.search": {
-    en: "Search commodity or byproduct…",
+    en: "Search product or byproduct…",
     ur: "اجناس یا ضمنی مصنوع تلاش کریں…",
   },
   "home.product": { en: "Product", ur: "مصنوعات" },
@@ -563,7 +566,7 @@ const TRANS: Record<string, { en: string; ur: string }> = {
   "rate.Retail Rate": { en: "Retail Rate", ur: "پرچون ریٹ" },
   "rate.Market Rate": { en: "Market Rate", ur: "مارکیٹ ریٹ" },
 
-  // Commodities
+  // products
   "c.Wheat": { en: "Wheat", ur: "گندم" },
   "c.Maize": { en: "Maize", ur: "مکئی" },
   "c.Cotton": { en: "Cotton", ur: "کپاس" },
@@ -596,11 +599,11 @@ const TRANS: Record<string, { en: string; ur: string }> = {
 
   // Orientation voice
   "orient.search": {
-    en: "Search. Find any commodity or byproduct by name to see its prices.",
+    en: "Search. Find any product or byproduct by name to see its prices.",
     ur: "تلاش۔ کسی بھی اجناس یا ضمنی مصنوع کا نام لکھ کر قیمت دیکھیں۔",
   },
   "orient.product": {
-    en: "Product. Select a crop or commodity to discover its byproduct prices.",
+    en: "Product. Select a crop or product to discover its byproduct prices.",
     ur: "مصنوعات۔ اپنی فصل منتخب کریں اور ضمنی مصنوعات کی قیمتیں دیکھیں۔",
   },
   "orient.liveMarket": {
@@ -636,88 +639,86 @@ const TRANS: Record<string, { en: string; ur: string }> = {
   "screen.mandi.title": { en: "Mandi", ur: "منڈی" },
   "screen.analytics.title": { en: "Analytics", ur: "تجزیات" },
   "screen.news.title": { en: "Market Updates", ur: "مارکیٹ اپڈیٹس" },
-}
+};
 
-type Lang = "en" | "ur"
+type Lang = "en" | "ur";
 
 interface LangCtx {
-  lang: Lang
-  setLang: (l: Lang) => void
-  t: (key: string) => string
-  tc: (name: string) => string
-  tm: (mandiName: string) => string
-  tr: (rateType: string) => string
-  voiceEnabled: boolean
-  setVoiceEnabled: (v: boolean) => void
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  t: (key: string) => string;
+  tc: (name: string) => string;
+  tm: (mandiName: string) => string;
+  tr: (rateType: string) => string;
+  voiceEnabled: boolean;
+  setVoiceEnabled: (v: boolean) => void;
 }
 
 const LangContext = createContext<LangCtx>({
   lang: "en",
-  setLang: () => { },
+  setLang: () => {},
   t: (k) => TRANS[k]?.en ?? (AUTO_URDU_DICT[k] || k),
   tc: (n) => n,
   tm: (m) => m,
   tr: (r) => r,
   voiceEnabled: false,
-  setVoiceEnabled: () => { },
-})
+  setVoiceEnabled: () => {},
+});
 
 function useLang() {
-  return useContext(LangContext)
+  return useContext(LangContext);
 }
 
 // Module-level lang for speakText (synced by LangProvider)
-let appLang: Lang = "en"
+let appLang: Lang = "en";
 
 function LangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("en")
-  const [voiceEnabled, setVoiceEnabled] = useState(false)
+  const [lang, setLangState] = useState<Lang>("en");
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
 
   const setLang = (l: Lang) => {
-    setLangState(l)
-    appLang = l
-  }
+    setLangState(l);
+    appLang = l;
+  };
 
   const t = (key: string): string => {
-    if (!key) return ""
-    if (TRANS[key]?.[lang]) return TRANS[key][lang]
+    if (!key) return "";
+    if (TRANS[key]?.[lang]) return TRANS[key][lang];
     if (lang === "ur") {
-      return AUTO_URDU_DICT[key] || AUTO_URDU_DICT[key.trim()] || key
+      return AUTO_URDU_DICT[key] || AUTO_URDU_DICT[key.trim()] || key;
     }
-    return TRANS[key]?.en || key
-  }
+    return TRANS[key]?.en || key;
+  };
 
   const tc = (name: string): string => {
-    if (!name) return ""
-    if (lang === "en") return name
+    if (!name) return "";
+    if (lang === "en") return name;
     return (
       TRANS[`c.${name}`]?.ur ||
       AUTO_URDU_DICT[name] ||
       AUTO_URDU_DICT[name.trim()] ||
       name
-    )
-  }
+    );
+  };
 
   const tm = (mandiName: string): string => {
-    if (!mandiName) return ""
-    if (lang === "en") return mandiName
+    if (!mandiName) return "";
+    if (lang === "en") return mandiName;
     return (
-      AUTO_URDU_DICT[mandiName] ||
-      AUTO_URDU_DICT[mandiName.trim()] ||
-      mandiName
-    )
-  }
+      AUTO_URDU_DICT[mandiName] || AUTO_URDU_DICT[mandiName.trim()] || mandiName
+    );
+  };
 
   const tr = (rateType: string): string => {
-    if (!rateType) return ""
-    if (lang === "en") return rateType
+    if (!rateType) return "";
+    if (lang === "en") return rateType;
     return (
       TRANS[`rate.${rateType}`]?.ur ||
       AUTO_URDU_DICT[rateType] ||
       AUTO_URDU_DICT[rateType.trim()] ||
       rateType
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -728,93 +729,109 @@ function LangProvider({ children }: { children: React.ReactNode }) {
         {children}
       </LangContext.Provider>
     </>
-  )
+  );
 }
 
 //  TYPES
 
-type RateItem = { vertical: string; commodity: string; byproduct: string }
-type Screen = { id: "home" } | { id: "search" } | { id: "mandi-list" } | {
-  id: "mandi-detail"
-  mandiId: string
-} | { id: "commodity-select" } | { id: "byproduct-select" } | {
-  id: "rates-result"
-  items: RateItem[]
-  source: "commodity" | "byproduct"
-} | {
-  id: "byproduct-combined"
-  products: { vertical: string; commodity: string }[]
-  active: number
-} | {
-  id: "commodity-rates"
-  vertical: string
-  commodity: string
-  byproduct: string
-  initialRateType?: string
-  initialMandi?: string
-  initialVariety?: string
-  initialNewOld?: string
-  initialColor?: string
-  initialSpec?: string
-  initialCondition?: string
-  initialStatDate?: string
-} | { id: "analytics" } | { id: "news" } | {
-  id: "live-market"
-} | {
-  id: "billing"
-  commodity: string
-  vertical?: string
-}
+type RateItem = { vertical: string; product: string; byproduct: string };
+type Screen =
+  | { id: "home" }
+  | { id: "search" }
+  | { id: "mandi-list" }
+  | {
+      id: "mandi-detail";
+      mandiId: string;
+    }
+  | { id: "product-select" }
+  | { id: "byproduct-select" }
+  | {
+      id: "rates-result";
+      items: RateItem[];
+      source: "product" | "byproduct";
+    }
+  | {
+      id: "byproduct-combined";
+      products: { vertical: string; product: string }[];
+      active: number;
+    }
+  | {
+      id: "product-rates";
+      vertical: string;
+      product: string;
+      byproduct: string;
+      initialRateType?: string;
+      initialMandi?: string;
+      initialVariety?: string;
+      initialNewOld?: string;
+      initialColor?: string;
+      initialSpec?: string;
+      initialCondition?: string;
+      initialStatDate?: string;
+    }
+  | { id: "analytics" }
+  | { id: "news" }
+  | {
+      id: "live-market";
+    }
+  | {
+      id: "billing";
+      product: string;
+      vertical?: string;
+    };
 
 type LocationScope = {
-  kind: "district" | "province" | "pakistan" | "mandi"
-  label: string
-}
+  kind: "district" | "province" | "pakistan" | "mandi";
+  label: string;
+};
 
-type NavTab = "home" | "analytics" | "news" | "voice"
-type TimeRange = "day" | "week" | "month" | "year"
-type AnalyticsTab = "trends" | "allrates" | "compare" | "regional"
+type NavTab = "home" | "analytics" | "news" | "voice";
+type TimeRange = "day" | "week" | "month" | "year";
+type AnalyticsTab = "trends" | "allrates" | "compare" | "regional";
 
 type FeedMsg = {
-  id: number
-  time: string
-  vertical: string
-  commodityUrdu: string
-  commodity: string
-  byproduct: string
-  stationUrdu: string
-  station: string
-  province: string
-  priceMin: number
-  priceMax: number
-  unit: string
-  arrivalCount: string
-  arrivalUnit: string
-  arrivalUnitUrdu: string
-  colorUrdu: string
-  color: string
-  rateType: string
-  specUrdu: string
-  spec: string
-  qualityUrdu: string
-  quality: string
-  qualityTypeUrdu: string
-  qualityType: string
-  trend?: "up" | "down" | "stable"
-  trendPct?: number
-}
+  id: number;
+  time: string;
+  vertical: string;
+  productUrdu: string;
+  product: string;
+  byproduct: string;
+  stationUrdu: string;
+  station: string;
+  province: string;
+  priceMin: number;
+  priceMax: number;
+  unit: string;
+  arrivalCount: string;
+  arrivalUnit: string;
+  arrivalUnitUrdu: string;
+  colorUrdu: string;
+  color: string;
+  rateType: string;
+  specUrdu: string;
+  spec: string;
+  qualityUrdu: string;
+  quality: string;
+  qualityTypeUrdu: string;
+  qualityType: string;
+  trend?: "up" | "down" | "stable";
+  trendPct?: number;
+};
 
 //  COMPLETE VERTICALS DATA
 
-const VERTICALS: Record<string, {
-  icon: string
-  urdu: string
-  commodities: Record<string, string[]>
-}> = {
+const VERTICALS: Record<
+  string,
+  {
+    icon: string;
+    urdu: string;
+    products: Record<string, string[]>;
+  }
+> = {
   Grains: {
     icon: "grains",
     urdu: "اناج",
-    commodities: {
+    products: {
       Wheat: [
         "Wheat",
         "Fine Flour",
@@ -945,7 +962,7 @@ const VERTICALS: Record<string, {
   Fruits: {
     icon: "fruits",
     urdu: "پھل",
-    commodities: {
+    products: {
       Mango: [
         "Mango Sindhri",
         "Mango White Chunsa",
@@ -980,7 +997,7 @@ const VERTICALS: Record<string, {
   Vegetables: {
     icon: "vegetables",
     urdu: "سبزیاں",
-    commodities: {
+    products: {
       Potato: [
         "Potato (Mozika)",
         "Potato (Santa)",
@@ -1022,7 +1039,7 @@ const VERTICALS: Record<string, {
   Livestock: {
     icon: "livestock",
     urdu: "مویشی",
-    commodities: {
+    products: {
       "Cattle Market": ["Cow", "Buffalo", "Goat", "Camel"],
       "Slaughter House": ["Cow", "Buffalo", "Goat"],
       Poultry: ["Broiler", "Layer"],
@@ -1044,7 +1061,7 @@ const VERTICALS: Record<string, {
   "Agri Inputs": {
     icon: "agri-inputs",
     urdu: "زرعی ان پٹس",
-    commodities: {
+    products: {
       Fertilizer: [
         "Urea",
         "DAP",
@@ -1076,7 +1093,7 @@ const VERTICALS: Record<string, {
   "Dry Fruits": {
     icon: "dry-fruits",
     urdu: "خشک میوہ",
-    commodities: {
+    products: {
       Almonds: ["Almond (American)", "Almond (Australian)", "Almond (Desi)"],
       Cashew: ["Cashew"],
       Walnut: ["Walnut"],
@@ -1088,7 +1105,7 @@ const VERTICALS: Record<string, {
   Herbals: {
     icon: "herbals",
     urdu: "جڑی بوٹیاں",
-    commodities: {
+    products: {
       Honey: ["Honey"],
       Psyllium: ["Psyllium Seed", "Psyllium Husk"],
       "Black Seed": ["Black Seed", "Black Seed Oil"],
@@ -1102,7 +1119,7 @@ const VERTICALS: Record<string, {
   Kiryana: {
     icon: "kiryana",
     urdu: "کریانہ",
-    commodities: {
+    products: {
       Wheat: ["Wheat", "Fine Flour", "Flour", "Semolina", "Special Flour"],
       Rice: [
         "1121 Basmati-1",
@@ -1138,22 +1155,56 @@ const VERTICALS: Record<string, {
       Eggs: ["Eggs"],
     },
   },
-}
+};
 
 //  PRODUCT DIVISIONS
 
 type ProdDiv = {
-  name: string
-  type: "product" | "vertical"
-  img?: string
-  byproducts?: string[]
-  products?: Record<string, string[]>
+  name: string;
+  type: "product" | "vertical";
+  img?: string;
+  byproducts?: string[];
+  products?: Record<string, string[]>;
+};
+
+const SUBSCRIBED_PRODUCTS = new Set<string>([
+  "Wheat", "Rice", "Cotton", "Maize", "Sugar", "Pulses", "Mustard", "Sesame",
+  "Millet", "Paddy", "Dates", "Spices", "Dry Fruit", "Live Market", "Fruits",
+  "Vegetable", "Livestock", "Fertilizer", "Edible Oil", "Kiryana", "Herbs"
+]);
+
+export type AppProps = {
+  initialUserData?: {
+    name?: string;
+    phone?: string;
+    profession?: string;
+    contact?: string;
+    role?: "customer" | "representative";
+    products?: string[];
+    city?: string;
+    district?: string;
+    province?: string;
+  };
+  activeRole?: "customer" | "representative";
+  hasRepAccount?: boolean;
+  onSwitchRole?: (role: "customer" | "representative") => void;
+  onStartRepOnboarding?: () => void;
+  onRestartOnboarding?: (mode?: "register" | "signin") => void;
+};
+
+const TODAY_ONLY_PRODUCTS = new Set<string>([]);
+
+function isProductSubscribed(name: string): boolean {
+  return true; // Unlocked for 2-day Free Trial
 }
 
-const SUBSCRIBED_PRODUCTS = new Set([
-  "Wheat",
-])
+function isProductTodayOnly(name: string): boolean {
+  return false;
+}
 
+function isProductAccessible(name: string): boolean {
+  return true; // All products accessible during Free Trial
+}
 
 const PRODUCT_ID_TO_NAME: Record<string, string> = {
   wheat: "Wheat",
@@ -1178,51 +1229,51 @@ const PRODUCT_ID_TO_NAME: Record<string, string> = {
   edibleoil: "Edible Oil",
   kiryana: "Kiryana",
   herbs: "Herbs",
-}
+};
 
 const PRODUCT_DIVISIONS: ProdDiv[] = [
   {
     name: "Wheat",
     type: "product",
-    byproducts: VERTICALS.Grains.commodities.Wheat,
+    byproducts: VERTICALS.Grains.products.Wheat,
   },
   {
     name: "Maize",
     type: "product",
-    byproducts: VERTICALS.Grains.commodities.Maize,
+    byproducts: VERTICALS.Grains.products.Maize,
   },
   {
     name: "Sesame",
     type: "product",
-    byproducts: VERTICALS.Grains.commodities.Sesame,
+    byproducts: VERTICALS.Grains.products.Sesame,
   },
   {
     name: "Millet",
     type: "product",
-    byproducts: VERTICALS.Grains.commodities.Millet,
+    byproducts: VERTICALS.Grains.products.Millet,
   },
   {
     name: "Cotton",
     type: "product",
-    byproducts: VERTICALS.Grains.commodities.Cotton,
+    byproducts: VERTICALS.Grains.products.Cotton,
   },
   {
     name: "Paddy",
     type: "product",
-    byproducts: VERTICALS.Grains.commodities.Paddy,
+    byproducts: VERTICALS.Grains.products.Paddy,
   },
   {
     name: "Rice",
     type: "product",
-    byproducts: VERTICALS.Grains.commodities.Rice,
+    byproducts: VERTICALS.Grains.products.Rice,
   },
   {
     name: "Edible Oil",
     type: "vertical",
     products: {
-      Canola: VERTICALS.Grains.commodities.Canola,
-      Soybean: VERTICALS.Grains.commodities.Soybean,
-      Sunflower: VERTICALS.Grains.commodities.Sunflower,
+      Canola: VERTICALS.Grains.products.Canola,
+      Soybean: VERTICALS.Grains.products.Soybean,
+      Sunflower: VERTICALS.Grains.products.Sunflower,
       Arugula: ["Arugula Seed", "Arugula Oil"],
       Castor: ["Castor Bean", "Castor Oil"],
     },
@@ -1230,56 +1281,56 @@ const PRODUCT_DIVISIONS: ProdDiv[] = [
   {
     name: "Fertilizer",
     type: "product",
-    byproducts: VERTICALS["Agri Inputs"].commodities.Fertilizer,
+    byproducts: VERTICALS["Agri Inputs"].products.Fertilizer,
   },
   {
     name: "Livestock",
     type: "vertical",
-    products: VERTICALS.Livestock.commodities,
+    products: VERTICALS.Livestock.products,
   },
   {
     name: "Dates",
     type: "product",
-    byproducts: VERTICALS.Grains.commodities.Dates,
+    byproducts: VERTICALS.Grains.products.Dates,
   },
   {
     name: "Mustard",
     type: "product",
-    byproducts: VERTICALS.Grains.commodities.Mustard,
+    byproducts: VERTICALS.Grains.products.Mustard,
   },
   {
     name: "Spices",
     type: "product",
-    byproducts: VERTICALS.Grains.commodities.Spices,
+    byproducts: VERTICALS.Grains.products.Spices,
   },
   {
     name: "Pulses",
     type: "product",
-    byproducts: VERTICALS.Grains.commodities.Pulses,
+    byproducts: VERTICALS.Grains.products.Pulses,
   },
   {
     name: "Kiryana",
     type: "vertical",
-    products: VERTICALS.Kiryana.commodities,
+    products: VERTICALS.Kiryana.products,
   },
   {
     name: "Sugar",
     type: "product",
-    byproducts: VERTICALS.Grains.commodities.Sugar,
+    byproducts: VERTICALS.Grains.products.Sugar,
   },
-  { name: "Fruits", type: "vertical", products: VERTICALS.Fruits.commodities },
+  { name: "Fruits", type: "vertical", products: VERTICALS.Fruits.products },
   {
     name: "Vegetable",
     type: "vertical",
-    products: VERTICALS.Vegetables.commodities,
+    products: VERTICALS.Vegetables.products,
   },
   {
     name: "Dry Fruit",
     type: "vertical",
-    products: VERTICALS["Dry Fruits"].commodities,
+    products: VERTICALS["Dry Fruits"].products,
   },
-  { name: "Herbs", type: "vertical", products: VERTICALS.Herbals.commodities },
-]
+  { name: "Herbs", type: "vertical", products: VERTICALS.Herbals.products },
+];
 
 const ALL_RATE_TYPES = [
   "Farm Rate",
@@ -1291,7 +1342,7 @@ const ALL_RATE_TYPES = [
   "Export Rate",
   "Retail Rate",
   "Wholesale Rate",
-]
+];
 const RATE_TYPE_URDU: Record<string, string> = {
   "Farm Rate": "فارم ریٹ",
   "Broker Rate": "بروکر ریٹ",
@@ -1302,7 +1353,7 @@ const RATE_TYPE_URDU: Record<string, string> = {
   "Export Rate": "برآمد ریٹ",
   "Retail Rate": "خردہ ریٹ",
   "Wholesale Rate": "ہول سیل ریٹ",
-}
+};
 const RATE_COLORS: Record<string, string> = {
   "Mill Rate": "#2FAE68",
   "Farm Rate": "#D79A2B",
@@ -1313,7 +1364,7 @@ const RATE_COLORS: Record<string, string> = {
   "Stock Rate": "#A96F18",
   "Export Rate": "#0A8F73",
   "Retail Rate": "#52635F",
-}
+};
 const RATE_MULTS: Record<string, number> = {
   "Farm Rate": 0.88,
   "Broker Rate": 0.95,
@@ -1324,17 +1375,20 @@ const RATE_MULTS: Record<string, number> = {
   "Export Rate": 1.12,
   "Retail Rate": 1.18,
   "Wholesale Rate": 1.02,
-}
+};
 
 //  MANDI ATTRIBUTE AVAILABILITY
 // Which attribute options are physically available per mandi (for visual graying)
-const MANDI_ATTR_AVAILABLE: Record<string, {
-  color: string[]
-  variety: string[]
-  spec: string[]
-  condition: string[]
-  newold: string[]
-}> = {
+const MANDI_ATTR_AVAILABLE: Record<
+  string,
+  {
+    color: string[];
+    variety: string[];
+    spec: string[];
+    condition: string[];
+    newold: string[];
+  }
+> = {
   "Pakpattan Mandi": {
     color: ["Golden", "White"],
     variety: ["Sona Moti", "TD-1", "SurSabz", "Akbar"],
@@ -1419,7 +1473,7 @@ const MANDI_ATTR_AVAILABLE: Record<string, {
     condition: ["Wet", "Dry"],
     newold: ["New", "Old"],
   },
-}
+};
 
 // Attribute price multiplier — shared by cards and the deeper view
 function computeAttrMult(
@@ -1429,7 +1483,7 @@ function computeAttrMult(
   spec?: string | null,
   condition?: string | null,
 ): number {
-  let m = 1
+  let m = 1;
   if (variety)
     m *=
       {
@@ -1443,25 +1497,23 @@ function computeAttrMult(
         Dilkush: 0.98,
         Arooj: 1.05,
         Subham: 1.01,
-      }[variety] || 1
-  if (color) m *= { Golden: 1.08, White: 1.0, Yellow: 0.95 }[color] || 1
-  if (newOld) m *= { New: 1.1, Old: 0.95 }[newOld] || 1
-  if (spec) m *= { "Seed Quality": 1.15, Retail: 1.0, Damage: 0.8 }[spec] || 1
-  if (condition) m *= { Wet: 0.92, Dry: 1.0, Mix: 0.96 }[condition] || 1
-  return m
+      }[variety] || 1;
+  if (color) m *= { Golden: 1.08, White: 1.0, Yellow: 0.95 }[color] || 1;
+  if (newOld) m *= { New: 1.1, Old: 0.95 }[newOld] || 1;
+  if (spec) m *= { "Seed Quality": 1.15, Retail: 1.0, Damage: 0.8 }[spec] || 1;
+  if (condition) m *= { Wet: 0.92, Dry: 1.0, Mix: 0.96 }[condition] || 1;
+  return m;
 }
 
 // Deterministic canonical attributes for any mandi — known mandis use explicit data, others use name hash
-function getMandiCanonicalAttrs(
-  mandiName: string,
-): {
-  variety: string
-  color: string
-  newOld: string
-  spec: string
-  condition: string
+function getMandiCanonicalAttrs(mandiName: string): {
+  variety: string;
+  color: string;
+  newOld: string;
+  spec: string;
+  condition: string;
 } {
-  const ma = MANDI_ATTR_AVAILABLE[mandiName]
+  const ma = MANDI_ATTR_AVAILABLE[mandiName];
   if (ma)
     return {
       variety: ma.variety[0],
@@ -1469,12 +1521,12 @@ function getMandiCanonicalAttrs(
       newOld: ma.newold[0],
       spec: ma.spec[0],
       condition: ma.condition[0],
-    }
+    };
   // Hash mandi name to pick consistent attributes for every other mandi
   const h = mandiName
     .split("")
-    .reduce((acc, c) => (acc * 31 + c.charCodeAt(0)) | 0, 0)
-  const abs = Math.abs(h)
+    .reduce((acc, c) => (acc * 31 + c.charCodeAt(0)) | 0, 0);
+  const abs = Math.abs(h);
   const varieties = [
     "Sona Moti",
     "TD-1",
@@ -1486,40 +1538,40 @@ function getMandiCanonicalAttrs(
     "Dilkush",
     "Arooj",
     "Subham",
-  ]
-  const colors = ["Golden", "White", "Yellow"]
-  const newOlds = ["New", "Old"]
-  const specs = ["Seed Quality", "Retail", "Damage"]
-  const conditions = ["Dry", "Mix", "Wet"]
+  ];
+  const colors = ["Golden", "White", "Yellow"];
+  const newOlds = ["New", "Old"];
+  const specs = ["Seed Quality", "Retail", "Damage"];
+  const conditions = ["Dry", "Mix", "Wet"];
   return {
     variety: varieties[abs % varieties.length],
     color: colors[(abs >> 3) % colors.length],
     newOld: newOlds[(abs >> 5) % newOlds.length],
     spec: specs[(abs >> 2) % specs.length],
     condition: conditions[(abs >> 4) % conditions.length],
-  }
+  };
 }
 
 // Attach canonical attributes for a mandi and bake their price effect into min/max
 function enrichRowWithAttrs(row: {
-  commodity: string
-  byproduct: string
-  emoji: string
-  rateType: string
-  arrival: string
-  min: number
-  max: number
-  trend: "up" | "down" | "stable"
-  trendPct: number
-  mandiName: string
-  mandiCity: string
-  province: string
-  vertical?: string
+  product: string;
+  byproduct: string;
+  emoji: string;
+  rateType: string;
+  arrival: string;
+  min: number;
+  max: number;
+  trend: "up" | "down" | "stable";
+  trendPct: number;
+  mandiName: string;
+  mandiCity: string;
+  province: string;
+  vertical?: string;
 }): RichRow {
   const { variety, color, newOld, spec, condition } = getMandiCanonicalAttrs(
     row.mandiName,
-  )
-  const mult = computeAttrMult(variety, color, newOld, spec, condition)
+  );
+  const mult = computeAttrMult(variety, color, newOld, spec, condition);
   return {
     ...row,
     variety,
@@ -1529,7 +1581,7 @@ function enrichRowWithAttrs(row: {
     condition,
     min: Math.round(row.min * mult),
     max: Math.round(row.max * mult),
-  }
+  };
 }
 
 //  COMPLETE LOCATIONS
@@ -1614,11 +1666,11 @@ const LOCATIONS: Record<string, Record<string, string[]>> = {
   Balochistan: {
     Quetta: ["Quetta Mandi"],
   },
-}
+};
 
 const ALL_MANDI_NAMES: string[] = Object.values(LOCATIONS).flatMap((d) =>
   Object.values(d).flat(),
-)
+);
 
 //  FEED MESSAGES
 
@@ -1627,8 +1679,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 1,
     time: "7:15 AM",
     vertical: "Grains",
-    commodityUrdu: "گندم",
-    commodity: "Wheat",
+    productUrdu: "گندم",
+    product: "Wheat",
     byproduct: "Wheat",
     stationUrdu: "پاکپتن",
     station: "Pakpattan Mandi",
@@ -1655,8 +1707,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 2,
     time: "7:30 AM",
     vertical: "Grains",
-    commodityUrdu: "گندم",
-    commodity: "Wheat",
+    productUrdu: "گندم",
+    product: "Wheat",
     byproduct: "Fine Flour",
     stationUrdu: "لاہور",
     station: "Lahore Mandi",
@@ -1683,8 +1735,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 3,
     time: "7:45 AM",
     vertical: "Grains",
-    commodityUrdu: "گندم",
-    commodity: "Wheat",
+    productUrdu: "گندم",
+    product: "Wheat",
     byproduct: "Bran",
     stationUrdu: "فیصل آباد",
     station: "Faisalabad Mandi",
@@ -1711,8 +1763,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 4,
     time: "8:00 AM",
     vertical: "Grains",
-    commodityUrdu: "گندم",
-    commodity: "Wheat",
+    productUrdu: "گندم",
+    product: "Wheat",
     byproduct: "Wheat",
     stationUrdu: "ملتان",
     station: "Multan Mandi",
@@ -1739,8 +1791,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 5,
     time: "8:10 AM",
     vertical: "Grains",
-    commodityUrdu: "گندم",
-    commodity: "Wheat",
+    productUrdu: "گندم",
+    product: "Wheat",
     byproduct: "Wheat",
     stationUrdu: "ساہیوال",
     station: "Sahiwal Mandi",
@@ -1767,8 +1819,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 6,
     time: "8:20 AM",
     vertical: "Grains",
-    commodityUrdu: "گندم",
-    commodity: "Wheat",
+    productUrdu: "گندم",
+    product: "Wheat",
     byproduct: "Wheat",
     stationUrdu: "بہاولپور",
     station: "Bahawalpur Mandi",
@@ -1795,8 +1847,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 7,
     time: "8:30 AM",
     vertical: "Grains",
-    commodityUrdu: "گندم",
-    commodity: "Wheat",
+    productUrdu: "گندم",
+    product: "Wheat",
     byproduct: "Wheat",
     stationUrdu: "سرگودھا",
     station: "Sargodha Mandi",
@@ -1823,8 +1875,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 8,
     time: "8:40 AM",
     vertical: "Grains",
-    commodityUrdu: "گندم",
-    commodity: "Wheat",
+    productUrdu: "گندم",
+    product: "Wheat",
     byproduct: "Wheat",
     stationUrdu: "کوئٹہ",
     station: "Quetta Mandi",
@@ -1851,8 +1903,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 9,
     time: "8:50 AM",
     vertical: "Grains",
-    commodityUrdu: "باسمتی چاول",
-    commodity: "Rice",
+    productUrdu: "باسمتی چاول",
+    product: "Rice",
     byproduct: "1121 Basmati-1",
     stationUrdu: "سیرانوالی",
     station: "Siranwali Mandi",
@@ -1879,8 +1931,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 10,
     time: "9:00 AM",
     vertical: "Grains",
-    commodityUrdu: "چاول",
-    commodity: "Rice",
+    productUrdu: "چاول",
+    product: "Rice",
     byproduct: "Irri 6",
     stationUrdu: "لاہور",
     station: "Lahore Mandi",
@@ -1907,8 +1959,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 11,
     time: "9:10 AM",
     vertical: "Grains",
-    commodityUrdu: "چاول",
-    commodity: "Rice",
+    productUrdu: "چاول",
+    product: "Rice",
     byproduct: "Sella 1121-1",
     stationUrdu: "فیصل آباد",
     station: "Faisalabad Mandi",
@@ -1935,8 +1987,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 12,
     time: "9:20 AM",
     vertical: "Grains",
-    commodityUrdu: "چاول",
-    commodity: "Rice",
+    productUrdu: "چاول",
+    product: "Rice",
     byproduct: "1509 Steam",
     stationUrdu: "سکھر",
     station: "Sukkur Mandi",
@@ -1963,8 +2015,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 13,
     time: "9:30 AM",
     vertical: "Grains",
-    commodityUrdu: "دھان",
-    commodity: "Paddy",
+    productUrdu: "دھان",
+    product: "Paddy",
     byproduct: "Paddy Irri 6",
     stationUrdu: "سیرانوالی",
     station: "Siranwali Mandi",
@@ -1991,8 +2043,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 14,
     time: "9:40 AM",
     vertical: "Grains",
-    commodityUrdu: "دھان",
-    commodity: "Paddy",
+    productUrdu: "دھان",
+    product: "Paddy",
     byproduct: "Paddy Kainat-1121",
     stationUrdu: "حافظ آباد",
     station: "Hafizabad Mandi",
@@ -2019,8 +2071,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 15,
     time: "9:50 AM",
     vertical: "Grains",
-    commodityUrdu: "کپاس",
-    commodity: "Cotton",
+    productUrdu: "کپاس",
+    product: "Cotton",
     byproduct: "Cotton Grade A",
     stationUrdu: "ملتان",
     station: "Multan Mandi",
@@ -2047,8 +2099,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 16,
     time: "10:00 AM",
     vertical: "Grains",
-    commodityUrdu: "کپاس",
-    commodity: "Cotton",
+    productUrdu: "کپاس",
+    product: "Cotton",
     byproduct: "Cotton Seed",
     stationUrdu: "بہاولپور",
     station: "Bahawalpur Mandi",
@@ -2075,8 +2127,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 17,
     time: "10:10 AM",
     vertical: "Grains",
-    commodityUrdu: "کپاس",
-    commodity: "Cotton",
+    productUrdu: "کپاس",
+    product: "Cotton",
     byproduct: "Cotton Grade A",
     stationUrdu: "نوابشاہ",
     station: "Nawabshah Mandi",
@@ -2103,8 +2155,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 18,
     time: "10:20 AM",
     vertical: "Grains",
-    commodityUrdu: "گنا",
-    commodity: "Sugar",
+    productUrdu: "گنا",
+    product: "Sugar",
     byproduct: "Sugarcane",
     stationUrdu: "رحیم یار خان",
     station: "Rahim Yar Khan Mandi",
@@ -2131,8 +2183,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 19,
     time: "10:30 AM",
     vertical: "Grains",
-    commodityUrdu: "چینی",
-    commodity: "Sugar",
+    productUrdu: "چینی",
+    product: "Sugar",
     byproduct: "Sugar (Mill)",
     stationUrdu: "ملتان",
     station: "Multan Mandi",
@@ -2159,8 +2211,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 20,
     time: "10:40 AM",
     vertical: "Grains",
-    commodityUrdu: "مکئی",
-    commodity: "Maize",
+    productUrdu: "مکئی",
+    product: "Maize",
     byproduct: "Maize Grade A",
     stationUrdu: "فیصل آباد",
     station: "Faisalabad Mandi",
@@ -2187,8 +2239,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 21,
     time: "10:50 AM",
     vertical: "Grains",
-    commodityUrdu: "مکئی",
-    commodity: "Maize",
+    productUrdu: "مکئی",
+    product: "Maize",
     byproduct: "Maize Grade A",
     stationUrdu: "پشاور",
     station: "Peshawar Mandi",
@@ -2215,8 +2267,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 22,
     time: "11:00 AM",
     vertical: "Grains",
-    commodityUrdu: "سرسوں",
-    commodity: "Mustard",
+    productUrdu: "سرسوں",
+    product: "Mustard",
     byproduct: "Mustard Seed",
     stationUrdu: "چیچہ وطنی",
     station: "Chichawatni Mandi",
@@ -2243,8 +2295,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 23,
     time: "11:10 AM",
     vertical: "Grains",
-    commodityUrdu: "کینولا",
-    commodity: "Canola",
+    productUrdu: "کینولا",
+    product: "Canola",
     byproduct: "Canola Seed",
     stationUrdu: "ساہیوال",
     station: "Sahiwal Mandi",
@@ -2271,8 +2323,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 24,
     time: "11:20 AM",
     vertical: "Grains",
-    commodityUrdu: "باجرہ",
-    commodity: "Millet",
+    productUrdu: "باجرہ",
+    product: "Millet",
     byproduct: "Millet Grade A",
     stationUrdu: "بہاولپور",
     station: "Bahawalpur Mandi",
@@ -2299,8 +2351,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 25,
     time: "11:30 AM",
     vertical: "Grains",
-    commodityUrdu: "دال",
-    commodity: "Pulses",
+    productUrdu: "دال",
+    product: "Pulses",
     byproduct: "Red Lentil",
     stationUrdu: "لاہور",
     station: "Lahore Mandi",
@@ -2327,8 +2379,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 26,
     time: "11:40 AM",
     vertical: "Grains",
-    commodityUrdu: "لال مرچ",
-    commodity: "Spices",
+    productUrdu: "لال مرچ",
+    product: "Spices",
     byproduct: "Red Chilli",
     stationUrdu: "کراچی",
     station: "Karachi Mandi",
@@ -2355,8 +2407,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 27,
     time: "11:50 AM",
     vertical: "Vegetables",
-    commodityUrdu: "ٹماٹر",
-    commodity: "Tomato",
+    productUrdu: "ٹماٹر",
+    product: "Tomato",
     byproduct: "Tomato (Grade A)",
     stationUrdu: "لاہور",
     station: "Lahore Mandi",
@@ -2383,8 +2435,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 28,
     time: "12:00 PM",
     vertical: "Vegetables",
-    commodityUrdu: "پیاز",
-    commodity: "Onion",
+    productUrdu: "پیاز",
+    product: "Onion",
     byproduct: "Onion (Grade A)",
     stationUrdu: "کراچی",
     station: "Karachi Mandi",
@@ -2411,8 +2463,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 29,
     time: "12:10 PM",
     vertical: "Vegetables",
-    commodityUrdu: "آلو",
-    commodity: "Potato",
+    productUrdu: "آلو",
+    product: "Potato",
     byproduct: "Potato (Mozika)",
     stationUrdu: "اوکاڑہ",
     station: "Okara Mandi",
@@ -2439,8 +2491,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 30,
     time: "12:20 PM",
     vertical: "Vegetables",
-    commodityUrdu: "لہسن",
-    commodity: "Garlic",
+    productUrdu: "لہسن",
+    product: "Garlic",
     byproduct: "Garlic Desi",
     stationUrdu: "لاہور",
     station: "Lahore Mandi",
@@ -2467,8 +2519,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 31,
     time: "12:30 PM",
     vertical: "Vegetables",
-    commodityUrdu: "مرچ",
-    commodity: "Chilli",
+    productUrdu: "مرچ",
+    product: "Chilli",
     byproduct: "Green Chilli - Large",
     stationUrdu: "پشاور",
     station: "Peshawar Mandi",
@@ -2495,8 +2547,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 32,
     time: "12:40 PM",
     vertical: "Vegetables",
-    commodityUrdu: "گوبھی",
-    commodity: "Cauliflower",
+    productUrdu: "گوبھی",
+    product: "Cauliflower",
     byproduct: "Cauliflower",
     stationUrdu: "لاہور",
     station: "Lahore Mandi",
@@ -2523,8 +2575,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 33,
     time: "12:50 PM",
     vertical: "Vegetables",
-    commodityUrdu: "آلو",
-    commodity: "Potato",
+    productUrdu: "آلو",
+    product: "Potato",
     byproduct: "Potato (Red)",
     stationUrdu: "حیدرآباد",
     station: "Hyderabad Mandi",
@@ -2551,8 +2603,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 34,
     time: "1:00 PM",
     vertical: "Fruits",
-    commodityUrdu: "آم",
-    commodity: "Mango",
+    productUrdu: "آم",
+    product: "Mango",
     byproduct: "Mango Sindhri",
     stationUrdu: "ملتان",
     station: "Multan Mandi",
@@ -2579,8 +2631,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 35,
     time: "1:10 PM",
     vertical: "Fruits",
-    commodityUrdu: "آم",
-    commodity: "Mango",
+    productUrdu: "آم",
+    product: "Mango",
     byproduct: "Mango Anwer Ratul",
     stationUrdu: "لاہور",
     station: "Lahore Mandi",
@@ -2607,8 +2659,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 36,
     time: "1:20 PM",
     vertical: "Fruits",
-    commodityUrdu: "کیلا",
-    commodity: "Banana",
+    productUrdu: "کیلا",
+    product: "Banana",
     byproduct: "Banana",
     stationUrdu: "کراچی",
     station: "Karachi Mandi",
@@ -2635,8 +2687,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 37,
     time: "1:30 PM",
     vertical: "Fruits",
-    commodityUrdu: "کینو",
-    commodity: "Citrus",
+    productUrdu: "کینو",
+    product: "Citrus",
     byproduct: "Orange",
     stationUrdu: "سرگودھا",
     station: "Sargodha Mandi",
@@ -2663,8 +2715,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 38,
     time: "1:40 PM",
     vertical: "Fruits",
-    commodityUrdu: "سیب",
-    commodity: "Apple",
+    productUrdu: "سیب",
+    product: "Apple",
     byproduct: "Apple Kala Kullu",
     stationUrdu: "پشاور",
     station: "Peshawar Mandi",
@@ -2691,8 +2743,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 39,
     time: "1:50 PM",
     vertical: "Livestock",
-    commodityUrdu: "مرغی",
-    commodity: "Poultry",
+    productUrdu: "مرغی",
+    product: "Poultry",
     byproduct: "Broiler",
     stationUrdu: "لاہور",
     station: "Lahore Mandi",
@@ -2719,8 +2771,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 40,
     time: "2:00 PM",
     vertical: "Livestock",
-    commodityUrdu: "بھینس",
-    commodity: "Cattle Market",
+    productUrdu: "بھینس",
+    product: "Cattle Market",
     byproduct: "Buffalo",
     stationUrdu: "بہاولپور",
     station: "Bahawalpur Mandi",
@@ -2747,8 +2799,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 41,
     time: "2:10 PM",
     vertical: "Livestock",
-    commodityUrdu: "دودھ",
-    commodity: "Dairy",
+    productUrdu: "دودھ",
+    product: "Dairy",
     byproduct: "Milk",
     stationUrdu: "فیصل آباد",
     station: "Faisalabad Mandi",
@@ -2775,8 +2827,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 42,
     time: "2:20 PM",
     vertical: "Agri Inputs",
-    commodityUrdu: "یوریا",
-    commodity: "Fertilizer",
+    productUrdu: "یوریا",
+    product: "Fertilizer",
     byproduct: "Urea",
     stationUrdu: "پاکپتن",
     station: "Pakpattan Mandi",
@@ -2803,8 +2855,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 43,
     time: "2:30 PM",
     vertical: "Agri Inputs",
-    commodityUrdu: "ڈی اے پی",
-    commodity: "Fertilizer",
+    productUrdu: "ڈی اے پی",
+    product: "Fertilizer",
     byproduct: "DAP",
     stationUrdu: "ملتان",
     station: "Multan Mandi",
@@ -2831,8 +2883,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 44,
     time: "2:40 PM",
     vertical: "Agri Inputs",
-    commodityUrdu: "این پی",
-    commodity: "Fertilizer",
+    productUrdu: "این پی",
+    product: "Fertilizer",
     byproduct: "NP",
     stationUrdu: "ساہیوال",
     station: "Sahiwal Mandi",
@@ -2859,8 +2911,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 45,
     time: "2:50 PM",
     vertical: "Dry Fruits",
-    commodityUrdu: "بادام",
-    commodity: "Almonds",
+    productUrdu: "بادام",
+    product: "Almonds",
     byproduct: "Almond (American)",
     stationUrdu: "کراچی",
     station: "Karachi Mandi",
@@ -2887,8 +2939,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 46,
     time: "3:00 PM",
     vertical: "Dry Fruits",
-    commodityUrdu: "اخروٹ",
-    commodity: "Walnut",
+    productUrdu: "اخروٹ",
+    product: "Walnut",
     byproduct: "Walnut",
     stationUrdu: "پشاور",
     station: "Peshawar Mandi",
@@ -2915,8 +2967,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 47,
     time: "3:10 PM",
     vertical: "Herbals",
-    commodityUrdu: "شہد",
-    commodity: "Honey",
+    productUrdu: "شہد",
+    product: "Honey",
     byproduct: "Honey",
     stationUrdu: "پشاور",
     station: "Peshawar Mandi",
@@ -2943,8 +2995,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 48,
     time: "3:20 PM",
     vertical: "Herbals",
-    commodityUrdu: "کلونجی",
-    commodity: "Black Seed",
+    productUrdu: "کلونجی",
+    product: "Black Seed",
     byproduct: "Black Seed",
     stationUrdu: "کراچی",
     station: "Karachi Mandi",
@@ -2971,8 +3023,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 49,
     time: "3:30 PM",
     vertical: "Kiryana",
-    commodityUrdu: "باسمتی چاول",
-    commodity: "Rice",
+    productUrdu: "باسمتی چاول",
+    product: "Rice",
     byproduct: "1121 Basmati-1",
     stationUrdu: "لاہور",
     station: "Lahore Mandi",
@@ -2999,8 +3051,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 50,
     time: "3:40 PM",
     vertical: "Kiryana",
-    commodityUrdu: "چینی",
-    commodity: "Sugar",
+    productUrdu: "چینی",
+    product: "Sugar",
     byproduct: "Sugar",
     stationUrdu: "ملتان",
     station: "Multan Mandi",
@@ -3027,8 +3079,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 51,
     time: "3:50 PM",
     vertical: "Kiryana",
-    commodityUrdu: "لال مرچ",
-    commodity: "Spices",
+    productUrdu: "لال مرچ",
+    product: "Spices",
     byproduct: "Red Chilli",
     stationUrdu: "کراچی",
     station: "Karachi Mandi",
@@ -3055,8 +3107,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 52,
     time: "4:00 PM",
     vertical: "Grains",
-    commodityUrdu: "کپاس",
-    commodity: "Cotton",
+    productUrdu: "کپاس",
+    product: "Cotton",
     byproduct: "Cotton Grade A",
     stationUrdu: "گھوٹکی",
     station: "Ghotki Mandi",
@@ -3083,8 +3135,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 53,
     time: "4:10 PM",
     vertical: "Grains",
-    commodityUrdu: "دھان",
-    commodity: "Paddy",
+    productUrdu: "دھان",
+    product: "Paddy",
     byproduct: "Paddy Irri 6",
     stationUrdu: "حیدرآباد",
     station: "Hyderabad Mandi",
@@ -3111,8 +3163,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 54,
     time: "4:20 PM",
     vertical: "Grains",
-    commodityUrdu: "چاول",
-    commodity: "Rice",
+    productUrdu: "چاول",
+    product: "Rice",
     byproduct: "Super Kernel",
     stationUrdu: "سکھر",
     station: "Sukkur Mandi",
@@ -3139,8 +3191,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 55,
     time: "4:30 PM",
     vertical: "Grains",
-    commodityUrdu: "گندم",
-    commodity: "Wheat",
+    productUrdu: "گندم",
+    product: "Wheat",
     byproduct: "Wheat",
     stationUrdu: "دیرہ اسماعیل خان",
     station: "Dera Ismail Khan Mandi",
@@ -3167,8 +3219,8 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 56,
     time: "4:40 PM",
     vertical: "Vegetables",
-    commodityUrdu: "پیاز",
-    commodity: "Onion",
+    productUrdu: "پیاز",
+    product: "Onion",
     byproduct: "Onion (Grade B)",
     stationUrdu: "سکھر",
     station: "Sukkur Mandi",
@@ -3191,7 +3243,7 @@ const FEED_MESSAGES: FeedMsg[] = [
     trend: "down",
     trendPct: 0.9,
   },
-]
+];
 
 //  INITIAL MANDIS
 
@@ -3358,23 +3410,26 @@ const INITIAL_MANDIS = [
     open: false,
     fav: false,
   },
-]
-type MandiItem = typeof INITIAL_MANDIS[0]
+];
+type MandiItem = (typeof INITIAL_MANDIS)[0];
 
-const MANDI_ROWS: Record<string, {
-  commodity: string
-  byproduct: string
-  emoji: string
-  rateType: string
-  arrival: string
-  min: number
-  max: number
-  trend: "up" | "down" | "stable"
-  trendPct: number
-}[]> = {
+const MANDI_ROWS: Record<
+  string,
+  {
+    product: string;
+    byproduct: string;
+    emoji: string;
+    rateType: string;
+    arrival: string;
+    min: number;
+    max: number;
+    trend: "up" | "down" | "stable";
+    trendPct: number;
+  }[]
+> = {
   pakpattan: [
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mill Rate",
@@ -3385,7 +3440,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.8,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -3396,7 +3451,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Mill Rate",
@@ -3407,7 +3462,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -3418,7 +3473,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.9,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -3429,7 +3484,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Straw",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3440,7 +3495,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Special Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -3451,7 +3506,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.7,
     },
     {
-      commodity: "Rice",
+      product: "Rice",
       byproduct: "1121 Basmati-1",
       emoji: "",
       rateType: "Mill Rate",
@@ -3462,7 +3517,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 3.2,
     },
     {
-      commodity: "Maize",
+      product: "Maize",
       byproduct: "Maize Grade A",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3473,7 +3528,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.9,
     },
     {
-      commodity: "Cotton",
+      product: "Cotton",
       byproduct: "Cotton Grade A",
       emoji: "",
       rateType: "Mill Rate",
@@ -3484,7 +3539,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.5,
     },
     {
-      commodity: "Fertilizer",
+      product: "Fertilizer",
       byproduct: "Urea",
       emoji: "",
       rateType: "Dealer Rate",
@@ -3495,7 +3550,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.2,
     },
     {
-      commodity: "Onion",
+      product: "Onion",
       byproduct: "Onion (Grade A)",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3506,7 +3561,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.5,
     },
     {
-      commodity: "Tomato",
+      product: "Tomato",
       byproduct: "Tomato (Grade A)",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3517,7 +3572,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 4.2,
     },
     {
-      commodity: "Potato",
+      product: "Potato",
       byproduct: "Potato (Mozika)",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3528,7 +3583,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Mustard",
+      product: "Mustard",
       byproduct: "Mustard Seed",
       emoji: "",
       rateType: "Mill Rate",
@@ -3539,7 +3594,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Sorghum",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3550,7 +3605,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Barley",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3561,7 +3616,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.8,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Oat",
       emoji: "",
       rateType: "Farm Rate",
@@ -3572,7 +3627,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Broker Rate",
@@ -3583,7 +3638,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Stock Rate",
@@ -3594,7 +3649,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Export Rate",
@@ -3605,7 +3660,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 3.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Broker Rate",
@@ -3616,7 +3671,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.8,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Stock Rate",
@@ -3627,7 +3682,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Broker Rate",
@@ -3640,7 +3695,7 @@ const MANDI_ROWS: Record<string, {
   ],
   sahiwal: [
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mill Rate",
@@ -3651,7 +3706,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.2,
     },
     {
-      commodity: "Rice",
+      product: "Rice",
       byproduct: "1121 Basmati-1",
       emoji: "",
       rateType: "Mill Rate",
@@ -3662,7 +3717,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.8,
     },
     {
-      commodity: "Cotton",
+      product: "Cotton",
       byproduct: "Cotton Grade A",
       emoji: "",
       rateType: "Mill Rate",
@@ -3673,7 +3728,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Canola",
+      product: "Canola",
       byproduct: "Canola Seed",
       emoji: "",
       rateType: "Farm Rate",
@@ -3684,7 +3739,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.8,
     },
     {
-      commodity: "Fertilizer",
+      product: "Fertilizer",
       byproduct: "NP",
       emoji: "",
       rateType: "Dealer Rate",
@@ -3697,7 +3752,7 @@ const MANDI_ROWS: Record<string, {
   ],
   lahore: [
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mill Rate",
@@ -3708,7 +3763,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Farm Rate",
@@ -3719,7 +3774,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Broker Rate",
@@ -3730,7 +3785,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Mill Rate",
@@ -3741,7 +3796,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.8,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -3752,7 +3807,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -3763,7 +3818,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.8,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3774,7 +3829,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Dealer Rate",
@@ -3785,7 +3840,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Straw",
       emoji: "",
       rateType: "Farm Rate",
@@ -3796,7 +3851,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.1,
     },
     {
-      commodity: "Tomato",
+      product: "Tomato",
       byproduct: "Tomato (Grade A)",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3807,7 +3862,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 3.8,
     },
     {
-      commodity: "Onion",
+      product: "Onion",
       byproduct: "Onion (Grade A)",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3818,7 +3873,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.1,
     },
     {
-      commodity: "Potato",
+      product: "Potato",
       byproduct: "Potato (Mozika)",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3829,7 +3884,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Poultry",
+      product: "Poultry",
       byproduct: "Broiler",
       emoji: "",
       rateType: "Farm Rate",
@@ -3840,7 +3895,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.1,
     },
     {
-      commodity: "Rice",
+      product: "Rice",
       byproduct: "Irri 6",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3851,7 +3906,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Mango",
+      product: "Mango",
       byproduct: "Mango Sindhri",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3862,7 +3917,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.8,
     },
     {
-      commodity: "Garlic",
+      product: "Garlic",
       byproduct: "Garlic Desi",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3873,7 +3928,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.8,
     },
     {
-      commodity: "Pulses",
+      product: "Pulses",
       byproduct: "Red Lentil",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -3884,7 +3939,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Sorghum",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3895,7 +3950,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Barley",
       emoji: "",
       rateType: "Mandi Rate",
@@ -3906,7 +3961,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Oat",
       emoji: "",
       rateType: "Farm Rate",
@@ -3917,7 +3972,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Stock Rate",
@@ -3928,7 +3983,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.9,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Broker Rate",
@@ -3939,7 +3994,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Export Rate",
@@ -3950,7 +4005,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.0,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Broker Rate",
@@ -3963,7 +4018,7 @@ const MANDI_ROWS: Record<string, {
   ],
   multan: [
     {
-      commodity: "Cotton",
+      product: "Cotton",
       byproduct: "Cotton Grade A",
       emoji: "",
       rateType: "Mill Rate",
@@ -3974,7 +4029,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.2,
     },
     {
-      commodity: "Cotton",
+      product: "Cotton",
       byproduct: "Cotton Seed",
       emoji: "",
       rateType: "Mill Rate",
@@ -3985,7 +4040,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.5,
     },
     {
-      commodity: "Mango",
+      product: "Mango",
       byproduct: "Mango Sindhri",
       emoji: "",
       rateType: "Export Rate",
@@ -3996,7 +4051,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 3.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mill Rate",
@@ -4007,7 +4062,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.6,
     },
     {
-      commodity: "Fertilizer",
+      product: "Fertilizer",
       byproduct: "DAP",
       emoji: "",
       rateType: "Dealer Rate",
@@ -4018,7 +4073,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.2,
     },
     {
-      commodity: "Sugar",
+      product: "Sugar",
       byproduct: "Sugar (Mill)",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4029,7 +4084,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.7,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4040,7 +4095,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -4051,7 +4106,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.7,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Mill Rate",
@@ -4062,7 +4117,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Dealer Rate",
@@ -4073,7 +4128,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.0,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Straw",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4084,7 +4139,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Special Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -4095,7 +4150,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Sorghum",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4106,7 +4161,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.5,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Barley",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4117,7 +4172,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Oat",
       emoji: "",
       rateType: "Farm Rate",
@@ -4128,7 +4183,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Export Rate",
@@ -4139,7 +4194,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Stock Rate",
@@ -4152,7 +4207,7 @@ const MANDI_ROWS: Record<string, {
   ],
   faisalabad: [
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mill Rate",
@@ -4163,7 +4218,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.9,
     },
     {
-      commodity: "Rice",
+      product: "Rice",
       byproduct: "1121 Basmati-1",
       emoji: "",
       rateType: "Export Rate",
@@ -4174,7 +4229,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.4,
     },
     {
-      commodity: "Maize",
+      product: "Maize",
       byproduct: "Maize Grade A",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4185,7 +4240,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.7,
     },
     {
-      commodity: "Mustard",
+      product: "Mustard",
       byproduct: "Mustard Seed",
       emoji: "",
       rateType: "Mill Rate",
@@ -4196,7 +4251,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.4,
     },
     {
-      commodity: "Dairy",
+      product: "Dairy",
       byproduct: "Milk",
       emoji: "",
       rateType: "Farm Rate",
@@ -4207,7 +4262,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.5,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Mill Rate",
@@ -4218,7 +4273,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.8,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -4229,7 +4284,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.8,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4240,7 +4295,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Dealer Rate",
@@ -4251,7 +4306,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Straw",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4262,7 +4317,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Special Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -4273,7 +4328,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.9,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Sorghum",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4284,7 +4339,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.0,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Barley",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4295,7 +4350,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Oat",
       emoji: "",
       rateType: "Farm Rate",
@@ -4308,7 +4363,7 @@ const MANDI_ROWS: Record<string, {
   ],
   okara: [
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4319,7 +4374,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Potato",
+      product: "Potato",
       byproduct: "Potato (Mozika)",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4330,7 +4385,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Maize",
+      product: "Maize",
       byproduct: "Maize Grade A",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4343,7 +4398,7 @@ const MANDI_ROWS: Record<string, {
   ],
   ryk: [
     {
-      commodity: "Sugar",
+      product: "Sugar",
       byproduct: "Sugarcane",
       emoji: "",
       rateType: "Mill Rate",
@@ -4354,7 +4409,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.5,
     },
     {
-      commodity: "Cotton",
+      product: "Cotton",
       byproduct: "Cotton Grade A",
       emoji: "",
       rateType: "Mill Rate",
@@ -4365,7 +4420,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.0,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mill Rate",
@@ -4376,7 +4431,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.4,
     },
     {
-      commodity: "Millet",
+      product: "Millet",
       byproduct: "Millet Grade A",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4387,7 +4442,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Fertilizer",
+      product: "Fertilizer",
       byproduct: "Urea",
       emoji: "",
       rateType: "Dealer Rate",
@@ -4400,7 +4455,7 @@ const MANDI_ROWS: Record<string, {
   ],
   bahawalpur: [
     {
-      commodity: "Cotton",
+      product: "Cotton",
       byproduct: "Cotton Grade A",
       emoji: "",
       rateType: "Mill Rate",
@@ -4411,7 +4466,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Cotton",
+      product: "Cotton",
       byproduct: "Cotton Seed",
       emoji: "",
       rateType: "Mill Rate",
@@ -4422,7 +4477,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4433,7 +4488,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.9,
     },
     {
-      commodity: "Millet",
+      product: "Millet",
       byproduct: "Millet Grade A",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4444,7 +4499,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.7,
     },
     {
-      commodity: "Cattle Market",
+      product: "Cattle Market",
       byproduct: "Buffalo",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4457,7 +4512,7 @@ const MANDI_ROWS: Record<string, {
   ],
   chichawatni: [
     {
-      commodity: "Mustard",
+      product: "Mustard",
       byproduct: "Mustard Seed",
       emoji: "",
       rateType: "Mill Rate",
@@ -4468,7 +4523,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mill Rate",
@@ -4479,7 +4534,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Rice",
+      product: "Rice",
       byproduct: "1121 Basmati-1",
       emoji: "",
       rateType: "Mill Rate",
@@ -4490,7 +4545,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.1,
     },
     {
-      commodity: "Fertilizer",
+      product: "Fertilizer",
       byproduct: "Urea",
       emoji: "",
       rateType: "Dealer Rate",
@@ -4503,7 +4558,7 @@ const MANDI_ROWS: Record<string, {
   ],
   karachi: [
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4514,7 +4569,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.6,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4525,7 +4580,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -4536,7 +4591,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.9,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4547,7 +4602,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4558,7 +4613,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Straw",
       emoji: "",
       rateType: "Farm Rate",
@@ -4569,7 +4624,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Sorghum",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4580,7 +4635,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.8,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Barley",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4591,7 +4646,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Oat",
       emoji: "",
       rateType: "Farm Rate",
@@ -4602,7 +4657,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.7,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Special Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -4613,7 +4668,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Spices",
+      product: "Spices",
       byproduct: "Red Chilli",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4624,7 +4679,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.1,
     },
     {
-      commodity: "Spices",
+      product: "Spices",
       byproduct: "White Cumin",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4635,7 +4690,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.5,
     },
     {
-      commodity: "Spices",
+      product: "Spices",
       byproduct: "Turmeric",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4646,7 +4701,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.4,
     },
     {
-      commodity: "Spices",
+      product: "Spices",
       byproduct: "Black Pepper",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4657,7 +4712,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.8,
     },
     {
-      commodity: "Almonds",
+      product: "Almonds",
       byproduct: "Almond (American)",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4668,7 +4723,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Onion",
+      product: "Onion",
       byproduct: "Onion (Grade A)",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4679,7 +4734,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.5,
     },
     {
-      commodity: "Garlic",
+      product: "Garlic",
       byproduct: "Garlic Chinese",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4690,7 +4745,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 3.2,
     },
     {
-      commodity: "Sugar",
+      product: "Sugar",
       byproduct: "Sugar (Wholesale)",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4703,7 +4758,7 @@ const MANDI_ROWS: Record<string, {
   ],
   sukkur: [
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4714,7 +4769,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4725,7 +4780,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -4736,7 +4791,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.5,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4747,7 +4802,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4758,7 +4813,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.0,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Straw",
       emoji: "",
       rateType: "Farm Rate",
@@ -4769,7 +4824,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Sorghum",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4780,7 +4835,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Special Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -4791,7 +4846,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.8,
     },
     {
-      commodity: "Rice",
+      product: "Rice",
       byproduct: "1509 Steam",
       emoji: "",
       rateType: "Mill Rate",
@@ -4802,7 +4857,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.8,
     },
     {
-      commodity: "Rice",
+      product: "Rice",
       byproduct: "Super Kernel",
       emoji: "",
       rateType: "Export Rate",
@@ -4813,7 +4868,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.8,
     },
     {
-      commodity: "Paddy",
+      product: "Paddy",
       byproduct: "Paddy Irri 6",
       emoji: "",
       rateType: "Farm Rate",
@@ -4824,7 +4879,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Onion",
+      product: "Onion",
       byproduct: "Onion (Grade B)",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4835,7 +4890,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.9,
     },
     {
-      commodity: "Tomato",
+      product: "Tomato",
       byproduct: "Tomato (Grade A)",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4846,7 +4901,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 3.2,
     },
     {
-      commodity: "Sugar",
+      product: "Sugar",
       byproduct: "Sugarcane",
       emoji: "",
       rateType: "Mill Rate",
@@ -4859,7 +4914,7 @@ const MANDI_ROWS: Record<string, {
   ],
   hyderabad: [
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mill Rate",
@@ -4870,7 +4925,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -4881,7 +4936,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.0,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -4892,7 +4947,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.7,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4903,7 +4958,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Dealer Rate",
@@ -4914,7 +4969,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.9,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Straw",
       emoji: "",
       rateType: "Farm Rate",
@@ -4925,7 +4980,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Special Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -4936,7 +4991,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Sorghum",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4947,7 +5002,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.5,
     },
     {
-      commodity: "Paddy",
+      product: "Paddy",
       byproduct: "Paddy Irri 6",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4958,7 +5013,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Tomato",
+      product: "Tomato",
       byproduct: "Tomato (Grade A)",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4969,7 +5024,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.8,
     },
     {
-      commodity: "Onion",
+      product: "Onion",
       byproduct: "Onion (Grade A)",
       emoji: "",
       rateType: "Mandi Rate",
@@ -4980,7 +5035,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.2,
     },
     {
-      commodity: "Cotton",
+      product: "Cotton",
       byproduct: "Cotton Grade A",
       emoji: "",
       rateType: "Farm Rate",
@@ -4993,7 +5048,7 @@ const MANDI_ROWS: Record<string, {
   ],
   peshawar: [
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mill Rate",
@@ -5004,7 +5059,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.5,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -5015,7 +5070,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -5026,7 +5081,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.8,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5037,7 +5092,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Dealer Rate",
@@ -5048,7 +5103,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Straw",
       emoji: "",
       rateType: "Farm Rate",
@@ -5059,7 +5114,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Sorghum",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5070,7 +5125,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.7,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Barley",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5081,7 +5136,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.9,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Oat",
       emoji: "",
       rateType: "Farm Rate",
@@ -5092,7 +5147,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Special Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -5103,7 +5158,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.9,
     },
     {
-      commodity: "Maize",
+      product: "Maize",
       byproduct: "Maize Grade A",
       emoji: "",
       rateType: "Farm Rate",
@@ -5114,7 +5169,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.3,
     },
     {
-      commodity: "Apple",
+      product: "Apple",
       byproduct: "Apple Kala Kullu",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5125,7 +5180,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.4,
     },
     {
-      commodity: "Walnut",
+      product: "Walnut",
       byproduct: "Walnut",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -5136,7 +5191,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.2,
     },
     {
-      commodity: "Honey",
+      product: "Honey",
       byproduct: "Honey",
       emoji: "",
       rateType: "Retail Rate",
@@ -5147,7 +5202,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 3.2,
     },
     {
-      commodity: "Dairy",
+      product: "Dairy",
       byproduct: "Milk",
       emoji: "",
       rateType: "Farm Rate",
@@ -5158,7 +5213,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.4,
     },
     {
-      commodity: "Poultry",
+      product: "Poultry",
       byproduct: "Broiler",
       emoji: "",
       rateType: "Farm Rate",
@@ -5171,7 +5226,7 @@ const MANDI_ROWS: Record<string, {
   ],
   quetta: [
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5182,7 +5237,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 2.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -5193,7 +5248,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.8,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -5204,7 +5259,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5215,7 +5270,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.5,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Dealer Rate",
@@ -5226,7 +5281,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Straw",
       emoji: "",
       rateType: "Farm Rate",
@@ -5237,7 +5292,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Special Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -5248,7 +5303,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.1,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Barley",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5259,7 +5314,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.0,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Sorghum",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5270,7 +5325,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.2,
     },
     {
-      commodity: "Dates",
+      product: "Dates",
       byproduct: "Ajwa Dates",
       emoji: "",
       rateType: "Retail Rate",
@@ -5281,7 +5336,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.4,
     },
     {
-      commodity: "Dates",
+      product: "Dates",
       byproduct: "Aseel Dates",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -5292,7 +5347,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Almonds",
+      product: "Almonds",
       byproduct: "Almond (Desi)",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -5303,7 +5358,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.5,
     },
     {
-      commodity: "Pistachio",
+      product: "Pistachio",
       byproduct: "Pistachio",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -5316,7 +5371,7 @@ const MANDI_ROWS: Record<string, {
   ],
   siranwali: [
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mill Rate",
@@ -5327,7 +5382,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.7,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -5338,7 +5393,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -5349,7 +5404,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.8,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Mill Rate",
@@ -5360,7 +5415,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -5371,7 +5426,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Straw",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5382,7 +5437,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Special Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -5393,7 +5448,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.7,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Sorghum",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5404,7 +5459,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Barley",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5415,7 +5470,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.7,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Oat",
       emoji: "",
       rateType: "Farm Rate",
@@ -5426,7 +5481,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.4,
     },
     {
-      commodity: "Rice",
+      product: "Rice",
       byproduct: "1121 Basmati-1",
       emoji: "",
       rateType: "Mill Rate",
@@ -5437,7 +5492,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 3.2,
     },
     {
-      commodity: "Paddy",
+      product: "Paddy",
       byproduct: "Paddy Irri 6",
       emoji: "",
       rateType: "Farm Rate",
@@ -5448,7 +5503,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.8,
     },
     {
-      commodity: "Paddy",
+      product: "Paddy",
       byproduct: "Paddy Kainat-1121",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5461,7 +5516,7 @@ const MANDI_ROWS: Record<string, {
   ],
   sargodha: [
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Wheat",
       emoji: "",
       rateType: "Mill Rate",
@@ -5472,7 +5527,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.9,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Fine Flour",
       emoji: "",
       rateType: "Wholesale Rate",
@@ -5483,7 +5538,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -5494,7 +5549,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.9,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Bran",
       emoji: "",
       rateType: "Mill Rate",
@@ -5505,7 +5560,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.4,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Semolina",
       emoji: "",
       rateType: "Dealer Rate",
@@ -5516,7 +5571,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.3,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Straw",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5527,7 +5582,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.2,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Special Flour",
       emoji: "",
       rateType: "Retail Rate",
@@ -5538,7 +5593,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.8,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Sorghum",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5549,7 +5604,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.9,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Barley",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5560,7 +5615,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.5,
     },
     {
-      commodity: "Wheat",
+      product: "Wheat",
       byproduct: "Oat",
       emoji: "",
       rateType: "Farm Rate",
@@ -5571,7 +5626,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.6,
     },
     {
-      commodity: "Citrus",
+      product: "Citrus",
       byproduct: "Orange",
       emoji: "",
       rateType: "Farm Rate",
@@ -5582,7 +5637,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 0.2,
     },
     {
-      commodity: "Citrus",
+      product: "Citrus",
       byproduct: "Musambi",
       emoji: "",
       rateType: "Mandi Rate",
@@ -5593,7 +5648,7 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.6,
     },
     {
-      commodity: "Canola",
+      product: "Canola",
       byproduct: "Canola Seed",
       emoji: "",
       rateType: "Mill Rate",
@@ -5604,29 +5659,29 @@ const MANDI_ROWS: Record<string, {
       trendPct: 1.0,
     },
   ],
-}
+};
 
 //  UTILITY
 
 const fmt = (n: number) =>
   n >= 100000
     ? `Rs.${(n / 100000).toFixed(1)}L`
-    : `Rs.${n.toLocaleString("en-PK")}`
+    : `Rs.${n.toLocaleString("en-PK")}`;
 
 //  CORRECTED IMAGE PATHS
 // These match the actual Figma/project file structure:
 //   src/icons/products/wheat200.png
 //   src/icons/by-products/cotton/Cotton-A.png
 
-const PRODUCTS_PATH = "/src/icons/products"
-const BYPRODUCTS_PATH = "/src/icons/by-products"
+const PRODUCTS_PATH = "/src/icons/products";
+const BYPRODUCTS_PATH = "/src/icons/by-products";
 
 const HOME_ICONS = {
   products: "/src/icons/products.png",
   liveMarket: "/src/icons/liveMarket.png",
   mandi: "/src/icons/mandi.png",
   homeHeader: "/src/icons/farm.png",
-}
+};
 
 const ICON_PATHS: Record<string, string> = {
   //  Vertical / product-level icons
@@ -5927,10 +5982,10 @@ const ICON_PATHS: Record<string, string> = {
   milk2: `${PRODUCTS_PATH}/wheat200.png`,
   "rhode-grass2": `${PRODUCTS_PATH}/wheat200.png`,
   slaughter2: `${PRODUCTS_PATH}/wheat200.png`,
-}
+};
 
-// Map friendly commodity names to sprite keys
-const COMMODITY_SPRITE_KEY: Record<string, string> = {
+// Map friendly product names to sprite keys
+const product_SPRITE_KEY: Record<string, string> = {
   // Verticals
   Grains: "grains",
   Fruits: "fruits",
@@ -6216,89 +6271,129 @@ const COMMODITY_SPRITE_KEY: Record<string, string> = {
   // Kiryana specific
   "Rice Polish": "rice",
   "Broken Irri 6": "rice",
-}
+};
 
-function getCommodityIconSrc(name?: string | null, vertical?: string | null): string {
-  if (!name && !vertical) return ICON_PATHS.wheat || `${PRODUCTS_PATH}/wheat200.png`
+function getproductIconSrc(
+  name?: string | null,
+  vertical?: string | null,
+): string {
+  if (!name && !vertical)
+    return ICON_PATHS.wheat || `${PRODUCTS_PATH}/wheat200.png`;
 
-  const n = (name || "").trim()
+  const n = (name || "").trim();
 
   // 1. Direct lookup in ICON_PATHS
-  if (ICON_PATHS[n]) return ICON_PATHS[n]
+  if (ICON_PATHS[n]) return ICON_PATHS[n];
 
   // 2. Hyphenated lookup (e.g. "Cotton A" -> "Cotton-A", "Fine Flour" -> "Fine-Flour")
-  const hyphenated = n.replace(/\s+/g, "-")
-  if (ICON_PATHS[hyphenated]) return ICON_PATHS[hyphenated]
+  const hyphenated = n.replace(/\s+/g, "-");
+  if (ICON_PATHS[hyphenated]) return ICON_PATHS[hyphenated];
 
-  // 3. COMMODITY_SPRITE_KEY mapping
-  const spriteKey = COMMODITY_SPRITE_KEY[n] || COMMODITY_SPRITE_KEY[hyphenated]
+  // 3. product_SPRITE_KEY mapping
+  const spriteKey = product_SPRITE_KEY[n] || product_SPRITE_KEY[hyphenated];
   if (spriteKey) {
-    if (ICON_PATHS[spriteKey]) return ICON_PATHS[spriteKey]
-    const spriteHyphen = spriteKey.replace(/\s+/g, "-")
-    if (ICON_PATHS[spriteHyphen]) return ICON_PATHS[spriteHyphen]
+    if (ICON_PATHS[spriteKey]) return ICON_PATHS[spriteKey];
+    const spriteHyphen = spriteKey.replace(/\s+/g, "-");
+    if (ICON_PATHS[spriteHyphen]) return ICON_PATHS[spriteHyphen];
   }
 
   // 4. Lowercase lookup
-  const lower = n.toLowerCase()
-  if (ICON_PATHS[lower]) return ICON_PATHS[lower]
+  const lower = n.toLowerCase();
+  if (ICON_PATHS[lower]) return ICON_PATHS[lower];
 
   // 5. Case-insensitive key match in ICON_PATHS
   const foundKey = Object.keys(ICON_PATHS).find(
-    (k) => k.toLowerCase() === lower || k.toLowerCase() === hyphenated.toLowerCase(),
-  )
-  if (foundKey && ICON_PATHS[foundKey]) return ICON_PATHS[foundKey]
+    (k) =>
+      k.toLowerCase() === lower || k.toLowerCase() === hyphenated.toLowerCase(),
+  );
+  if (foundKey && ICON_PATHS[foundKey]) return ICON_PATHS[foundKey];
 
   // 6. Vertical fallback
   if (vertical) {
-    const vTrim = vertical.trim()
-    const vSprite = COMMODITY_SPRITE_KEY[vTrim]
-    if (vSprite && ICON_PATHS[vSprite]) return ICON_PATHS[vSprite]
-    const vLower = vTrim.toLowerCase()
-    if (ICON_PATHS[vLower]) return ICON_PATHS[vLower]
+    const vTrim = vertical.trim();
+    const vSprite = product_SPRITE_KEY[vTrim];
+    if (vSprite && ICON_PATHS[vSprite]) return ICON_PATHS[vSprite];
+    const vLower = vTrim.toLowerCase();
+    if (ICON_PATHS[vLower]) return ICON_PATHS[vLower];
   }
 
   // 7. Default
-  return ICON_PATHS.wheat || `${PRODUCTS_PATH}/wheat200.png`
+  return ICON_PATHS.wheat || `${PRODUCTS_PATH}/wheat200.png`;
 }
 
 function getVerticalForProduct(productName: string): string {
   return (
-    Object.entries(VERTICALS).find(
-      ([, vd]) => vd.commodities[productName],
-    )?.[0] || "Grains"
-  )
+    Object.entries(VERTICALS).find(([, vd]) => vd.products[productName])?.[0] ||
+    "Grains"
+  );
 }
 
-const REAL_COMMODITY_IMAGES: Record<string, string> = new Proxy(
+const REAL_product_IMAGES: Record<string, string> = new Proxy(
   {},
   {
-    get: (_, prop: string) => getCommodityIconSrc(prop),
+    get: (_, prop: string) => getproductIconSrc(prop),
   },
-) as Record<string, string>
+) as Record<string, string>;
 
 // Clean Bell Icon with notification badge
-function BellIconSVG({ size = 20, color = "#fff" }: { size?: number; color?: string }) {
+function BellIconSVG({
+  size = 20,
+  color = "#fff",
+}: {
+  size?: number;
+  color?: string;
+}) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
       <path d="M13.73 21a2 2 0 0 1-3.46 0" />
     </svg>
-  )
+  );
 }
 
 // Clean Lock Icon
-function LockIconSVG({ size = 18, color = "#4A6258" }: { size?: number; color?: string }) {
+function LockIconSVG({
+  size = 18,
+  color = "#4A6258",
+}: {
+  size?: number;
+  color?: string;
+}) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" fill="none" />
       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
       <circle cx="12" cy="16" r="1.5" fill={color} />
     </svg>
-  )
+  );
 }
 
 // Clean Voice Off / Voice On Badge Icon
-function VoiceBadgeIconSVG({ active = false, size = 14 }: { active?: boolean; size?: number }) {
+function VoiceBadgeIconSVG({
+  active = false,
+  size = 14,
+}: {
+  active?: boolean;
+  size?: number;
+}) {
   return (
     <span
       style={{
@@ -6313,13 +6408,31 @@ function VoiceBadgeIconSVG({ active = false, size = 14 }: { active?: boolean; si
       }}
     >
       {active ? (
-        <svg width={size - 4} height={size - 4} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width={size - 4}
+          height={size - 4}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#fff"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
           <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
           <line x1="12" y1="19" x2="12" y2="23" />
         </svg>
       ) : (
-        <svg width={size - 4} height={size - 4} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width={size - 4}
+          height={size - 4}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#fff"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <line x1="1" y1="1" x2="23" y2="23" />
           <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />
           <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a6.97 6.97 0 0 1-.7 3" />
@@ -6327,38 +6440,53 @@ function VoiceBadgeIconSVG({ active = false, size = 14 }: { active?: boolean; si
         </svg>
       )}
     </span>
-  )
+  );
 }
 
 // Clean Pin Icon
-function PinIconSVG({ size = 13, color = "#85E2B8" }: { size?: number; color?: string }) {
+function PinIconSVG({
+  size = 13,
+  color = "#85E2B8",
+}: {
+  size?: number;
+  color?: string;
+}) {
   return (
-    <svg width={size} height={size + 3} viewBox="0 0 10 13" fill="none" style={{ flexShrink: 0 }}>
-      <path d="M5 0C2.794 0 1 1.794 1 4c0 3 4 9 4 9s4-6 4-9c0-2.206-1.794-4-4-4z" fill={color} />
+    <svg
+      width={size}
+      height={size + 3}
+      viewBox="0 0 10 13"
+      fill="none"
+      style={{ flexShrink: 0 }}
+    >
+      <path
+        d="M5 0C2.794 0 1 1.794 1 4c0 3 4 9 4 9s4-6 4-9c0-2.206-1.794-4-4-4z"
+        fill={color}
+      />
       <circle cx="5" cy="4" r="1.5" fill="rgba(255,255,255,0.85)" />
     </svg>
-  )
+  );
 }
 
 function AgriAmbientCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    let animId: number
-    let width = (canvas.width = canvas.parentElement?.clientWidth || 360)
-    let height = (canvas.height = canvas.parentElement?.clientHeight || 600)
+    let animId: number;
+    let width = (canvas.width = canvas.parentElement?.clientWidth || 360);
+    let height = (canvas.height = canvas.parentElement?.clientHeight || 600);
 
     const handleResize = () => {
-      if (!canvas || !canvas.parentElement) return
-      width = canvas.width = canvas.parentElement.clientWidth
-      height = canvas.height = canvas.parentElement.clientHeight
-    }
-    window.addEventListener("resize", handleResize)
+      if (!canvas || !canvas.parentElement) return;
+      width = canvas.width = canvas.parentElement.clientWidth;
+      height = canvas.height = canvas.parentElement.clientHeight;
+    };
+    window.addEventListener("resize", handleResize);
 
     const particles = Array.from({ length: 16 }, () => ({
       x: Math.random() * width,
@@ -6367,39 +6495,39 @@ function AgriAmbientCanvas() {
       vx: (Math.random() - 0.45) * 0.3,
       vy: -Math.random() * 0.4 - 0.15,
       alpha: Math.random() * 0.35 + 0.15,
-    }))
+    }));
 
-    let tick = 0
+    let tick = 0;
     const render = () => {
-      tick += 0.012
-      ctx.clearRect(0, 0, width, height)
+      tick += 0.012;
+      ctx.clearRect(0, 0, width, height);
 
       particles.forEach((p) => {
-        p.x += p.vx + Math.sin(tick + p.y * 0.02) * 0.2
-        p.y += p.vy
+        p.x += p.vx + Math.sin(tick + p.y * 0.02) * 0.2;
+        p.y += p.vy;
         if (p.y < -10) {
-          p.y = height + 10
-          p.x = Math.random() * width
+          p.y = height + 10;
+          p.x = Math.random() * width;
         }
-        if (p.x < -10) p.x = width + 10
-        if (p.x > width + 10) p.x = -10
+        if (p.x < -10) p.x = width + 10;
+        if (p.x > width + 10) p.x = -10;
 
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(168, 220, 200, ${p.alpha})`
-        ctx.fill()
-      })
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(168, 220, 200, ${p.alpha})`;
+        ctx.fill();
+      });
 
-      animId = requestAnimationFrame(render)
-    }
+      animId = requestAnimationFrame(render);
+    };
 
-    render()
+    render();
 
     return () => {
-      window.removeEventListener("resize", handleResize)
-      cancelAnimationFrame(animId)
-    }
-  }, [])
+      window.removeEventListener("resize", handleResize);
+      cancelAnimationFrame(animId);
+    };
+  }, []);
 
   return (
     <canvas
@@ -6407,74 +6535,74 @@ function AgriAmbientCanvas() {
       className="absolute inset-0 w-full h-full pointer-events-none"
       style={{ opacity: 0.7, zIndex: 0 }}
     />
-  )
+  );
 }
 
 function AgriForegroundCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    const img = new Image()
-    img.src = agriForegroundImg
+    const img = new Image();
+    img.src = agriForegroundImg;
 
-    let animId: number = 0
+    let animId: number = 0;
     const render = () => {
-      const parent = canvas.parentElement
-      if (!parent) return
-      const rect = parent.getBoundingClientRect()
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      const rect = parent.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-      const width = rect.width
-      const height = rect.height
+      const width = rect.width;
+      const height = rect.height;
 
-      if (width === 0 || height === 0) return
+      if (width === 0 || height === 0) return;
 
       if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
-        canvas.width = width * dpr
-        canvas.height = height * dpr
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
       }
 
-      ctx.save()
-      ctx.scale(dpr, dpr)
-      ctx.clearRect(0, 0, width, height)
+      ctx.save();
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, width, height);
 
       if (img.complete && img.naturalWidth > 0) {
         // Draw the curved sagging foreground graphic maintaining aspect ratio, anchored to bottom
-        const imgAspect = img.naturalWidth / img.naturalHeight
-        const drawHeight = Math.max(height, width / imgAspect)
-        const drawWidth = drawHeight * imgAspect
-        const drawX = (width - drawWidth) / 2
-        const drawY = height - drawHeight
+        const imgAspect = img.naturalWidth / img.naturalHeight;
+        const drawHeight = Math.max(height, width / imgAspect);
+        const drawWidth = drawHeight * imgAspect;
+        const drawX = (width - drawWidth) / 2;
+        const drawY = height - drawHeight;
 
-        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight)
+        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
       }
-      ctx.restore()
-    }
+      ctx.restore();
+    };
 
     img.onload = () => {
-      render()
-    }
+      render();
+    };
 
     const ro = new ResizeObserver(() => {
-      render()
-    })
+      render();
+    });
 
     if (canvas.parentElement) {
-      ro.observe(canvas.parentElement)
+      ro.observe(canvas.parentElement);
     }
 
-    render()
+    render();
 
     return () => {
-      ro.disconnect()
-      cancelAnimationFrame(animId)
-    }
-  }, [])
+      ro.disconnect();
+      cancelAnimationFrame(animId);
+    };
+  }, []);
 
   return (
     <div
@@ -6495,15 +6623,15 @@ function AgriForegroundCanvas() {
         }}
       />
     </div>
-  )
+  );
 }
 
 function getSpriteKey(name: string, vertical?: string): string | null {
   return (
-    COMMODITY_SPRITE_KEY[name] ||
-    (vertical ? COMMODITY_SPRITE_KEY[vertical] : null) ||
+    product_SPRITE_KEY[name] ||
+    (vertical ? product_SPRITE_KEY[vertical] : null) ||
     null
-  )
+  );
 }
 
 function SpriteIcon({
@@ -6512,12 +6640,12 @@ function SpriteIcon({
   className,
   style,
 }: {
-  spriteKey: string
-  size?: number
-  className?: string
-  style?: React.CSSProperties
+  spriteKey: string;
+  size?: number;
+  className?: string;
+  style?: React.CSSProperties;
 }) {
-  const src = getCommodityIconSrc(spriteKey)
+  const src = getproductIconSrc(spriteKey);
   return (
     <div
       className={className}
@@ -6544,23 +6672,23 @@ function SpriteIcon({
         decoding="async"
       />
     </div>
-  )
+  );
 }
 
-function CommodityIcon({
+function ProductIcon({
   name,
   vertical,
   size = 44,
   className,
   style,
 }: {
-  name: string
-  vertical?: string
-  size?: number
-  className?: string
-  style?: React.CSSProperties
+  name: string;
+  vertical?: string;
+  size?: number;
+  className?: string;
+  style?: React.CSSProperties;
 }) {
-  const src = getCommodityIconSrc(name, vertical)
+  const src = getproductIconSrc(name, vertical);
   return (
     <div
       className={className}
@@ -6587,28 +6715,28 @@ function CommodityIcon({
         decoding="async"
       />
     </div>
-  )
+  );
 }
 
-const getVerticalIcon = (v: string) => VERTICALS[v]?.icon || "grains"
+const getVerticalIcon = (v: string) => VERTICALS[v]?.icon || "grains";
 
 function ScrollRow({
   children,
   bg = "#F4FAF7",
   style,
 }: {
-  children: React.ReactNode
-  bg?: string
-  style?: React.CSSProperties
+  children: React.ReactNode;
+  bg?: string;
+  style?: React.CSSProperties;
 }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const { lang } = useLang()
-  const isRtl = lang === "ur"
+  const ref = useRef<HTMLDivElement>(null);
+  const { lang } = useLang();
+  const isRtl = lang === "ur";
 
   const scrollLeft = () =>
-    ref.current?.scrollBy({ left: isRtl ? 160 : -160, behavior: "smooth" })
+    ref.current?.scrollBy({ left: isRtl ? 160 : -160, behavior: "smooth" });
   const scrollRight = () =>
-    ref.current?.scrollBy({ left: isRtl ? -160 : 160, behavior: "smooth" })
+    ref.current?.scrollBy({ left: isRtl ? -160 : 160, behavior: "smooth" });
 
   return (
     <div className="relative flex-shrink-0 w-full" style={style}>
@@ -6638,7 +6766,16 @@ function ScrollRow({
           background: `linear-gradient(to right, ${bg} 70%, transparent)`,
         }}
       >
-        <span style={{ fontSize: 20, fontWeight: 900, color: "#087F63", lineHeight: 1 }}>‹</span>
+        <span
+          style={{
+            fontSize: 20,
+            fontWeight: 900,
+            color: "#087F63",
+            lineHeight: 1,
+          }}
+        >
+          ‹
+        </span>
       </button>
       <button
         onClick={scrollRight}
@@ -6648,10 +6785,19 @@ function ScrollRow({
           background: `linear-gradient(to left, ${bg} 70%, transparent)`,
         }}
       >
-        <span style={{ fontSize: 20, fontWeight: 900, color: "#087F63", lineHeight: 1 }}>›</span>
+        <span
+          style={{
+            fontSize: 20,
+            fontWeight: 900,
+            color: "#087F63",
+            lineHeight: 1,
+          }}
+        >
+          ›
+        </span>
       </button>
     </div>
-  )
+  );
 }
 
 function TrendBadge({
@@ -6659,11 +6805,11 @@ function TrendBadge({
   pct,
   compact,
 }: {
-  trend: "up" | "down" | "stable"
-  pct: number
-  compact?: boolean
+  trend: "up" | "down" | "stable";
+  pct: number;
+  compact?: boolean;
 }) {
-  const displayPct = Math.abs(pct || 2.4).toFixed(1)
+  const displayPct = Math.abs(pct || 2.4).toFixed(1);
   if (trend === "up")
     return (
       <span
@@ -6681,7 +6827,7 @@ function TrendBadge({
         <span>▲</span>
         <span>+{displayPct}%</span>
       </span>
-    )
+    );
   if (trend === "down")
     return (
       <span
@@ -6699,7 +6845,7 @@ function TrendBadge({
         <span>▼</span>
         <span>-{displayPct}%</span>
       </span>
-    )
+    );
   return (
     <span
       style={{
@@ -6715,7 +6861,7 @@ function TrendBadge({
     >
       0.0%
     </span>
-  )
+  );
 }
 
 //  ZM MESSAGE CARD & MODAL
@@ -6758,7 +6904,7 @@ function ZMMessageCard({ msg }: { msg: FeedMsg }) {
         >
           <p>تاریخ : 03-08-2026</p>
           <p>
-            اجناس : <strong>{msg.commodityUrdu}</strong> ({msg.byproduct})
+            اجناس : <strong>{msg.productUrdu}</strong> ({msg.byproduct})
           </p>
           <p>
             مقام : <strong>{msg.stationUrdu}</strong>، ({msg.province})
@@ -6775,7 +6921,7 @@ function ZMMessageCard({ msg }: { msg: FeedMsg }) {
         </div>
         <div className="text-xs leading-relaxed" style={{ color: "#183B34" }}>
           <p>
-            Commodity : <strong>{msg.commodity}</strong> · {msg.byproduct}
+            product : <strong>{msg.product}</strong> · {msg.byproduct}
           </p>
           <p>
             Station : <strong>{msg.station}</strong> ({msg.province})
@@ -6793,26 +6939,19 @@ function ZMMessageCard({ msg }: { msg: FeedMsg }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function ZMMessageModal({
   msg,
   onClose,
 }: {
-  msg: FeedMsg
-  onClose: () => void
+  msg: FeedMsg;
+  onClose: () => void;
 }) {
   return (
-    <div
-      className="zm-sheet-overlay"
-      style={{ zIndex: 300 }}
-      onClick={onClose}
-    >
-      <div
-        className="zm-sheet"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="zm-sheet-overlay" style={{ zIndex: 300 }} onClick={onClose}>
+      <div className="zm-sheet" onClick={(e) => e.stopPropagation()}>
         <div
           className="flex items-center justify-between px-5 py-3"
           style={{ background: "#075E4F" }}
@@ -6820,7 +6959,7 @@ function ZMMessageModal({
           <div>
             <p className="text-white font-bold">ZM Rate Report</p>
             <p className="text-green-200 text-xs">
-              {msg.commodity} · {msg.byproduct} · {msg.station}
+              {msg.product} · {msg.byproduct} · {msg.station}
             </p>
           </div>
           <button
@@ -6838,7 +6977,7 @@ function ZMMessageModal({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 //  SHEETS
@@ -6848,19 +6987,15 @@ function PriceTypeSheet({
   onApply,
   onClose,
 }: {
-  selected: string[]
-  onApply: (v: string[]) => void
-  onClose: () => void
+  selected: string[];
+  onApply: (v: string[]) => void;
+  onClose: () => void;
 }) {
-  const [local, setLocal] = useState<string[]>(selected)
+  const [local, setLocal] = useState<string[]>(selected);
   const toggle = (rt: string) =>
-    setLocal((p) => (p.includes(rt) ? p.filter((x) => x !== rt) : [...p, rt]))
+    setLocal((p) => (p.includes(rt) ? p.filter((x) => x !== rt) : [...p, rt]));
   return (
-    <div
-      className="zm-sheet-overlay"
-      style={{ zIndex: 200 }}
-      onClick={onClose}
-    >
+    <div className="zm-sheet-overlay" style={{ zIndex: 200 }} onClick={onClose}>
       <div
         className="zm-sheet-high"
         style={{ maxHeight: "82vh" }}
@@ -6873,8 +7008,8 @@ function PriceTypeSheet({
         <div className="overflow-y-auto flex-1 min-h-0 p-4 flex flex-col gap-2">
           <button
             onClick={() => {
-              if (local.length === ALL_RATE_TYPES.length) setLocal([])
-              else setLocal([...ALL_RATE_TYPES])
+              if (local.length === ALL_RATE_TYPES.length) setLocal([]);
+              else setLocal([...ALL_RATE_TYPES]);
             }}
             className="tap-target rounded-2xl px-4 py-3.5 flex items-center gap-3"
             style={{
@@ -6882,8 +7017,9 @@ function PriceTypeSheet({
                 local.length === ALL_RATE_TYPES.length ? "#168A76" : "#F1F7F4",
               color:
                 local.length === ALL_RATE_TYPES.length ? "#fff" : "#183B34",
-              border: `1.5px solid ${local.length === ALL_RATE_TYPES.length ? "#168A76" : "#D5E2DD"
-                }`,
+              border: `1.5px solid ${
+                local.length === ALL_RATE_TYPES.length ? "#168A76" : "#D5E2DD"
+              }`,
             }}
           >
             <div
@@ -6924,8 +7060,9 @@ function PriceTypeSheet({
               className="tap-target rounded-2xl px-4 flex items-center gap-3"
               style={{
                 background: local.includes(rt) ? "#EAF5F1" : "#F1F7F4",
-                border: `1.5px solid ${local.includes(rt) ? "#168A76" : "#D5E2DD"
-                  }`,
+                border: `1.5px solid ${
+                  local.includes(rt) ? "#168A76" : "#D5E2DD"
+                }`,
                 minHeight: 52,
               }}
             >
@@ -6946,8 +7083,8 @@ function PriceTypeSheet({
         <div className="px-4 pb-6 pt-3 border-t border-[#DCE8E3] flex-shrink-0">
           <button
             onClick={() => {
-              onApply(local)
-              onClose()
+              onApply(local);
+              onClose();
             }}
             className="tap-target w-full rounded-2xl py-4 font-bold text-white text-base"
             style={{ background: "#168A76" }}
@@ -6961,7 +7098,7 @@ function PriceTypeSheet({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function MandiPickerSheet({
@@ -6969,36 +7106,32 @@ function MandiPickerSheet({
   onApply,
   onClose,
 }: {
-  selected: string[]
-  onApply: (names: string[]) => void
-  onClose: () => void
+  selected: string[];
+  onApply: (names: string[]) => void;
+  onClose: () => void;
 }) {
-  const [local, setLocal] = useState<string[]>(selected)
-  const [province, setProvince] = useState<string | null>(null)
-  const [district, setDistrict] = useState<string | null>(null)
-  const [searchQ, setSearchQ] = useState("")
+  const [local, setLocal] = useState<string[]>(selected);
+  const [province, setProvince] = useState<string | null>(null);
+  const [district, setDistrict] = useState<string | null>(null);
+  const [searchQ, setSearchQ] = useState("");
 
   const toggle = (name: string) =>
     setLocal((p) =>
       p.includes(name) ? p.filter((x) => x !== name) : [...p, name],
-    )
+    );
   const searchResults =
     searchQ.length >= 2
       ? ALL_MANDI_NAMES.filter((n) =>
-        n.toLowerCase().includes(searchQ.toLowerCase()),
-      )
-      : []
+          n.toLowerCase().includes(searchQ.toLowerCase()),
+        )
+      : [];
   const back = () => {
-    if (district) setDistrict(null)
-    else if (province) setProvince(null)
-  }
+    if (district) setDistrict(null);
+    else if (province) setProvince(null);
+  };
 
   return (
-    <div
-      className="zm-sheet-overlay"
-      style={{ zIndex: 200 }}
-      onClick={onClose}
-    >
+    <div className="zm-sheet-overlay" style={{ zIndex: 200 }} onClick={onClose}>
       <div
         className="zm-sheet-high"
         style={{ maxHeight: "88vh" }}
@@ -7071,8 +7204,9 @@ function MandiPickerSheet({
                   className="tap-target flex-shrink-0 rounded-2xl px-4 flex items-center gap-3"
                   style={{
                     background: local.includes(name) ? "#F1F7F4" : "#F1F7F4",
-                    border: `1.5px solid ${local.includes(name) ? "#087F63" : "#D5E2DD"
-                      }`,
+                    border: `1.5px solid ${
+                      local.includes(name) ? "#087F63" : "#D5E2DD"
+                    }`,
                     height: 60,
                   }}
                 >
@@ -7102,34 +7236,35 @@ function MandiPickerSheet({
             )
           ) : !province ? (
             Object.keys(LOCATIONS).map((p) => {
-              const allProvMandis = Object.values(LOCATIONS[p]).flat()
+              const allProvMandis = Object.values(LOCATIONS[p]).flat();
               const provSelCount = allProvMandis.filter((m) =>
                 local.includes(m),
-              ).length
-              const provAllSel = provSelCount === allProvMandis.length
+              ).length;
+              const provAllSel = provSelCount === allProvMandis.length;
               const toggleProv = (e: React.MouseEvent) => {
-                e.stopPropagation()
+                e.stopPropagation();
                 if (provAllSel)
-                  setLocal((l) => l.filter((x) => !allProvMandis.includes(x)))
+                  setLocal((l) => l.filter((x) => !allProvMandis.includes(x)));
                 else
                   setLocal((l) => [
                     ...l.filter((x) => !allProvMandis.includes(x)),
                     ...allProvMandis,
-                  ])
-              }
+                  ]);
+              };
               return (
                 <div
                   key={p}
                   className="flex-shrink-0 rounded-2xl overflow-hidden"
                   style={{
-                    border: `1.5px solid ${provSelCount > 0 ? "#087F63" : "#D5E2DD"
-                      }`,
+                    border: `1.5px solid ${
+                      provSelCount > 0 ? "#087F63" : "#D5E2DD"
+                    }`,
                   }}
                 >
                   <button
                     onClick={() => {
-                      setProvince(p)
-                      setDistrict(null)
+                      setProvince(p);
+                      setDistrict(null);
                     }}
                     className="tap-target w-full px-4 flex items-center justify-between"
                     style={{
@@ -7186,32 +7321,33 @@ function MandiPickerSheet({
                     </div>
                   </button>
                 </div>
-              )
+              );
             })
           ) : !district ? (
             Object.keys(LOCATIONS[province]).map((d) => {
-              const distMandis = LOCATIONS[province][d]
+              const distMandis = LOCATIONS[province][d];
               const distSelCount = distMandis.filter((m) =>
                 local.includes(m),
-              ).length
-              const distAllSel = distSelCount === distMandis.length
+              ).length;
+              const distAllSel = distSelCount === distMandis.length;
               const toggleDist = (e: React.MouseEvent) => {
-                e.stopPropagation()
+                e.stopPropagation();
                 if (distAllSel)
-                  setLocal((l) => l.filter((x) => !distMandis.includes(x)))
+                  setLocal((l) => l.filter((x) => !distMandis.includes(x)));
                 else
                   setLocal((l) => [
                     ...l.filter((x) => !distMandis.includes(x)),
                     ...distMandis,
-                  ])
-              }
+                  ]);
+              };
               return (
                 <div
                   key={d}
                   className="flex-shrink-0 rounded-2xl overflow-hidden"
                   style={{
-                    border: `1.5px solid ${distSelCount > 0 ? "#087F63" : "#D5E2DD"
-                      }`,
+                    border: `1.5px solid ${
+                      distSelCount > 0 ? "#087F63" : "#D5E2DD"
+                    }`,
                   }}
                 >
                   <button
@@ -7270,7 +7406,7 @@ function MandiPickerSheet({
                     </div>
                   </button>
                 </div>
-              )
+              );
             })
           ) : (
             LOCATIONS[province][district].map((name) => (
@@ -7280,8 +7416,9 @@ function MandiPickerSheet({
                 className="tap-target flex-shrink-0 rounded-2xl px-4 flex items-center gap-3"
                 style={{
                   background: local.includes(name) ? "#F1F7F4" : "#F1F7F4",
-                  border: `1.5px solid ${local.includes(name) ? "#087F63" : "#D5E2DD"
-                    }`,
+                  border: `1.5px solid ${
+                    local.includes(name) ? "#087F63" : "#D5E2DD"
+                  }`,
                   height: 60,
                 }}
               >
@@ -7328,21 +7465,22 @@ function MandiPickerSheet({
         >
           <button
             onClick={() => {
-              onApply(local)
-              onClose()
+              onApply(local);
+              onClose();
             }}
             className="tap-target w-full rounded-2xl py-4 font-bold text-white text-base"
             style={{ background: "#087F63" }}
           >
             {local.length > 0
-              ? `Show Rates · ${local.length} Mandi${local.length > 1 ? "s" : ""
-              }`
+              ? `Show Rates · ${local.length} Mandi${
+                  local.length > 1 ? "s" : ""
+                }`
               : "Show All Mandis"}
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function LocationSheet({
@@ -7350,18 +7488,14 @@ function LocationSheet({
   onClose,
   districtOnly = false,
 }: {
-  onSelect: (p: string, d?: string, s?: string) => void
-  onClose: () => void
-  districtOnly?: boolean
+  onSelect: (p: string, d?: string, s?: string) => void;
+  onClose: () => void;
+  districtOnly?: boolean;
 }) {
-  const [province, setProvince] = useState<string | null>(null)
-  const [district, setDistrict] = useState<string | null>(null)
+  const [province, setProvince] = useState<string | null>(null);
+  const [district, setDistrict] = useState<string | null>(null);
   return (
-    <div
-      className="zm-sheet-overlay"
-      style={{ zIndex: 200 }}
-      onClick={onClose}
-    >
+    <div className="zm-sheet-overlay" style={{ zIndex: 200 }} onClick={onClose}>
       <div
         className="zm-sheet"
         style={{ background: "#F4FAF7", maxHeight: "80vh" }}
@@ -7372,8 +7506,8 @@ function LocationSheet({
             <button
               className="tap-target text-xl w-8"
               onClick={() => {
-                if (district) setDistrict(null)
-                else setProvince(null)
+                if (district) setDistrict(null);
+                else setProvince(null);
               }}
             >
               ←
@@ -7434,8 +7568,8 @@ function LocationSheet({
               <button
                 key={s}
                 onClick={() => {
-                  onSelect(province, district, s)
-                  onClose()
+                  onSelect(province, district, s);
+                  onClose();
                 }}
                 className="tap-target rounded-2xl px-4 flex flex-col justify-center"
                 style={{
@@ -7450,7 +7584,7 @@ function LocationSheet({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 //  LOCATION SCOPE SHEET — contextual chip (District/Province/Pakistan/Mandi)
@@ -7460,21 +7594,21 @@ function LocationScopeSheet({
   onSelect,
   onClose,
 }: {
-  scope: LocationScope
-  onSelect: (s: LocationScope) => void
-  onClose: () => void
+  scope: LocationScope;
+  onSelect: (s: LocationScope) => void;
+  onClose: () => void;
 }) {
-  const [mandiPicker, setMandiPicker] = useState(false)
+  const [mandiPicker, setMandiPicker] = useState(false);
   const rows: {
-    kind: LocationScope["kind"]
-    label: string
-    sub: string
-    icon: string
+    kind: LocationScope["kind"];
+    label: string;
+    sub: string;
+    icon: string;
   }[] = [
-      { kind: "pakistan", label: "Pakistan", sub: "My Country", icon: "" },
-      { kind: "province", label: "Punjab", sub: "My Province", icon: "" },
-      { kind: "district", label: "Pakpattan", sub: "My District", icon: "" },
-    ]
+    { kind: "pakistan", label: "Pakistan", sub: "My Country", icon: "" },
+    { kind: "province", label: "Punjab", sub: "My Province", icon: "" },
+    { kind: "district", label: "Pakpattan", sub: "My District", icon: "" },
+  ];
 
   if (mandiPicker) {
     return (
@@ -7482,15 +7616,11 @@ function LocationScopeSheet({
         onSelect={(p, d, s) => onSelect({ kind: "mandi", label: s || d || p })}
         onClose={onClose}
       />
-    )
+    );
   }
 
   return (
-    <div
-      className="zm-sheet-overlay"
-      style={{ zIndex: 200 }}
-      onClick={onClose}
-    >
+    <div className="zm-sheet-overlay" style={{ zIndex: 200 }} onClick={onClose}>
       <div
         className="zm-sheet"
         style={{ background: "#F4FAF7", maxHeight: "80vh" }}
@@ -7504,12 +7634,12 @@ function LocationScopeSheet({
         </div>
         <div className="p-4 flex flex-col gap-2">
           {rows.map((r) => {
-            const on = scope.kind === r.kind
+            const on = scope.kind === r.kind;
             return (
               <button
                 key={r.kind}
                 onClick={() => {
-                  onSelect({ kind: r.kind, label: r.label })
+                  onSelect({ kind: r.kind, label: r.label });
                 }}
                 className="tap-target rounded-2xl px-4 flex items-center gap-3"
                 style={{
@@ -7534,7 +7664,7 @@ function LocationScopeSheet({
                   <span style={{ color: "#087F63", fontWeight: 800 }}></span>
                 )}
               </button>
-            )
+            );
           })}
           <button
             onClick={() => setMandiPicker(true)}
@@ -7557,72 +7687,72 @@ function LocationScopeSheet({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 //  FEED MODAL — 4-dimension filter
 
 type FeedFilter = {
-  commodities: string[]
-  byproducts: string[]
-  stations: string[]
-  rateTypes: string[]
-}
+  products: string[];
+  byproducts: string[];
+  stations: string[];
+  rateTypes: string[];
+};
 
 function FeedModal({
   initialFilter,
   onClose,
 }: {
-  initialFilter?: Partial<FeedFilter>
-  onClose: () => void
+  initialFilter?: Partial<FeedFilter>;
+  onClose: () => void;
 }) {
   const [filter, setFilter] = useState<FeedFilter>({
-    commodities: initialFilter?.commodities || [],
+    products: initialFilter?.products || [],
     byproducts: initialFilter?.byproducts || [],
     stations: initialFilter?.stations || [],
     rateTypes: initialFilter?.rateTypes || [],
-  })
-  const [sheet, setSheet] =
-    useState<"commodity" | "byproduct" | "location" | "price" | null>(null)
-  const [comVertical, setComVertical] = useState<string | null>(null)
+  });
+  const [sheet, setSheet] = useState<
+    "product" | "byproduct" | "location" | "price" | null
+  >(null);
+  const [comVertical, setComVertical] = useState<string | null>(null);
 
   const displayed = FEED_MESSAGES.filter(
     (m) =>
-      (filter.commodities.length === 0 ||
-        filter.commodities.includes(m.commodity)) &&
+      (filter.products.length === 0 || filter.products.includes(m.product)) &&
       (filter.byproducts.length === 0 ||
         filter.byproducts.includes(m.byproduct)) &&
       (filter.stations.length === 0 ||
         filter.stations.includes(m.station) ||
         filter.stations.some((s) => m.province === s)) &&
       (filter.rateTypes.length === 0 || filter.rateTypes.includes(m.rateType)),
-  )
+  );
 
   const totalActive =
-    filter.commodities.length +
+    filter.products.length +
     filter.byproducts.length +
     filter.stations.length +
-    filter.rateTypes.length
+    filter.rateTypes.length;
 
   const uniqueBPs = [
     ...new Set(
       Object.entries(VERTICALS).flatMap(([, vd]) =>
-        Object.entries(vd.commodities)
+        Object.entries(vd.products)
           .filter(
             ([c]) =>
-              filter.commodities.length === 0 || filter.commodities.includes(c),
+              filter.products.length === 0 || filter.products.includes(c),
           )
           .flatMap(([, bps]) => bps),
       ),
     ),
-  ]
+  ];
 
   const chipLabel = (items: string[], placeholder: string) =>
     items.length === 0
       ? placeholder
       : items.length === 1
         ? items[0]
-        : `${items.length} ${placeholder}s`
+        : `${items.length} ${placeholder}s`;
 
   return (
     <div
@@ -7653,7 +7783,7 @@ function FeedModal({
           <button
             onClick={() =>
               setFilter({
-                commodities: [],
+                products: [],
                 byproducts: [],
                 stations: [],
                 rateTypes: [],
@@ -7670,21 +7800,21 @@ function FeedModal({
       {/* 4 Filter picker buttons — horizontally scrollable with clickable arrow */}
       <ScrollRow bg="#0B7F70" style={{ background: "#0B7F70" }}>
         <button
-          onClick={() => setSheet("commodity")}
+          onClick={() => setSheet("product")}
           className="tap-target flex-shrink-0 flex items-center gap-1.5 rounded-full font-bold"
           style={{
             fontSize: 13,
             padding: "10px 14px",
-            background: filter.commodities.length > 0 ? "#087F63" : "#E8EFEC",
-            color: filter.commodities.length > 0 ? "#fff" : "#183B34",
+            background: filter.products.length > 0 ? "#087F63" : "#E8EFEC",
+            color: filter.products.length > 0 ? "#fff" : "#183B34",
           }}
         >
-          {chipLabel(filter.commodities, "Commodity")}
-          {filter.commodities.length > 0 && (
+          {chipLabel(filter.products, "product")}
+          {filter.products.length > 0 && (
             <button
               onClick={(e) => {
-                e.stopPropagation()
-                setFilter((f) => ({ ...f, commodities: [], byproducts: [] }))
+                e.stopPropagation();
+                setFilter((f) => ({ ...f, products: [], byproducts: [] }));
               }}
               className="tap-target opacity-70 ml-1"
             ></button>
@@ -7692,7 +7822,7 @@ function FeedModal({
         </button>
         <button
           onClick={() => {
-            if (filter.commodities.length > 0) setSheet("byproduct")
+            if (filter.products.length > 0) setSheet("byproduct");
           }}
           className="tap-target flex-shrink-0 flex items-center gap-1.5 rounded-full font-bold"
           style={{
@@ -7701,24 +7831,24 @@ function FeedModal({
             background:
               filter.byproducts.length > 0
                 ? "#147D72"
-                : filter.commodities.length === 0
+                : filter.products.length === 0
                   ? "rgba(255,255,255,0.18)"
                   : "#E8EFEC",
             color:
               filter.byproducts.length > 0
                 ? "#fff"
-                : filter.commodities.length === 0
+                : filter.products.length === 0
                   ? "rgba(255,255,255,0.45)"
                   : "#183B34",
-            opacity: filter.commodities.length === 0 ? 0.6 : 1,
+            opacity: filter.products.length === 0 ? 0.6 : 1,
           }}
         >
           {chipLabel(filter.byproducts, "Byproduct")}
           {filter.byproducts.length > 0 && (
             <button
               onClick={(e) => {
-                e.stopPropagation()
-                setFilter((f) => ({ ...f, byproducts: [] }))
+                e.stopPropagation();
+                setFilter((f) => ({ ...f, byproducts: [] }));
               }}
               className="tap-target opacity-70 ml-1"
             ></button>
@@ -7738,8 +7868,8 @@ function FeedModal({
           {filter.stations.length > 0 && (
             <button
               onClick={(e) => {
-                e.stopPropagation()
-                setFilter((f) => ({ ...f, stations: [] }))
+                e.stopPropagation();
+                setFilter((f) => ({ ...f, stations: [] }));
               }}
               className="tap-target opacity-70 ml-1"
             ></button>
@@ -7759,8 +7889,8 @@ function FeedModal({
           {filter.rateTypes.length > 0 && (
             <button
               onClick={(e) => {
-                e.stopPropagation()
-                setFilter((f) => ({ ...f, rateTypes: [] }))
+                e.stopPropagation();
+                setFilter((f) => ({ ...f, rateTypes: [] }));
               }}
               className="tap-target opacity-70 ml-1"
             ></button>
@@ -7771,7 +7901,7 @@ function FeedModal({
       {/* Active filter pills row — horizontally scrollable, each removable */}
       {totalActive > 0 && (
         <ScrollRow bg="transparent" style={{ background: "rgba(0,0,0,0.18)" }}>
-          {filter.commodities.map((c) => (
+          {filter.products.map((c) => (
             <span
               key={c}
               className="flex-shrink-0 flex items-center gap-1 font-bold rounded-full"
@@ -7787,7 +7917,7 @@ function FeedModal({
                 onClick={() =>
                   setFilter((f) => ({
                     ...f,
-                    commodities: f.commodities.filter((x) => x !== c),
+                    products: f.products.filter((x) => x !== c),
                   }))
                 }
                 className="tap-target opacity-70"
@@ -7877,7 +8007,7 @@ function FeedModal({
             <button
               onClick={() =>
                 setFilter({
-                  commodities: [],
+                  products: [],
                   byproducts: [],
                   stations: [],
                   rateTypes: [],
@@ -7898,8 +8028,8 @@ function FeedModal({
         )}
       </div>
 
-      {/* Commodity sheet — multi-select with vertical drill + Select All per vertical */}
-      {sheet === "commodity" && (
+      {/* product sheet — multi-select with vertical drill + Select All per vertical */}
+      {sheet === "product" && (
         <div
           className="zm-sheet-overlay"
           style={{ zIndex: 210 }}
@@ -7924,39 +8054,40 @@ function FeedModal({
                 </button>
               )}
               <p className="font-bold text-lg flex-1">
-                {comVertical || "Commodity"}
+                {comVertical || "product"}
               </p>
-              {filter.commodities.length > 0 && (
+              {filter.products.length > 0 && (
                 <button
                   onClick={() =>
                     setFilter((f) => ({
                       ...f,
-                      commodities: [],
+                      products: [],
                       byproducts: [],
                     }))
                   }
                   className="tap-target text-xs font-bold px-3 py-1.5 rounded-full flex-shrink-0"
                   style={{ background: "#F9E1DE", color: "#A83B37" }}
                 >
-                  Clear {filter.commodities.length}
+                  Clear {filter.products.length}
                 </button>
               )}
             </div>
             <div className="overflow-y-auto flex-1 p-4 flex flex-col gap-2">
               {!comVertical ? (
                 Object.entries(VERTICALS).map(([v, vd]) => {
-                  const comms = Object.keys(vd.commodities)
+                  const comms = Object.keys(vd.products);
                   const selCount = comms.filter((c) =>
-                    filter.commodities.includes(c),
-                  ).length
-                  const allSel = selCount === comms.length && comms.length > 0
+                    filter.products.includes(c),
+                  ).length;
+                  const allSel = selCount === comms.length && comms.length > 0;
                   return (
                     <div
                       key={v}
                       className="rounded-2xl overflow-hidden"
                       style={{
-                        border: `1.5px solid ${selCount > 0 ? "#087F63" : "#D5E2DD"
-                          }`,
+                        border: `1.5px solid ${
+                          selCount > 0 ? "#087F63" : "#D5E2DD"
+                        }`,
                       }}
                     >
                       <button
@@ -7975,30 +8106,30 @@ function FeedModal({
                         <div className="flex-1 text-left">
                           <p className="font-bold text-sm">{v}</p>
                           <p className="text-xs" style={{ color: "#52635F" }}>
-                            {comms.length} commodities
+                            {comms.length} products
                             {selCount > 0 ? ` · ${selCount} selected` : ""}
                           </p>
                         </div>
                         <button
                           onClick={(e) => {
-                            e.stopPropagation()
+                            e.stopPropagation();
                             if (allSel)
                               setFilter((f) => ({
                                 ...f,
-                                commodities: f.commodities.filter(
+                                products: f.products.filter(
                                   (c) => !comms.includes(c),
                                 ),
-                              }))
+                              }));
                             else
                               setFilter((f) => ({
                                 ...f,
-                                commodities: [
-                                  ...f.commodities.filter(
+                                products: [
+                                  ...f.products.filter(
                                     (c) => !comms.includes(c),
                                   ),
                                   ...comms,
                                 ],
-                              }))
+                              }));
                           }}
                           className="tap-target flex items-center gap-1.5 rounded-xl px-2.5 py-1.5"
                           style={{
@@ -8038,38 +8169,35 @@ function FeedModal({
                         <span style={{ color: "#52635F" }}>›</span>
                       </button>
                     </div>
-                  )
+                  );
                 })
               ) : (
                 <>
                   {(() => {
-                    const comms = Object.keys(
-                      VERTICALS[comVertical].commodities,
-                    )
+                    const comms = Object.keys(VERTICALS[comVertical].products);
                     const selCount = comms.filter((c) =>
-                      filter.commodities.includes(c),
-                    ).length
-                    const allSel = selCount === comms.length && comms.length > 0
+                      filter.products.includes(c),
+                    ).length;
+                    const allSel =
+                      selCount === comms.length && comms.length > 0;
                     return (
                       <button
                         onClick={() => {
                           if (allSel)
                             setFilter((f) => ({
                               ...f,
-                              commodities: f.commodities.filter(
+                              products: f.products.filter(
                                 (c) => !comms.includes(c),
                               ),
-                            }))
+                            }));
                           else
                             setFilter((f) => ({
                               ...f,
-                              commodities: [
-                                ...f.commodities.filter(
-                                  (c) => !comms.includes(c),
-                                ),
+                              products: [
+                                ...f.products.filter((c) => !comms.includes(c)),
                                 ...comms,
                               ],
-                            }))
+                            }));
                         }}
                         className="tap-target w-full rounded-2xl px-4 py-3 flex items-center justify-center gap-2 mb-1"
                         style={{
@@ -8104,19 +8232,19 @@ function FeedModal({
                             : `Select All ${comms.length} in ${comVertical}`}
                         </span>
                       </button>
-                    )
+                    );
                   })()}
-                  {Object.keys(VERTICALS[comVertical].commodities).map((c) => {
-                    const sel = filter.commodities.includes(c)
+                  {Object.keys(VERTICALS[comVertical].products).map((c) => {
+                    const sel = filter.products.includes(c);
                     return (
                       <button
                         key={c}
                         onClick={() =>
                           setFilter((f) => ({
                             ...f,
-                            commodities: sel
-                              ? f.commodities.filter((x) => x !== c)
-                              : [...f.commodities, c],
+                            products: sel
+                              ? f.products.filter((x) => x !== c)
+                              : [...f.products, c],
                           }))
                         }
                         className="tap-target rounded-2xl px-4 flex items-center gap-3"
@@ -8141,7 +8269,7 @@ function FeedModal({
                           {c}
                         </span>
                       </button>
-                    )
+                    );
                   })}
                 </>
               )}
@@ -8152,8 +8280,8 @@ function FeedModal({
                 className="tap-target w-full rounded-2xl py-4 font-bold text-white text-base"
                 style={{ background: "#087F63" }}
               >
-                {filter.commodities.length > 0
-                  ? `Done · ${filter.commodities.length} selected`
+                {filter.products.length > 0
+                  ? `Done · ${filter.products.length} selected`
                   : "Done"}
               </button>
             </div>
@@ -8162,7 +8290,7 @@ function FeedModal({
       )}
 
       {/* Byproduct sheet — multi-select with Select All */}
-      {sheet === "byproduct" && filter.commodities.length > 0 && (
+      {sheet === "byproduct" && filter.products.length > 0 && (
         <div
           className="zm-sheet-overlay"
           style={{ zIndex: 210 }}
@@ -8190,16 +8318,17 @@ function FeedModal({
                 (() => {
                   const allSel =
                     uniqueBPs.length > 0 &&
-                    uniqueBPs.every((b) => filter.byproducts.includes(b))
+                    uniqueBPs.every((b) => filter.byproducts.includes(b));
                   return (
                     <button
                       onClick={() => {
-                        if (allSel) setFilter((f) => ({ ...f, byproducts: [] }))
+                        if (allSel)
+                          setFilter((f) => ({ ...f, byproducts: [] }));
                         else
                           setFilter((f) => ({
                             ...f,
                             byproducts: [...uniqueBPs],
-                          }))
+                          }));
                       }}
                       className="tap-target w-full rounded-2xl px-4 py-3 flex items-center justify-center gap-2 mb-1"
                       style={{
@@ -8234,10 +8363,10 @@ function FeedModal({
                           : `Select All ${uniqueBPs.length} Byproducts`}
                       </span>
                     </button>
-                  )
+                  );
                 })()}
               {uniqueBPs.map((b) => {
-                const sel = filter.byproducts.includes(b)
+                const sel = filter.byproducts.includes(b);
                 return (
                   <button
                     key={b}
@@ -8271,7 +8400,7 @@ function FeedModal({
                       {b}
                     </span>
                   </button>
-                )
+                );
               })}
             </div>
             <div className="px-4 pb-6 pt-3 flex-shrink-0 border-t border-[#DCE8E3]">
@@ -8294,7 +8423,7 @@ function FeedModal({
         <MandiPickerSheet
           selected={filter.stations}
           onApply={(s) => {
-            setFilter((f) => ({ ...f, stations: s }))
+            setFilter((f) => ({ ...f, stations: s }));
           }}
           onClose={() => setSheet(null)}
         />
@@ -8305,21 +8434,21 @@ function FeedModal({
         <PriceTypeSheet
           selected={filter.rateTypes}
           onApply={(ts) => {
-            setFilter((f) => ({ ...f, rateTypes: ts }))
-            setSheet(null)
+            setFilter((f) => ({ ...f, rateTypes: ts }));
+            setSheet(null);
           }}
           onClose={() => setSheet(null)}
         />
       )}
     </div>
-  )
+  );
 }
 
 //  CIRCLE TILE
 
 function CircleTile({
   src,
-  commodity,
+  product,
   vertical,
   alt,
   label,
@@ -8329,19 +8458,19 @@ function CircleTile({
   starred,
   onStar,
 }: {
-  src?: string
-  commodity?: string
-  vertical?: string
-  alt: string
-  label: string
-  selected?: boolean
-  onPress: () => void
-  size?: number
-  starred?: boolean
-  onStar?: () => void
+  src?: string;
+  product?: string;
+  vertical?: string;
+  alt: string;
+  label: string;
+  selected?: boolean;
+  onPress: () => void;
+  size?: number;
+  starred?: boolean;
+  onStar?: () => void;
 }) {
-  const iconSize = Math.round(size * 0.65)
-  const spriteKey = commodity ? getSpriteKey(commodity, vertical) : null
+  const iconSize = Math.round(size * 0.65);
+  const spriteKey = product ? getSpriteKey(product, vertical) : null;
   return (
     <button
       onClick={onPress}
@@ -8393,8 +8522,8 @@ function CircleTile({
           <span
             role="button"
             onClick={(e) => {
-              e.stopPropagation()
-              onStar()
+              e.stopPropagation();
+              onStar();
             }}
             className="absolute top-0 left-0 w-6 h-6 rounded-full flex items-center justify-center"
             style={{
@@ -8426,7 +8555,7 @@ function CircleTile({
         {label}
       </span>
     </button>
-  )
+  );
 }
 
 //  SEARCH SCREEN
@@ -8435,45 +8564,45 @@ function SearchScreen({
   push,
   onBack,
 }: {
-  push: (s: Screen) => void
-  onBack: () => void
+  push: (s: Screen) => void;
+  onBack: () => void;
 }) {
-  const { lang, t, tc } = useLang()
-  const [q, setQ] = useState("")
-  const inputRef = useRef<HTMLInputElement>(null)
+  const { lang, t, tc } = useLang();
+  const [q, setQ] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
+    inputRef.current?.focus();
+  }, []);
 
-  // Build flat search index: all commodities + byproducts
+  // Build flat search index: all products + byproducts
   const allItems = Object.entries(VERTICALS).flatMap(([vertical, vd]) =>
-    Object.entries(vd.commodities).flatMap(([commodity, byproducts]) => [
+    Object.entries(vd.products).flatMap(([product, byproducts]) => [
       {
         vertical,
-        commodity,
-        byproduct: commodity,
-        label: commodity,
+        product,
+        byproduct: product,
+        label: product,
         isComm: true,
       },
       ...byproducts
-        .filter((bp) => bp !== commodity)
+        .filter((bp) => bp !== product)
         .map((bp) => ({
           vertical,
-          commodity,
+          product,
           byproduct: bp,
           label: bp,
           isComm: false,
         })),
     ]),
-  )
+  );
 
   const results =
     q.length >= 1
       ? allItems
-        .filter((it) => it.label.toLowerCase().includes(q.toLowerCase()))
-        .slice(0, 30)
-      : []
+          .filter((it) => it.label.toLowerCase().includes(q.toLowerCase()))
+          .slice(0, 30)
+      : [];
 
   return (
     <div
@@ -8500,7 +8629,7 @@ function SearchScreen({
               border: "1.5px solid #D5E2DD",
             }}
           >
-            <span style={{ fontSize: 18, opacity: 0.7 }}>🔍</span>
+            {" "}
             <input
               ref={inputRef}
               value={q}
@@ -8510,7 +8639,10 @@ function SearchScreen({
               style={{
                 color: "#183B34",
                 fontSize: lang === "ur" ? 19 : 14,
-                fontFamily: lang === "ur" ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif" : "'Inter', sans-serif",
+                fontFamily:
+                  lang === "ur"
+                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                    : "'Inter', sans-serif",
                 direction: lang === "ur" ? "rtl" : "ltr",
               }}
             />
@@ -8519,7 +8651,9 @@ function SearchScreen({
                 onClick={() => setQ("")}
                 className="tap-target font-bold flex-shrink-0"
                 style={{ color: "#52635F", fontSize: 16 }}
-              >✕</button>
+              >
+                ✕
+              </button>
             ) : (
               <span
                 className="flex-shrink-0"
@@ -8532,7 +8666,6 @@ function SearchScreen({
 
       {results.length === 0 && q.length < 1 && (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 px-8">
-          <span style={{ fontSize: 56, opacity: 0.25 }}>🌾</span>
           <p
             className="text-center font-bold"
             style={{
@@ -8547,7 +8680,7 @@ function SearchScreen({
           >
             {lang === "ur"
               ? "کوئی بھی جنس یا ضمنی مصنوع تلاش کریں — گندم، باسمتی، چوکر…"
-              : "Search for any commodity or byproduct — wheat, basmati, bran, tomato…"}
+              : "Search for any product or byproduct — wheat, basmati, bran, tomato…"}
           </p>
         </div>
       )}
@@ -8565,7 +8698,9 @@ function SearchScreen({
                   : "inherit",
             }}
           >
-            {lang === "ur" ? `"${q}" کا کوئی نتیجہ نہیں ملا` : `No results for "${q}"`}
+            {lang === "ur"
+              ? `"${q}" کا کوئی نتیجہ نہیں ملا`
+              : `No results for "${q}"`}
           </p>
         </div>
       )}
@@ -8576,16 +8711,16 @@ function SearchScreen({
             {results.map((it, i) => (
               <CircleTile
                 key={i}
-                commodity={it.byproduct}
+                product={it.byproduct}
                 vertical={it.vertical}
                 alt={it.label}
                 label={tc(it.label)}
                 size={72}
                 onPress={() =>
                   push({
-                    id: "commodity-rates",
+                    id: "product-rates",
                     vertical: it.vertical,
-                    commodity: it.commodity,
+                    product: it.product,
                     byproduct: it.byproduct,
                   })
                 }
@@ -8595,87 +8730,89 @@ function SearchScreen({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 //  PRODUCT BYPRODUCT RESOLVER
 // Given a product selection captured from PRODUCT_DIVISIONS ({vertical:div.name,
-// commodity:product}), return its byproduct list. Falls back to VERTICALS.
-function productByproducts(vertical: string, commodity: string): string[] {
-  const div = PRODUCT_DIVISIONS.find((d) => d.name === vertical)
+// product:product}), return its byproduct list. Falls back to VERTICALS.
+function productByproducts(vertical: string, product: string): string[] {
+  const div = PRODUCT_DIVISIONS.find((d) => d.name === vertical);
   if (div) {
-    if (div.type === "product") return div.byproducts ?? []
-    const p = div.products?.[commodity]
-    if (p) return p
+    if (div.type === "product") return div.byproducts ?? [];
+    const p = div.products?.[product];
+    if (p) return p;
   }
-  return VERTICALS[vertical]?.commodities[commodity] ?? []
+  return VERTICALS[vertical]?.products[product] ?? [];
 }
 
-//  COMMODITY (PRODUCT) SELECT
+//  product (PRODUCT) SELECT
 
-type ProductSel = { vertical: string; commodity: string }
+type ProductSel = { vertical: string; product: string };
 
-function CommoditySelectScreen({
+function ProductSelectScreen({
   push,
   onBack,
 }: {
-  push: (s: Screen) => void
-  onBack: () => void
+  push: (s: Screen) => void;
+  onBack: () => void;
 }) {
   // null = divisions grid; a vertical-type ProdDiv = its products grid
-  const [openDiv, setOpenDiv] = useState<ProdDiv | null>(null)
-  const [selected, setSelected] = useState<ProductSel[]>([])
-  const { lang, voiceEnabled, t: tl, tc } = useLang()
+  const [openDiv, setOpenDiv] = useState<ProdDiv | null>(null);
+  const [selected, setSelected] = useState<ProductSel[]>([]);
+  const { lang, voiceEnabled, t: tl, tc } = useLang();
 
   const goBack = () => {
     if (openDiv) {
-      setOpenDiv(null)
-      return
+      setOpenDiv(null);
+      return;
     }
-    onBack()
-  }
+    onBack();
+  };
 
-  const keyOf = (s: ProductSel) => `${s.vertical}|${s.commodity}`
-  const isProductSelected = (vertical: string, commodity: string) =>
-    selected.some((s) => keyOf(s) === `${vertical}|${commodity}`)
-  const toggleProduct = (vertical: string, commodity: string) => {
-    const k = `${vertical}|${commodity}`
+  const keyOf = (s: ProductSel) => `${s.vertical}|${s.product}`;
+  const isProductSelected = (vertical: string, product: string) =>
+    selected.some((s) => keyOf(s) === `${vertical}|${product}`);
+  const toggleProduct = (vertical: string, product: string) => {
+    const k = `${vertical}|${product}`;
     setSelected((prev) =>
       prev.some((s) => keyOf(s) === k)
         ? prev.filter((s) => keyOf(s) !== k)
-        : [...prev, { vertical, commodity }],
-    )
-  }
+        : [...prev, { vertical, product }],
+    );
+  };
 
   const handleProductTap = (
     onSelect: () => void,
     speakLabel: string,
     subscribed: boolean,
-    commodityName?: string,
+    productName?: string,
     verticalName?: string,
   ) => {
     if (!subscribed) {
-      if (voiceEnabled) speakText(tl("voice.locked"))
+      if (voiceEnabled) speakText(tl("voice.locked"));
       push({
         id: "billing",
-        commodity: commodityName || speakLabel,
+        product: productName || speakLabel,
         vertical: verticalName,
-      })
-      return
+      });
+      return;
     }
-    if (voiceEnabled) speakText(tc(speakLabel))
-    onSelect()
-  }
+    if (voiceEnabled) speakText(tc(speakLabel));
+    onSelect();
+  };
 
   const currentProducts: string[] =
     openDiv && openDiv.type === "vertical"
       ? Object.keys(openDiv.products ?? {})
-      : []
+      : [];
 
-  const title = openDiv ? tc(openDiv.name) : tl("prodsel.title")
+  const title = openDiv ? tc(openDiv.name) : tl("prodsel.title");
   const breadcrumb = openDiv
-    ? lang === "ur" ? "دیکھنے کے لیے مصنوعات منتخب کریں" : "Select products to watch"
-    : null
+    ? lang === "ur"
+      ? "دیکھنے کے لیے مصنوعات منتخب کریں"
+      : "Select products to watch"
+    : null;
 
   return (
     <div
@@ -8706,7 +8843,10 @@ function CommoditySelectScreen({
               className="text-xs truncate"
               style={{ color: "#52635F", fontFamily: "'Inter', sans-serif" }}
             >
-              {breadcrumb ?? (lang === "ur" ? "مصنوعات کا انتخاب کریں" : "Tap products you want to follow")}
+              {breadcrumb ??
+                (lang === "ur"
+                  ? "مصنوعات کا انتخاب کریں"
+                  : "Tap products you want to follow")}
             </p>
           </div>
           {selected.length > 0 && (
@@ -8748,7 +8888,7 @@ function CommoditySelectScreen({
               className="tap-target flex-shrink-0 flex items-center gap-1 rounded-full text-xs font-bold px-3 py-1"
               style={{ background: "#087F63", color: "#fff" }}
             >
-              {tc(s.commodity)}
+              {tc(s.product)}
             </button>
           ))}
         </ScrollRow>
@@ -8768,18 +8908,18 @@ function CommoditySelectScreen({
           >
             {[...PRODUCT_DIVISIONS]
               .sort((a, b) => {
-                const as_ = SUBSCRIBED_PRODUCTS.has(a.name) ? 0 : 1
-                const bs_ = SUBSCRIBED_PRODUCTS.has(b.name) ? 0 : 1
-                return as_ - bs_
+                const as_ = SUBSCRIBED_PRODUCTS.has(a.name) ? 0 : 1;
+                const bs_ = SUBSCRIBED_PRODUCTS.has(b.name) ? 0 : 1;
+                return as_ - bs_;
               })
               .map((div) => {
-                const subscribed = SUBSCRIBED_PRODUCTS.has(div.name)
+                const subscribed = SUBSCRIBED_PRODUCTS.has(div.name);
                 const sel =
                   div.type === "product"
                     ? isProductSelected(div.name, div.name)
-                    : selected.some((s) => s.vertical === div.name)
-                const btnSize = subscribed ? 96 : 72
-                const iconSize = subscribed ? 58 : 42
+                    : selected.some((s) => s.vertical === div.name);
+                const btnSize = subscribed ? 96 : 72;
+                const iconSize = subscribed ? 58 : 42;
                 return (
                   <div key={div.name} className="flex flex-col items-center">
                     <button
@@ -8815,7 +8955,7 @@ function CommoditySelectScreen({
                           : "0 2px 8px rgba(18,65,48,0.06)",
                       }}
                     >
-                      <CommodityIcon
+                      <ProductIcon
                         name={div.name}
                         size={iconSize}
                         style={{
@@ -8887,14 +9027,12 @@ function CommoditySelectScreen({
                       {tc(div.name)}
                     </span>
                     {!subscribed && (
-                      <span
-                        className="mt-0.5 px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#E4F0EA] text-[#087F63] border border-[#C6DFD4]"
-                      >
+                      <span className="mt-0.5 px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#E4F0EA] text-[#087F63] border border-[#C6DFD4]">
                         {lang === "ur" ? "سبسکرائب" : "Subscribe"}
                       </span>
                     )}
                   </div>
-                )
+                );
               })}
           </div>
         )}
@@ -8903,11 +9041,11 @@ function CommoditySelectScreen({
         {openDiv && (
           <div className="flex flex-wrap gap-x-3 gap-y-5 justify-start">
             {currentProducts.map((p) => {
-              const label = p.replace(/_/g, " ")
+              const label = p.replace(/_/g, " ");
               return (
                 <CircleTile
                   key={p}
-                  commodity={label}
+                  product={label}
                   vertical={openDiv.name}
                   alt={label}
                   label={tc(label)}
@@ -8921,7 +9059,7 @@ function CommoditySelectScreen({
                   }
                   size={72}
                 />
-              )
+              );
             })}
           </div>
         )}
@@ -8953,13 +9091,17 @@ function CommoditySelectScreen({
             style={{ background: "#D5E2DD", color: "#52635F" }}
           >
             {openDiv
-              ? lang === "ur" ? "شامل کرنے کے لیے مصنوعات ٹیپ کریں" : "Tap products to add them"
-              : lang === "ur" ? "ٹیپ کریں · + مزید شامل کریں" : "Tap a product · + add more"}
+              ? lang === "ur"
+                ? "شامل کرنے کے لیے مصنوعات ٹیپ کریں"
+                : "Tap products to add them"
+              : lang === "ur"
+                ? "ٹیپ کریں · + مزید شامل کریں"
+                : "Tap a product · + add more"}
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }
 
 //  DATE PICKER SHEET
@@ -8969,27 +9111,23 @@ function DatePickerSheet({
   onSelect,
   onClose,
 }: {
-  selected: string
-  onSelect: (date: string) => void
-  onClose: () => void
+  selected: string;
+  onSelect: (date: string) => void;
+  onClose: () => void;
 }) {
-  const today = new Date()
+  const today = new Date();
   const fmt2 = (d: Date) =>
     d.toLocaleDateString("en-PK", {
       day: "numeric",
       month: "short",
       year: "numeric",
-    })
-  const yesterday = new Date(today)
-  yesterday.setDate(today.getDate() - 1)
-  const quick = ["Today", "Yesterday"]
+    });
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const quick = ["Today", "Yesterday"];
 
   return (
-    <div
-      className="zm-sheet-overlay"
-      style={{ zIndex: 200 }}
-      onClick={onClose}
-    >
+    <div className="zm-sheet-overlay" style={{ zIndex: 200 }} onClick={onClose}>
       <div
         className="zm-sheet"
         style={{ background: "#F4FAF7", maxHeight: "60vh" }}
@@ -9034,8 +9172,8 @@ function DatePickerSheet({
           ))}
           <button
             onClick={() => {
-              const d = prompt("Enter date (DD/MM/YYYY)")
-              if (d) onSelect(d)
+              const d = prompt("Enter date (DD/MM/YYYY)");
+              if (d) onSelect(d);
             }}
             className="tap-target rounded-2xl px-4 flex items-center gap-3"
             style={{
@@ -9055,7 +9193,7 @@ function DatePickerSheet({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 //  BY-PRODUCT COMBINED (product chip-tabs → byproducts)
@@ -9068,46 +9206,52 @@ function ByProductCombinedScreen({
   onBack,
   isPickedBP,
   togglePickBP,
+  locationScope,
+  onOpenLocation,
+  profileCompleted = false,
+  onOpenSubscribe,
 }: {
-  products: ProductSel[]
-  active: number
-  push: (s: Screen) => void
-  replace: (s: Screen) => void
-  onBack: () => void
-  isPickedBP: (item: RateItem) => boolean
-  togglePickBP: (item: RateItem) => void
-  locationScope?: LocationScope
-  onOpenLocation?: () => void
+  products: ProductSel[];
+  active: number;
+  push: (s: Screen) => void;
+  replace: (s: Screen) => void;
+  onBack: () => void;
+  isPickedBP: (item: RateItem) => boolean;
+  togglePickBP: (item: RateItem) => void;
+  locationScope?: LocationScope;
+  onOpenLocation?: () => void;
+  profileCompleted?: boolean;
+  onOpenSubscribe?: () => void;
 }) {
-  const [showAllProducts, setShowAllProducts] = useState(true)
-  const idx = Math.min(active, products.length - 1)
-  const activeProduct = showAllProducts ? null : (products[idx] ?? products[0])
+  const [showAllProducts, setShowAllProducts] = useState(true);
+  const idx = Math.min(active, products.length - 1);
+  const activeProduct = showAllProducts ? null : (products[idx] ?? products[0]);
   const setActive = (i: number) => {
-    setShowAllProducts(false)
-    replace({ id: "byproduct-combined", products, active: i })
-  }
+    setShowAllProducts(false);
+    replace({ id: "byproduct-combined", products, active: i });
+  };
   const byproducts = activeProduct
-    ? productByproducts(activeProduct.vertical, activeProduct.commodity)
+    ? productByproducts(activeProduct.vertical, activeProduct.product)
     : products
-      .flatMap((p) => productByproducts(p.vertical, p.commodity))
-      .filter((b, i, a) => a.indexOf(b) === i)
+        .flatMap((p) => productByproducts(p.vertical, p.product))
+        .filter((b, i, a) => a.indexOf(b) === i);
 
-  // Date scroll system
+  // Date scroll system - restricted to 2 days (Today & Yesterday) for non-subscribers
   const [visibleDateLabel, setVisibleDateLabel] = useState<{
-    d: number
-    month: string
-  }>({ d: 21, month: "AUG" })
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
-  const dateSectionRefs = useRef<Map<string, HTMLDivElement>>(new Map())
+    d: number;
+    month: string;
+  }>({ d: 21, month: "AUG" });
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const dateSectionRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  const BASE_DATE = new Date(2026, 7, 21) // Aug 21 2026 = today
-  const NUM_DAYS = 7
+  const BASE_DATE = new Date(2026, 7, 21); // Aug 21 2026 = today
+  const NUM_DAYS = profileCompleted ? 7 : 2;
 
   const dateForOffset = (offset: number) => {
-    const d = new Date(BASE_DATE)
-    d.setDate(d.getDate() - offset)
-    return d
-  }
+    const d = new Date(BASE_DATE);
+    d.setDate(d.getDate() - offset);
+    return d;
+  };
   const dateLabel = (d: Date) => {
     const months = [
       "JAN",
@@ -9122,11 +9266,11 @@ function ByProductCombinedScreen({
       "OCT",
       "NOV",
       "DEC",
-    ]
-    return { d: d.getDate(), month: months[d.getMonth()] }
-  }
+    ];
+    return { d: d.getDate(), month: months[d.getMonth()] };
+  };
   const dateLabelStr = (d: Date) =>
-    `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+    `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
   const dateDisplayStr = (d: Date) => {
     const months = [
       "Jan",
@@ -9141,14 +9285,14 @@ function ByProductCombinedScreen({
       "Oct",
       "Nov",
       "Dec",
-    ]
-    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
-  }
+    ];
+    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  };
 
   const handleScrollArea = useCallback(() => {
-    const container = scrollAreaRef.current
-    if (!container) return
-    const containerTop = container.getBoundingClientRect().top
+    const container = scrollAreaRef.current;
+    if (!container) return;
+    const containerTop = container.getBoundingClientRect().top;
     let found = {
       d: dateForOffset(0).getDate(),
       month: [
@@ -9165,75 +9309,77 @@ function ByProductCombinedScreen({
         "NOV",
         "DEC",
       ][dateForOffset(0).getMonth()],
-    }
+    };
     dateSectionRefs.current.forEach((el, key) => {
-      const rect = el.getBoundingClientRect()
+      const rect = el.getBoundingClientRect();
       if (rect.top - containerTop <= 60) {
-        const parts = key.split("-")
+        const parts = key.split("-");
         const dObj = new Date(
           parseInt(parts[0]),
           parseInt(parts[1]),
           parseInt(parts[2]),
-        )
-        found = dateLabel(dObj)
+        );
+        found = dateLabel(dObj);
       }
-    })
-    setVisibleDateLabel(found)
-  }, [])
+    });
+    setVisibleDateLabel(found);
+  }, []);
 
   useEffect(() => {
-    const el = scrollAreaRef.current
-    if (!el) return
-    el.addEventListener("scroll", handleScrollArea, { passive: true })
-    return () => el.removeEventListener("scroll", handleScrollArea)
-  }, [handleScrollArea])
+    const el = scrollAreaRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", handleScrollArea, { passive: true });
+    return () => el.removeEventListener("scroll", handleScrollArea);
+  }, [handleScrollArea]);
 
   //  Filter state
-  const [selectedBP, setSelectedBP] = useState<string | null>(null)
-  const [selectedRateTypes, setSelectedRateTypes] = useState<string[]>([])
+  const [selectedBP, setSelectedBP] = useState<string | null>(null);
+  const [selectedRateTypes, setSelectedRateTypes] = useState<string[]>([]);
   // Location: multi-select — array of selected location labels (empty = All Pakistan)
-  const [selectedLocs, setSelectedLocs] = useState<{
-    kind: LocationScope["kind"]
-    label: string
-  }[]>([])
-  const [locSheet, setLocSheet] = useState(false)
+  const [selectedLocs, setSelectedLocs] = useState<
+    {
+      kind: LocationScope["kind"];
+      label: string;
+    }[]
+  >([]);
+  const [locSheet, setLocSheet] = useState(false);
   // Derive single locScope for inLocScope fn — if multi selected, show all matching
   const locScope: LocationScope =
     selectedLocs.length === 0
       ? { kind: "pakistan", label: "All Pakistan" }
-      : selectedLocs[0]
+      : selectedLocs[0];
 
   // Reset byproduct filter when active product changes
-  const prevIdx = useRef(idx)
+  const prevIdx = useRef(idx);
   useEffect(() => {
     if (prevIdx.current !== idx) {
-      setSelectedBP(null)
-      prevIdx.current = idx
+      setSelectedBP(null);
+      prevIdx.current = idx;
     }
-  }, [idx])
+  }, [idx]);
 
-  const { voiceEnabled, lang, t: tL, tc: tcL, tm: tmL, tr: trL } = useLang()
+  const { voiceEnabled, lang, t: tL, tc: tcL, tm: tmL, tr: trL } = useLang();
 
   const handleCardTap = (r: RichRow, bp: string, navigateFn: () => void) => {
     if (voiceEnabled) {
-      const bpName = tcL(bp)
-      const commName = tcL(r.commodity)
-      const mandiName = tmL(r.mandiName)
-      const rateTypeName = trL(r.rateType)
+      const bpName = tcL(bp);
+      const commName = tcL(r.product);
+      const mandiName = tmL(r.mandiName);
+      const rateTypeName = trL(r.rateType);
       const text =
         lang === "ur"
           ? r.min > 0
             ? `${commName} ${bpName}۔ قیمت ${r.min.toLocaleString()} سے ${r.max.toLocaleString()} روپے۔ ${mandiName} میں آمد ${r.arrival}۔ ${rateTypeName}۔`
             : `${commName} ${bpName}۔ ${mandiName} میں آج کا ڈیٹا موجود نہیں۔`
           : r.min > 0
-            ? `${r.commodity} ${bp}. Rs ${r.min.toLocaleString()} to ${r.max.toLocaleString()}. ${r.arrival} arrived in ${r.mandiName}. ${r.rateType}.`
-            : `${r.commodity} ${bp}. No data in ${r.mandiName} today.`
-      speakText(text)
+            ? `${r.product} ${bp}. Rs ${r.min.toLocaleString()} to ${r.max.toLocaleString()}. ${r.arrival} arrived in ${r.mandiName}. ${r.rateType}.`
+            : `${r.product} ${bp}. No data in ${r.mandiName} today.`;
+      speakText(text);
     }
-    navigateFn()
-  }
+    navigateFn();
+  };
 
-  const activeBPs = selectedBP ? [selectedBP] : byproducts
+  const activeBPs = selectedBP ? [selectedBP] : byproducts;
 
   // Check if a mandi row is in the current location scope (multi-select aware)
   const inLocScope = (
@@ -9241,25 +9387,25 @@ function ByProductCombinedScreen({
     mandiCity: string,
     province: string,
   ) => {
-    if (selectedLocs.length === 0) return true
+    if (selectedLocs.length === 0) return true;
     return selectedLocs.some((loc) => {
       switch (loc.kind) {
         case "pakistan":
-          return true
+          return true;
         case "province":
-          return province === loc.label
+          return province === loc.label;
         case "district":
-          return mandiCity === loc.label || mandiName.includes(loc.label)
+          return mandiCity === loc.label || mandiName.includes(loc.label);
         case "mandi":
-          return mandiName === loc.label || mandiCity === loc.label
+          return mandiName === loc.label || mandiCity === loc.label;
       }
-    })
-  }
+    });
+  };
 
   // Build best representative rate row for a byproduct — returns null if no real data
   const buildRepRow = (bp: string): { row: RichRow; hasData: boolean } => {
     const noData: RichRow = {
-      commodity: activeProduct?.commodity || "",
+      product: activeProduct?.product || "",
       byproduct: bp,
       emoji: "",
       rateType: "—",
@@ -9272,49 +9418,49 @@ function ByProductCombinedScreen({
       mandiCity: "—",
       province: "Punjab",
       vertical: activeProduct?.vertical || "Grains",
-    }
+    };
 
     const fromMandi = Object.entries(MANDI_ROWS).flatMap(([mandiId, rows]) => {
-      const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId)
-      if (!mandi) return []
-      if (!inLocScope(mandi.name, mandi.city, mandi.province)) return []
+      const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
+      if (!mandi) return [];
+      if (!inLocScope(mandi.name, mandi.city, mandi.province)) return [];
       return rows
         .filter(
           (r) =>
-            activeCommodities.includes(r.commodity) &&
+            activeproducts.includes(r.product) &&
             (!bp || r.byproduct === bp) &&
             (selectedRateTypes.length === 0 ||
               selectedRateTypes.includes(r.rateType)),
         )
         .map((r) => {
           const vEntry = showAllProducts
-            ? products.find((p) => p.commodity === r.commodity)
-            : null
+            ? products.find((p) => p.product === r.product)
+            : null;
           return enrichRowWithAttrs({
             ...r,
             mandiName: mandi.name,
             mandiCity: mandi.city,
             province: mandi.province,
             vertical: vEntry?.vertical || activeProduct?.vertical || "Grains",
-          })
-        })
-    })
-    if (fromMandi.length > 0) return { row: fromMandi[0], hasData: true }
+          });
+        });
+    });
+    if (fromMandi.length > 0) return { row: fromMandi[0], hasData: true };
 
     const fromFeed = FEED_MESSAGES.filter(
       (m) =>
-        activeCommodities.includes(m.commodity) &&
+        activeproducts.includes(m.product) &&
         (!bp || m.byproduct === bp) &&
         (selectedRateTypes.length === 0 ||
           selectedRateTypes.includes(m.rateType)) &&
         inLocScope(m.station, m.station, m.province),
-    )
+    );
     if (fromFeed.length > 0) {
-      const m = fromFeed[0]
+      const m = fromFeed[0];
       return {
         hasData: true,
         row: {
-          commodity: m.commodity,
+          product: m.product,
           byproduct: m.byproduct,
           emoji: "",
           rateType: m.rateType,
@@ -9328,37 +9474,37 @@ function ByProductCombinedScreen({
           province: m.province,
           vertical: m.vertical,
         },
-      }
+      };
     }
-    return { row: noData, hasData: false }
-  }
+    return { row: noData, hasData: false };
+  };
 
-  const activeCommodities = showAllProducts
-    ? products.map((p) => p.commodity)
-    : [activeProduct?.commodity || ""]
+  const activeproducts = showAllProducts
+    ? products.map((p) => p.product)
+    : [activeProduct?.product || ""];
 
   const buildAllRows = (bp: string): RichRow[] => {
-    const rows: RichRow[] = []
-    const seen = new Set<string>() // deduplicate by mandi+rateType
+    const rows: RichRow[] = [];
+    const seen = new Set<string>(); // deduplicate by mandi+rateType
     Object.entries(MANDI_ROWS).forEach(([mandiId, mandiRows]) => {
-      const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId)
-      if (!mandi) return
-      if (!inLocScope(mandi.name, mandi.city, mandi.province)) return
+      const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
+      if (!mandi) return;
+      if (!inLocScope(mandi.name, mandi.city, mandi.province)) return;
       mandiRows
         .filter(
           (r) =>
-            activeCommodities.includes(r.commodity) &&
+            activeproducts.includes(r.product) &&
             (!bp || r.byproduct === bp) &&
             (selectedRateTypes.length === 0 ||
               selectedRateTypes.includes(r.rateType)),
         )
         .forEach((r) => {
-          const key = `${mandi.name}|${r.rateType}`
-          if (seen.has(key)) return
-          seen.add(key)
+          const key = `${mandi.name}|${r.rateType}`;
+          if (seen.has(key)) return;
+          seen.add(key);
           const vEntry = showAllProducts
-            ? products.find((p) => p.commodity === r.commodity)
-            : null
+            ? products.find((p) => p.product === r.product)
+            : null;
           rows.push(
             enrichRowWithAttrs({
               ...r,
@@ -9367,33 +9513,33 @@ function ByProductCombinedScreen({
               province: mandi.province,
               vertical: vEntry?.vertical || activeProduct?.vertical || "Grains",
             }),
-          )
-        })
-    })
-    return rows
-  }
+          );
+        });
+    });
+    return rows;
+  };
 
   const handlePriceChipTap = (rateType: string) => {
-    const isCurrentlyOn = selectedRateTypes.includes(rateType)
+    const isCurrentlyOn = selectedRateTypes.includes(rateType);
     setSelectedRateTypes((p) =>
       p.includes(rateType) ? p.filter((x) => x !== rateType) : [...p, rateType],
-    )
+    );
     if (voiceEnabled) {
       if (lang === "ur") {
         speakText(
           isCurrentlyOn
             ? "تمام ریٹس دکھائے جا رہے ہیں۔"
             : `تمام ${trL(rateType)} کے ریٹس دکھائے جا رہے ہیں۔`,
-        )
+        );
       } else {
         speakText(
           isCurrentlyOn
             ? "All price types are shown."
             : `All ${rateType} rates are shown.`,
-        )
+        );
       }
     }
-  }
+  };
 
   const handleMandiChipTap = (mandiName: string) => {
     if (voiceEnabled) {
@@ -9401,16 +9547,20 @@ function ByProductCombinedScreen({
         lang === "ur"
           ? `${tmL(mandiName)} کی قیمتیں دکھائی جا رہی ہیں۔`
           : `Prices of ${mandiName} are shown.`,
-      )
+      );
     }
-  }
+  };
 
   const locLabel =
     selectedLocs.length === 0
-      ? (lang === "ur" ? "پاکستان" : "Pakistan")
+      ? lang === "ur"
+        ? "پاکستان"
+        : "Pakistan"
       : selectedLocs.length === 1
         ? tmL(selectedLocs[0].label)
-        : (lang === "ur" ? `${selectedLocs.length} مقامات` : `${selectedLocs.length} Locations`)
+        : lang === "ur"
+          ? `${selectedLocs.length} مقامات`
+          : `${selectedLocs.length} Locations`;
 
   return (
     <div
@@ -9422,31 +9572,71 @@ function ByProductCombinedScreen({
         className="flex-shrink-0"
         style={{ background: "#F4FAF7", borderBottom: "1px solid #D5E2DD" }}
       >
-        {/* Title row with location top-right */}
-        <div className="px-4 pt-10 pb-2 flex items-center gap-3">
-          <button
-            onClick={onBack}
-            className="tap-target w-11 h-11 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
-            style={{ background: "#E8EFEC" }}
-          >
-            {lang === "ur" ? "→" : "←"}
-          </button>
-          <div className="flex-1 min-w-0">
-            <h1
-              className="font-extrabold text-xl truncate"
-              style={{
-                color: "#183B34",
-                fontFamily:
-                  lang === "ur"
-                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                    : "'Poppins', sans-serif",
-              }}
+        {/* Title row with location top-right and Free Trial chip */}
+        <div className="px-4 pt-10 pb-2 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <button
+              onClick={onBack}
+              className="tap-target w-10 h-10 rounded-2xl flex items-center justify-center text-xl flex-shrink-0"
+              style={{ background: "#E8EFEC" }}
             >
-              {activeProduct ? tcL(activeProduct.commodity) : (lang === "ur" ? "مصنوعات" : "Products")}
-            </h1>
+              {lang === "ur" ? "→" : "←"}
+            </button>
+            <div className="min-w-0">
+              <h1
+                className="font-extrabold text-lg truncate"
+                style={{
+                  color: "#183B34",
+                  fontFamily:
+                    lang === "ur"
+                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      : "'Poppins', sans-serif",
+                }}
+              >
+                {activeProduct
+                  ? tcL(activeProduct.product)
+                  : lang === "ur"
+                    ? "مصنوعات"
+                    : "Products"}
+              </h1>
+            </div>
           </div>
-          {/* Date flip indicator + Location selector — top right */}
+
+          {/* Top Right: Free Trial Badge + Date flip indicator + Location selector */}
           <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Free Trial Badge Chip */}
+            {!profileCompleted ? (
+              <button
+                type="button"
+                onClick={() => onOpenSubscribe?.()}
+                className="tap-target flex items-center gap-1 px-2.5 py-1 rounded-full font-extrabold text-xs"
+                style={{
+                  background: "linear-gradient(135deg, #FFF0C7, #FDE68A)",
+                  border: "1.2px solid #F59E0B",
+                  color: "#92400E",
+                  boxShadow: "0 2px 6px rgba(245, 158, 11, 0.2)",
+                  cursor: "pointer",
+                }}
+                title="Tap to Complete Profile & Unlock All Rates"
+              >
+                <span style={{ fontSize: 10 }}>
+                  {lang === "ur" ? "ٹرائل: ۲ دن" : "Trial: 2d"}
+                </span>
+              </button>
+            ) : (
+              <div
+                className="flex items-center gap-1 px-2 py-0.5 rounded-full font-bold text-xs"
+                style={{
+                  background: "#E8F5E9",
+                  color: "#1B5E20",
+                  border: "1px solid #81C784",
+                }}
+              >
+                {/* <span style={{ fontSize: 10 }}>💎</span> */}
+                <span style={{ fontSize: 9.5 }}>VIP</span>
+              </div>
+            )}
+
             {/* Flip calendar date indicator */}
             <div
               role="button"
@@ -9457,14 +9647,14 @@ function ByProductCombinedScreen({
                     lang === "ur"
                       ? "گزشتہ تاریخوں کی قیمتیں دکھائی جا رہی ہیں۔"
                       : "Showing historical dates and prices.",
-                  )
+                  );
                 }
               }}
               style={{
                 display: "flex",
                 borderRadius: 10,
                 overflow: "hidden",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.16)",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
                 flexShrink: 0,
                 border: "1px solid #C7E8D8",
                 cursor: "pointer",
@@ -9473,7 +9663,7 @@ function ByProductCombinedScreen({
               <div
                 style={{
                   background: "#087F63",
-                  padding: "6px 10px",
+                  padding: "4px 7px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -9482,9 +9672,9 @@ function ByProductCombinedScreen({
                 <span
                   style={{
                     color: "#fff",
-                    fontSize: 9,
+                    fontSize: 8.5,
                     fontWeight: 800,
-                    letterSpacing: 1,
+                    letterSpacing: 0.5,
                   }}
                 >
                   {visibleDateLabel.month}
@@ -9493,7 +9683,7 @@ function ByProductCombinedScreen({
               <div
                 style={{
                   background: "#F4FAF7",
-                  padding: "6px 10px",
+                  padding: "4px 7px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -9503,7 +9693,7 @@ function ByProductCombinedScreen({
                 <span
                   style={{
                     color: "#183B34",
-                    fontSize: 18,
+                    fontSize: 15,
                     fontWeight: 900,
                     lineHeight: 1,
                   }}
@@ -9512,24 +9702,38 @@ function ByProductCombinedScreen({
                 </span>
               </div>
             </div>
+
+            {/* Location selector button */}
             <button
               onClick={() => {
-                setLocSheet(true)
+                setLocSheet(true);
                 if (voiceEnabled) {
-                  speakText(lang === "ur" ? "مقام منتخب کریں" : "Select location")
+                  speakText(
+                    lang === "ur" ? "مقام منتخب کریں" : "Select location",
+                  );
                 }
               }}
-              className="tap-target flex-shrink-0 flex items-center gap-1.5 rounded-2xl font-bold text-xs px-3"
+              className="tap-target flex-shrink-0 flex items-center gap-1 rounded-2xl font-bold text-xs px-2.5"
               style={{
-                height: 38,
+                height: 34,
                 background: "#E4F2EC",
                 color: "#075E4F",
                 border: "1px solid #C7E8D8",
-                maxWidth: 130,
+                maxWidth: 110,
               }}
             >
-              <span className="truncate">{locLabel}</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.85, flexShrink: 0 }}>
+              <span className="truncate" style={{ fontSize: 11 }}>{locLabel}</span>
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ opacity: 0.85, flexShrink: 0 }}
+              >
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </button>
@@ -9554,13 +9758,13 @@ function ByProductCombinedScreen({
           </span>
           <button
             onClick={() => {
-              setShowAllProducts(true)
+              setShowAllProducts(true);
               if (voiceEnabled)
                 speakText(
                   lang === "ur"
                     ? "تمام مصنوعات منتخب ہیں۔ تمام قیمتیں دکھائی جا رہی ہیں۔"
                     : "All products selected. All prices are shown.",
-                )
+                );
             }}
             className="tap-target flex-shrink-0 rounded-full font-bold flex items-center justify-center"
             style={{
@@ -9579,18 +9783,18 @@ function ByProductCombinedScreen({
             {lang === "ur" ? "سب" : "All"}
           </button>
           {products.map((p, i) => {
-            const on = !showAllProducts && i === idx
+            const on = !showAllProducts && i === idx;
             return (
               <button
-                key={`${p.vertical}|${p.commodity}`}
+                key={`${p.vertical}|${p.product}`}
                 onClick={() => {
-                  setActive(i)
+                  setActive(i);
                   if (voiceEnabled)
                     speakText(
                       lang === "ur"
-                        ? `${tcL(p.commodity)} کی تمام ضمنی مصنوعات کے ریٹس دکھائے جا رہے ہیں۔`
-                        : `All ${p.commodity} byproduct prices are shown.`,
-                    )
+                        ? `${tcL(p.product)} کی تمام ضمنی مصنوعات کے ریٹس دکھائے جا رہے ہیں۔`
+                        : `All ${p.product} byproduct prices are shown.`,
+                    );
                 }}
                 className="tap-target flex-shrink-0 flex items-center gap-1.5 rounded-full font-bold"
                 style={{
@@ -9606,8 +9810,8 @@ function ByProductCombinedScreen({
                       : "inherit",
                 }}
               >
-                <CommodityIcon
-                  name={p.commodity}
+                <ProductIcon
+                  name={p.product}
                   vertical={p.vertical}
                   size={lang === "ur" ? 18 : 14}
                   style={{
@@ -9615,9 +9819,9 @@ function ByProductCombinedScreen({
                     flexShrink: 0,
                   }}
                 />
-                {tcL(p.commodity)}
+                {tcL(p.product)}
               </button>
-            )
+            );
           })}
         </ScrollRow>
 
@@ -9639,14 +9843,16 @@ function ByProductCombinedScreen({
           </span>
           <button
             onClick={() => {
-              setSelectedBP(null)
-              const prodName = activeProduct?.commodity || (lang === "ur" ? "تمام مصنوعات" : "all products")
+              setSelectedBP(null);
+              const prodName =
+                activeProduct?.product ||
+                (lang === "ur" ? "تمام مصنوعات" : "all products");
               if (voiceEnabled)
                 speakText(
                   lang === "ur"
                     ? `${tcL(prodName)} کی تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔`
                     : `All byproducts of ${prodName} shown.`,
-                )
+                );
             }}
             className="tap-target flex-shrink-0 rounded-full font-bold flex items-center justify-center"
             style={{
@@ -9665,18 +9871,22 @@ function ByProductCombinedScreen({
             {lang === "ur" ? "سب" : "All"}
           </button>
           {byproducts.map((bp) => {
-            const on = selectedBP === bp
+            const on = selectedBP === bp;
             return (
               <button
                 key={bp}
                 onClick={() => {
-                  setSelectedBP(on ? null : bp)
+                  setSelectedBP(on ? null : bp);
                   if (voiceEnabled)
                     speakText(
                       on
-                        ? (lang === "ur" ? "تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔" : "All byproducts shown.")
-                        : (lang === "ur" ? `${tcL(bp)} کی قیمتیں دکھائی جا رہی ہیں۔` : `Prices of ${bp} are shown.`),
-                    )
+                        ? lang === "ur"
+                          ? "تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔"
+                          : "All byproducts shown."
+                        : lang === "ur"
+                          ? `${tcL(bp)} کی قیمتیں دکھائی جا رہی ہیں۔`
+                          : `Prices of ${bp} are shown.`,
+                    );
                 }}
                 className="tap-target flex-shrink-0 flex items-center gap-1.5 rounded-full font-bold"
                 style={{
@@ -9692,7 +9902,7 @@ function ByProductCombinedScreen({
                       : "inherit",
                 }}
               >
-                <CommodityIcon
+                <ProductIcon
                   name={bp}
                   vertical={activeProduct?.vertical}
                   size={lang === "ur" ? 17 : 13}
@@ -9703,11 +9913,11 @@ function ByProductCombinedScreen({
                 />
                 {tcL(bp)}
               </button>
-            )
+            );
           })}
         </ScrollRow>
 
-        {/* Row 3: Price Type chips — All selected by default */}
+        {/* Row 3: Price Type chips */}
         <ScrollRow bg="#fff" style={{ borderTop: "1px solid #E8EFEC" }}>
           <span
             className="flex-shrink-0 font-extrabold mr-1"
@@ -9723,16 +9933,15 @@ function ByProductCombinedScreen({
           >
             {lang === "ur" ? "ریٹ" : "Price"}
           </span>
-          {/* All chip */}
           <button
             onClick={() => {
-              setSelectedRateTypes([])
+              setSelectedRateTypes([]);
               if (voiceEnabled)
                 speakText(
                   lang === "ur"
                     ? "تمام ریٹس دکھائے جا رہے ہیں۔"
                     : "All price types are shown.",
-                )
+                );
             }}
             className="tap-target flex-shrink-0 rounded-full font-bold flex items-center justify-center"
             style={{
@@ -9753,7 +9962,7 @@ function ByProductCombinedScreen({
             {lang === "ur" ? "سب" : "All"}
           </button>
           {ALL_RATE_TYPES.map((rt) => {
-            const on = selectedRateTypes.includes(rt)
+            const on = selectedRateTypes.includes(rt);
             return (
               <button
                 key={rt}
@@ -9774,7 +9983,7 @@ function ByProductCombinedScreen({
               >
                 {trL(rt).replace(" ریٹ", "").replace(" Rate", "")}
               </button>
-            )
+            );
           })}
         </ScrollRow>
 
@@ -9786,13 +9995,13 @@ function ByProductCombinedScreen({
           >
             <button
               onClick={() => {
-                setSelectedRateTypes([])
+                setSelectedRateTypes([]);
                 if (voiceEnabled) {
                   speakText(
                     lang === "ur"
                       ? "قیمت کا فلٹر ہٹا دیا گیا۔ تمام ریٹس دکھائے جا رہے ہیں۔"
                       : "Price filter reset. All price types are shown.",
-                  )
+                  );
                 }
               }}
               className="tap-target flex items-center gap-1.5 rounded-full font-bold"
@@ -9809,7 +10018,9 @@ function ByProductCombinedScreen({
                     : "inherit",
               }}
             >
-              {lang === "ur" ? "↺ قیمت کا فلٹر ری سیٹ کریں" : "↺ Reset Price Filter"}
+              {lang === "ur"
+                ? "↺ قیمت کا فلٹر ری سیٹ کریں"
+                : "↺ Reset Price Filter"}
             </button>
           </div>
         )}
@@ -9829,26 +10040,90 @@ function ByProductCombinedScreen({
         )}
         {activeBPs.length > 0 &&
           Array.from({ length: NUM_DAYS }, (_, offset) => {
-            const dateObj = dateForOffset(offset)
-            const dKey = dateLabelStr(dateObj)
-            const dDisplay = dateDisplayStr(dateObj)
-            const isToday = offset === 0
-            const priceVariation = 1 - offset * 0.012
+            const dateObj = dateForOffset(offset);
+            const dKey = dateLabelStr(dateObj);
+            const dDisplay = dateDisplayStr(dateObj);
+            const isToday = offset === 0;
+            const priceVariation = 1 - offset * 0.012;
 
             const sortedBPs = [...activeBPs].sort((a, b) => {
-              const aHas = buildRepRow(a).hasData
-              const bHas = buildRepRow(b).hasData
-              if (aHas && !bHas) return -1
-              if (!aHas && bHas) return 1
-              return 0
-            })
+              const aHas = buildRepRow(a).hasData;
+              const bHas = buildRepRow(b).hasData;
+              if (aHas && !bHas) return -1;
+              if (!aHas && bHas) return 1;
+              return 0;
+            });
+
+            // Progressive filter-based reveal calculation
+            const isCountryFilter =
+              selectedLocs.length === 0 ||
+              selectedLocs.some((l) => l.kind === "pakistan");
+            const isProvinceFilter = selectedLocs.some(
+              (l) => l.kind === "province",
+            );
+            const isDistrictFilter = selectedLocs.some(
+              (l) => l.kind === "district",
+            );
+
+            const revealRatio = isCountryFilter
+              ? 0.45 // Whole country: ~45% cards visible
+              : isProvinceFilter
+                ? 0.35 // Province: ~35% cards visible
+                : isDistrictFilter
+                  ? 0.25 // District: ~25% cards visible
+                  : 0.15; // Specific Mandi: ~15% cards visible
+
+            // Flatten all rows for this date to track cardIndex
+            let totalCardCountInDate = 0;
+            const allDateItems: {
+              bp: string;
+              r: RichRow;
+              hasData: boolean;
+            }[] = [];
+
+            sortedBPs.forEach((bp) => {
+              const allR = buildAllRows(bp);
+              const { row: repRow, hasData } = buildRepRow(bp);
+              const dataRows = allR.slice(0, 3);
+              const showRows =
+                dataRows.length > 0
+                  ? dataRows.map((r) => ({
+                      r: {
+                        ...r,
+                        min: Math.round(r.min * priceVariation),
+                        max: Math.round(r.max * priceVariation),
+                      },
+                      hasData: true,
+                    }))
+                  : [
+                      {
+                        r: {
+                          ...repRow,
+                          byproduct: bp,
+                          min: Math.round(repRow.min * priceVariation),
+                          max: Math.round(repRow.max * priceVariation),
+                        },
+                        hasData: false,
+                      },
+                    ];
+
+              showRows.forEach((item) => {
+                allDateItems.push({ bp, ...item });
+              });
+            });
+
+            totalCardCountInDate = allDateItems.length;
+            const visibleThreshold = Math.max(
+              1,
+              Math.ceil(totalCardCountInDate * revealRatio),
+            );
 
             return (
               <div
                 key={dKey}
                 ref={(el) => {
-                  if (el) dateSectionRefs.current.set(dKey, el)
-                  else dateSectionRefs.current.delete(dKey)
+                  if (el) dateSectionRefs.current.set(dKey, el);
+                  else dateSectionRefs.current.delete(dKey);
                 }}
               >
                 {/* Date section separator */}
@@ -9882,37 +10157,66 @@ function ByProductCombinedScreen({
                   />
                 </div>
 
+                {/* Historical Date Locked Notice for Non-Subscribers */}
+                {!isToday && !profileCompleted && (
+                  <div
+                    className="mx-4 my-2 px-3 py-2.5 rounded-2xl flex items-center justify-between gap-2"
+                    style={{
+                      background: "linear-gradient(135deg, #FFFBEB, #FEF3C7)",
+                      border: "1.2px solid #F59E0B",
+                      boxShadow: "0 2px 8px rgba(245, 158, 11, 0.1)",
+                    }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span style={{ fontSize: 16 }}>🔒</span>
+                      <div>
+                        <div
+                          style={{
+                            fontSize: 11.5,
+                            fontWeight: 800,
+                            color: "#92400E",
+                          }}
+                        >
+                          {lang === "ur"
+                            ? `${dDisplay} کے ریٹس لاک ہیں`
+                            : `Rates for ${dDisplay} are locked`}
+                        </div>
+                        <div style={{ fontSize: 10, color: "#B45309" }}>
+                          {lang === "ur"
+                            ? "پچھلی تاریخوں کا ریکارڈ دیکھنے کے لیے پروفائل مکمل کریں۔"
+                            : "Complete your profile to unlock historical price data."}
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => onOpenSubscribe?.()}
+                      className="tap-target px-2.5 py-1.5 rounded-xl font-extrabold text-xs text-white flex-shrink-0"
+                      style={{
+                        background: "#087F63",
+                        boxShadow: "0 2px 6px rgba(8,127,99,0.25)",
+                      }}
+                    >
+                      {lang === "ur" ? "انلاک ➔" : "Unlock ➔"}
+                    </button>
+                  </div>
+                )}
+
                 <div className="flex flex-col gap-3 px-4 pb-2">
-                  {sortedBPs.flatMap((bp) => {
-                    const allR = buildAllRows(bp)
-                    const { row: repRow, hasData } = buildRepRow(bp)
+                  {allDateItems.map(({ bp, r, hasData: hd }, cardIdx) => {
+                    // Determine if card is blurred
+                    const isCardBlurred =
+                      !profileCompleted &&
+                      (!isToday || cardIdx >= visibleThreshold);
 
-                    const dataRows = allR.slice(0, 3)
-                    const showRows: { r: typeof repRow; hasData: boolean }[] =
-                      dataRows.length > 0
-                        ? dataRows.map((r) => ({
-                          r: {
-                            ...r,
-                            min: Math.round(r.min * priceVariation),
-                            max: Math.round(r.max * priceVariation),
-                          },
-                          hasData: true,
-                        }))
-                        : [
-                          {
-                            r: {
-                              ...repRow,
-                              byproduct: bp,
-                              min: Math.round(repRow.min * priceVariation),
-                              max: Math.round(repRow.max * priceVariation),
-                            },
-                            hasData: false,
-                          },
-                        ]
-
-                    return showRows.map(({ r, hasData: hd }, ri) => (
-                      <div key={`${dKey}-${bp}-${ri}`} className="relative">
-                        {!hd && (
+                    return (
+                      <div
+                        key={`${dKey}-${bp}-${cardIdx}`}
+                        className="relative"
+                        style={{ overflow: "hidden", borderRadius: 18 }}
+                      >
+                        {/* If no data */}
+                        {!hd && !isCardBlurred && (
                           <div className="absolute inset-0 z-20 rounded-2xl flex flex-col items-center justify-center pointer-events-none overflow-hidden">
                             <div
                               className="absolute inset-0"
@@ -9937,29 +10241,40 @@ function ByProductCombinedScreen({
                             </div>
                           </div>
                         )}
-                        {/* Date badge on top-right of card */}
-                        <div style={{ position: "relative" }}>
+
+                        {/* Card Content (blurred if locked) */}
+                        <div
+                          style={{
+                            filter: isCardBlurred ? "blur(5px)" : "none",
+                            opacity: isCardBlurred ? 0.6 : 1,
+                            pointerEvents: isCardBlurred ? "none" : "auto",
+                            userSelect: isCardBlurred ? "none" : "auto",
+                            transition: "filter 0.3s, opacity 0.3s",
+                          }}
+                        >
                           <RateCard
                             r={{ ...r, byproduct: bp }}
+                            dateText={isToday ? "TODAY" : dDisplay}
+                            isToday={isToday}
                             onClick={() =>
                               handleCardTap(r, bp, () => {
                                 const rowVertical =
                                   r.vertical ||
                                   activeProduct?.vertical ||
-                                  "Grains"
-                                const rowCommodity =
-                                  r.commodity || activeProduct?.commodity || bp
+                                  "Grains";
+                                const rowproduct =
+                                  r.product || activeProduct?.product || bp;
                                 const baseItem = {
                                   vertical: rowVertical,
-                                  commodity: rowCommodity,
+                                  product: rowproduct,
                                   byproduct: bp,
-                                }
+                                };
                                 if (!hd) {
-                                  push({ id: "commodity-rates", ...baseItem })
-                                  return
+                                  push({ id: "product-rates", ...baseItem });
+                                  return;
                                 }
                                 push({
-                                  id: "commodity-rates",
+                                  id: "product-rates",
                                   ...baseItem,
                                   initialRateType: r.rateType,
                                   initialMandi: r.mandiName,
@@ -9972,38 +10287,62 @@ function ByProductCombinedScreen({
                                     offset > 0
                                       ? dateObj.toISOString()
                                       : undefined,
-                                })
+                                });
                               })
                             }
                             onPriceChipTap={hd ? handlePriceChipTap : undefined}
                             onMandiChipTap={hd ? handleMandiChipTap : undefined}
                           />
-                          {/* Date badge */}
+                        </div>
+
+                        {/* Blurred Locked Card Overlay */}
+                        {isCardBlurred && (
                           <div
+                            onClick={() => onOpenSubscribe?.()}
+                            className="tap-target absolute inset-0 z-20 flex flex-col items-center justify-center p-3 cursor-pointer"
                             style={{
-                              position: "absolute",
-                              top: 10,
-                              right: 10,
-                              background: isToday ? "#087F63" : "#52635F",
-                              color: "#fff",
-                              fontSize: 9,
-                              fontWeight: 700,
-                              borderRadius: 8,
-                              padding: "2px 7px",
-                              pointerEvents: "none",
-                              zIndex: 5,
-                              letterSpacing: 0.3,
+                              background: "rgba(244, 250, 247, 0.72)",
+                              backdropFilter: "blur(2px)",
+                              borderRadius: 18,
                             }}
                           >
-                            {isToday ? "TODAY" : dDisplay}
+                            <div
+                              className="flex items-center gap-2 px-3.5 py-1.5 rounded-full"
+                              style={{
+                                background: "#FFFFFF",
+                                border: "1.5px solid #087F63",
+                                boxShadow: "0 4px 14px rgba(8,127,99,0.18)",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  fontSize: 11,
+                                  fontWeight: 800,
+                                  color: "#087F63",
+                                }}
+                              >
+                                {lang === "ur"
+                                  ? "ریٹ دیکھنے کے لیے پروفائل مکمل کریں"
+                                  : "Complete Profile to Unlock Rate"}
+                              </span>
+                              <span
+                                style={{
+                                  fontSize: 11,
+                                  fontWeight: 900,
+                                  color: "#087F63",
+                                }}
+                              >
+                                ➔
+                              </span>
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
-                    ))
+                    );
                   })}
                 </div>
               </div>
-            )
+            );
           })}
       </div>
 
@@ -10011,22 +10350,22 @@ function ByProductCombinedScreen({
         <MultiLocSheet
           selected={selectedLocs}
           onApply={(locs) => {
-            setSelectedLocs(locs)
-            setLocSheet(false)
+            setSelectedLocs(locs);
+            setLocSheet(false);
             if (voiceEnabled) {
-              if (locs.length === 0) {
-                speakText("Prices of my country shown.")
+              if (locs.length === 0 || locs.some((l) => l.kind === "pakistan")) {
+                speakText("Prices of my country shown.");
               } else if (locs.length === 1) {
-                const loc = locs[0]
+                const loc = locs[0];
                 if (loc.kind === "pakistan")
-                  speakText("Prices of my country shown.")
+                  speakText("Prices of my country shown.");
                 else if (loc.kind === "province")
-                  speakText(`Prices of ${loc.label} are shown.`)
+                  speakText(`Prices of ${loc.label} are shown.`);
                 else if (loc.kind === "district")
-                  speakText(`Prices of ${loc.label} district are shown.`)
-                else speakText(`Prices of ${loc.label} are shown.`)
+                  speakText(`Prices of ${loc.label} district are shown.`);
+                else speakText(`Prices of ${loc.label} are shown.`);
               } else {
-                speakText(`Prices of ${locs.length} locations are shown.`)
+                speakText(`Prices of ${locs.length} locations are shown.`);
               }
             }
           }}
@@ -10034,74 +10373,129 @@ function ByProductCombinedScreen({
         />
       )}
     </div>
-  )
+  );
 }
 
-//  MULTI-LOCATION SHEET (multi-select mandis/districts/provinces)
+// ─── MULTI-LOCATION SHEET WITH ACCORDION LAYOUT & WHOLE COUNTRY OPTION ──────
 function MultiLocSheet({
   selected,
   onApply,
   onClose,
 }: {
-  selected: { kind: LocationScope["kind"]; label: string }[]
-  onApply: (locs: { kind: LocationScope["kind"]; label: string }[]) => void
-  onClose: () => void
+  selected: { kind: LocationScope["kind"]; label: string }[];
+  onApply: (locs: { kind: LocationScope["kind"]; label: string }[]) => void;
+  onClose: () => void;
 }) {
-  const { lang, voiceEnabled, tm: tmL } = useLang()
-  const [draft, setDraft] = useState(selected)
-  const [tab, setTab] = useState<"province" | "district" | "mandi">("province")
-  const [provinceFilter, setProvinceFilter] = useState<string | null>(null)
+  const { lang, voiceEnabled, tm: tmL } = useLang();
+  const [draft, setDraft] = useState(selected);
+  const [selectedProvince, setSelectedProvince] = useState<string>("Punjab");
+  const [distSearch, setDistSearch] = useState("");
+  const [expandedDistricts, setExpandedDistricts] = useState<
+    Record<string, boolean>
+  >({
+    Lahore: true,
+    Multan: true,
+    Faisalabad: true,
+  });
 
-  const provinces = Object.keys(LOCATIONS)
-  const districts = provinceFilter
-    ? Object.keys(LOCATIONS[provinceFilter] || {})
-    : Object.keys(LOCATIONS).flatMap((p) => Object.keys(LOCATIONS[p] || {}))
-  const mandis = provinceFilter
-    ? Object.values(LOCATIONS[provinceFilter] || {}).flat()
-    : Object.values(LOCATIONS).flatMap((d) => Object.values(d).flat())
+  const isWholeCountrySelected =
+    draft.length === 0 || draft.some((x) => x.kind === "pakistan");
 
-  const toggle = (kind: LocationScope["kind"], label: string) => {
-    const key = `${kind}|${label}`
-    const alreadyOn = draft.some((x) => `${x.kind}|${x.label}` === key)
-    setDraft((p) =>
-      alreadyOn
-        ? p.filter((x) => `${x.kind}|${x.label}` !== key)
-        : [...p, { kind, label }],
-    )
+  const provinces = Object.keys(LOCATIONS);
+  const availableDistricts = Object.keys(LOCATIONS[selectedProvince] || {});
+  const filteredDistricts = availableDistricts.filter((d) => {
+    if (!distSearch) return true;
+    const q = distSearch.toLowerCase();
+    if (d.toLowerCase().includes(q)) return true;
+    const mandis = LOCATIONS[selectedProvince]?.[d] || [];
+    return mandis.some((m) => m.toLowerCase().includes(q));
+  });
+
+  const toggleWholeCountry = () => {
+    setDraft([{ kind: "pakistan", label: "All Pakistan" }]);
     if (voiceEnabled) {
-      if (alreadyOn) {
-        speakText(
-          lang === "ur"
-            ? `${tmL(label)} ہٹا دیا گیا۔`
-            : `${label} removed.`,
-        )
-      } else {
-        speakText(
-          lang === "ur"
-            ? `${tmL(label)} منتخب کیا گیا۔`
-            : `${label} selected.`,
-        )
-      }
+      speakText(
+        lang === "ur"
+          ? "پورا پاکستان منتخب کیا گیا۔"
+          : "Whole country selected.",
+      );
     }
-  }
-  const isOn = (kind: LocationScope["kind"], label: string) =>
-    draft.some((x) => x.kind === kind && x.label === label)
+  };
 
-  const listItems =
-    tab === "province" ? provinces : tab === "district" ? districts : mandis
+  const toggleProvince = (p: string) => {
+    const isAlready = draft.some(
+      (x) => x.kind === "province" && x.label === p,
+    );
+    if (isAlready) {
+      setDraft((prev) =>
+        prev.filter((x) => !(x.kind === "province" && x.label === p)),
+      );
+    } else {
+      setDraft((prev) => [
+        ...prev.filter((x) => x.kind !== "pakistan"),
+        { kind: "province", label: p },
+      ]);
+    }
+    setSelectedProvince(p);
+  };
 
-  const MY_DISTRICT = "Lahore"
-  const MY_PROVINCE = "Punjab"
+  const toggleDistrictAccordion = (d: string) => {
+    setExpandedDistricts((prev) => ({ ...prev, [d]: !prev[d] }));
+  };
+
+  const toggleMandi = (mName: string, distName: string) => {
+    const isAlready = draft.some((x) => x.label === mName);
+    if (isAlready) {
+      setDraft((prev) => prev.filter((x) => x.label !== mName));
+    } else {
+      setDraft((prev) => [
+        ...prev.filter((x) => x.kind !== "pakistan"),
+        { kind: "mandi", label: mName },
+      ]);
+    }
+  };
+
+  const toggleSelectAllInDistrict = (
+    distName: string,
+    mandiList: string[],
+  ) => {
+    const allSelected = mandiList.every((m) =>
+      draft.some((x) => x.label === m),
+    );
+    if (allSelected) {
+      setDraft((prev) => prev.filter((x) => !mandiList.includes(x.label)));
+    } else {
+      const toAdd = mandiList
+        .filter((m) => !draft.some((x) => x.label === m))
+        .map((m) => ({ kind: "mandi" as const, label: m }));
+      setDraft((prev) => [
+        ...prev.filter((x) => x.kind !== "pakistan"),
+        ...toAdd,
+      ]);
+    }
+  };
+
+  const isMandiSelected = (mName: string) =>
+    draft.some((x) => x.label === mName);
+  const isProvSelected = (p: string) =>
+    draft.some((x) => x.kind === "province" && x.label === p);
 
   return (
     <div
       className="zm-sheet-overlay"
-      style={{ zIndex: 250 }}
+      style={{ zIndex: 350 }}
       onClick={onClose}
     >
       <div
         className="zm-sheet-high"
-        style={{ background: "#F4FAF7", maxHeight: "88vh" }}
+        style={{
+          background: "#F4FAF7",
+          maxHeight: "90vh",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: "28px 28px 0 0",
+          boxShadow: "0 -10px 40px rgba(6,77,64,0.22)",
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Handle + title */}
@@ -10114,311 +10508,513 @@ function MultiLocSheet({
             style={{ background: "#C7D6D0" }}
           />
           <div className="flex items-center justify-between">
-            <p className="font-bold text-lg">
-              {lang === "ur" ? "مقامات کا انتخاب کریں" : "Select Locations"}
-            </p>
-            {draft.length > 0 && (
+            <div>
+              <p
+                className="font-extrabold text-lg"
+                style={{ color: "#183B34" }}
+              >
+                {lang === "ur" ? "مقام کا فلٹر" : "Location Filter"}
+              </p>
+            </div>
+            {draft.length > 0 && !isWholeCountrySelected && (
               <button
                 onClick={() => {
-                  setDraft([])
-                  if (voiceEnabled) {
-                    speakText(lang === "ur" ? "تمام مقامات ہٹا دیے گئے۔" : "All cleared.")
-                  }
+                  toggleWholeCountry();
                 }}
-                className="tap-target text-xs font-semibold"
-                style={{ color: "#D95A51" }}
+                className="tap-target text-xs font-semibold px-2.5 py-1 rounded-full"
+                style={{ background: "#E8EFEC", color: "#087F63" }}
               >
-                {lang === "ur" ? "تمام ہٹائیں" : "Clear all"}
+                {lang === "ur" ? "ری سیٹ" : "Reset"}
               </button>
             )}
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
-          {/* Quick picks */}
-          <div
-            className="px-4 pt-4 pb-3 flex flex-col gap-2.5"
-            style={{ borderBottom: "1px solid #E8EFEC" }}
-          >
-            <p
-              className="font-extrabold tracking-wide mb-1"
+        {/* Scrollable Content Body */}
+        <div className="flex-1 overflow-y-auto px-5 py-4">
+          {/* Universal Search Bar at TOP */}
+          <div style={{ marginBottom: 12 }}>
+            <label
               style={{
-                color: "#80918B",
-                fontSize: lang === "ur" ? 17 : 12,
-                fontFamily:
-                  lang === "ur"
-                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                    : "inherit",
+                display: "block",
+                fontSize: 11,
+                fontWeight: 700,
+                color: "#52635F",
+                textTransform: "uppercase",
+                marginBottom: 6,
               }}
             >
-              {lang === "ur" ? "فوری انتخاب" : "QUICK SELECT"}
-            </p>
-            <button
-              onClick={() => {
-                setDraft([])
-                onApply([])
-              }}
-              className="tap-target flex items-center gap-3 rounded-2xl px-4 py-2.5"
-              style={{
-                background: "#FFF0C7",
-                border: "1.5px solid #F2D58A",
-                minHeight: lang === "ur" ? 64 : 52,
-              }}
-            >
-              <div className="flex-1 text-left">
-                <p
-                  className="font-bold"
-                  style={{
-                    color: "#9A6817",
-                    fontSize: lang === "ur" ? 20 : 14,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {lang === "ur" ? "میرا ملک" : "My Country"}
-                </p>
-                <p
-                  style={{
-                    color: "#52635F",
-                    fontSize: lang === "ur" ? 16 : 12,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur" ? "پاکستان" : "Pakistan"}
-                </p>
-              </div>
-            </button>
-            <button
-              onClick={() => {
-                setDraft([{ kind: "province", label: MY_PROVINCE }])
-                onApply([{ kind: "province", label: MY_PROVINCE }])
-              }}
-              className="tap-target flex items-center gap-3 rounded-2xl px-4 py-2.5"
-              style={{
-                background: "#EAF5F1",
-                border: "1.5px solid #818CF8",
-                minHeight: lang === "ur" ? 64 : 52,
-              }}
-            >
-              <div className="flex-1 text-left">
-                <p
-                  className="font-bold"
-                  style={{
-                    color: "#3730A3",
-                    fontSize: lang === "ur" ? 20 : 14,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {lang === "ur" ? "میرا صوبہ" : "My Province"}
-                </p>
-                <p
-                  style={{
-                    color: "#52635F",
-                    fontSize: lang === "ur" ? 16 : 12,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {tmL(MY_PROVINCE)}
-                </p>
-              </div>
-            </button>
-            <button
-              onClick={() => {
-                setDraft([{ kind: "district", label: MY_DISTRICT }])
-                onApply([{ kind: "district", label: MY_DISTRICT }])
-              }}
-              className="tap-target flex items-center gap-3 rounded-2xl px-4 py-2.5"
-              style={{
-                background: "#E4F2EC",
-                border: "1.5px solid #087F63",
-                minHeight: lang === "ur" ? 64 : 52,
-              }}
-            >
-              <div className="flex-1 text-left">
-                <p
-                  className="font-bold"
-                  style={{
-                    color: "#075E4F",
-                    fontSize: lang === "ur" ? 20 : 14,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {lang === "ur" ? "میرا ضلع" : "My District"}
-                </p>
-                <p
-                  style={{
-                    color: "#52635F",
-                    fontSize: lang === "ur" ? 16 : 12,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {tmL(MY_DISTRICT)}
-                </p>
-              </div>
-            </button>
-          </div>
-
-          {/* Tab selector */}
-          <div className="px-4 pt-3 pb-2 flex-shrink-0">
-            <p
-              className="font-bold tracking-wide mb-2"
-              style={{
-                color: "#80918B",
-                fontSize: lang === "ur" ? 16 : 12,
-                fontFamily:
-                  lang === "ur"
-                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                    : "inherit",
-              }}
-            >
-              {lang === "ur" ? "یا خود منتخب کریں" : "OR CHOOSE MANUALLY"}
-            </p>
+              {lang === "ur"
+                ? "منڈی یا ضلع تلاش کریں"
+                : "Search Any Mandi or District"}
+            </label>
             <div
-              className="flex gap-1.5 p-1 rounded-2xl"
-              style={{ background: "#E8EFEC" }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                background: "#fff",
+                border: "1.5px solid #D5E2DD",
+                borderRadius: 12,
+                padding: "9px 12px",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.02)",
+              }}
             >
-              {(["province", "district", "mandi"] as const).map((t) => (
+              <span style={{ fontSize: 16, color: "#087F63" }}>⌕</span>
+              <input
+                type="text"
+                placeholder={
+                  lang === "ur"
+                    ? "مثال: جڑانوالہ، بادامی باغ، فیصل آباد..."
+                    : "e.g. Badami Bagh, Faisalabad, Multan..."
+                }
+                value={distSearch}
+                onChange={(e) => setDistSearch(e.target.value)}
+                style={{
+                  border: "none",
+                  outline: "none",
+                  width: "100%",
+                  fontSize: 13,
+                  color: "#183B34",
+                  background: "transparent",
+                }}
+              />
+              {distSearch && (
                 <button
-                  key={t}
-                  onClick={() => {
-                    setTab(t)
-                    if (voiceEnabled) {
-                      speakText(
-                        lang === "ur"
-                          ? `${t === "province" ? "صوبہ" : t === "district" ? "ضلع" : "منڈی"} منتخب کریں`
-                          : `Select ${t}`,
-                      )
-                    }
-                  }}
-                  className="tap-target flex-1 rounded-xl font-bold"
+                  type="button"
+                  onClick={() => setDistSearch("")}
                   style={{
-                    height: lang === "ur" ? 44 : 34,
-                    fontSize: lang === "ur" ? 17 : 11,
-                    background: tab === t ? "#087F63" : "transparent",
-                    color: tab === t ? "#fff" : "#52635F",
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
+                    border: "none",
+                    background: "none",
+                    color: "#80918B",
+                    fontSize: 13,
+                    cursor: "pointer",
                   }}
                 >
-                  {t === "province"
-                    ? (lang === "ur" ? "صوبہ" : "Province")
-                    : t === "district"
-                      ? (lang === "ur" ? "ضلع" : "District")
-                      : (lang === "ur" ? "منڈی" : "Mandi")}
+                  ✕
                 </button>
-              ))}
+              )}
             </div>
-            {/* Province filter chips for district/mandi */}
-            {(tab === "district" || tab === "mandi") && (
-              <div className="flex gap-1 mt-2 overflow-x-auto pb-1">
-                <button
-                  onClick={() => setProvinceFilter(null)}
-                  className="tap-target flex-shrink-0 rounded-full font-bold px-3.5 py-1"
-                  style={{
-                    background: !provinceFilter ? "#087F63" : "#E8EFEC",
-                    color: !provinceFilter ? "#fff" : "#52635F",
-                    fontSize: lang === "ur" ? 16 : 12,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur" ? "سب" : "All"}
-                </button>
-                {provinces.map((p) => (
-                  <button
-                    key={p}
-                    onClick={() =>
-                      setProvinceFilter(p === provinceFilter ? null : p)
-                    }
-                    className="tap-target flex-shrink-0 rounded-full font-bold px-3.5 py-1"
-                    style={{
-                      background: provinceFilter === p ? "#087F63" : "#E8EFEC",
-                      color: provinceFilter === p ? "#fff" : "#52635F",
-                      fontSize: lang === "ur" ? 16 : 12,
-                      fontFamily:
-                        lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                          : "inherit",
-                    }}
-                  >
-                    {tmL(p)}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
-          {/* List */}
-          <div className="px-4 pb-3 flex flex-col gap-2">
-            {listItems.map((item) => {
-              const on = isOn(tab, item)
-              return (
-                <button
-                  key={item}
-                  onClick={() => toggle(tab, item)}
-                  className="tap-target flex items-center gap-3 rounded-2xl px-4"
-                  style={{
-                    background: on ? "#E4F2EC" : "#F1F7F4",
-                    border: on ? "1.5px solid #087F63" : "1px solid #D5E2DD",
-                    minHeight: lang === "ur" ? 54 : 48,
-                  }}
-                >
-                  <span
-                    className="flex-1 text-left font-bold"
+          {/* Quick Select: Whole Country (All Pakistan) Card */}
+          <div style={{ marginBottom: 12 }}>
+            <button
+              type="button"
+              onClick={toggleWholeCountry}
+              className="tap-target w-full"
+              style={{
+                padding: "12px 14px",
+                borderRadius: 14,
+                border: isWholeCountrySelected
+                  ? "2px solid #087F63"
+                  : "1.5px solid #D5E2DD",
+                background: isWholeCountrySelected
+                  ? "linear-gradient(135deg, #E4F2EC, #D1ECE2)"
+                  : "#FFFFFF",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                cursor: "pointer",
+                boxShadow: isWholeCountrySelected
+                  ? "0 3px 12px rgba(8,127,99,0.14)"
+                  : "none",
+                transition: "all 0.15s",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ textAlign: "left" }}>
+                  <div
                     style={{
-                      color: on ? "#075E4F" : "#183B34",
-                      fontSize: lang === "ur" ? 19 : 14,
-                      fontFamily:
-                        lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                          : "inherit",
+                      fontSize: 13.5,
+                      fontWeight: 800,
+                      color: isWholeCountrySelected ? "#087F63" : "#183B34",
                     }}
                   >
-                    {tmL(item)}
-                  </span>
-                  <div
-                    className="w-7 h-7 rounded-full flex items-center justify-center"
-                    style={{ background: on ? "#087F63" : "#D5E2DD" }}
-                  >
-                    {on && (
-                      <span
-                        className="text-white font-bold"
-                        style={{ fontSize: 13 }}
-                      >
-                        ✓
-                      </span>
-                    )}
+                    {lang === "ur"
+                      ? "پورا پاکستان"
+                      : "All Pakistan"}
                   </div>
-                </button>
-              )
-            })}
+                </div>
+              </div>
+
+              <div
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: "50%",
+                  border: isWholeCountrySelected
+                    ? "2px solid #087F63"
+                    : "1.5px solid #C7D6D0",
+                  background: isWholeCountrySelected ? "#087F63" : "#FFFFFF",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#FFFFFF",
+                  fontSize: 11,
+                  fontWeight: 900,
+                }}
+              >
+                {isWholeCountrySelected ? "✓" : ""}
+              </div>
+            </button>
+          </div>
+
+          {/* Unified Container Box for Province Tabs & Mandis/Districts */}
+          <div
+            style={{
+              background: "#FFFFFF",
+              border: "1.5px solid #D5E2DD",
+              borderRadius: 16,
+              padding: "14px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+              boxShadow: "0 3px 12px rgba(6,77,64,0.04)",
+              marginBottom: 12,
+            }}
+          >
+            {/* Province Tabs Header inside Box */}
+            <div>
+              <div
+                style={{
+                  fontSize: 10.5,
+                  fontWeight: 800,
+                  color: "#52635F",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  marginBottom: 6,
+                }}
+              >
+                {lang === "ur" ? "صوبہ منتخب کریں" : "Select Province"}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                  overflowX: "auto",
+                  paddingBottom: 2,
+                  scrollbarWidth: "none",
+                }}
+              >
+                {provinces.map((p) => {
+                  const isCurrentTab = selectedProvince === p;
+                  const isSelectedInDraft = isProvSelected(p);
+                  return (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => toggleProvince(p)}
+                      className="tap-target px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap"
+                      style={{
+                        background:
+                          isSelectedInDraft || isCurrentTab
+                            ? "#087F63"
+                            : "#F4FAF7",
+                        color:
+                          isSelectedInDraft || isCurrentTab
+                            ? "#fff"
+                            : "#183B34",
+                        border:
+                          isSelectedInDraft || isCurrentTab
+                            ? "1.5px solid #087F63"
+                            : "1.5px solid #D5E2DD",
+                        boxShadow:
+                          isSelectedInDraft || isCurrentTab
+                            ? "0 2px 8px rgba(8,127,99,0.2)"
+                            : "none",
+                      }}
+                    >
+                      {tmL(p)} {isSelectedInDraft ? "✓" : ""}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div style={{ height: 1, background: "#E8EFEC" }} />
+
+            {/* Districts & Mandis inside Unified Box */}
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: 8,
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 10.5,
+                    fontWeight: 800,
+                    color: "#52635F",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  {lang === "ur"
+                    ? "اضلاع اور منڈیاں"
+                    : "Districts & Mandis"}
+                </span>
+                <span
+                  style={{
+                    fontSize: 10.5,
+                    color: "#087F63",
+                    fontWeight: 700,
+                  }}
+                >
+                  {draft.length} filter{draft.length !== 1 ? "s" : ""} active
+                </span>
+              </div>
+
+              <div
+                style={{
+                  maxHeight: 280,
+                  minHeight: 160,
+                  overflowY: "auto",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                  scrollbarWidth: "thin",
+                  paddingRight: 2,
+                }}
+              >
+                {filteredDistricts.map((d) => {
+                  const isDistExpanded = !!expandedDistricts[d];
+                  const mandiList = LOCATIONS[selectedProvince]?.[d] || [];
+                  const selectedInDistrictCount = mandiList.filter((m) =>
+                    isMandiSelected(m),
+                  ).length;
+                  const allInDistrictSelected =
+                    mandiList.length > 0 &&
+                    selectedInDistrictCount === mandiList.length;
+
+                  return (
+                    <div
+                      key={d}
+                      style={{
+                        flexShrink: 0,
+                        background: "#F9FBFB",
+                        border:
+                          selectedInDistrictCount > 0
+                            ? "1.5px solid #087F63"
+                            : "1px solid #E2EFE9",
+                        borderRadius: 12,
+                        overflow: "hidden",
+                      }}
+                    >
+                      {/* District Accordion Header */}
+                      <div
+                        onClick={() => toggleDistrictAccordion(d)}
+                        style={{
+                          padding: "10px 12px",
+                          background:
+                            selectedInDistrictCount > 0
+                              ? "#F0F8F4"
+                              : "#FFFFFF",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          cursor: "pointer",
+                          userSelect: "none",
+                          borderBottom:
+                            isDistExpanded && mandiList.length > 0
+                              ? "1px solid #E2EFE9"
+                              : "none",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                          }}
+                        >
+                          <div>
+                            <div
+                              style={{
+                                fontSize: 13,
+                                fontWeight: 800,
+                                color:
+                                  selectedInDistrictCount > 0
+                                    ? "#087F63"
+                                    : "#183B34",
+                              }}
+                            >
+                              {d}
+                            </div>
+                            <div
+                              style={{
+                                fontSize: 10.5,
+                                color: "#52635F",
+                                marginTop: 1,
+                              }}
+                            >
+                              {mandiList.length}{" "}
+                              {mandiList.length === 1 ? "Mandi" : "Mandis"}
+                              {selectedInDistrictCount > 0 &&
+                                ` · ${selectedInDistrictCount} Selected`}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                          }}
+                        >
+                          {/* Select All in District Button */}
+                          {mandiList.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleSelectAllInDistrict(d, mandiList);
+                              }}
+                              style={{
+                                fontSize: 10,
+                                fontWeight: 800,
+                                color: allInDistrictSelected
+                                  ? "#FFFFFF"
+                                  : "#087F63",
+                                background: allInDistrictSelected
+                                  ? "#087F63"
+                                  : "#E4F2EC",
+                                border: "1px solid #087F63",
+                                padding: "3px 8px",
+                                borderRadius: 6,
+                                cursor: "pointer",
+                              }}
+                            >
+                              {allInDistrictSelected
+                                ? "✓ All Selected"
+                                : "Select All"}
+                            </button>
+                          )}
+
+                          {/* Accordion Expand / Collapse Indicator */}
+                          <span
+                            style={{
+                              color: isDistExpanded ? "#087F63" : "#80918B",
+                              fontSize: 12,
+                              fontWeight: 800,
+                              transform: isDistExpanded
+                                ? "rotate(0deg)"
+                                : "rotate(-90deg)",
+                              transition: "transform 0.2s",
+                            }}
+                          >
+                            ▼
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Mandis List for this District */}
+                      {isDistExpanded && mandiList.length > 0 && (
+                        <div
+                          style={{
+                            padding: "8px 10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 6,
+                            background: "#FFFFFF",
+                          }}
+                        >
+                          {mandiList.map((mName) => {
+                            const isSelected = isMandiSelected(mName);
+                            return (
+                              <button
+                                key={mName}
+                                type="button"
+                                onClick={() => toggleMandi(mName, d)}
+                                className="tap-target"
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "center",
+                                  padding: "8px 10px",
+                                  borderRadius: 8,
+                                  border: isSelected
+                                    ? "1.5px solid #087F63"
+                                    : "1px solid #E2EFE9",
+                                  background: isSelected
+                                    ? "#E4F2EC"
+                                    : "#FAFCFB",
+                                  textAlign: "left",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    fontSize: 12,
+                                    fontWeight: isSelected ? 800 : 600,
+                                    color: isSelected ? "#087F63" : "#183B34",
+                                  }}
+                                >
+                                  {mName}
+                                </span>
+                                <div
+                                  style={{
+                                    width: 18,
+                                    height: 18,
+                                    borderRadius: 4,
+                                    border: isSelected
+                                      ? "1.5px solid #087F63"
+                                      : "1.5px solid #C7D6D0",
+                                    background: isSelected
+                                      ? "#087F63"
+                                      : "#FFFFFF",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: "#FFFFFF",
+                                    fontSize: 11,
+                                    fontWeight: 900,
+                                  }}
+                                >
+                                  {isSelected ? "✓" : ""}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {filteredDistricts.length === 0 && (
+                  <div
+                    style={{
+                      padding: "20px 14px",
+                      textAlign: "center",
+                      background: "#FAFCFB",
+                      borderRadius: 12,
+                      border: "1.5px dashed #D5E2DD",
+                      color: "#52635F",
+                      fontSize: 12.5,
+                    }}
+                  >
+                    <div>🔍 No locations matching "{distSearch}"</div>
+                    <button
+                      type="button"
+                      onClick={() => setDistSearch("")}
+                      className="tap-target px-3 py-1 rounded-lg text-xs font-bold mt-2"
+                      style={{ background: "#087F63", color: "#fff" }}
+                    >
+                      Clear Search
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
+        {/* Footer Apply Button */}
         <div
           className="px-4 pb-6 pt-3 flex-shrink-0"
           style={{ borderTop: "1px solid #D5E2DD" }}
@@ -10428,23 +11024,28 @@ function MultiLocSheet({
             className="tap-target w-full rounded-2xl font-extrabold text-white"
             style={{
               background: "#087F63",
-              minHeight: lang === "ur" ? 56 : 48,
-              padding: "14px 16px",
-              fontSize: lang === "ur" ? 20 : 16,
-              fontFamily:
-                lang === "ur"
-                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                  : "inherit",
+              minHeight: 48,
+              padding: "13px 16px",
+              fontSize: 15,
+              boxShadow: "0 4px 14px rgba(8,127,99,0.3)",
             }}
           >
-            {draft.length > 0
-              ? (lang === "ur" ? `${draft.length} مقامات لاگو کریں` : `Apply ${draft.length} Location${draft.length > 1 ? "s" : ""}`)
-              : (lang === "ur" ? "سب دکھائیں" : "Show All")}
+            {isWholeCountrySelected
+              ? lang === "ur"
+                ? "پورا پاکستان لاگو کریں"
+                : "Apply All Pakistan"
+              : draft.length > 0
+                ? lang === "ur"
+                  ? `${draft.length} مقامات لاگو کریں`
+                  : `Apply ${draft.length} Selected Location${draft.length > 1 ? "s" : ""}`
+                : lang === "ur"
+                  ? "پورا پاکستان لاگو کریں"
+                  : "Apply All Pakistan"}
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 //  BY-PRODUCT SELECT
@@ -10453,43 +11054,43 @@ function ByProductSelectScreen({
   push,
   onBack,
 }: {
-  push: (s: Screen) => void
-  onBack: () => void
+  push: (s: Screen) => void;
+  onBack: () => void;
 }) {
-  const verticals = Object.keys(VERTICALS)
-  const [activeV, setActiveV] = useState(verticals[0])
-  const [activeComm, setActiveComm] = useState<string | null>(null)
-  const [selected, setSelected] = useState<RateItem[]>([])
+  const verticals = Object.keys(VERTICALS);
+  const [activeV, setActiveV] = useState(verticals[0]);
+  const [activeComm, setActiveComm] = useState<string | null>(null);
+  const [selected, setSelected] = useState<RateItem[]>([]);
 
-  const commodities = Object.keys(VERTICALS[activeV]?.commodities || {})
+  const products = Object.keys(VERTICALS[activeV]?.products || {});
   const byproducts = activeComm
-    ? VERTICALS[activeV]?.commodities[activeComm] || []
-    : []
+    ? VERTICALS[activeV]?.products[activeComm] || []
+    : [];
 
   const toggleBP = (bp: string) => {
-    if (!activeComm) return
+    if (!activeComm) return;
     const item: RateItem = {
       vertical: activeV,
-      commodity: activeComm,
+      product: activeComm,
       byproduct: bp,
-    }
-    const key = `${activeV}|${activeComm}|${bp}`
+    };
+    const key = `${activeV}|${activeComm}|${bp}`;
     setSelected((prev) =>
-      prev.some((p) => `${p.vertical}|${p.commodity}|${p.byproduct}` === key)
+      prev.some((p) => `${p.vertical}|${p.product}|${p.byproduct}` === key)
         ? prev.filter(
-          (p) => `${p.vertical}|${p.commodity}|${p.byproduct}` !== key,
-        )
+            (p) => `${p.vertical}|${p.product}|${p.byproduct}` !== key,
+          )
         : [...prev, item],
-    )
-  }
+    );
+  };
 
   const isBPSelected = (bp: string) =>
     selected.some(
       (p) =>
         p.vertical === activeV &&
-        p.commodity === activeComm &&
+        p.product === activeComm &&
         p.byproduct === bp,
-    )
+    );
 
   return (
     <div
@@ -10575,8 +11176,8 @@ function ByProductSelectScreen({
           <button
             key={v}
             onClick={() => {
-              setActiveV(v)
-              setActiveComm(null)
+              setActiveV(v);
+              setActiveComm(null);
             }}
             className="tap-target flex-shrink-0 flex items-center gap-1.5 rounded-full font-semibold text-xs px-3 py-2"
             style={{
@@ -10598,7 +11199,7 @@ function ByProductSelectScreen({
         ))}
       </ScrollRow>
 
-      {/* Commodity row — if no commodity selected, show commodity tiles */}
+      {/* product row — if no product selected, show product tiles */}
       {!activeComm ? (
         <div className="flex-1 overflow-y-auto min-h-0 px-4 pt-5 pb-4">
           <p
@@ -10608,10 +11209,10 @@ function ByProductSelectScreen({
             Pick a product to see its byproducts
           </p>
           <div className="flex flex-wrap gap-x-3 gap-y-5 justify-start">
-            {commodities.map((c) => (
+            {products.map((c) => (
               <CircleTile
                 key={c}
-                commodity={c}
+                product={c}
                 vertical={activeV}
                 alt={c}
                 label={c}
@@ -10624,7 +11225,7 @@ function ByProductSelectScreen({
         </div>
       ) : (
         <>
-          {/* Back to commodity list + commodity name */}
+          {/* Back to product list + product name */}
           <div
             className="flex items-center gap-2 px-4 py-2 flex-shrink-0"
             style={{ background: "#F1F7F4", borderBottom: "1px solid #D5E2DD" }}
@@ -10648,7 +11249,7 @@ function ByProductSelectScreen({
               {byproducts.map((bp) => (
                 <CircleTile
                   key={bp}
-                  commodity={bp}
+                  product={bp}
                   vertical={activeV}
                   alt={bp}
                   label={bp}
@@ -10693,7 +11294,7 @@ function ByProductSelectScreen({
         )}
       </div>
     </div>
-  )
+  );
 }
 
 //  RICH RATE CARD (matches screenshot aesthetic)
@@ -10707,48 +11308,50 @@ const VERTICAL_BG: Record<string, string> = {
   "Dry Fruits": "#B9822E",
   Herbals: "#2C86A8",
   Kiryana: "#52635F",
-}
+};
 
 type RichRow = {
-  commodity: string
-  byproduct: string
-  emoji: string
-  rateType: string
-  arrival: string
-  min: number
-  max: number
-  trend: "up" | "down" | "stable"
-  trendPct: number
-  mandiName: string
-  mandiCity: string
-  province: string
-  vertical?: string
-  variety?: string
-  color?: string
-  spec?: string
-  condition?: string
-  newOld?: string
-}
+  product: string;
+  byproduct: string;
+  emoji: string;
+  rateType: string;
+  arrival: string;
+  min: number;
+  max: number;
+  trend: "up" | "down" | "stable";
+  trendPct: number;
+  mandiName: string;
+  mandiCity: string;
+  province: string;
+  vertical?: string;
+  variety?: string;
+  color?: string;
+  spec?: string;
+  condition?: string;
+  newOld?: string;
+};
 
 function RateCard({
   r,
   onClick,
   onPriceChipTap,
   onMandiChipTap,
+  dateText,
+  isToday = true,
 }: {
-  r: RichRow
-  onClick: () => void
-  onPriceChipTap?: (rateType: string) => void
-  onMandiChipTap?: (mandiName: string) => void
+  r: RichRow;
+  onClick: () => void;
+  onPriceChipTap?: (rateType: string) => void;
+  onMandiChipTap?: (mandiName: string) => void;
+  dateText?: string;
+  isToday?: boolean;
 }) {
-  const { lang, tc: tcL, tm: tmL, tr: trL } = useLang()
+  const { lang, tc: tcL, tm: tmL, tr: trL } = useLang();
   const vKey =
     r.vertical ||
-    Object.entries(VERTICALS).find(
-      ([, vd]) => vd.commodities[r.commodity],
-    )?.[0] ||
-    "Grains"
-  const bg = VERTICAL_BG[vKey] || "#087F63"
+    Object.entries(VERTICALS).find(([, vd]) => vd.products[r.product])?.[0] ||
+    "Grains";
+  const bg = VERTICAL_BG[vKey] || "#087F63";
 
   return (
     <button
@@ -10772,18 +11375,21 @@ function RateCard({
             borderLeft: lang === "ur" ? "1px solid #D5E2DD" : undefined,
           }}
         >
-          <CommodityIcon name={r.byproduct || vKey} vertical={vKey} size={lang === "ur" ? 54 : 48} />
+          <ProductIcon
+            name={r.byproduct || vKey}
+            vertical={vKey}
+            size={lang === "ur" ? 54 : 48}
+          />
         </div>
         {/* Main content */}
         <div className="flex-1 p-3 flex flex-col gap-2">
-          {/* Row 1: name (left, largest font) + trend badge (right) */}
-          <div className={`flex items-center justify-between gap-2 ${lang === "ur" ? "pl-16" : "pr-16"}`}>
-            {/* TrendBadge is positioned neatly between product name and top-right date badge */}
+          {/* Row 1: by-product name + trend percentage + today/date badge all in 1 line */}
+          <div className="flex items-center justify-between gap-2">
             <p
               className="font-black leading-tight truncate flex-1 min-w-0"
               style={{
                 color: "#183B34",
-                fontSize: lang === "ur" ? 25 : 19,
+                fontSize: lang === "ur" ? 22 : 18,
                 fontWeight: 900,
                 letterSpacing: "-0.01em",
                 fontFamily:
@@ -10792,10 +11398,27 @@ function RateCard({
                     : "'Poppins', sans-serif",
               }}
             >
-              {tcL(r.byproduct || r.commodity)}
+              {tcL(r.byproduct || r.product)}
             </p>
-            <div className="flex-shrink-0">
+            <div className="flex items-center gap-1.5 flex-shrink-0">
               <TrendBadge trend={r.trend} pct={r.trendPct} />
+              {dateText && (
+                <span
+                  style={{
+                    background: isToday ? "#087F63" : "#52635F",
+                    color: "#fff",
+                    fontSize: 9,
+                    fontWeight: 700,
+                    borderRadius: 6,
+                    padding: "2.5px 7px",
+                    letterSpacing: 0.3,
+                    whiteSpace: "nowrap",
+                    display: "inline-block",
+                  }}
+                >
+                  {dateText}
+                </span>
+              )}
             </div>
           </div>
           {/* Row 2: arrival */}
@@ -10809,7 +11432,10 @@ function RateCard({
                   : "inherit",
             }}
           >
-            <span className="font-bold">{lang === "ur" ? "آمد:" : "Arrival:"}</span> {r.arrival}
+            <span className="font-bold">
+              {lang === "ur" ? "آمد:" : "Arrival:"}
+            </span>{" "}
+            {r.arrival}
           </p>
           {/* Row 3: Min left, Max pushed to right end */}
           <div className="flex items-end justify-between">
@@ -10821,7 +11447,8 @@ function RateCard({
                     style={{
                       color: "#2F4A43",
                       fontSize: 18,
-                      fontFamily: "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif",
+                      fontFamily:
+                        "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif",
                     }}
                   >
                     کم سے کم
@@ -10831,7 +11458,8 @@ function RateCard({
                     style={{
                       color: "#52635F",
                       fontSize: 14,
-                      fontFamily: "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif",
+                      fontFamily:
+                        "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif",
                       lineHeight: 1.1,
                       marginTop: -2,
                     }}
@@ -10869,7 +11497,8 @@ function RateCard({
                     style={{
                       color: bg,
                       fontSize: 18,
-                      fontFamily: "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif",
+                      fontFamily:
+                        "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif",
                     }}
                   >
                     زیادہ سے زیادہ
@@ -10879,7 +11508,8 @@ function RateCard({
                     style={{
                       color: "#52635F",
                       fontSize: 14,
-                      fontFamily: "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif",
+                      fontFamily:
+                        "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif",
                       lineHeight: 1.1,
                       marginTop: -2,
                     }}
@@ -10918,9 +11548,9 @@ function RateCard({
               onClick={
                 onPriceChipTap
                   ? (e) => {
-                    e.stopPropagation()
-                    onPriceChipTap(r.rateType)
-                  }
+                      e.stopPropagation();
+                      onPriceChipTap(r.rateType);
+                    }
                   : undefined
               }
               onKeyDown={
@@ -10954,9 +11584,9 @@ function RateCard({
               onClick={
                 onMandiChipTap
                   ? (e) => {
-                    e.stopPropagation()
-                    onMandiChipTap(r.mandiName)
-                  }
+                      e.stopPropagation();
+                      onMandiChipTap(r.mandiName);
+                    }
                   : undefined
               }
               onKeyDown={
@@ -10989,7 +11619,7 @@ function RateCard({
         </div>
       </div>
     </button>
-  )
+  );
 }
 
 //  RATES RESULT
@@ -10999,70 +11629,69 @@ function RatesResultScreen({
   source,
   onBack,
 }: {
-  items: RateItem[]
-  source: "commodity" | "byproduct"
-  onBack: () => void
+  items: RateItem[];
+  source: "product" | "byproduct";
+  onBack: () => void;
 }) {
-  const [selectedMandis, setSelectedMandis] = useState<string[]>([])
-  const [selectedRateTypes, setSelectedRateTypes] = useState<string[]>([])
-  const [mandiSheet, setMandiSheet] = useState(false)
-  const [rateSheet, setRateSheet] = useState(false)
-  const [msgModal, setMsgModal] = useState<FeedMsg | null>(null)
+  const [selectedMandis, setSelectedMandis] = useState<string[]>([]);
+  const [selectedRateTypes, setSelectedRateTypes] = useState<string[]>([]);
+  const [mandiSheet, setMandiSheet] = useState(false);
+  const [rateSheet, setRateSheet] = useState(false);
+  const [msgModal, setMsgModal] = useState<FeedMsg | null>(null);
 
   //  Spotlight: tap a chip in any row to "focus" on just that value
   // null = show all selected; set = show only rows matching that spotlight
-  const [spotCommodity, setSpotCommodity] = useState<string | null>(null)
-  const [spotMandi, setSpotMandi] = useState<string | null>(null)
-  const [spotRateType, setSpotRateType] = useState<string | null>(null)
+  const [spotproduct, setSpotproduct] = useState<string | null>(null);
+  const [spotMandi, setSpotMandi] = useState<string | null>(null);
+  const [spotRateType, setSpotRateType] = useState<string | null>(null);
 
-  // unique commodity labels from items
-  const itemCommodities = [...new Set(items.map((i) => i.commodity))]
+  // unique product labels from items
+  const itemproducts = [...new Set(items.map((i) => i.product))];
   // active mandi set — if none selected show all from MANDI_ROWS
   const activeMandis =
     selectedMandis.length > 0
       ? selectedMandis
-      : INITIAL_MANDIS.map((m) => m.name)
+      : INITIAL_MANDIS.map((m) => m.name);
 
   const baseRows: RichRow[] = Object.entries(MANDI_ROWS).flatMap(
     ([mandiId, rows]) => {
-      const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId)
-      if (!mandi) return []
+      const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
+      if (!mandi) return [];
       if (selectedMandis.length > 0 && !selectedMandis.includes(mandi.name))
-        return []
+        return [];
       return rows
         .filter((r) => {
           const matchItem = items.some(
             (item) =>
-              r.commodity === item.commodity &&
+              r.product === item.product &&
               (item.byproduct === "" || r.byproduct === item.byproduct),
-          )
+          );
           const matchRate =
             selectedRateTypes.length === 0 ||
-            selectedRateTypes.includes(r.rateType)
-          return matchItem && matchRate
+            selectedRateTypes.includes(r.rateType);
+          return matchItem && matchRate;
         })
         .map((r) => ({
           ...r,
           mandiName: mandi.name,
           mandiCity: mandi.city,
           province: mandi.province,
-          vertical:
-            items.find((i) => i.commodity === r.commodity)?.vertical || "",
-        }))
+          vertical: items.find((i) => i.product === r.product)?.vertical || "",
+        }));
     },
-  )
+  );
 
   const feedAsFallback: RichRow[] = FEED_MESSAGES.filter((m) => {
     const matchItem = items.some(
       (item) =>
-        m.commodity === item.commodity &&
+        m.product === item.product &&
         (item.byproduct === "" || m.byproduct === item.byproduct),
-    )
+    );
     const matchRate =
-      selectedRateTypes.length === 0 || selectedRateTypes.includes(m.rateType)
-    return matchItem && matchRate
+      selectedRateTypes.length === 0 || selectedRateTypes.includes(m.rateType);
+    return matchItem && matchRate;
   }).map((m) => ({
-    commodity: m.commodity,
+    product: m.product,
     byproduct: m.byproduct,
     emoji: getVerticalIcon(m.vertical),
     rateType: m.rateType,
@@ -11075,29 +11704,29 @@ function RatesResultScreen({
     mandiCity: m.station,
     province: m.province,
     vertical: m.vertical,
-  }))
+  }));
 
-  const sourceRows = baseRows.length > 0 ? baseRows : feedAsFallback
+  const sourceRows = baseRows.length > 0 ? baseRows : feedAsFallback;
 
   // Apply spotlight filters on top
   const displayed = sourceRows.filter((r) => {
-    if (spotCommodity && r.commodity !== spotCommodity) return false
-    if (spotMandi && r.mandiName !== spotMandi) return false
-    if (spotRateType && r.rateType !== spotRateType) return false
-    return true
-  })
+    if (spotproduct && r.product !== spotproduct) return false;
+    if (spotMandi && r.mandiName !== spotMandi) return false;
+    if (spotRateType && r.rateType !== spotRateType) return false;
+    return true;
+  });
 
   const rowToMsg = (r: RichRow): FeedMsg => {
     const ex = FEED_MESSAGES.find(
-      (m) => m.commodity === r.commodity && m.station === r.mandiName,
-    )
-    if (ex) return ex
+      (m) => m.product === r.product && m.station === r.mandiName,
+    );
+    if (ex) return ex;
     return {
       id: Date.now(),
       time: "Today",
       vertical: r.vertical || "Grains",
-      commodityUrdu: r.commodity,
-      commodity: r.commodity,
+      productUrdu: r.product,
+      product: r.product,
       byproduct: r.byproduct,
       stationUrdu: r.mandiCity,
       station: r.mandiName,
@@ -11119,13 +11748,13 @@ function RatesResultScreen({
       qualityType: "Trade",
       trend: r.trend,
       trendPct: r.trendPct,
-    }
-  }
+    };
+  };
 
-  const anySpotlight = !!(spotCommodity || spotMandi || spotRateType)
+  const anySpotlight = !!(spotproduct || spotMandi || spotRateType);
 
   // Distinct values available in base rows for spotlight
-  const availRateTypes = [...new Set(sourceRows.map((r) => r.rateType))]
+  const availRateTypes = [...new Set(sourceRows.map((r) => r.rateType))];
 
   // SpotChip: tap = spotlight, tap again = deselect spotlight
   function SpotChip({
@@ -11134,10 +11763,10 @@ function RatesResultScreen({
     color,
     onToggle,
   }: {
-    label: string
-    active: boolean
-    color: string
-    onToggle: () => void
+    label: string;
+    active: boolean;
+    color: string;
+    onToggle: () => void;
   }) {
     return (
       <button
@@ -11155,7 +11784,7 @@ function RatesResultScreen({
         {label}
         {active && <span style={{ fontSize: 11, opacity: 0.75 }}></span>}
       </button>
-    )
+    );
   }
 
   return (
@@ -11186,9 +11815,9 @@ function RatesResultScreen({
           {anySpotlight && (
             <button
               onClick={() => {
-                setSpotCommodity(null)
-                setSpotMandi(null)
-                setSpotRateType(null)
+                setSpotproduct(null);
+                setSpotMandi(null);
+                setSpotRateType(null);
               }}
               className="tap-target flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold"
               style={{
@@ -11226,9 +11855,9 @@ function RatesResultScreen({
             {selectedMandis.length > 0 && (
               <button
                 onClick={(e) => {
-                  e.stopPropagation()
-                  setSelectedMandis([])
-                  setSpotMandi(null)
+                  e.stopPropagation();
+                  setSelectedMandis([]);
+                  setSpotMandi(null);
                 }}
                 style={{ opacity: 0.7, marginLeft: 2 }}
               ></button>
@@ -11253,9 +11882,9 @@ function RatesResultScreen({
             {selectedRateTypes.length > 0 && (
               <button
                 onClick={(e) => {
-                  e.stopPropagation()
-                  setSelectedRateTypes([])
-                  setSpotRateType(null)
+                  e.stopPropagation();
+                  setSelectedRateTypes([]);
+                  setSpotRateType(null);
                 }}
                 style={{ opacity: 0.7, marginLeft: 2 }}
               ></button>
@@ -11271,28 +11900,28 @@ function RatesResultScreen({
           >
             Item
           </span>
-          {itemCommodities.map((c) => {
-            const v = items.find((i) => i.commodity === c)?.vertical || ""
-            const bps = items.filter((i) => i.commodity === c && i.byproduct)
+          {itemproducts.map((c) => {
+            const v = items.find((i) => i.product === c)?.vertical || "";
+            const bps = items.filter((i) => i.product === c && i.byproduct);
             return bps.length > 0 ? (
               bps.map((bp) => (
                 <SpotChip
                   key={`${c}-${bp.byproduct}`}
                   label={bp.byproduct}
-                  active={spotCommodity === c}
+                  active={spotproduct === c}
                   color="#087F63"
-                  onToggle={() => setSpotCommodity((p) => (p === c ? null : c))}
+                  onToggle={() => setSpotproduct((p) => (p === c ? null : c))}
                 />
               ))
             ) : (
               <SpotChip
                 key={c}
                 label={c}
-                active={spotCommodity === c}
+                active={spotproduct === c}
                 color="#087F63"
-                onToggle={() => setSpotCommodity((p) => (p === c ? null : c))}
+                onToggle={() => setSpotproduct((p) => (p === c ? null : c))}
               />
-            )
+            );
           })}
         </ScrollRow>
 
@@ -11350,9 +11979,9 @@ function RatesResultScreen({
               </p>
               <button
                 onClick={() => {
-                  setSpotCommodity(null)
-                  setSpotMandi(null)
-                  setSpotRateType(null)
+                  setSpotproduct(null);
+                  setSpotMandi(null);
+                  setSpotRateType(null);
                 }}
                 className="tap-target mt-3 px-4 py-2 rounded-2xl text-sm font-bold"
                 style={{ background: "#087F63", color: "#fff" }}
@@ -11371,8 +12000,8 @@ function RatesResultScreen({
         <MandiPickerSheet
           selected={selectedMandis}
           onApply={(s) => {
-            setSelectedMandis(s)
-            setSpotMandi(null)
+            setSelectedMandis(s);
+            setSpotMandi(null);
           }}
           onClose={() => setMandiSheet(false)}
         />
@@ -11381,8 +12010,8 @@ function RatesResultScreen({
         <PriceTypeSheet
           selected={selectedRateTypes}
           onApply={(s) => {
-            setSelectedRateTypes(s)
-            setSpotRateType(null)
+            setSelectedRateTypes(s);
+            setSpotRateType(null);
           }}
           onClose={() => setRateSheet(false)}
         />
@@ -11391,10 +12020,10 @@ function RatesResultScreen({
         <ZMMessageModal msg={msgModal} onClose={() => setMsgModal(null)} />
       )}
     </div>
-  )
+  );
 }
 
-//  COMMODITY RATES
+//  product RATES
 
 //  HISTORICAL DATA REQUEST SHEET
 
@@ -11402,17 +12031,13 @@ function HistoricalRequestSheet({
   subject,
   onClose,
 }: {
-  subject: string
-  onClose: () => void
+  subject: string;
+  onClose: () => void;
 }) {
-  const [text, setText] = useState("")
-  const [sent, setSent] = useState(false)
+  const [text, setText] = useState("");
+  const [sent, setSent] = useState(false);
   return (
-    <div
-      className="zm-sheet-overlay"
-      style={{ zIndex: 200 }}
-      onClick={onClose}
-    >
+    <div className="zm-sheet-overlay" style={{ zIndex: 200 }} onClick={onClose}>
       <div
         className="zm-sheet"
         style={{ background: "#F4FAF7", maxHeight: "85vh" }}
@@ -11501,7 +12126,7 @@ function HistoricalRequestSheet({
         )}
       </div>
     </div>
-  )
+  );
 }
 
 //  DEEP VIEW LOCATION SHEET
@@ -11512,78 +12137,75 @@ function DeepViewLocationSheet({
   onClose,
   validMandis,
 }: {
-  current: LocationScope
-  onSelect: (scope: LocationScope) => void
-  onClose: () => void
-  validMandis?: string[]
+  current: LocationScope;
+  onSelect: (scope: LocationScope) => void;
+  onClose: () => void;
+  validMandis?: string[];
 }) {
-  const { tm } = useLang()
-  const USER_DISTRICT = "Sahiwal"
-  const USER_PROVINCE = "Punjab"
+  const { tm } = useLang();
+  const USER_DISTRICT = "Sahiwal";
+  const USER_PROVINCE = "Punjab";
 
-  type Level = "province" | "district" | "mandi"
-  const [level, setLevel] = useState<Level>("province")
-  const [province, setProvince] = useState<string | null>(null)
-  const [district, setDistrict] = useState<string | null>(null)
-  const [search, setSearch] = useState("")
+  type Level = "province" | "district" | "mandi";
+  const [level, setLevel] = useState<Level>("province");
+  const [province, setProvince] = useState<string | null>(null);
+  const [district, setDistrict] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
-  const provinces = Object.keys(LOCATIONS)
-  const districts = province ? Object.keys(LOCATIONS[province] || {}) : []
+  const provinces = Object.keys(LOCATIONS);
+  const districts = province ? Object.keys(LOCATIONS[province] || {}) : [];
   const allMandis =
-    province && district ? LOCATIONS[province]?.[district] || [] : []
+    province && district ? LOCATIONS[province]?.[district] || [] : [];
   // If validMandis provided, only show mandis that have data
   const mandis = validMandis
     ? allMandis.filter((m) => validMandis.includes(m))
-    : allMandis
+    : allMandis;
 
   // Flat search results across all levels
   const searchResults = useMemo(() => {
-    if (search.length < 2) return []
-    const q = search.toLowerCase()
-    const out: { kind: LocationScope["kind"]; label: string; hint: string }[] = []
+    if (search.length < 2) return [];
+    const q = search.toLowerCase();
+    const out: { kind: LocationScope["kind"]; label: string; hint: string }[] =
+      [];
     provinces.forEach((p) => {
       if (p.toLowerCase().includes(q))
-        out.push({ kind: "province", label: p, hint: "Province" })
+        out.push({ kind: "province", label: p, hint: "Province" });
       Object.keys(LOCATIONS[p] || {}).forEach((d) => {
         if (d.toLowerCase().includes(q))
-          out.push({ kind: "district", label: d, hint: `${p}` })
-            ; (LOCATIONS[p]?.[d] || []).forEach((m) => {
-              if (m.toLowerCase().includes(q)) {
-                if (!validMandis || validMandis.includes(m))
-                  out.push({ kind: "mandi", label: m, hint: `${p} › ${d}` })
-              }
-            })
-      })
-    })
-    return out.slice(0, 12)
-  }, [search, validMandis])
+          out.push({ kind: "district", label: d, hint: `${p}` });
+        (LOCATIONS[p]?.[d] || []).forEach((m) => {
+          if (m.toLowerCase().includes(q)) {
+            if (!validMandis || validMandis.includes(m))
+              out.push({ kind: "mandi", label: m, hint: `${p} › ${d}` });
+          }
+        });
+      });
+    });
+    return out.slice(0, 12);
+  }, [search, validMandis]);
 
   const goBack = () => {
     if (level === "mandi") {
-      setLevel("district")
-      return
+      setLevel("district");
+      return;
     }
     if (level === "district") {
-      setLevel("province")
-      setDistrict(null)
-      return
+      setLevel("province");
+      setDistrict(null);
+      return;
     }
-    onClose()
-  }
+    onClose();
+  };
 
   const breadcrumb =
     level === "province"
       ? ""
       : level === "district"
         ? province || ""
-        : `${province} › ${district}`
+        : `${province} › ${district}`;
 
   return (
-    <div
-      className="zm-sheet-overlay"
-      style={{ zIndex: 200 }}
-      onClick={onClose}
-    >
+    <div className="zm-sheet-overlay" style={{ zIndex: 200 }} onClick={onClose}>
       <div
         className="zm-sheet-high"
         style={{ maxHeight: "90vh" }}
@@ -11627,12 +12249,12 @@ function DeepViewLocationSheet({
                     height: 48,
                     background:
                       current.kind === "district" &&
-                        current.label === USER_DISTRICT
+                      current.label === USER_DISTRICT
                         ? "#E4F2EC"
                         : "#F1F7F4",
                     border:
                       current.kind === "district" &&
-                        current.label === USER_DISTRICT
+                      current.label === USER_DISTRICT
                         ? "2px solid #087F63"
                         : "1px solid #D5E2DD",
                   }}
@@ -11666,12 +12288,12 @@ function DeepViewLocationSheet({
                     height: 48,
                     background:
                       current.kind === "province" &&
-                        current.label === USER_PROVINCE
+                      current.label === USER_PROVINCE
                         ? "#E4F2EC"
                         : "#F1F7F4",
                     border:
                       current.kind === "province" &&
-                        current.label === USER_PROVINCE
+                      current.label === USER_PROVINCE
                         ? "2px solid #087F63"
                         : "1px solid #D5E2DD",
                   }}
@@ -11699,8 +12321,8 @@ function DeepViewLocationSheet({
               </div>
               <button
                 onClick={() => {
-                  onSelect({ kind: "pakistan", label: "All Pakistan" })
-                  onClose()
+                  onSelect({ kind: "pakistan", label: "All Pakistan" });
+                  onClose();
                 }}
                 className="tap-target w-full rounded-2xl flex items-center justify-center gap-2"
                 style={{
@@ -11765,8 +12387,8 @@ function DeepViewLocationSheet({
                 <button
                   key={i}
                   onClick={() => {
-                    onSelect({ kind: r.kind, label: r.label })
-                    onClose()
+                    onSelect({ kind: r.kind, label: r.label });
+                    onClose();
                   }}
                   className="tap-target w-full flex items-center gap-3 px-5 py-3.5 text-left"
                   style={{ borderBottom: "1px solid #E8EFEC" }}
@@ -11806,13 +12428,13 @@ function DeepViewLocationSheet({
                 </p>
               </div>
               {provinces.map((p) => {
-                const on = current.kind === "province" && current.label === p
+                const on = current.kind === "province" && current.label === p;
                 return (
                   <button
                     key={p}
                     onClick={() => {
-                      setProvince(p)
-                      setLevel("district")
+                      setProvince(p);
+                      setLevel("district");
                     }}
                     className="tap-target w-full flex items-center gap-3 px-5 py-4 text-left"
                     style={{
@@ -11828,7 +12450,7 @@ function DeepViewLocationSheet({
                     </span>
                     <span style={{ color: "#80918B", fontSize: 18 }}>›</span>
                   </button>
-                )
+                );
               })}
             </>
           ) : level === "district" ? (
@@ -11836,8 +12458,8 @@ function DeepViewLocationSheet({
               {province && (
                 <button
                   onClick={() => {
-                    onSelect({ kind: "province", label: province })
-                    onClose()
+                    onSelect({ kind: "province", label: province });
+                    onClose();
                   }}
                   className="tap-target w-full flex items-center gap-2 px-5 py-3 text-left"
                   style={{
@@ -11865,13 +12487,13 @@ function DeepViewLocationSheet({
                 </button>
               )}
               {districts.map((d) => {
-                const on = current.kind === "district" && current.label === d
+                const on = current.kind === "district" && current.label === d;
                 return (
                   <button
                     key={d}
                     onClick={() => {
-                      setDistrict(d)
-                      setLevel("mandi")
+                      setDistrict(d);
+                      setLevel("mandi");
                     }}
                     className="tap-target w-full flex items-center gap-3 px-5 py-4 text-left"
                     style={{
@@ -11887,7 +12509,7 @@ function DeepViewLocationSheet({
                     </span>
                     <span style={{ color: "#80918B", fontSize: 18 }}>›</span>
                   </button>
-                )
+                );
               })}
             </>
           ) : (
@@ -11895,8 +12517,8 @@ function DeepViewLocationSheet({
               {district && (
                 <button
                   onClick={() => {
-                    onSelect({ kind: "district", label: district })
-                    onClose()
+                    onSelect({ kind: "district", label: district });
+                    onClose();
                   }}
                   className="tap-target w-full flex items-center gap-2 px-5 py-3 text-left"
                   style={{
@@ -11924,13 +12546,13 @@ function DeepViewLocationSheet({
                 </button>
               )}
               {mandis.map((m) => {
-                const on = current.kind === "mandi" && current.label === m
+                const on = current.kind === "mandi" && current.label === m;
                 return (
                   <button
                     key={m}
                     onClick={() => {
-                      onSelect({ kind: "mandi", label: m })
-                      onClose()
+                      onSelect({ kind: "mandi", label: m });
+                      onClose();
                     }}
                     className="tap-target w-full flex items-center gap-3 px-5 py-4 text-left"
                     style={{
@@ -11947,32 +12569,32 @@ function DeepViewLocationSheet({
                     </span>
                     {on && <span style={{ color: "#168A76" }}></span>}
                   </button>
-                )
+                );
               })}
             </>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 //  BY PRODUCT DETAIL (Overview | Trends)
 
 // Geo-aggregated comparison row type
 type CompRow = {
-  key: string
-  rateType: string
-  min: number
-  max: number
-  arrival: string
-  trend: "up" | "down" | "stable"
-  trendPct: number
-}
+  key: string;
+  rateType: string;
+  min: number;
+  max: number;
+  arrival: string;
+  trend: "up" | "down" | "stable";
+  trendPct: number;
+};
 
-function CommodityRatesScreen({
+function ProductRatesScreen({
   vertical,
-  commodity,
+  product,
   byproduct,
   onBack,
   push,
@@ -11989,114 +12611,114 @@ function CommodityRatesScreen({
   initialCondition,
   initialStatDate,
 }: {
-  vertical: string
-  commodity: string
-  byproduct: string
-  onBack: () => void
-  push?: (s: Screen) => void
-  isPickedBP: (item: RateItem) => boolean
-  togglePickBP: (item: RateItem) => void
-  locationScope: LocationScope
-  onOpenLocation: () => void
-  initialRateType?: string
-  initialMandi?: string
-  initialVariety?: string
-  initialNewOld?: string
-  initialColor?: string
-  initialSpec?: string
-  initialCondition?: string
-  initialStatDate?: string
+  vertical: string;
+  product: string;
+  byproduct: string;
+  onBack: () => void;
+  push?: (s: Screen) => void;
+  isPickedBP: (item: RateItem) => boolean;
+  togglePickBP: (item: RateItem) => void;
+  locationScope: LocationScope;
+  onOpenLocation: () => void;
+  initialRateType?: string;
+  initialMandi?: string;
+  initialVariety?: string;
+  initialNewOld?: string;
+  initialColor?: string;
+  initialSpec?: string;
+  initialCondition?: string;
+  initialStatDate?: string;
 }) {
-  const { lang, t, tc, tm, tr, voiceEnabled } = useLang()
-  const [tab, setTab] = useState<"overview" | "trends">("overview")
-  const [msgModal, setMsgModal] = useState<FeedMsg | null>(null)
+  const { lang, t, tc, tm, tr, voiceEnabled } = useLang();
+  const [tab, setTab] = useState<"overview" | "trends">("overview");
+  const [msgModal, setMsgModal] = useState<FeedMsg | null>(null);
   const [activeTypes, setActiveTypes] = useState<string[]>(
     initialRateType ? [initialRateType] : ["Retail"],
-  )
-  const [trendMode, setTrendMode] = useState<"price" | "arrival">("price")
-  const [range, setRange] = useState<"week" | "month" | "quarter">("week")
-  const [histOpen, setHistOpen] = useState(false)
+  );
+  const [trendMode, setTrendMode] = useState<"price" | "arrival">("price");
+  const [range, setRange] = useState<"week" | "month" | "quarter">("week");
+  const [histOpen, setHistOpen] = useState(false);
   // Local location scope — starts from initialMandi if provided, else from parent
   const [locScope, setLocScope] = useState<LocationScope>(
     initialMandi ? { kind: "mandi", label: initialMandi } : initialScope,
-  )
-  const [locSheet, setLocSheet] = useState(false)
+  );
+  const [locSheet, setLocSheet] = useState(false);
   // Date filter
-  const [dateMode, setDateMode] = useState<"today" | "date" | "range">("today")
-  const [dateSheet, setDateSheet] = useState(false)
+  const [dateMode, setDateMode] = useState<"today" | "date" | "range">("today");
+  const [dateSheet, setDateSheet] = useState(false);
   // Geographic view for comparison table
-  const [geoView, setGeoView] =
-    useState<"mandi" | "district" | "province" | "pakistan">("mandi")
+  const [geoView, setGeoView] = useState<
+    "mandi" | "district" | "province" | "pakistan"
+  >("mandi");
   // Rate type filter for table (empty = all)
-  const [tableRateTypes, setTableRateTypes] = useState<string[]>([])
+  const [tableRateTypes, setTableRateTypes] = useState<string[]>([]);
   // Chart hover state
-  const [hoverIdx, setHoverIdx] = useState<number | null>(null)
-  const [arrivalHoverIdx, setArrivalHoverIdx] = useState<number | null>(null)
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+  const [arrivalHoverIdx, setArrivalHoverIdx] = useState<number | null>(null);
   // Attribute filters — pre-filled from card when entering from by-product screen
   const [attrVariety, setAttrVariety] = useState<string | null>(
     initialVariety || null,
-  )
+  );
   const [attrNewOld, setAttrNewOld] = useState<string | null>(
     initialNewOld || null,
-  )
+  );
   const [attrColor, setAttrColor] = useState<string | null>(
     initialColor || null,
-  )
-  const [attrSpec, setAttrSpec] = useState<string | null>(initialSpec || null)
+  );
+  const [attrSpec, setAttrSpec] = useState<string | null>(initialSpec || null);
   const [attrCondition, setAttrCondition] = useState<string | null>(
     initialCondition || null,
-  )
+  );
   const [attrRateType, setAttrRateType] = useState<string | null>(
     initialRateType || null,
-  )
-  const [attrSheet, setAttrSheet] =
-    useState<"variety" | "newold" | "color" | "spec" | "condition" | "ratetype" | null>(
-      null,
-    )
+  );
+  const [attrSheet, setAttrSheet] = useState<
+    "variety" | "newold" | "color" | "spec" | "condition" | "ratetype" | null
+  >(null);
   // Overview stat date filter — pre-filled when navigating from a historical card
   const [statDateFilter, setStatDateFilter] = useState<Date | null>(
     initialStatDate ? new Date(initialStatDate) : null,
-  )
-  const [statDateCalOpen, setStatDateCalOpen] = useState(false)
+  );
+  const [statDateCalOpen, setStatDateCalOpen] = useState(false);
   const [statDateCalMonth, setStatDateCalMonth] = useState<Date>(
     initialStatDate ? new Date(initialStatDate) : new Date(2026, 7, 21),
-  )
+  );
   // Mandi table province + date filter
   const [tableProvinceFilter, setTableProvinceFilter] = useState<string | null>(
     null,
-  )
-  const [tableDateFilter, setTableDateFilter] = useState<Date | null>(null)
-  const [tableDateCalOpen, setTableDateCalOpen] = useState(false)
+  );
+  const [tableDateFilter, setTableDateFilter] = useState<Date | null>(null);
+  const [tableDateCalOpen, setTableDateCalOpen] = useState(false);
   const [tableDateCalMonth, setTableDateCalMonth] = useState<Date>(
     new Date(2026, 7, 21),
-  )
+  );
   // Date table + its filters
-  const [dateTableOpen, setDateTableOpen] = useState(false)
-  const [dtSelDate, setDtSelDate] = useState<Date>(new Date())
-  const [dtCalMonth, setDtCalMonth] = useState<Date>(new Date())
-  const [dtCalOpen, setDtCalOpen] = useState(false)
-  const [dtQuality, setDtQuality] = useState<string | null>(null)
-  const [dtPriceType, setDtPriceType] = useState<string | null>(null)
-  const [dtSpec, setDtSpec] = useState<string | null>(null)
-  const [dtCondition, setDtCondition] = useState<string | null>(null)
-  const [dtOpenCol, setDtOpenCol] = useState<string | null>(null)
+  const [dateTableOpen, setDateTableOpen] = useState(false);
+  const [dtSelDate, setDtSelDate] = useState<Date>(new Date());
+  const [dtCalMonth, setDtCalMonth] = useState<Date>(new Date());
+  const [dtCalOpen, setDtCalOpen] = useState(false);
+  const [dtQuality, setDtQuality] = useState<string | null>(null);
+  const [dtPriceType, setDtPriceType] = useState<string | null>(null);
+  const [dtSpec, setDtSpec] = useState<string | null>(null);
+  const [dtCondition, setDtCondition] = useState<string | null>(null);
+  const [dtOpenCol, setDtOpenCol] = useState<string | null>(null);
 
-  const title = byproduct || commodity
+  const title = byproduct || product;
   const pickItem: RateItem = {
     vertical,
-    commodity,
-    byproduct: byproduct || commodity,
-  }
-  const picked = isPickedBP(pickItem)
+    product,
+    byproduct: byproduct || product,
+  };
+  const picked = isPickedBP(pickItem);
 
   const allRows = useMemo(
     () =>
       Object.entries(MANDI_ROWS).flatMap(([mandiId, rows]) => {
-        const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId)
+        const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
         return rows
           .filter(
             (r) =>
-              r.commodity === commodity &&
+              r.product === product &&
               (!byproduct || r.byproduct === byproduct),
           )
           .map((r) => ({
@@ -12104,34 +12726,34 @@ function CommodityRatesScreen({
             mandiName: mandi?.name || mandiId,
             mandiCity: mandi?.city || mandiId,
             province: mandi?.province || "Punjab",
-          }))
+          }));
       }),
-    [commodity, byproduct],
-  )
+    [product, byproduct],
+  );
 
-  const inLocScope = (r: typeof allRows[0]) => {
+  const inLocScope = (r: (typeof allRows)[0]) => {
     switch (locScope.kind) {
       case "pakistan":
-        return true
+        return true;
       case "province":
-        return r.province === locScope.label
+        return r.province === locScope.label;
       case "district":
         return (
           r.mandiCity === locScope.label || r.mandiName.includes(locScope.label)
-        )
+        );
       case "mandi":
-        return r.mandiName === locScope.label || r.mandiCity === locScope.label
+        return r.mandiName === locScope.label || r.mandiCity === locScope.label;
       default:
-        return true
+        return true;
     }
-  }
-  const scopedRows = allRows.filter(inLocScope)
+  };
+  const scopedRows = allRows.filter(inLocScope);
   const rows = (scopedRows.length > 0 ? scopedRows : allRows).filter(
     (r) => !attrRateType || r.rateType === attrRateType,
-  )
+  );
 
   const parseArrival = (a: string) =>
-    parseInt(String(a).replace(/[^0-9]/g, "")) || 0
+    parseInt(String(a).replace(/[^0-9]/g, "")) || 0;
 
   // Attribute adjustment multipliers applied to min/max display
   const attrMultiplier = computeAttrMult(
@@ -12140,38 +12762,38 @@ function CommodityRatesScreen({
     attrNewOld,
     attrSpec,
     attrCondition,
-  )
+  );
 
   // Date variation for overview stats
-  const STAT_BASE_DATE = new Date(2026, 7, 21)
+  const STAT_BASE_DATE = new Date(2026, 7, 21);
   const statDateVariation = statDateFilter
     ? Math.max(
-      0.88,
-      1 -
-      Math.round(
-        Math.abs(STAT_BASE_DATE.getTime() - statDateFilter.getTime()) /
-        86400000,
-      ) *
-      0.012,
-    )
-    : 1
+        0.88,
+        1 -
+          Math.round(
+            Math.abs(STAT_BASE_DATE.getTime() - statDateFilter.getTime()) /
+              86400000,
+          ) *
+            0.012,
+      )
+    : 1;
 
-  const baseMax = rows.length ? Math.max(...rows.map((r) => r.max)) : 0
-  const baseMin = rows.length ? Math.min(...rows.map((r) => r.min)) : 0
-  const statMax = Math.round(baseMax * attrMultiplier * statDateVariation)
-  const statMin = Math.round(baseMin * attrMultiplier * statDateVariation)
+  const baseMax = rows.length ? Math.max(...rows.map((r) => r.max)) : 0;
+  const baseMin = rows.length ? Math.min(...rows.map((r) => r.min)) : 0;
+  const statMax = Math.round(baseMax * attrMultiplier * statDateVariation);
+  const statMin = Math.round(baseMin * attrMultiplier * statDateVariation);
   const statArrival = Math.round(
     rows.reduce((s, r) => s + parseArrival(r.arrival), 0) * statDateVariation,
-  )
-  const statMandis = new Set(rows.map((r) => r.mandiName)).size
+  );
+  const statMandis = new Set(rows.map((r) => r.mandiName)).size;
 
   // Build comparison rows by geoView
   const compRows = useMemo((): CompRow[] => {
-    type R = typeof allRows[0]
+    type R = (typeof allRows)[0];
     const src: R[] =
       tableRateTypes.length > 0
         ? rows.filter((r) => tableRateTypes.includes(r.rateType))
-        : rows
+        : rows;
     const agg = (grp: R[]) => ({
       min: Math.min(...grp.map((r) => r.min)),
       max: Math.max(...grp.map((r) => r.max)),
@@ -12180,24 +12802,24 @@ function CommodityRatesScreen({
         " MT",
       trend: grp[0].trend,
       trendPct: grp[0].trendPct,
-    })
+    });
     const groupBy = (arr: R[], keyFn: (r: R) => string) => {
-      const map = new Map<string, R[]>()
+      const map = new Map<string, R[]>();
       arr.forEach((r) => {
-        const k = keyFn(r)
-        map.set(k, [...(map.get(k) || []), r])
-      })
-      return map
-    }
+        const k = keyFn(r);
+        map.set(k, [...(map.get(k) || []), r]);
+      });
+      return map;
+    };
     const byRateType = (grp: R[]) => [
       ...groupBy(grp, (r) => r.rateType).entries(),
-    ]
+    ];
     if (geoView === "mandi")
       return src.map((r) => ({
         key: r.mandiName,
         rateType: r.rateType,
         ...agg([r]),
-      }))
+      }));
     if (geoView === "district") {
       return [...groupBy(src, (r) => r.mandiCity).entries()].flatMap(
         ([city, grp]) =>
@@ -12206,7 +12828,7 @@ function CommodityRatesScreen({
             rateType: rt,
             ...agg(rg),
           })),
-      )
+      );
     }
     if (geoView === "province") {
       return [...groupBy(src, (r) => r.province).entries()].flatMap(
@@ -12216,26 +12838,26 @@ function CommodityRatesScreen({
             rateType: rt,
             ...agg(rg),
           })),
-      )
+      );
     }
     return byRateType(src).map(([rt, rg]) => ({
       key: "Pakistan",
       rateType: rt,
       ...agg(rg),
-    }))
-  }, [rows, geoView, tableRateTypes])
+    }));
+  }, [rows, geoView, tableRateTypes]);
 
-  const rowToMsg = (r: typeof allRows[0]): FeedMsg => {
+  const rowToMsg = (r: (typeof allRows)[0]): FeedMsg => {
     const ex = FEED_MESSAGES.find(
-      (m) => m.commodity === r.commodity && m.station === r.mandiName,
-    )
-    if (ex) return ex
+      (m) => m.product === r.product && m.station === r.mandiName,
+    );
+    if (ex) return ex;
     return {
       id: Date.now(),
       time: "Today",
       vertical,
-      commodityUrdu: commodity,
-      commodity,
+      productUrdu: product,
+      product,
       byproduct: r.byproduct,
       stationUrdu: r.mandiCity,
       station: r.mandiName,
@@ -12257,12 +12879,12 @@ function CommodityRatesScreen({
       qualityType: "Trade",
       trend: r.trend,
       trendPct: r.trendPct,
-    }
-  }
+    };
+  };
 
   // Chart data
-  const len = range === "week" ? 7 : range === "month" ? 30 : 90
-  const base = rows[0]?.min || allRows[0]?.min || 2850
+  const len = range === "week" ? 7 : range === "month" ? 30 : 90;
+  const base = rows[0]?.min || allRows[0]?.min || 2850;
   const priceSeries = useMemo(
     () =>
       ALL_RATE_TYPES.map((rt) => ({
@@ -12270,36 +12892,37 @@ function CommodityRatesScreen({
         color: RATE_COLORS[rt],
         data: genPts(base * (RATE_MULTS[rt] || 1), len, 0.025),
       })),
-    [base, len, commodity, byproduct, locScope.label],
-  )
-  const arrivalBase = Math.max(statArrival / Math.max(statMandis, 1), 400)
+    [base, len, product, byproduct, locScope.label],
+  );
+  const arrivalBase = Math.max(statArrival / Math.max(statMandis, 1), 400);
   const arrivalData = useMemo(
     () => genPts(arrivalBase, len, 0.06),
-    [arrivalBase, len, commodity, byproduct, locScope.label],
-  )
-  const shownSeries = priceSeries.filter((s) => activeTypes.includes(s.label))
+    [arrivalBase, len, product, byproduct, locScope.label],
+  );
+  const shownSeries = priceSeries.filter((s) => activeTypes.includes(s.label));
   const toggleType = (tKey: string) =>
     setActiveTypes((p) =>
       p.includes(tKey) ? p.filter((x) => x !== tKey) : [...p, tKey],
-    )
+    );
 
   // X-axis date labels
-  const today = new Date(2026, 7, 17) // Aug 17 2026
+  const today = new Date(2026, 7, 17); // Aug 17 2026
   const xLabels = useMemo(() => {
-    const labels: string[] = []
-    const urDays = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"]
-    const enDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    const labels: string[] = [];
+    const urDays = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"];
+    const enDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     for (let i = len - 1; i >= 0; i--) {
-      const d = new Date(today)
-      d.setDate(d.getDate() - i)
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
       if (range === "week")
-        labels.push(lang === "ur" ? urDays[d.getDay()] : enDays[d.getDay()])
+        labels.push(lang === "ur" ? urDays[d.getDay()] : enDays[d.getDay()]);
       else if (range === "month")
-        labels.push(i % 7 === 0 ? `${d.getDate()}/${d.getMonth() + 1}` : "")
-      else labels.push(i % 15 === 0 ? `${d.getDate()}/${d.getMonth() + 1}` : "")
+        labels.push(i % 7 === 0 ? `${d.getDate()}/${d.getMonth() + 1}` : "");
+      else
+        labels.push(i % 15 === 0 ? `${d.getDate()}/${d.getMonth() + 1}` : "");
     }
-    return labels
-  }, [len, range, lang])
+    return labels;
+  }, [len, range, lang]);
 
   // Chart SVG helpers
   const CH = 300,
@@ -12307,24 +12930,24 @@ function CommodityRatesScreen({
     PL = 54,
     PR = 12,
     PT = 20,
-    PB = 44
-  const chartW = CW - PL - PR
-  const chartH = CH - PT - PB
+    PB = 44;
+  const chartW = CW - PL - PR;
+  const chartH = CH - PT - PB;
 
-  const xOf = (i: number, total: number) => PL + (i / (total - 1)) * chartW
+  const xOf = (i: number, total: number) => PL + (i / (total - 1)) * chartW;
   const yOf = (v: number, mn: number, mx: number) =>
-    PT + ((mx - v) / (mx - mn || 1)) * chartH
+    PT + ((mx - v) / (mx - mn || 1)) * chartH;
 
-  const priceFlat = shownSeries.flatMap((s) => s.data)
-  const pMin = priceFlat.length ? Math.min(...priceFlat) : 0
-  const pMax = priceFlat.length ? Math.max(...priceFlat) : 1
-  const aMin = Math.min(...arrivalData)
-  const aMax = Math.max(...arrivalData)
+  const priceFlat = shownSeries.flatMap((s) => s.data);
+  const pMin = priceFlat.length ? Math.min(...priceFlat) : 0;
+  const pMax = priceFlat.length ? Math.max(...priceFlat) : 1;
+  const aMin = Math.min(...arrivalData);
+  const aMax = Math.max(...arrivalData);
 
-  const yPriceTicks = [pMin, (pMin + pMax) / 2, pMax].map((v) => Math.round(v))
+  const yPriceTicks = [pMin, (pMin + pMax) / 2, pMax].map((v) => Math.round(v));
   const yArrivalTicks = [aMin, (aMin + aMax) / 2, aMax].map((v) =>
     Math.round(v),
-  )
+  );
 
   return (
     <div
@@ -12354,8 +12977,8 @@ function CommodityRatesScreen({
             {lang === "ur" ? "→" : "←"}
           </button>
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <CommodityIcon
-              name={byproduct || commodity}
+            <ProductIcon
+              name={byproduct || product}
               vertical={vertical}
               size={36}
             />
@@ -12388,10 +13011,12 @@ function CommodityRatesScreen({
           </button>
         </div>
         <div className="px-4 pb-2 flex gap-1.5">
-          {([
-            ["overview", lang === "ur" ? "جائزہ" : "Overview"],
-            ["trends", lang === "ur" ? "رجحانات" : "Trends"],
-          ] as ["overview" | "trends", string][]).map(([tTab, label]) => (
+          {(
+            [
+              ["overview", lang === "ur" ? "جائزہ" : "Overview"],
+              ["trends", lang === "ur" ? "رجحانات" : "Trends"],
+            ] as ["overview" | "trends", string][]
+          ).map(([tTab, label]) => (
             <button
               key={tTab}
               onClick={() => setTab(tTab)}
@@ -12416,7 +13041,7 @@ function CommodityRatesScreen({
       <div className="flex-1 overflow-y-auto px-4 pt-4 pb-6 flex flex-col gap-4">
         {rows.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 opacity-50">
-            <span style={{ fontSize: 48 }}>🌾</span>
+            {/* <span style={{ fontSize: 48 }}></span> */}
             <p
               className="font-semibold mt-2"
               style={{
@@ -12429,6 +13054,58 @@ function CommodityRatesScreen({
             >
               {lang === "ur" ? "ڈیٹا دستیاب نہیں ہے۔" : "No data available."}
             </p>
+          </div>
+        )}
+
+        {/* Today-Only Free Preview Notice Banner */}
+        {isProductTodayOnly(product) && (
+          <div
+            style={{
+              background: "linear-gradient(135deg, #E6F7F0, #D1EFE4)",
+              border: "1.5px solid #2FAE68",
+              borderRadius: 16,
+              padding: "12px 14px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 10,
+              boxShadow: "0 2px 10px rgba(8,127,99,0.08)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 20 }}>⭐</span>
+              <div>
+                <div
+                  style={{ fontSize: 13, fontWeight: 800, color: "#064D40" }}
+                >
+                  {lang === "ur"
+                    ? "صرف آج کا ڈیٹا فعال ہے"
+                    : "Today's Free Data Preview"}
+                </div>
+                <div style={{ fontSize: 11.5, color: "#2E5C4E" }}>
+                  {lang === "ur"
+                    ? "ماضی کا مکمل ڈیٹا دیکھنے کے لیے سبسکرائب کریں۔"
+                    : "Data before today is locked. Subscribe to unlock history."}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => push?.({ id: "billing", product, vertical })}
+              style={{
+                background: "#087F63",
+                color: "#fff",
+                border: "none",
+                borderRadius: 10,
+                padding: "6px 12px",
+                fontSize: 11.5,
+                fontWeight: 800,
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+                boxShadow: "0 2px 8px rgba(8,127,99,0.2)",
+              }}
+            >
+              {lang === "ur" ? "سبسکرائب" : "Subscribe"}
+            </button>
           </div>
         )}
 
@@ -12450,39 +13127,41 @@ function CommodityRatesScreen({
               >
                 {statDateFilter
                   ? (() => {
-                    const mn = [
-                      "Jan",
-                      "Feb",
-                      "Mar",
-                      "Apr",
-                      "May",
-                      "Jun",
-                      "Jul",
-                      "Aug",
-                      "Sep",
-                      "Oct",
-                      "Nov",
-                      "Dec",
-                    ]
-                    const mnUr = [
-                      "جنوری",
-                      "فروری",
-                      "مارچ",
-                      "اپریل",
-                      "مئی",
-                      "جون",
-                      "جولائی",
-                      "اگست",
-                      "ستمبر",
-                      "اکتوبر",
-                      "نومبر",
-                      "دسمبر",
-                    ]
-                    return lang === "ur"
-                      ? `${statDateFilter.getDate()} ${mnUr[statDateFilter.getMonth()]} کا جائزہ`
-                      : `${statDateFilter.getDate()} ${mn[statDateFilter.getMonth()]} Overview`
-                  })()
-                  : (lang === "ur" ? "آج کا جائزہ" : "Today's Overview")}
+                      const mn = [
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "Apr",
+                        "May",
+                        "Jun",
+                        "Jul",
+                        "Aug",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec",
+                      ];
+                      const mnUr = [
+                        "جنوری",
+                        "فروری",
+                        "مارچ",
+                        "اپریل",
+                        "مئی",
+                        "جون",
+                        "جولائی",
+                        "اگست",
+                        "ستمبر",
+                        "اکتوبر",
+                        "نومبر",
+                        "دسمبر",
+                      ];
+                      return lang === "ur"
+                        ? `${statDateFilter.getDate()} ${mnUr[statDateFilter.getMonth()]} کا جائزہ`
+                        : `${statDateFilter.getDate()} ${mn[statDateFilter.getMonth()]} Overview`;
+                    })()
+                  : lang === "ur"
+                    ? "آج کا جائزہ"
+                    : "Today's Overview"}
               </p>
               {/* Date flipper button */}
               {(() => {
@@ -12499,7 +13178,7 @@ function CommodityRatesScreen({
                   "Oct",
                   "Nov",
                   "Dec",
-                ]
+                ];
                 const mnUr = [
                   "جنوری",
                   "فروری",
@@ -12513,28 +13192,32 @@ function CommodityRatesScreen({
                   "اکتوبر",
                   "نومبر",
                   "دسمبر",
-                ]
-                const sdYear = statDateCalMonth.getFullYear()
-                const sdMonthIdx = statDateCalMonth.getMonth()
-                const sdMonthName = lang === "ur"
-                  ? `${mnUr[sdMonthIdx]} ${sdYear}`
-                  : statDateCalMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })
-                const sdFirstDow = new Date(sdYear, sdMonthIdx, 1).getDay()
+                ];
+                const sdYear = statDateCalMonth.getFullYear();
+                const sdMonthIdx = statDateCalMonth.getMonth();
+                const sdMonthName =
+                  lang === "ur"
+                    ? `${mnUr[sdMonthIdx]} ${sdYear}`
+                    : statDateCalMonth.toLocaleDateString("en-US", {
+                        month: "long",
+                        year: "numeric",
+                      });
+                const sdFirstDow = new Date(sdYear, sdMonthIdx, 1).getDay();
                 const sdDaysInMonth = new Date(
                   sdYear,
                   sdMonthIdx + 1,
                   0,
-                ).getDate()
+                ).getDate();
                 const sdCalDays: (number | null)[] = [
                   ...Array(sdFirstDow).fill(null),
                   ...Array.from({ length: sdDaysInMonth }, (_, i) => i + 1),
-                ]
-                while (sdCalDays.length % 7 !== 0) sdCalDays.push(null)
+                ];
+                while (sdCalDays.length % 7 !== 0) sdCalDays.push(null);
                 const sdIsSame = (a: Date, b: Date) =>
                   a.getFullYear() === b.getFullYear() &&
                   a.getMonth() === b.getMonth() &&
-                  a.getDate() === b.getDate()
-                const sdIsRef = (d: Date) => sdIsSame(d, new Date(2026, 7, 21))
+                  a.getDate() === b.getDate();
+                const sdIsRef = (d: Date) => sdIsSame(d, new Date(2026, 7, 21));
                 return (
                   <div className="relative">
                     {/* Flip-calendar style button */}
@@ -12571,8 +13254,12 @@ function CommodityRatesScreen({
                           }}
                         >
                           {statDateFilter
-                            ? (lang === "ur" ? mnUr[statDateFilter.getMonth()] : mn[statDateFilter.getMonth()])
-                            : (lang === "ur" ? mnUr[7] : mn[7])}
+                            ? lang === "ur"
+                              ? mnUr[statDateFilter.getMonth()]
+                              : mn[statDateFilter.getMonth()]
+                            : lang === "ur"
+                              ? mnUr[7]
+                              : mn[7]}
                         </span>
                       </div>
                       <div
@@ -12660,8 +13347,8 @@ function CommodityRatesScreen({
                             <div className="flex justify-end mb-1">
                               <button
                                 onClick={() => {
-                                  setStatDateFilter(null)
-                                  setStatDateCalOpen(false)
+                                  setStatDateFilter(null);
+                                  setStatDateCalOpen(false);
                                 }}
                                 className="font-bold px-2 py-0.5 rounded-full"
                                 style={{
@@ -12674,7 +13361,9 @@ function CommodityRatesScreen({
                                       : "inherit",
                                 }}
                               >
-                                {lang === "ur" ? "ہٹائیں (آج)" : "Clear (Today)"}
+                                {lang === "ur"
+                                  ? "ہٹائیں (آج)"
+                                  : "Clear (Today)"}
                               </button>
                             </div>
                           )}
@@ -12713,18 +13402,18 @@ function CommodityRatesScreen({
                             }}
                           >
                             {sdCalDays.map((day, idx) => {
-                              if (!day) return <div key={idx} />
-                              const d = new Date(sdYear, sdMonthIdx, day)
+                              if (!day) return <div key={idx} />;
+                              const d = new Date(sdYear, sdMonthIdx, day);
                               const selected = statDateFilter
                                 ? sdIsSame(d, statDateFilter)
-                                : false
-                              const isRef = sdIsRef(d)
+                                : false;
+                              const isRef = sdIsRef(d);
                               return (
                                 <button
                                   key={idx}
                                   onClick={() => {
-                                    setStatDateFilter(d)
-                                    setStatDateCalOpen(false)
+                                    setStatDateFilter(d);
+                                    setStatDateCalOpen(false);
                                   }}
                                   className="tap-target flex items-center justify-center rounded-full font-semibold text-xs mx-auto"
                                   style={{
@@ -12748,14 +13437,14 @@ function CommodityRatesScreen({
                                 >
                                   {day}
                                 </button>
-                              )
+                              );
                             })}
                           </div>
                         </div>
                       </div>
                     )}
                   </div>
-                )
+                );
               })()}
               {/* Location filter */}
               <button
@@ -12778,9 +13467,21 @@ function CommodityRatesScreen({
                     ? tm(locScope.label.replace(" Mandi", ""))
                     : locScope.kind === "province"
                       ? tm(locScope.label)
-                      : (lang === "ur" ? "پورا پاکستان" : "Overview")}
+                      : lang === "ur"
+                        ? "پورا پاکستان"
+                        : "Overview"}
                 </span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.85, flexShrink: 0 }}>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ opacity: 0.85, flexShrink: 0 }}
+                >
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </button>
@@ -12903,7 +13604,9 @@ function CommodityRatesScreen({
                   }}
                 >
                   {statArrival > 0
-                    ? (lang === "ur" ? `${statArrival.toLocaleString()} بوری` : statArrival.toLocaleString())
+                    ? lang === "ur"
+                      ? `${statArrival.toLocaleString()} بوری`
+                      : statArrival.toLocaleString()
                     : "—"}
                 </p>
               </div>
@@ -13147,24 +13850,24 @@ function CommodityRatesScreen({
 
             {/* Inline Mandi Rates Table — all Pakistan mandis for this byproduct */}
             {(() => {
-              const PROVINCES = ["Punjab", "Sindh", "KPK", "Balochistan"]
+              const PROVINCES = ["Punjab", "Sindh", "KPK", "Balochistan"];
               // Always source from allRows (all Pakistan), independent of locScope
               const tableSourceRows = allRows.filter(
                 (r) => !attrRateType || r.rateType === attrRateType,
-              )
+              );
               const tableRows = tableSourceRows.filter(
                 (r) =>
                   !tableProvinceFilter || r.province === tableProvinceFilter,
-              )
-              const BASE_DATE = new Date(2026, 7, 21)
+              );
+              const BASE_DATE = new Date(2026, 7, 21);
               const tableDateVariation = tableDateFilter
                 ? (() => {
-                  const diffMs =
-                    BASE_DATE.getTime() - tableDateFilter.getTime()
-                  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24))
-                  return Math.max(0.88, 1 - diffDays * 0.012)
-                })()
-                : 1
+                    const diffMs =
+                      BASE_DATE.getTime() - tableDateFilter.getTime();
+                    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+                    return Math.max(0.88, 1 - diffDays * 0.012);
+                  })()
+                : 1;
               const monthNames = [
                 "Jan",
                 "Feb",
@@ -13178,7 +13881,7 @@ function CommodityRatesScreen({
                 "Oct",
                 "Nov",
                 "Dec",
-              ]
+              ];
               const monthNamesUr = [
                 "جنوری",
                 "فروری",
@@ -13192,35 +13895,41 @@ function CommodityRatesScreen({
                 "اکتوبر",
                 "نومبر",
                 "دسمبر",
-              ]
+              ];
               const dateLabel = tableDateFilter
-                ? (lang === "ur"
+                ? lang === "ur"
                   ? `${tableDateFilter.getDate()} ${monthNamesUr[tableDateFilter.getMonth()]}`
-                  : `${tableDateFilter.getDate()} ${monthNames[tableDateFilter.getMonth()]}`)
-                : (lang === "ur" ? "آج" : "Today")
+                  : `${tableDateFilter.getDate()} ${monthNames[tableDateFilter.getMonth()]}`
+                : lang === "ur"
+                  ? "آج"
+                  : "Today";
               // Calendar helpers for table date picker
-              const tcYear = tableDateCalMonth.getFullYear()
-              const tcMonthIdx = tableDateCalMonth.getMonth()
-              const tcMonthName = lang === "ur"
-                ? `${monthNamesUr[tcMonthIdx]} ${tcYear}`
-                : tableDateCalMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })
-              const tcFirstDow = new Date(tcYear, tcMonthIdx, 1).getDay()
+              const tcYear = tableDateCalMonth.getFullYear();
+              const tcMonthIdx = tableDateCalMonth.getMonth();
+              const tcMonthName =
+                lang === "ur"
+                  ? `${monthNamesUr[tcMonthIdx]} ${tcYear}`
+                  : tableDateCalMonth.toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    });
+              const tcFirstDow = new Date(tcYear, tcMonthIdx, 1).getDay();
               const tcDaysInMonth = new Date(
                 tcYear,
                 tcMonthIdx + 1,
                 0,
-              ).getDate()
+              ).getDate();
               const tcCalDays: (number | null)[] = [
                 ...Array(tcFirstDow).fill(null),
                 ...Array.from({ length: tcDaysInMonth }, (_, i) => i + 1),
-              ]
-              while (tcCalDays.length % 7 !== 0) tcCalDays.push(null)
+              ];
+              while (tcCalDays.length % 7 !== 0) tcCalDays.push(null);
               const tcIsSameDay = (a: Date, b: Date) =>
                 a.getFullYear() === b.getFullYear() &&
                 a.getMonth() === b.getMonth() &&
-                a.getDate() === b.getDate()
+                a.getDate() === b.getDate();
               const tcIsToday = (d: Date) =>
-                tcIsSameDay(d, new Date(2026, 7, 21))
+                tcIsSameDay(d, new Date(2026, 7, 21));
               return (
                 <div
                   className="rounded-2xl overflow-hidden"
@@ -13317,8 +14026,9 @@ function CommodityRatesScreen({
                               tableProvinceFilter === p ? "#087F63" : "#fff",
                             color:
                               tableProvinceFilter === p ? "#fff" : "#52635F",
-                            border: `1px solid ${tableProvinceFilter === p ? "#087F63" : "#D5E2DD"
-                              }`,
+                            border: `1px solid ${
+                              tableProvinceFilter === p ? "#087F63" : "#D5E2DD"
+                            }`,
                             fontSize: lang === "ur" ? 13 : 10,
                             fontFamily:
                               lang === "ur"
@@ -13326,7 +14036,11 @@ function CommodityRatesScreen({
                                 : "inherit",
                           }}
                         >
-                          {p ? tm(p) : (lang === "ur" ? "تمام صوبے" : "All Provinces")}
+                          {p
+                            ? tm(p)
+                            : lang === "ur"
+                              ? "تمام صوبے"
+                              : "All Provinces"}
                         </button>
                       ))}
                     </div>
@@ -13390,8 +14104,8 @@ function CommodityRatesScreen({
                         <div className="flex justify-end mb-1">
                           <button
                             onClick={() => {
-                              setTableDateFilter(null)
-                              setTableDateCalOpen(false)
+                              setTableDateFilter(null);
+                              setTableDateCalOpen(false);
                             }}
                             className="font-bold px-2 py-0.5 rounded-full"
                             style={{
@@ -13443,18 +14157,18 @@ function CommodityRatesScreen({
                         }}
                       >
                         {tcCalDays.map((day, idx) => {
-                          if (!day) return <div key={idx} />
-                          const d = new Date(tcYear, tcMonthIdx, day)
+                          if (!day) return <div key={idx} />;
+                          const d = new Date(tcYear, tcMonthIdx, day);
                           const selected = tableDateFilter
                             ? tcIsSameDay(d, tableDateFilter)
-                            : false
-                          const isRef = tcIsToday(d)
+                            : false;
+                          const isRef = tcIsToday(d);
                           return (
                             <button
                               key={idx}
                               onClick={() => {
-                                setTableDateFilter(d)
-                                setTableDateCalOpen(false)
+                                setTableDateFilter(d);
+                                setTableDateCalOpen(false);
                               }}
                               className="tap-target flex items-center justify-center rounded-full font-semibold text-xs mx-auto"
                               style={{
@@ -13478,7 +14192,7 @@ function CommodityRatesScreen({
                             >
                               {day}
                             </button>
-                          )
+                          );
                         })}
                       </div>
                     </div>
@@ -13489,8 +14203,10 @@ function CommodityRatesScreen({
                     className="px-3 py-2"
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "2fr 1fr 1fr 1.4fr 0.8fr",
+                      gridTemplateColumns: "1.35fr 1.15fr 1.15fr 0.75fr 0.95fr",
+                      columnGap: 8,
                       borderBottom: "1px solid #E8EFEC",
+                      alignItems: "center",
                     }}
                   >
                     <span
@@ -13589,36 +14305,36 @@ function CommodityRatesScreen({
                     )}
                     {tableRows.map((r, ci) => {
                       const trendArrow =
-                        r.trend === "up" ? "▲" : r.trend === "down" ? "▼" : "—"
+                        r.trend === "up" ? "▲" : r.trend === "down" ? "▼" : "—";
                       const trendColor =
                         r.trend === "up"
                           ? "#16A34A"
                           : r.trend === "down"
                             ? "#C94A43"
-                            : "#52635F"
-                      const rtColor = RATE_COLORS[r.rateType] || "#52635F"
+                            : "#52635F";
+                      const rtColor = RATE_COLORS[r.rateType] || "#52635F";
                       const isSelected =
                         locScope.kind === "mandi" &&
-                        locScope.label === r.mandiName
+                        locScope.label === r.mandiName;
                       // Each row uses ITS OWN canonical attrs so prices match the byproduct list cards
-                      const rowCanon = getMandiCanonicalAttrs(r.mandiName)
+                      const rowCanon = getMandiCanonicalAttrs(r.mandiName);
                       const rowAttrMult = computeAttrMult(
                         rowCanon.variety,
                         rowCanon.color,
                         rowCanon.newOld,
                         rowCanon.spec,
                         rowCanon.condition,
-                      )
-                      const effMult = rowAttrMult * tableDateVariation
+                      );
+                      const effMult = rowAttrMult * tableDateVariation;
                       return (
                         <button
                           key={`${r.mandiName}-${r.rateType}-${ci}`}
                           onClick={() => {
-                            if (!push) return
+                            if (!push) return;
                             push({
-                              id: "commodity-rates",
+                              id: "product-rates",
                               vertical,
-                              commodity,
+                              product,
                               byproduct,
                               initialMandi: r.mandiName,
                               initialRateType: r.rateType,
@@ -13629,11 +14345,13 @@ function CommodityRatesScreen({
                               initialCondition: rowCanon.condition,
                               initialStatDate:
                                 tableDateFilter?.toISOString() || undefined,
-                            })
+                            });
                           }}
                           style={{
                             display: "grid",
-                            gridTemplateColumns: "2fr 1fr 1fr 1.4fr 0.8fr",
+                            gridTemplateColumns:
+                              "1.35fr 1.15fr 1.15fr 0.75fr 0.95fr",
+                            columnGap: 8,
                             padding: "10px 12px",
                             borderBottom:
                               ci < tableRows.length - 1
@@ -13664,7 +14382,8 @@ function CommodityRatesScreen({
                             style={{
                               color: "#52635F",
                               textAlign: "right",
-                              fontSize: lang === "ur" ? 14 : 12,
+                              fontSize: lang === "ur" ? 13 : 11.5,
+                              whiteSpace: "nowrap",
                             }}
                           >
                             {fmt(Math.round(r.min * effMult))}
@@ -13674,7 +14393,8 @@ function CommodityRatesScreen({
                             style={{
                               color: "#087F63",
                               textAlign: "right",
-                              fontSize: lang === "ur" ? 14 : 12,
+                              fontSize: lang === "ur" ? 13 : 11.5,
+                              whiteSpace: "nowrap",
                             }}
                           >
                             {fmt(Math.round(r.max * effMult))}
@@ -13694,21 +14414,31 @@ function CommodityRatesScreen({
                                   : "inherit",
                             }}
                           >
-                            {tr(r.rateType).replace(" ریٹ", "").replace(" Rate", "")}
+                            {tr(r.rateType)
+                              .replace(" ریٹ", "")
+                              .replace(" Rate", "")}
                           </span>
                           <span
                             className="text-xs font-bold"
-                            style={{ color: trendColor, textAlign: "right" }}
+                            style={{
+                              color: trendColor,
+                              textAlign: "right",
+                              whiteSpace: "nowrap",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              justifyContent: "flex-end",
+                              gap: 2,
+                            }}
                           >
-                            {trendArrow}
-                            {r.trendPct > 0 ? ` ${r.trendPct}%` : ""}
+                            <span>{trendArrow}</span>
+                            {r.trendPct > 0 && <span>{r.trendPct}%</span>}
                           </span>
                         </button>
-                      )
+                      );
                     })}
                   </div>
                 </div>
-              )
+              );
             })()}
 
             {/*  Attribute picker sheet  */}
@@ -13732,15 +14462,17 @@ function CommodityRatesScreen({
                   spec: ["Seed Quality", "Retail", "Damage"],
                   condition: ["Wet", "Dry", "Mix"],
                   ratetype: ALL_RATE_TYPES,
-                }
+                };
                 const labels: Record<string, string> = {
                   variety: lang === "ur" ? "قسم منتخب کریں" : "Variety",
-                  newold: lang === "ur" ? "نیا / پرانا منتخب کریں" : "New / Old",
+                  newold:
+                    lang === "ur" ? "نیا / پرانا منتخب کریں" : "New / Old",
                   color: lang === "ur" ? "رنگ منتخب کریں" : "Color",
                   spec: lang === "ur" ? "خصوصیت منتخب کریں" : "Specifications",
                   condition: lang === "ur" ? "حالت منتخب کریں" : "Condition",
-                  ratetype: lang === "ur" ? "نرخ کی قسم منتخب کریں" : "Rate Type",
-                }
+                  ratetype:
+                    lang === "ur" ? "نرخ کی قسم منتخب کریں" : "Rate Type",
+                };
                 const currVal =
                   attrSheet === "variety"
                     ? attrVariety
@@ -13752,16 +14484,16 @@ function CommodityRatesScreen({
                           ? attrSpec
                           : attrSheet === "ratetype"
                             ? attrRateType
-                            : attrCondition
+                            : attrCondition;
                 const setter = (v: string | null) => {
-                  if (attrSheet === "variety") setAttrVariety(v)
-                  else if (attrSheet === "newold") setAttrNewOld(v)
-                  else if (attrSheet === "color") setAttrColor(v)
-                  else if (attrSheet === "spec") setAttrSpec(v)
-                  else if (attrSheet === "ratetype") setAttrRateType(v)
-                  else setAttrCondition(v)
-                  setAttrSheet(null)
-                }
+                  if (attrSheet === "variety") setAttrVariety(v);
+                  else if (attrSheet === "newold") setAttrNewOld(v);
+                  else if (attrSheet === "color") setAttrColor(v);
+                  else if (attrSheet === "spec") setAttrSpec(v);
+                  else if (attrSheet === "ratetype") setAttrRateType(v);
+                  else setAttrCondition(v);
+                  setAttrSheet(null);
+                };
                 return (
                   <div
                     className="zm-sheet-overlay"
@@ -13770,7 +14502,11 @@ function CommodityRatesScreen({
                   >
                     <div
                       className="zm-sheet"
-                      style={{ maxHeight: "60vh", display: "flex", flexDirection: "column" }}
+                      style={{
+                        maxHeight: "60vh",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
                       onClick={(e) => e.stopPropagation()}
                     >
                       <div className="px-5 pt-4 pb-3 border-b border-[#DCE8E3] flex-shrink-0">
@@ -13813,7 +14549,9 @@ function CommodityRatesScreen({
                                     : "inherit",
                               }}
                             >
-                              {lang === "ur" ? "انتخاب ہٹائیں" : "Clear selection"}
+                              {lang === "ur"
+                                ? "انتخاب ہٹائیں"
+                                : "Clear selection"}
                             </span>
                           </button>
                         )}
@@ -13822,21 +14560,26 @@ function CommodityRatesScreen({
                           const mandiAttrs =
                             locScope.kind === "mandi"
                               ? MANDI_ATTR_AVAILABLE[locScope.label]
-                              : null
+                              : null;
                           const attrKey =
                             attrSheet === "newold"
                               ? "newold"
-                              : attrSheet as "color" | "variety" | "spec" | "condition" | "newold"
+                              : (attrSheet as
+                                  | "color"
+                                  | "variety"
+                                  | "spec"
+                                  | "condition"
+                                  | "newold");
                           const available =
                             !mandiAttrs ||
                             !mandiAttrs[attrKey] ||
-                            mandiAttrs[attrKey].includes(opt)
+                            mandiAttrs[attrKey].includes(opt);
                           const optLabel =
                             attrSheet === "variety"
                               ? tc(opt)
                               : attrSheet === "ratetype"
                                 ? tr(opt)
-                                : t(opt)
+                                : t(opt);
                           return (
                             <button
                               key={opt}
@@ -13887,7 +14630,9 @@ function CommodityRatesScreen({
                                         : "inherit",
                                   }}
                                 >
-                                  {lang === "ur" ? "منڈی میں نہیں" : "Not in mandi"}
+                                  {lang === "ur"
+                                    ? "منڈی میں نہیں"
+                                    : "Not in mandi"}
                                 </span>
                               )}
                               {available && currVal === opt && (
@@ -13898,12 +14643,12 @@ function CommodityRatesScreen({
                                 </span>
                               )}
                             </button>
-                          )
+                          );
                         })}
                       </div>
                     </div>
                   </div>
-                )
+                );
               })()}
 
             {/* Date table sheet */}
@@ -13911,62 +14656,62 @@ function CommodityRatesScreen({
               (() => {
                 const allTableRows = Object.entries(MANDI_ROWS).flatMap(
                   ([mandiId, mrows]) => {
-                    const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId)
-                    if (!mandi) return []
+                    const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
+                    if (!mandi) return [];
                     return mrows
                       .filter(
                         (r) =>
-                          r.commodity === commodity &&
+                          r.product === product &&
                           (!byproduct || r.byproduct === byproduct),
                       )
                       .map((r) => ({
                         ...r,
                         mandiName: mandi.name,
                         province: mandi.province,
-                      }))
+                      }));
                   },
-                )
+                );
 
                 // Apply column filters
                 // Date-seeded variance: different days show slightly different prices
                 const dateSeed =
                   dtSelDate.getFullYear() * 10000 +
                   (dtSelDate.getMonth() + 1) * 100 +
-                  dtSelDate.getDate()
+                  dtSelDate.getDate();
                 const dateVariance = (base: number) => {
-                  const hash = ((dateSeed * 2654435761) >>> 0) % 1000
-                  const pct = (hash / 1000 - 0.5) * 0.08 // ±4% variance
-                  return Math.round(base * (1 + pct))
-                }
+                  const hash = ((dateSeed * 2654435761) >>> 0) % 1000;
+                  const pct = (hash / 1000 - 0.5) * 0.08; // ±4% variance
+                  return Math.round(base * (1 + pct));
+                };
 
                 const filteredTableRows = allTableRows
                   .filter((r) => {
-                    if (dtPriceType && r.rateType !== dtPriceType) return false
-                    return true
+                    if (dtPriceType && r.rateType !== dtPriceType) return false;
+                    return true;
                   })
                   .map((r) => ({
                     ...r,
                     min: dateVariance(r.min),
                     max: dateVariance(r.max),
-                  }))
+                  }));
 
                 const allPriceTypes = [
                   ...new Set(allTableRows.map((r) => r.rateType)),
-                ]
+                ];
                 const specs = [
                   "Seed Quality",
                   "Retail",
                   "Damage",
                   "Export Grade",
-                ]
-                const conditions = ["Dry", "Wet", "Mix"]
-                const qualities = ["New", "Old", "Cleaned", "Uncleaned"]
+                ];
+                const conditions = ["Dry", "Wet", "Mix"];
+                const qualities = ["New", "Old", "Cleaned", "Uncleaned"];
 
                 // Calendar helpers
-                const selD = dtSelDate
-                const calM = dtCalMonth
-                const calYear = calM.getFullYear()
-                const calMonthIdx = calM.getMonth()
+                const selD = dtSelDate;
+                const calM = dtCalMonth;
+                const calYear = calM.getFullYear();
+                const calMonthIdx = calM.getMonth();
                 const monthNamesUr = [
                   "جنوری",
                   "فروری",
@@ -13980,43 +14725,53 @@ function CommodityRatesScreen({
                   "اکتوبر",
                   "نومبر",
                   "دسمبر",
-                ]
-                const monthName = lang === "ur"
-                  ? `${monthNamesUr[calMonthIdx]} ${calYear}`
-                  : calM.toLocaleDateString("en-US", {
-                    month: "long",
-                    year: "numeric",
-                  })
-                const firstDow = new Date(calYear, calMonthIdx, 1).getDay() // 0=Sun
+                ];
+                const monthName =
+                  lang === "ur"
+                    ? `${monthNamesUr[calMonthIdx]} ${calYear}`
+                    : calM.toLocaleDateString("en-US", {
+                        month: "long",
+                        year: "numeric",
+                      });
+                const firstDow = new Date(calYear, calMonthIdx, 1).getDay(); // 0=Sun
                 const daysInMonth = new Date(
                   calYear,
                   calMonthIdx + 1,
                   0,
-                ).getDate()
+                ).getDate();
                 const prevMonth = () =>
-                  setDtCalMonth(new Date(calYear, calMonthIdx - 1, 1))
+                  setDtCalMonth(new Date(calYear, calMonthIdx - 1, 1));
                 const nextMonth = () =>
-                  setDtCalMonth(new Date(calYear, calMonthIdx + 1, 1))
+                  setDtCalMonth(new Date(calYear, calMonthIdx + 1, 1));
                 const isSameDay = (a: Date, b: Date) =>
                   a.getFullYear() === b.getFullYear() &&
                   a.getMonth() === b.getMonth() &&
-                  a.getDate() === b.getDate()
-                const isToday = (d: Date) => isSameDay(d, new Date())
+                  a.getDate() === b.getDate();
+                const isToday = (d: Date) => isSameDay(d, new Date());
                 const calDays: (number | null)[] = [
                   ...Array(firstDow).fill(null),
                   ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
-                ]
-                while (calDays.length % 7 !== 0) calDays.push(null)
+                ];
+                while (calDays.length % 7 !== 0) calDays.push(null);
 
-                const urDaysFull = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"]
-                const selDateStr = lang === "ur"
-                  ? `${urDaysFull[selD.getDay()]}، ${selD.getDate()} ${monthNamesUr[selD.getMonth()]} ${selD.getFullYear()}`
-                  : selD.toLocaleDateString("en-GB", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })
+                const urDaysFull = [
+                  "اتوار",
+                  "پیر",
+                  "منگل",
+                  "بدھ",
+                  "جمعرات",
+                  "جمعہ",
+                  "ہفتہ",
+                ];
+                const selDateStr =
+                  lang === "ur"
+                    ? `${urDaysFull[selD.getDay()]}، ${selD.getDate()} ${monthNamesUr[selD.getMonth()]} ${selD.getFullYear()}`
+                    : selD.toLocaleDateString("en-GB", {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      });
 
                 // Column header dropdown opts
                 const colOpts: Record<string, string[]> = {
@@ -14026,7 +14781,7 @@ function CommodityRatesScreen({
                   ),
                   Specification: specs,
                   Condition: conditions,
-                }
+                };
                 const colLabels: Record<string, string> = {
                   Station: lang === "ur" ? "منڈی" : "Station",
                   Quality: lang === "ur" ? "معیار" : "Quality",
@@ -14037,27 +14792,27 @@ function CommodityRatesScreen({
                   Unit: lang === "ur" ? "یونٹ" : "Unit",
                   Specification: lang === "ur" ? "خصوصیت" : "Specification",
                   Condition: lang === "ur" ? "حالت" : "Condition",
-                }
+                };
                 const colState: Record<string, string | null> = {
                   Quality: dtQuality,
                   "Price Type": dtPriceType,
                   Specification: dtSpec,
                   Condition: dtCondition,
-                }
+                };
                 const colSetter: Record<string, (v: string | null) => void> = {
                   Quality: setDtQuality,
                   "Price Type": (v) => setDtPriceType(v ? v + " Rate" : null),
                   Specification: setDtSpec,
                   Condition: setDtCondition,
-                }
+                };
 
                 return (
                   <div
                     className="zm-sheet-overlay"
                     style={{ zIndex: 250 }}
                     onClick={() => {
-                      setDateTableOpen(false)
-                      setDtOpenCol(null)
+                      setDateTableOpen(false);
+                      setDtOpenCol(null);
                     }}
                   >
                     <div
@@ -14111,8 +14866,8 @@ function CommodityRatesScreen({
                           {/* Calendar icon button */}
                           <button
                             onClick={(e) => {
-                              e.stopPropagation()
-                              setDtCalOpen((o) => !o)
+                              e.stopPropagation();
+                              setDtCalOpen((o) => !o);
                             }}
                             className="tap-target flex items-center gap-1.5 rounded-xl px-3 py-2 font-semibold text-xs"
                             style={{
@@ -14228,16 +14983,16 @@ function CommodityRatesScreen({
                             }}
                           >
                             {calDays.map((day, idx) => {
-                              if (!day) return <div key={idx} />
-                              const d = new Date(calYear, calMonthIdx, day)
-                              const selected = isSameDay(d, selD)
-                              const today = isToday(d)
+                              if (!day) return <div key={idx} />;
+                              const d = new Date(calYear, calMonthIdx, day);
+                              const selected = isSameDay(d, selD);
+                              const today = isToday(d);
                               return (
                                 <button
                                   key={idx}
                                   onClick={() => {
-                                    setDtSelDate(d)
-                                    setDtCalOpen(false)
+                                    setDtSelDate(d);
+                                    setDtCalOpen(false);
                                   }}
                                   className="tap-target flex items-center justify-center rounded-full font-semibold text-xs mx-auto"
                                   style={{
@@ -14261,7 +15016,7 @@ function CommodityRatesScreen({
                                 >
                                   {day}
                                 </button>
-                              )
+                              );
                             })}
                           </div>
                         </div>
@@ -14296,21 +15051,28 @@ function CommodityRatesScreen({
                                 "Specification",
                                 "Condition",
                               ].map((col) => {
-                                const hasFilter = col in colOpts
-                                const activeVal = colState[col]
+                                const hasFilter = col in colOpts;
+                                const activeVal = colState[col];
                                 const displayVal =
                                   col === "Price Type" && dtPriceType
-                                    ? tr(dtPriceType).replace(" ریٹ", "").replace(" Rate", "")
+                                    ? tr(dtPriceType)
+                                        .replace(" ریٹ", "")
+                                        .replace(" Rate", "")
                                     : activeVal
-                                      ? (col === "Specification" || col === "Condition" || col === "Quality" ? t(activeVal) : activeVal)
-                                      : null
-                                const colTitle = colLabels[col] || col
+                                      ? col === "Specification" ||
+                                        col === "Condition" ||
+                                        col === "Quality"
+                                        ? t(activeVal)
+                                        : activeVal
+                                      : null;
+                                const colTitle = colLabels[col] || col;
                                 return (
                                   <th
                                     key={col}
                                     style={{
                                       padding: "7px 5px",
-                                      textAlign: lang === "ur" ? "right" : "left",
+                                      textAlign:
+                                        lang === "ur" ? "right" : "left",
                                       fontWeight: 700,
                                       whiteSpace: "nowrap",
                                       borderRight:
@@ -14326,10 +15088,10 @@ function CommodityRatesScreen({
                                     {hasFilter ? (
                                       <button
                                         onClick={(e) => {
-                                          e.stopPropagation()
+                                          e.stopPropagation();
                                           setDtOpenCol(
                                             dtOpenCol === col ? null : col,
-                                          )
+                                          );
                                         }}
                                         className="flex items-center gap-0.5 font-bold text-white"
                                         style={{
@@ -14384,25 +15146,25 @@ function CommodityRatesScreen({
                                       >
                                         <button
                                           onClick={() => {
-                                            colSetter[col](null)
-                                            setDtOpenCol(null)
+                                            colSetter[col](null);
+                                            setDtOpenCol(null);
                                           }}
                                           className={`tap-target w-full ${lang === "ur" ? "text-right" : "text-left"} px-3 py-2 text-xs font-semibold`}
                                           style={{
                                             color:
                                               !activeVal &&
-                                                !(
-                                                  col === "Price Type" &&
-                                                  dtPriceType
-                                                )
+                                              !(
+                                                col === "Price Type" &&
+                                                dtPriceType
+                                              )
                                                 ? "#075E4F"
                                                 : "#2F4A43",
                                             background:
                                               !activeVal &&
-                                                !(
-                                                  col === "Price Type" &&
-                                                  dtPriceType
-                                                )
+                                              !(
+                                                col === "Price Type" &&
+                                                dtPriceType
+                                              )
                                                 ? "#E4F2EC"
                                                 : "#fff",
                                             fontSize: lang === "ur" ? 14 : 12,
@@ -14418,19 +15180,21 @@ function CommodityRatesScreen({
                                           const isActive =
                                             col === "Price Type"
                                               ? dtPriceType === opt + " Rate"
-                                              : activeVal === opt
+                                              : activeVal === opt;
                                           const optText =
                                             col === "Price Type"
-                                              ? tr(opt + " Rate").replace(" ریٹ", "").replace(" Rate", "")
-                                              : t(opt)
+                                              ? tr(opt + " Rate")
+                                                  .replace(" ریٹ", "")
+                                                  .replace(" Rate", "")
+                                              : t(opt);
                                           return (
                                             <button
                                               key={opt}
                                               onClick={() => {
                                                 colSetter[col](
                                                   isActive ? null : opt,
-                                                )
-                                                setDtOpenCol(null)
+                                                );
+                                                setDtOpenCol(null);
                                               }}
                                               className={`tap-target w-full ${lang === "ur" ? "text-right" : "text-left"} px-3 py-2 text-xs font-semibold`}
                                               style={{
@@ -14440,7 +15204,8 @@ function CommodityRatesScreen({
                                                 background: isActive
                                                   ? "#E4F2EC"
                                                   : "#fff",
-                                                fontSize: lang === "ur" ? 14 : 12,
+                                                fontSize:
+                                                  lang === "ur" ? 14 : 12,
                                                 fontFamily:
                                                   lang === "ur"
                                                     ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
@@ -14449,12 +15214,12 @@ function CommodityRatesScreen({
                                             >
                                               {optText}
                                             </button>
-                                          )
+                                          );
                                         })}
                                       </div>
                                     )}
                                   </th>
-                                )
+                                );
                               })}
                             </tr>
                           </thead>
@@ -14474,7 +15239,9 @@ function CommodityRatesScreen({
                                         : "inherit",
                                   }}
                                 >
-                                  {lang === "ur" ? "کوئی ریکارڈ موجود نہیں ہے" : "No matching rows"}
+                                  {lang === "ur"
+                                    ? "کوئی ریکارڈ موجود نہیں ہے"
+                                    : "No matching rows"}
                                 </td>
                               </tr>
                             ) : (
@@ -14484,18 +15251,18 @@ function CommodityRatesScreen({
                                     ? "▲"
                                     : r.trend === "down"
                                       ? "▼"
-                                      : "–"
+                                      : "–";
                                 const trendColor =
                                   r.trend === "up"
                                     ? "#159447"
                                     : r.trend === "down"
                                       ? "#C94A43"
-                                      : "#80918B"
+                                      : "#80918B";
                                 const rowQuality =
-                                  dtQuality || attrNewOld || "New"
-                                const rowSpec = dtSpec || attrSpec || "Retail"
+                                  dtQuality || attrNewOld || "New";
+                                const rowSpec = dtSpec || attrSpec || "Retail";
                                 const rowCond =
-                                  dtCondition || attrCondition || "Dry"
+                                  dtCondition || attrCondition || "Dry";
                                 return (
                                   <tr
                                     key={i}
@@ -14565,7 +15332,9 @@ function CommodityRatesScreen({
                                               : "inherit",
                                         }}
                                       >
-                                        {tr(r.rateType).replace(" ریٹ", "").replace(" Rate", "")}
+                                        {tr(r.rateType)
+                                          .replace(" ریٹ", "")
+                                          .replace(" Rate", "")}
                                       </span>
                                     </td>
                                     <td
@@ -14629,7 +15398,7 @@ function CommodityRatesScreen({
                                       {t(rowCond)}
                                     </td>
                                   </tr>
-                                )
+                                );
                               })
                             )}
                           </tbody>
@@ -14654,7 +15423,9 @@ function CommodityRatesScreen({
                                 : "inherit",
                           }}
                         >
-                          {lang === "ur" ? "یونٹ = روپے · فی ۴۰ کلو" : "Unit = Rs. · Unit = (40 kg)"}
+                          {lang === "ur"
+                            ? "یونٹ = روپے · فی ۴۰ کلو"
+                            : "Unit = Rs. · Unit = (40 kg)"}
                         </span>
                         <button
                           onClick={() => setDateTableOpen(false)}
@@ -14673,124 +15444,525 @@ function CommodityRatesScreen({
                       </div>
                     </div>
                   </div>
-                )
+                );
               })()}
           </>
         )}
 
-        {tab === "trends" && rows.length > 0 && (
-          <>
-            {/* Location filter row — same as overview tab */}
-            <div className="flex items-center justify-between">
-              <p
-                className="text-xs font-bold uppercase tracking-wide"
-                style={{
-                  color: "#52635F",
-                  fontSize: lang === "ur" ? 16 : 12,
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                      : "inherit",
-                }}
-              >
-                {lang === "ur" ? "قیمتوں کے رجحانات" : "Price Trends"}
-              </p>
-              <button
-                onClick={() => setLocSheet(true)}
-                className="tap-target flex items-center gap-1 rounded-xl font-semibold text-xs px-2.5 py-1.5"
-                style={{
-                  background: locScope.kind === "mandi" ? "#087F63" : "#E4F2EC",
-                  color: locScope.kind === "mandi" ? "#fff" : "#075E4F",
-                  border:
-                    locScope.kind === "mandi" ? "none" : "1px solid #C7E8D8",
-                  fontSize: lang === "ur" ? 14 : 12,
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                      : "inherit",
-                }}
-              >
-                <span style={{ fontSize: 12 }}>📍</span>
-                {locScope.kind === "mandi"
-                  ? tm(locScope.label.replace(" Mandi", ""))
-                  : locScope.kind === "province"
-                    ? tm(locScope.label)
-                    : locScope.kind === "district"
-                      ? tm(locScope.label)
-                      : (lang === "ur" ? "قومی سطح" : "National")}
-              </button>
+        {tab === "trends" && rows.length > 0 && isProductTodayOnly(product) && (
+          <div
+            style={{
+              background: "#FFFFFF",
+              border: "1.5px solid #D5E2DD",
+              borderRadius: 20,
+              padding: "28px 20px",
+              textAlign: "center",
+              boxShadow: "0 4px 20px rgba(6,77,64,0.06)",
+            }}
+          >
+            <div
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: "50%",
+                background: "#FFF4E5",
+                color: "#D97706",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 30,
+                margin: "0 auto 16px",
+              }}
+            >
+              🔒
             </div>
-            <div className="flex gap-2">
-              {([
-                ["week", lang === "ur" ? "ہفتہ" : "Week"],
-                ["month", lang === "ur" ? "مہینہ" : "Month"],
-                ["quarter", lang === "ur" ? "تین ماہ" : "Quarter"],
-              ] as ["week" | "month" | "quarter", string][]).map(([rKey, label]) => (
-                <button
-                  key={rKey}
-                  onClick={() => setRange(rKey)}
-                  className="tap-target flex-1 rounded-xl font-bold text-xs capitalize"
-                  style={{
-                    height: lang === "ur" ? 42 : 38,
-                    background: range === rKey ? "#087F63" : "#fff",
-                    color: range === rKey ? "#fff" : "#183B34",
-                    border: range === rKey ? "none" : "1px solid #D5E2DD",
-                    fontSize: lang === "ur" ? 16 : 12,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              {([
-                ["price", lang === "ur" ? "قیمت کا رجحان" : "Price Trend"],
-                ["arrival", lang === "ur" ? "آمد کا رجحان" : "Arrival Trend"],
-              ] as ["price" | "arrival", string][]).map(([m, label]) => (
-                <button
-                  key={m}
-                  onClick={() => setTrendMode(m)}
-                  className="tap-target flex-1 rounded-xl font-bold text-xs"
-                  style={{
-                    height: lang === "ur" ? 42 : 38,
-                    background: trendMode === m ? "#075E4F" : "#E8EFEC",
-                    color: trendMode === m ? "#fff" : "#183B34",
-                    fontSize: lang === "ur" ? 16 : 12,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+            <h3
+              style={{
+                fontSize: 18,
+                fontWeight: 800,
+                color: "#183B34",
+                marginBottom: 8,
+                fontFamily:
+                  lang === "ur"
+                    ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                    : "inherit",
+              }}
+            >
+              {lang === "ur"
+                ? "ماضی کے رجحانات اور گراف لاک ہیں"
+                : "Historical Trends & Charts Locked"}
+            </h3>
+            <p
+              style={{
+                fontSize: 13,
+                color: "#52635F",
+                lineHeight: 1.5,
+                marginBottom: 22,
+                fontFamily:
+                  lang === "ur"
+                    ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                    : "inherit",
+              }}
+            >
+              {lang === "ur"
+                ? `${tc(product)} کے 7 دن، 30 دن اور 90 دن کے تاریخی نرخ، تجزیات اور آمد کے رجحانات دیکھنے کے لیے سبسکرائب کریں۔`
+                : `Subscribe to unlock full 7-day, 30-day and 90-day price trend graphs, arrival patterns and historical market intelligence for ${product}.`}
+            </p>
+            <button
+              onClick={() => push?.({ id: "billing", product, vertical })}
+              className="tap-target w-full py-3.5 rounded-2xl text-white font-extrabold text-sm flex items-center justify-center gap-2"
+              style={{
+                background: "linear-gradient(135deg, #087F63, #064D40)",
+                boxShadow: "0 4px 14px rgba(8,127,99,0.35)",
+              }}
+            >
+              <span>
+                {lang === "ur"
+                  ? "ماضی کا ڈیٹا ان لاک کریں (PKR 3,000/ماہ) →"
+                  : "Subscribe to Unlock Past History (PKR 3,000/mo) →"}
+              </span>
+            </button>
+          </div>
+        )}
 
-            {trendMode === "price" ? (
-              <>
-                {/* Interactive price chart */}
+        {tab === "trends" &&
+          rows.length > 0 &&
+          !isProductTodayOnly(product) && (
+            <>
+              {/* Location filter row — same as overview tab */}
+              <div className="flex items-center justify-between">
+                <p
+                  className="text-xs font-bold uppercase tracking-wide"
+                  style={{
+                    color: "#52635F",
+                    fontSize: lang === "ur" ? 16 : 12,
+                    fontFamily:
+                      lang === "ur"
+                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                        : "inherit",
+                  }}
+                >
+                  {lang === "ur" ? "قیمتوں کے رجحانات" : "Price Trends"}
+                </p>
+                <button
+                  onClick={() => setLocSheet(true)}
+                  className="tap-target flex items-center gap-1 rounded-xl font-semibold text-xs px-2.5 py-1.5"
+                  style={{
+                    background:
+                      locScope.kind === "mandi" ? "#087F63" : "#E4F2EC",
+                    color: locScope.kind === "mandi" ? "#fff" : "#075E4F",
+                    border:
+                      locScope.kind === "mandi" ? "none" : "1px solid #C7E8D8",
+                    fontSize: lang === "ur" ? 14 : 12,
+                    fontFamily:
+                      lang === "ur"
+                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                        : "inherit",
+                  }}
+                >
+                  {locScope.kind === "mandi"
+                    ? tm(locScope.label.replace(" Mandi", ""))
+                    : locScope.kind === "province"
+                      ? tm(locScope.label)
+                      : locScope.kind === "district"
+                        ? tm(locScope.label)
+                        : lang === "ur"
+                          ? "قومی سطح"
+                          : "National"}
+                </button>
+              </div>
+              <div className="flex gap-2">
+                {(
+                  [
+                    ["week", lang === "ur" ? "ہفتہ" : "Week"],
+                    ["month", lang === "ur" ? "مہینہ" : "Month"],
+                    ["quarter", lang === "ur" ? "تین ماہ" : "Quarter"],
+                  ] as ["week" | "month" | "quarter", string][]
+                ).map(([rKey, label]) => (
+                  <button
+                    key={rKey}
+                    onClick={() => setRange(rKey)}
+                    className="tap-target flex-1 rounded-xl font-bold text-xs capitalize"
+                    style={{
+                      height: lang === "ur" ? 42 : 38,
+                      background: range === rKey ? "#087F63" : "#fff",
+                      color: range === rKey ? "#fff" : "#183B34",
+                      border: range === rKey ? "none" : "1px solid #D5E2DD",
+                      fontSize: lang === "ur" ? 16 : 12,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                {(
+                  [
+                    ["price", lang === "ur" ? "قیمت کا رجحان" : "Price Trend"],
+                    [
+                      "arrival",
+                      lang === "ur" ? "آمد کا رجحان" : "Arrival Trend",
+                    ],
+                  ] as ["price" | "arrival", string][]
+                ).map(([m, label]) => (
+                  <button
+                    key={m}
+                    onClick={() => setTrendMode(m)}
+                    className="tap-target flex-1 rounded-xl font-bold text-xs"
+                    style={{
+                      height: lang === "ur" ? 42 : 38,
+                      background: trendMode === m ? "#075E4F" : "#E8EFEC",
+                      color: trendMode === m ? "#fff" : "#183B34",
+                      fontSize: lang === "ur" ? 16 : 12,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              {trendMode === "price" ? (
+                <>
+                  {/* Interactive price chart */}
+                  <div
+                    className="rounded-2xl px-3 pt-3 pb-2"
+                    style={{
+                      background: "#F4FAF7",
+                      border: "1px solid #D5E2DD",
+                    }}
+                  >
+                    {/* Hover tooltip */}
+                    {hoverIdx !== null && shownSeries.length > 0 && (
+                      <div
+                        className="rounded-xl px-3 py-2 mb-2 flex flex-wrap gap-2"
+                        style={{
+                          background: "#F1F7F4",
+                          border: "1px solid #D5E2DD",
+                        }}
+                      >
+                        <span
+                          className="text-[11px] font-bold"
+                          style={{
+                            color: "#2F4A43",
+                            fontSize: lang === "ur" ? 14 : 11,
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                          }}
+                        >
+                          {xLabels[hoverIdx] ||
+                            (lang === "ur"
+                              ? `دن ${hoverIdx + 1}`
+                              : `Day ${hoverIdx + 1}`)}
+                        </span>
+                        {shownSeries.map((s) => (
+                          <span
+                            key={s.label}
+                            className="text-[11px] font-semibold"
+                            style={{
+                              color: s.color,
+                              fontSize: lang === "ur" ? 13 : 11,
+                              fontFamily:
+                                lang === "ur"
+                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  : "inherit",
+                            }}
+                          >
+                            {tr(s.label)
+                              .replace(" ریٹ", "")
+                              .replace(" Rate", "")}{" "}
+                            {lang === "ur" ? "روپے" : "Rs."}{" "}
+                            {Math.round(s.data[hoverIdx]).toLocaleString()}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <svg
+                      viewBox={`0 0 ${CW} ${CH}`}
+                      className="w-full"
+                      style={{ height: CH, display: "block" }}
+                      onMouseMove={(e) => {
+                        const rect = (
+                          e.currentTarget as SVGSVGElement
+                        ).getBoundingClientRect();
+                        const relX =
+                          ((e.clientX - rect.left) / rect.width) * CW - PL;
+                        const i = Math.round((relX / chartW) * (len - 1));
+                        setHoverIdx(Math.max(0, Math.min(len - 1, i)));
+                      }}
+                      onMouseLeave={() => setHoverIdx(null)}
+                      onTouchMove={(e) => {
+                        const rect = (
+                          e.currentTarget as SVGSVGElement
+                        ).getBoundingClientRect();
+                        const touch = e.touches[0];
+                        const relX =
+                          ((touch.clientX - rect.left) / rect.width) * CW - PL;
+                        const i = Math.round((relX / chartW) * (len - 1));
+                        setHoverIdx(Math.max(0, Math.min(len - 1, i)));
+                      }}
+                      onTouchEnd={() => setHoverIdx(null)}
+                    >
+                      {/* Y-axis gridlines + labels */}
+                      {yPriceTicks.map((tick, ti) => {
+                        const y = yOf(tick, pMin, pMax);
+                        return (
+                          <g key={ti}>
+                            <line
+                              x1={PL}
+                              y1={y}
+                              x2={CW - PR}
+                              y2={y}
+                              stroke="#E8EFEC"
+                              strokeWidth="1"
+                            />
+                            <text
+                              x={PL - 4}
+                              y={y + 4}
+                              textAnchor="end"
+                              fontSize="9"
+                              fill="#80918B"
+                            >
+                              {tick >= 1000
+                                ? (tick / 1000).toFixed(1) + "k"
+                                : tick}
+                            </text>
+                          </g>
+                        );
+                      })}
+                      {/* X-axis labels */}
+                      {xLabels.map((lbl, i) =>
+                        lbl ? (
+                          <text
+                            key={i}
+                            x={xOf(i, len)}
+                            y={CH - 4}
+                            textAnchor="middle"
+                            fontSize={lang === "ur" ? "10" : "9"}
+                            fill="#80918B"
+                            fontFamily={
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit"
+                            }
+                          >
+                            {lbl}
+                          </text>
+                        ) : null,
+                      )}
+                      {/* Lines */}
+                      {shownSeries.map((s) => {
+                        const pts = s.data
+                          .map(
+                            (v, i) =>
+                              `${
+                                i === 0 ? "M" : "L"
+                              }${xOf(i, len).toFixed(1)},${yOf(v, pMin, pMax).toFixed(1)}`,
+                          )
+                          .join(" ");
+                        return (
+                          <path
+                            key={s.label}
+                            d={pts}
+                            stroke={s.color}
+                            strokeWidth="2"
+                            fill="none"
+                            strokeLinecap="round"
+                          />
+                        );
+                      })}
+                      {/* Hover crosshair */}
+                      {hoverIdx !== null && (
+                        <>
+                          <line
+                            x1={xOf(hoverIdx, len)}
+                            y1={PT}
+                            x2={xOf(hoverIdx, len)}
+                            y2={CH - PB}
+                            stroke="#2F4A43"
+                            strokeWidth="1"
+                            strokeDasharray="3 3"
+                          />
+                          {shownSeries.map((s) => (
+                            <circle
+                              key={s.label}
+                              cx={xOf(hoverIdx!, len)}
+                              cy={yOf(s.data[hoverIdx!], pMin, pMax)}
+                              r="4"
+                              fill={s.color}
+                              stroke="#fff"
+                              strokeWidth="1.5"
+                            />
+                          ))}
+                        </>
+                      )}
+                      {/* Axes */}
+                      <line
+                        x1={PL}
+                        y1={PT}
+                        x2={PL}
+                        y2={CH - PB}
+                        stroke="#C7D6D0"
+                        strokeWidth="1"
+                      />
+                      <line
+                        x1={PL}
+                        y1={CH - PB}
+                        x2={CW - PR}
+                        y2={CH - PB}
+                        stroke="#C7D6D0"
+                        strokeWidth="1"
+                      />
+                      {/* X-axis label */}
+                      <text
+                        x={(PL + CW - PR) / 2}
+                        y={CH - 4}
+                        textAnchor="middle"
+                        fontSize="10"
+                        fontWeight="600"
+                        fill="#52635F"
+                        fontFamily={
+                          lang === "ur"
+                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            : "inherit"
+                        }
+                      >
+                        {lang === "ur" ? "دن" : "Days"}
+                      </text>
+                      {/* Y-axis label */}
+                      <text
+                        x={12}
+                        y={(PT + CH - PB) / 2}
+                        textAnchor="middle"
+                        fontSize="10"
+                        fontWeight="600"
+                        fill="#52635F"
+                        transform={`rotate(-90, 12, ${(PT + CH - PB) / 2})`}
+                        fontFamily={
+                          lang === "ur"
+                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            : "inherit"
+                        }
+                      >
+                        {lang === "ur"
+                          ? "قیمت (روپے/۴۰ کلو)"
+                          : "Price (Rs/40kg)"}
+                      </text>
+                    </svg>
+                  </div>
+                  <p
+                    className="text-xs font-bold uppercase tracking-wide"
+                    style={{
+                      color: "#52635F",
+                      letterSpacing: "0.05em",
+                      fontSize: lang === "ur" ? 15 : 12,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {lang === "ur" ? "نرخ کی اقسام" : "Price Types"}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {/* All / سب Button */}
+                    <button
+                      onClick={() => {
+                        if (activeTypes.length === ALL_RATE_TYPES.length) {
+                          setActiveTypes([initialRateType || "Retail"]);
+                        } else {
+                          setActiveTypes([...ALL_RATE_TYPES]);
+                        }
+                      }}
+                      className="tap-target flex items-center gap-1 rounded-full font-bold"
+                      style={{
+                        fontSize: lang === "ur" ? 14 : 11,
+                        padding: "4px 10px",
+                        background:
+                          activeTypes.length === ALL_RATE_TYPES.length
+                            ? "#087F63"
+                            : "#E8EFEC",
+                        border:
+                          "1.5px solid " +
+                          (activeTypes.length === ALL_RATE_TYPES.length
+                            ? "#087F63"
+                            : "#D5E2DD"),
+                        color:
+                          activeTypes.length === ALL_RATE_TYPES.length
+                            ? "#fff"
+                            : "#52635F",
+                        fontFamily:
+                          lang === "ur"
+                            ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                            : "inherit",
+                      }}
+                    >
+                      {lang === "ur" ? "سب" : "All"}
+                    </button>
+
+                    {ALL_RATE_TYPES.map((tRt) => {
+                      const on = activeTypes.includes(tRt);
+                      return (
+                        <button
+                          key={tRt}
+                          onClick={() => toggleType(tRt)}
+                          className="tap-target flex items-center gap-1 rounded-full font-semibold"
+                          style={{
+                            fontSize: lang === "ur" ? 14 : 10,
+                            padding: "4px 8px",
+                            background: on ? "#fff" : "#E8EFEC",
+                            border: `1.5px solid ${
+                              on ? RATE_COLORS[tRt] : "#D5E2DD"
+                            }`,
+                            color: on ? "#183B34" : "#80918B",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                          }}
+                        >
+                          <span
+                            className="rounded-full flex-shrink-0"
+                            style={{
+                              width: 7,
+                              height: 7,
+                              background: on ? RATE_COLORS[tRt] : "#C7D6D0",
+                            }}
+                          />
+                          {on ? " " : ""}
+                          {tr(tRt).replace(" ریٹ", "").replace(" Rate", "")}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                /* Interactive arrival chart */
                 <div
                   className="rounded-2xl px-3 pt-3 pb-2"
                   style={{ background: "#F4FAF7", border: "1px solid #D5E2DD" }}
                 >
-                  {/* Hover tooltip */}
-                  {hoverIdx !== null && shownSeries.length > 0 && (
+                  {arrivalHoverIdx !== null && (
                     <div
-                      className="rounded-xl px-3 py-2 mb-2 flex flex-wrap gap-2"
+                      className="rounded-xl px-3 py-2 mb-2"
                       style={{
-                        background: "#F1F7F4",
-                        border: "1px solid #D5E2DD",
+                        background: "#FFF0C7",
+                        border: "1px solid #F2D58A",
                       }}
                     >
                       <span
                         className="text-[11px] font-bold"
                         style={{
-                          color: "#2F4A43",
+                          color: "#9A6817",
                           fontSize: lang === "ur" ? 14 : 11,
                           fontFamily:
                             lang === "ur"
@@ -14798,25 +15970,27 @@ function CommodityRatesScreen({
                               : "inherit",
                         }}
                       >
-                        {xLabels[hoverIdx] || (lang === "ur" ? `دن ${hoverIdx + 1}` : `Day ${hoverIdx + 1}`)}
+                        {xLabels[arrivalHoverIdx] ||
+                          (lang === "ur"
+                            ? `دن ${arrivalHoverIdx + 1}`
+                            : `Day ${arrivalHoverIdx + 1}`)}
                       </span>
-                      {shownSeries.map((s) => (
-                        <span
-                          key={s.label}
-                          className="text-[11px] font-semibold"
-                          style={{
-                            color: s.color,
-                            fontSize: lang === "ur" ? 13 : 11,
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                          }}
-                        >
-                          {tr(s.label).replace(" ریٹ", "").replace(" Rate", "")} {lang === "ur" ? "روپے" : "Rs."}{" "}
-                          {Math.round(s.data[hoverIdx]).toLocaleString()}
-                        </span>
-                      ))}
+                      <span
+                        className="text-[11px] font-semibold ml-2"
+                        style={{
+                          color: "#9A6817",
+                          fontSize: lang === "ur" ? 14 : 11,
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        {Math.round(
+                          arrivalData[arrivalHoverIdx],
+                        ).toLocaleString()}{" "}
+                        {lang === "ur" ? "میٹرک ٹن" : "MT"}
+                      </span>
                     </div>
                   )}
                   <svg
@@ -14824,28 +15998,29 @@ function CommodityRatesScreen({
                     className="w-full"
                     style={{ height: CH, display: "block" }}
                     onMouseMove={(e) => {
-                      const rect =
-                        (e.currentTarget as SVGSVGElement).getBoundingClientRect()
+                      const rect = (
+                        e.currentTarget as SVGSVGElement
+                      ).getBoundingClientRect();
                       const relX =
-                        ((e.clientX - rect.left) / rect.width) * CW - PL
-                      const i = Math.round((relX / chartW) * (len - 1))
-                      setHoverIdx(Math.max(0, Math.min(len - 1, i)))
+                        ((e.clientX - rect.left) / rect.width) * CW - PL;
+                      const i = Math.round((relX / chartW) * (len - 1));
+                      setArrivalHoverIdx(Math.max(0, Math.min(len - 1, i)));
                     }}
-                    onMouseLeave={() => setHoverIdx(null)}
+                    onMouseLeave={() => setArrivalHoverIdx(null)}
                     onTouchMove={(e) => {
-                      const rect =
-                        (e.currentTarget as SVGSVGElement).getBoundingClientRect()
-                      const touch = e.touches[0]
+                      const rect = (
+                        e.currentTarget as SVGSVGElement
+                      ).getBoundingClientRect();
+                      const touch = e.touches[0];
                       const relX =
-                        ((touch.clientX - rect.left) / rect.width) * CW - PL
-                      const i = Math.round((relX / chartW) * (len - 1))
-                      setHoverIdx(Math.max(0, Math.min(len - 1, i)))
+                        ((touch.clientX - rect.left) / rect.width) * CW - PL;
+                      const i = Math.round((relX / chartW) * (len - 1));
+                      setArrivalHoverIdx(Math.max(0, Math.min(len - 1, i)));
                     }}
-                    onTouchEnd={() => setHoverIdx(null)}
+                    onPointerLeave={() => setArrivalHoverIdx(null)}
                   >
-                    {/* Y-axis gridlines + labels */}
-                    {yPriceTicks.map((tick, ti) => {
-                      const y = yOf(tick, pMin, pMax)
+                    {yArrivalTicks.map((tick, ti) => {
+                      const y = yOf(tick, aMin, aMax);
                       return (
                         <g key={ti}>
                           <line
@@ -14865,12 +16040,11 @@ function CommodityRatesScreen({
                           >
                             {tick >= 1000
                               ? (tick / 1000).toFixed(1) + "k"
-                              : tick}
+                              : Math.round(tick)}
                           </text>
                         </g>
-                      )
+                      );
                     })}
-                    {/* X-axis labels */}
                     {xLabels.map((lbl, i) =>
                       lbl ? (
                         <text
@@ -14890,52 +16064,57 @@ function CommodityRatesScreen({
                         </text>
                       ) : null,
                     )}
-                    {/* Lines */}
-                    {shownSeries.map((s) => {
-                      const pts = s.data
+                    {/* Area fill */}
+                    <path
+                      d={[
+                        ...arrivalData.map(
+                          (v, i) =>
+                            `${
+                              i === 0 ? "M" : "L"
+                            }${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
+                        ),
+                        `L${xOf(len - 1, len)},${CH - PB}`,
+                        `L${PL},${CH - PB}`,
+                        "Z",
+                      ].join(" ")}
+                      fill="#B9822E"
+                      fillOpacity="0.12"
+                    />
+                    <path
+                      d={arrivalData
                         .map(
                           (v, i) =>
-                            `${i === 0 ? "M" : "L"
-                            }${xOf(i, len).toFixed(1)},${yOf(v, pMin, pMax).toFixed(1)}`,
+                            `${
+                              i === 0 ? "M" : "L"
+                            }${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
                         )
-                        .join(" ")
-                      return (
-                        <path
-                          key={s.label}
-                          d={pts}
-                          stroke={s.color}
-                          strokeWidth="2"
-                          fill="none"
-                          strokeLinecap="round"
-                        />
-                      )
-                    })}
-                    {/* Hover crosshair */}
-                    {hoverIdx !== null && (
+                        .join(" ")}
+                      stroke="#B9822E"
+                      strokeWidth="2"
+                      fill="none"
+                      strokeLinecap="round"
+                    />
+                    {arrivalHoverIdx !== null && (
                       <>
                         <line
-                          x1={xOf(hoverIdx, len)}
+                          x1={xOf(arrivalHoverIdx, len)}
                           y1={PT}
-                          x2={xOf(hoverIdx, len)}
+                          x2={xOf(arrivalHoverIdx, len)}
                           y2={CH - PB}
-                          stroke="#2F4A43"
+                          stroke="#9A6817"
                           strokeWidth="1"
                           strokeDasharray="3 3"
                         />
-                        {shownSeries.map((s) => (
-                          <circle
-                            key={s.label}
-                            cx={xOf(hoverIdx!, len)}
-                            cy={yOf(s.data[hoverIdx!], pMin, pMax)}
-                            r="4"
-                            fill={s.color}
-                            stroke="#fff"
-                            strokeWidth="1.5"
-                          />
-                        ))}
+                        <circle
+                          cx={xOf(arrivalHoverIdx, len)}
+                          cy={yOf(arrivalData[arrivalHoverIdx], aMin, aMax)}
+                          r="4.5"
+                          fill="#B9822E"
+                          stroke="#fff"
+                          strokeWidth="1.5"
+                        />
                       </>
                     )}
-                    {/* Axes */}
                     <line
                       x1={PL}
                       y1={PT}
@@ -14983,15 +16162,52 @@ function CommodityRatesScreen({
                           : "inherit"
                       }
                     >
-                      {lang === "ur" ? "قیمت (روپے/۴۰ کلو)" : "Price (Rs/40kg)"}
+                      {lang === "ur" ? "آمد (میٹرک ٹن)" : "Arrivals (MT)"}
                     </text>
                   </svg>
                 </div>
-                <p
-                  className="text-xs font-bold uppercase tracking-wide"
+              )}
+
+              <div
+                className="rounded-2xl p-4 flex items-center gap-3"
+                style={{ background: "#F1F7F4", border: "1px dashed #C7E8D8" }}
+              >
+                <div className="flex-1">
+                  <p
+                    className="font-bold text-sm"
+                    style={{
+                      fontSize: lang === "ur" ? 17 : 14,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {lang === "ur"
+                      ? "پرانا ریکارڈ درکار ہے؟"
+                      : "Need older data?"}
+                  </p>
+                  <p
+                    className="text-xs"
+                    style={{
+                      color: "#52635F",
+                      fontSize: lang === "ur" ? 13 : 12,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {lang === "ur"
+                      ? "ہماری ٹیم سے رابطہ کریں۔"
+                      : "Ask our team for history beyond what's shown."}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setHistOpen(true)}
+                  className="tap-target flex-shrink-0 rounded-xl px-3 py-2.5 font-bold text-xs text-white"
                   style={{
-                    color: "#52635F",
-                    letterSpacing: "0.05em",
+                    background: "#087F63",
                     fontSize: lang === "ur" ? 15 : 12,
                     fontFamily:
                       lang === "ur"
@@ -14999,333 +16215,11 @@ function CommodityRatesScreen({
                         : "inherit",
                   }}
                 >
-                  {lang === "ur" ? "نرخ کی اقسام" : "Price Types"}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {/* All / سب Button */}
-                  <button
-                    onClick={() => {
-                      if (activeTypes.length === ALL_RATE_TYPES.length) {
-                        setActiveTypes([initialRateType || "Retail"])
-                      } else {
-                        setActiveTypes([...ALL_RATE_TYPES])
-                      }
-                    }}
-                    className="tap-target flex items-center gap-1 rounded-full font-bold"
-                    style={{
-                      fontSize: lang === "ur" ? 14 : 11,
-                      padding: "4px 10px",
-                      background: activeTypes.length === ALL_RATE_TYPES.length ? "#087F63" : "#E8EFEC",
-                      border: "1.5px solid " + (activeTypes.length === ALL_RATE_TYPES.length ? "#087F63" : "#D5E2DD"),
-                      color: activeTypes.length === ALL_RATE_TYPES.length ? "#fff" : "#52635F",
-                      fontFamily:
-                        lang === "ur"
-                          ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                          : "inherit",
-                    }}
-                  >
-                    {lang === "ur" ? "سب" : "All"}
-                  </button>
-
-                  {ALL_RATE_TYPES.map((tRt) => {
-                    const on = activeTypes.includes(tRt)
-                    return (
-                      <button
-                        key={tRt}
-                        onClick={() => toggleType(tRt)}
-                        className="tap-target flex items-center gap-1 rounded-full font-semibold"
-                        style={{
-                          fontSize: lang === "ur" ? 14 : 10,
-                          padding: "4px 8px",
-                          background: on ? "#fff" : "#E8EFEC",
-                          border: `1.5px solid ${on ? RATE_COLORS[tRt] : "#D5E2DD"
-                            }`,
-                          color: on ? "#183B34" : "#80918B",
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        <span
-                          className="rounded-full flex-shrink-0"
-                          style={{
-                            width: 7,
-                            height: 7,
-                            background: on ? RATE_COLORS[tRt] : "#C7D6D0",
-                          }}
-                        />
-                        {on ? " " : ""}
-                        {tr(tRt).replace(" ریٹ", "").replace(" Rate", "")}
-                      </button>
-                    )
-                  })}
-                </div>
-              </>
-            ) : (
-              /* Interactive arrival chart */
-              <div
-                className="rounded-2xl px-3 pt-3 pb-2"
-                style={{ background: "#F4FAF7", border: "1px solid #D5E2DD" }}
-              >
-                {arrivalHoverIdx !== null && (
-                  <div
-                    className="rounded-xl px-3 py-2 mb-2"
-                    style={{
-                      background: "#FFF0C7",
-                      border: "1px solid #F2D58A",
-                    }}
-                  >
-                    <span
-                      className="text-[11px] font-bold"
-                      style={{
-                        color: "#9A6817",
-                        fontSize: lang === "ur" ? 14 : 11,
-                        fontFamily:
-                          lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                            : "inherit",
-                      }}
-                    >
-                      {xLabels[arrivalHoverIdx] || (lang === "ur" ? `دن ${arrivalHoverIdx + 1}` : `Day ${arrivalHoverIdx + 1}`)}
-                    </span>
-                    <span
-                      className="text-[11px] font-semibold ml-2"
-                      style={{
-                        color: "#9A6817",
-                        fontSize: lang === "ur" ? 14 : 11,
-                        fontFamily:
-                          lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                            : "inherit",
-                      }}
-                    >
-                      {Math.round(
-                        arrivalData[arrivalHoverIdx],
-                      ).toLocaleString()}{" "}
-                      {lang === "ur" ? "میٹرک ٹن" : "MT"}
-                    </span>
-                  </div>
-                )}
-                <svg
-                  viewBox={`0 0 ${CW} ${CH}`}
-                  className="w-full"
-                  style={{ height: CH, display: "block" }}
-                  onMouseMove={(e) => {
-                    const rect =
-                      (e.currentTarget as SVGSVGElement).getBoundingClientRect()
-                    const relX =
-                      ((e.clientX - rect.left) / rect.width) * CW - PL
-                    const i = Math.round((relX / chartW) * (len - 1))
-                    setArrivalHoverIdx(Math.max(0, Math.min(len - 1, i)))
-                  }}
-                  onMouseLeave={() => setArrivalHoverIdx(null)}
-                  onTouchMove={(e) => {
-                    const rect =
-                      (e.currentTarget as SVGSVGElement).getBoundingClientRect()
-                    const touch = e.touches[0]
-                    const relX =
-                      ((touch.clientX - rect.left) / rect.width) * CW - PL
-                    const i = Math.round((relX / chartW) * (len - 1))
-                    setArrivalHoverIdx(Math.max(0, Math.min(len - 1, i)))
-                  }}
-                  onPointerLeave={() => setArrivalHoverIdx(null)}
-                >
-                  {yArrivalTicks.map((tick, ti) => {
-                    const y = yOf(tick, aMin, aMax)
-                    return (
-                      <g key={ti}>
-                        <line
-                          x1={PL}
-                          y1={y}
-                          x2={CW - PR}
-                          y2={y}
-                          stroke="#E8EFEC"
-                          strokeWidth="1"
-                        />
-                        <text
-                          x={PL - 4}
-                          y={y + 4}
-                          textAnchor="end"
-                          fontSize="9"
-                          fill="#80918B"
-                        >
-                          {tick >= 1000
-                            ? (tick / 1000).toFixed(1) + "k"
-                            : Math.round(tick)}
-                        </text>
-                      </g>
-                    )
-                  })}
-                  {xLabels.map((lbl, i) =>
-                    lbl ? (
-                      <text
-                        key={i}
-                        x={xOf(i, len)}
-                        y={CH - 4}
-                        textAnchor="middle"
-                        fontSize={lang === "ur" ? "10" : "9"}
-                        fill="#80918B"
-                        fontFamily={
-                          lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                            : "inherit"
-                        }
-                      >
-                        {lbl}
-                      </text>
-                    ) : null,
-                  )}
-                  {/* Area fill */}
-                  <path
-                    d={[
-                      ...arrivalData.map(
-                        (v, i) =>
-                          `${i === 0 ? "M" : "L"
-                          }${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
-                      ),
-                      `L${xOf(len - 1, len)},${CH - PB}`,
-                      `L${PL},${CH - PB}`,
-                      "Z",
-                    ].join(" ")}
-                    fill="#B9822E"
-                    fillOpacity="0.12"
-                  />
-                  <path
-                    d={arrivalData
-                      .map(
-                        (v, i) =>
-                          `${i === 0 ? "M" : "L"
-                          }${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
-                      )
-                      .join(" ")}
-                    stroke="#B9822E"
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                  />
-                  {arrivalHoverIdx !== null && (
-                    <>
-                      <line
-                        x1={xOf(arrivalHoverIdx, len)}
-                        y1={PT}
-                        x2={xOf(arrivalHoverIdx, len)}
-                        y2={CH - PB}
-                        stroke="#9A6817"
-                        strokeWidth="1"
-                        strokeDasharray="3 3"
-                      />
-                      <circle
-                        cx={xOf(arrivalHoverIdx, len)}
-                        cy={yOf(arrivalData[arrivalHoverIdx], aMin, aMax)}
-                        r="4.5"
-                        fill="#B9822E"
-                        stroke="#fff"
-                        strokeWidth="1.5"
-                      />
-                    </>
-                  )}
-                  <line
-                    x1={PL}
-                    y1={PT}
-                    x2={PL}
-                    y2={CH - PB}
-                    stroke="#C7D6D0"
-                    strokeWidth="1"
-                  />
-                  <line
-                    x1={PL}
-                    y1={CH - PB}
-                    x2={CW - PR}
-                    y2={CH - PB}
-                    stroke="#C7D6D0"
-                    strokeWidth="1"
-                  />
-                  {/* X-axis label */}
-                  <text
-                    x={(PL + CW - PR) / 2}
-                    y={CH - 4}
-                    textAnchor="middle"
-                    fontSize="10"
-                    fontWeight="600"
-                    fill="#52635F"
-                    fontFamily={
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit"
-                    }
-                  >
-                    {lang === "ur" ? "دن" : "Days"}
-                  </text>
-                  {/* Y-axis label */}
-                  <text
-                    x={12}
-                    y={(PT + CH - PB) / 2}
-                    textAnchor="middle"
-                    fontSize="10"
-                    fontWeight="600"
-                    fill="#52635F"
-                    transform={`rotate(-90, 12, ${(PT + CH - PB) / 2})`}
-                    fontFamily={
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit"
-                    }
-                  >
-                    {lang === "ur" ? "آمد (میٹرک ٹن)" : "Arrivals (MT)"}
-                  </text>
-                </svg>
+                  {lang === "ur" ? "درخواست کریں ←" : "Request →"}
+                </button>
               </div>
-            )}
-
-            <div
-              className="rounded-2xl p-4 flex items-center gap-3"
-              style={{ background: "#F1F7F4", border: "1px dashed #C7E8D8" }}
-            >
-              <div className="flex-1">
-                <p
-                  className="font-bold text-sm"
-                  style={{
-                    fontSize: lang === "ur" ? 17 : 14,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur" ? "پرانا ریکارڈ درکار ہے؟" : "Need older data?"}
-                </p>
-                <p
-                  className="text-xs"
-                  style={{
-                    color: "#52635F",
-                    fontSize: lang === "ur" ? 13 : 12,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur" ? "ہماری ٹیم سے رابطہ کریں۔" : "Ask our team for history beyond what's shown."}
-                </p>
-              </div>
-              <button
-                onClick={() => setHistOpen(true)}
-                className="tap-target flex-shrink-0 rounded-xl px-3 py-2.5 font-bold text-xs text-white"
-                style={{
-                  background: "#087F63",
-                  fontSize: lang === "ur" ? 15 : 12,
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                      : "inherit",
-                }}
-              >
-                {lang === "ur" ? "درخواست کریں ←" : "Request →"}
-              </button>
-            </div>
-          </>
-        )}
+            </>
+          )}
       </div>
 
       {msgModal && (
@@ -15342,10 +16236,10 @@ function CommodityRatesScreen({
           // Only show mandis that have data under current filters (rate type aware)
           const filteredForMandis = allRows.filter(
             (r) => !attrRateType || r.rateType === attrRateType,
-          )
+          );
           const availMandis = [
             ...new Set(filteredForMandis.map((r) => r.mandiName)),
-          ]
+          ];
           return (
             <div
               className="zm-sheet-overlay"
@@ -15397,8 +16291,8 @@ function CommodityRatesScreen({
                   {/* All Pakistan option */}
                   <button
                     onClick={() => {
-                      setLocScope({ kind: "pakistan", label: "All Pakistan" })
-                      setLocSheet(false)
+                      setLocScope({ kind: "pakistan", label: "All Pakistan" });
+                      setLocSheet(false);
                     }}
                     className="tap-target flex items-center gap-3 rounded-2xl px-4"
                     style={{
@@ -15426,22 +16320,20 @@ function CommodityRatesScreen({
                       {lang === "ur" ? "پورا پاکستان" : "All Pakistan"}
                     </span>
                     {locScope.kind === "pakistan" && (
-                      <span
-                        style={{ color: "#087F63", fontWeight: 800 }}
-                      >
+                      <span style={{ color: "#087F63", fontWeight: 800 }}>
                         ✓
                       </span>
                     )}
                   </button>
                   {availMandis.map((mandiName) => {
                     const isActive =
-                      locScope.kind === "mandi" && locScope.label === mandiName
+                      locScope.kind === "mandi" && locScope.label === mandiName;
                     return (
                       <button
                         key={mandiName}
                         onClick={() => {
-                          setLocScope({ kind: "mandi", label: mandiName })
-                          setLocSheet(false)
+                          setLocScope({ kind: "mandi", label: mandiName });
+                          setLocSheet(false);
                         }}
                         className="tap-target flex items-center gap-3 rounded-2xl px-4"
                         style={{
@@ -15466,19 +16358,17 @@ function CommodityRatesScreen({
                           {tm(mandiName)}
                         </span>
                         {isActive && (
-                          <span
-                            style={{ color: "#087F63", fontWeight: 800 }}
-                          >
+                          <span style={{ color: "#087F63", fontWeight: 800 }}>
                             ✓
                           </span>
                         )}
                       </button>
-                    )
+                    );
                   })}
                 </div>
               </div>
             </div>
-          )
+          );
         })()}
       {dateSheet && (
         <div
@@ -15532,30 +16422,43 @@ function CommodityRatesScreen({
                 {
                   id: "today" as const,
                   label: lang === "ur" ? "آج" : "Today",
-                  dateLabel: lang === "ur" ? "۱۷ اگست ۲۰۲۶ · منگل" : "17 Aug 2026 · Tuesday",
-                  sub: lang === "ur" ? "تازہ ترین دستیاب نرخ" : "Latest available rates",
+                  dateLabel:
+                    lang === "ur"
+                      ? "۱۷ اگست ۲۰۲۶ · منگل"
+                      : "17 Aug 2026 · Tuesday",
+                  sub:
+                    lang === "ur"
+                      ? "تازہ ترین دستیاب نرخ"
+                      : "Latest available rates",
                   icon: "",
                 },
                 {
                   id: "date" as const,
                   label: lang === "ur" ? "گزشتہ کل" : "Yesterday",
-                  dateLabel: lang === "ur" ? "۱۶ اگست ۲۰۲۶ · پیر" : "16 Aug 2026 · Monday",
+                  dateLabel:
+                    lang === "ur"
+                      ? "۱۶ اگست ۲۰۲۶ · پیر"
+                      : "16 Aug 2026 · Monday",
                   sub: lang === "ur" ? "پچھلے دن کے نرخ" : "Previous day rates",
                   icon: "",
                 },
                 {
                   id: "range" as const,
                   label: lang === "ur" ? "اس ہفتے" : "This Week",
-                  dateLabel: lang === "ur" ? "۱۱ تا ۱۷ اگست ۲۰۲۶" : "11 – 17 Aug 2026",
-                  sub: lang === "ur" ? "متعدد دنوں کا موازنہ" : "Compare across multiple days",
+                  dateLabel:
+                    lang === "ur" ? "۱۱ تا ۱۷ اگست ۲۰۲۶" : "11 – 17 Aug 2026",
+                  sub:
+                    lang === "ur"
+                      ? "متعدد دنوں کا موازنہ"
+                      : "Compare across multiple days",
                   icon: "",
                 },
               ].map(({ id, label, dateLabel, sub, icon }) => (
                 <button
                   key={id}
                   onClick={() => {
-                    setDateMode(id)
-                    setDateSheet(false)
+                    setDateMode(id);
+                    setDateSheet(false);
                   }}
                   className="tap-target rounded-2xl px-4 flex items-center gap-3"
                   style={{
@@ -15568,7 +16471,9 @@ function CommodityRatesScreen({
                   }}
                 >
                   <span style={{ fontSize: 22 }}>{icon}</span>
-                  <div className={`flex-1 ${lang === "ur" ? "text-right" : "text-left"}`}>
+                  <div
+                    className={`flex-1 ${lang === "ur" ? "text-right" : "text-left"}`}
+                  >
                     <p
                       className="font-bold text-sm"
                       style={{
@@ -15610,9 +16515,7 @@ function CommodityRatesScreen({
                     </p>
                   </div>
                   {dateMode === id && (
-                    <span style={{ color: "#087F63", fontWeight: 800 }}>
-                      ✓
-                    </span>
+                    <span style={{ color: "#087F63", fontWeight: 800 }}>✓</span>
                   )}
                 </button>
               ))}
@@ -15621,7 +16524,7 @@ function CommodityRatesScreen({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 //  MANDI LIST
@@ -15630,24 +16533,26 @@ function MandiListScreen({
   push,
   onBack,
 }: {
-  push: (s: Screen) => void
-  onBack: () => void
+  push: (s: Screen) => void;
+  onBack: () => void;
 }) {
-  const { lang, tm } = useLang()
-  const [tab, setTab] = useState<"fav" | "nearby" | "browse">("fav")
-  const [mandis, setMandis] = useState<MandiItem[]>(INITIAL_MANDIS)
-  const [locPickerOpen, setLocPickerOpen] = useState(false)
-  const [locSelections, setLocSelections] = useState<{
-    kind: LocationScope["kind"]
-    label: string
-  }[]>([])
+  const { lang, tm } = useLang();
+  const [tab, setTab] = useState<"fav" | "nearby" | "browse">("fav");
+  const [mandis, setMandis] = useState<MandiItem[]>(INITIAL_MANDIS);
+  const [locPickerOpen, setLocPickerOpen] = useState(false);
+  const [locSelections, setLocSelections] = useState<
+    {
+      kind: LocationScope["kind"];
+      label: string;
+    }[]
+  >([]);
 
   const toggleFav = (id: string) =>
-    setMandis((p) => p.map((m) => (m.id === id ? { ...m, fav: !m.fav } : m)))
-  const favMandis = mandis.filter((m) => m.fav)
+    setMandis((p) => p.map((m) => (m.id === id ? { ...m, fav: !m.fav } : m)));
+  const favMandis = mandis.filter((m) => m.fav);
   const nearbyMandis = [...mandis].sort(
     (a, b) => parseFloat(a.distance) - parseFloat(b.distance),
-  )
+  );
 
   const MandiCard = ({ m }: { m: MandiItem }) => (
     <div
@@ -15677,8 +16582,8 @@ function MandiListScreen({
           role="button"
           tabIndex={0}
           onClick={(e) => {
-            e.stopPropagation()
-            toggleFav(m.id)
+            e.stopPropagation();
+            toggleFav(m.id);
           }}
           onKeyDown={(e) =>
             e.key === "Enter" && (e.stopPropagation(), toggleFav(m.id))
@@ -15690,7 +16595,7 @@ function MandiListScreen({
         </div>
       </div>
     </div>
-  )
+  );
 
   return (
     <div
@@ -15710,7 +16615,9 @@ function MandiListScreen({
             {lang === "ur" ? "→" : "←"}
           </button>
           <div>
-            <h1 className="font-extrabold text-xl">{lang === "ur" ? "منڈیاں" : "Mandis"}</h1>
+            <h1 className="font-extrabold text-xl">
+              {lang === "ur" ? "منڈیاں" : "Mandis"}
+            </h1>
           </div>
         </div>
         <div className="flex gap-2">
@@ -15726,10 +16633,16 @@ function MandiListScreen({
               }}
             >
               {t === "fav"
-                ? (lang === "ur" ? "پسندیدہ" : " Favourites")
+                ? lang === "ur"
+                  ? "پسندیدہ"
+                  : " Favourites"
                 : t === "nearby"
-                  ? (lang === "ur" ? "قریب" : " Nearby")
-                  : (lang === "ur" ? "براؤز" : " Browse")}
+                  ? lang === "ur"
+                    ? "قریب"
+                    : " Nearby"
+                  : lang === "ur"
+                    ? "براؤز"
+                    : " Browse"}
             </button>
           ))}
         </div>
@@ -15742,7 +16655,9 @@ function MandiListScreen({
               <p className="font-semibold text-center">
                 {lang === "ur" ? "کوئی پسندیدہ نہیں۔" : "No favourites yet."}
                 <br />
-                {lang === "ur" ? "منڈی پن کرنے کے لیے ٹیپ کریں۔" : "Tap to pin a mandi."}
+                {lang === "ur"
+                  ? "منڈی پن کرنے کے لیے ٹیپ کریں۔"
+                  : "Tap to pin a mandi."}
               </p>
             </div>
           ) : (
@@ -15784,16 +16699,17 @@ function MandiListScreen({
                 locSelections.length === 0
                   ? INITIAL_MANDIS
                   : INITIAL_MANDIS.filter((m) =>
-                    locSelections.some((sel) => {
-                      if (sel.kind === "pakistan") return true
-                      if (sel.kind === "province")
-                        return m.province === sel.label
-                      if (sel.kind === "district") return m.city === sel.label
-                      if (sel.kind === "mandi") return m.name === sel.label
-                      return false
-                    }),
-                  )
-              return browseMandis.map((m) => <MandiCard key={m.id} m={m} />)
+                      locSelections.some((sel) => {
+                        if (sel.kind === "pakistan") return true;
+                        if (sel.kind === "province")
+                          return m.province === sel.label;
+                        if (sel.kind === "district")
+                          return m.city === sel.label;
+                        if (sel.kind === "mandi") return m.name === sel.label;
+                        return false;
+                      }),
+                    );
+              return browseMandis.map((m) => <MandiCard key={m.id} m={m} />);
             })()}
           </>
         )}
@@ -15802,14 +16718,14 @@ function MandiListScreen({
         <MultiLocSheet
           selected={locSelections}
           onApply={(locs) => {
-            setLocSelections(locs)
-            setLocPickerOpen(false)
+            setLocSelections(locs);
+            setLocPickerOpen(false);
           }}
           onClose={() => setLocPickerOpen(false)}
         />
       )}
     </div>
-  )
+  );
 }
 
 function MandiDetailScreen({
@@ -15817,58 +16733,56 @@ function MandiDetailScreen({
   onBack,
   push,
 }: {
-  mandiId: string
-  onBack: () => void
-  push: (s: Screen) => void
+  mandiId: string;
+  onBack: () => void;
+  push: (s: Screen) => void;
 }) {
-  const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId)!
-  const rows = MANDI_ROWS[mandiId] || []
-  const [rateFilter, setRateFilter] = useState("")
-  const [rateSheet, setRateSheet] = useState(false)
-  const [msgModal, setMsgModal] = useState<FeedMsg | null>(null)
-  const [selectedCommodity, setSelectedCommodity] = useState<string | null>(
-    null,
-  )
-  const [selectedBP, setSelectedBP] = useState<string | null>(null)
-  const [selectedRateTypes, setSelectedRateTypes] = useState<string[]>([])
+  const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId)!;
+  const rows = MANDI_ROWS[mandiId] || [];
+  const [rateFilter, setRateFilter] = useState("");
+  const [rateSheet, setRateSheet] = useState(false);
+  const [msgModal, setMsgModal] = useState<FeedMsg | null>(null);
+  const [selectedproduct, setSelectedproduct] = useState<string | null>(null);
+  const [selectedBP, setSelectedBP] = useState<string | null>(null);
+  const [selectedRateTypes, setSelectedRateTypes] = useState<string[]>([]);
 
-  const mandiCommodities = [...new Set(rows.map((r) => r.commodity))]
+  const mandiproducts = [...new Set(rows.map((r) => r.product))];
   const mandiByproducts = [
     ...new Set(
       rows
-        .filter((r) => !selectedCommodity || r.commodity === selectedCommodity)
+        .filter((r) => !selectedproduct || r.product === selectedproduct)
         .map((r) => r.byproduct),
     ),
-  ]
+  ];
 
   const displayed = rows.filter((r) => {
-    if (selectedCommodity && r.commodity !== selectedCommodity) return false
-    if (selectedBP && r.byproduct !== selectedBP) return false
+    if (selectedproduct && r.product !== selectedproduct) return false;
+    if (selectedBP && r.byproduct !== selectedBP) return false;
     if (selectedRateTypes.length > 0 && !selectedRateTypes.includes(r.rateType))
-      return false
-    if (rateFilter && r.rateType !== rateFilter) return false
-    return true
-  })
+      return false;
+    if (rateFilter && r.rateType !== rateFilter) return false;
+    return true;
+  });
 
-  // Find vertical for a commodity
-  const getVertical = (commodity: string): string => {
+  // Find vertical for a product
+  const getVertical = (product: string): string => {
     for (const [v, vData] of Object.entries(VERTICALS)) {
-      if (Object.keys(vData.commodities || {}).includes(commodity)) return v
+      if (Object.keys(vData.products || {}).includes(product)) return v;
     }
-    return "Grains"
-  }
+    return "Grains";
+  };
 
-  const rowToMsg = (r: typeof rows[0]): FeedMsg => {
+  const rowToMsg = (r: (typeof rows)[0]): FeedMsg => {
     const ex = FEED_MESSAGES.find(
-      (m) => m.commodity === r.commodity && m.station === mandi.name,
-    )
-    if (ex) return ex
+      (m) => m.product === r.product && m.station === mandi.name,
+    );
+    if (ex) return ex;
     return {
       id: Date.now(),
       time: "Today",
       vertical: "Grains",
-      commodityUrdu: r.commodity,
-      commodity: r.commodity,
+      productUrdu: r.product,
+      product: r.product,
       byproduct: r.byproduct,
       stationUrdu: mandi.city,
       station: mandi.name,
@@ -15890,8 +16804,8 @@ function MandiDetailScreen({
       qualityType: "Trade",
       trend: r.trend,
       trendPct: r.trendPct,
-    }
-  }
+    };
+  };
 
   return (
     <div
@@ -15927,45 +16841,43 @@ function MandiDetailScreen({
           </span>
           <button
             onClick={() => {
-              setSelectedCommodity(null)
-              setSelectedBP(null)
+              setSelectedproduct(null);
+              setSelectedBP(null);
             }}
             className="tap-target flex-shrink-0 rounded-full font-semibold text-xs px-3 py-2"
             style={{
-              background: !selectedCommodity ? "#087F63" : "#E8EFEC",
-              color: !selectedCommodity ? "#fff" : "#52635F",
-              border: !selectedCommodity ? "none" : "1px solid #D5E2DD",
+              background: !selectedproduct ? "#087F63" : "#E8EFEC",
+              color: !selectedproduct ? "#fff" : "#52635F",
+              border: !selectedproduct ? "none" : "1px solid #D5E2DD",
             }}
           >
             All
           </button>
-          {mandiCommodities.map((c) => (
+          {mandiproducts.map((c) => (
             <button
               key={c}
               onClick={() => {
-                setSelectedCommodity(selectedCommodity === c ? null : c)
-                setSelectedBP(null)
+                setSelectedproduct(selectedproduct === c ? null : c);
+                setSelectedBP(null);
               }}
               className="tap-target flex-shrink-0 flex items-center gap-1.5 rounded-full font-semibold text-xs px-3 py-2"
               style={{
-                background: selectedCommodity === c ? "#087F63" : "#E8EFEC",
-                color: selectedCommodity === c ? "#fff" : "#52635F",
-                border: selectedCommodity === c ? "none" : "1px solid #D5E2DD",
+                background: selectedproduct === c ? "#087F63" : "#E8EFEC",
+                color: selectedproduct === c ? "#fff" : "#52635F",
+                border: selectedproduct === c ? "none" : "1px solid #D5E2DD",
               }}
             >
-              <CommodityIcon
+              <ProductIcon
                 name={c}
                 vertical={
                   Object.entries(VERTICALS).find(
-                    ([, vd]) => vd.commodities[c],
+                    ([, vd]) => vd.products[c],
                   )?.[0]
                 }
                 size={13}
                 style={{
                   filter:
-                    selectedCommodity === c
-                      ? "brightness(0) invert(1)"
-                      : "none",
+                    selectedproduct === c ? "brightness(0) invert(1)" : "none",
                   flexShrink: 0,
                 }}
               />
@@ -16003,13 +16915,13 @@ function MandiDetailScreen({
                 border: selectedBP === bp ? "none" : "1px solid #D5E2DD",
               }}
             >
-              <CommodityIcon
+              <ProductIcon
                 name={bp}
                 vertical={
-                  selectedCommodity
+                  selectedproduct
                     ? Object.entries(VERTICALS).find(
-                      ([, vd]) => vd.commodities[selectedCommodity],
-                    )?.[0]
+                        ([, vd]) => vd.products[selectedproduct],
+                      )?.[0]
                     : undefined
                 }
                 size={13}
@@ -16045,7 +16957,7 @@ function MandiDetailScreen({
             All
           </button>
           {ALL_RATE_TYPES.map((rt) => {
-            const on = selectedRateTypes.includes(rt)
+            const on = selectedRateTypes.includes(rt);
             return (
               <button
                 key={rt}
@@ -16063,7 +16975,7 @@ function MandiDetailScreen({
               >
                 {rt.replace(" Rate", "")}
               </button>
-            )
+            );
           })}
         </ScrollRow>
       </header>
@@ -16084,11 +16996,11 @@ function MandiDetailScreen({
                 province: mandi.province,
               }}
               onClick={() => {
-                const ma = MANDI_ATTR_AVAILABLE[mandi.name]
+                const ma = MANDI_ATTR_AVAILABLE[mandi.name];
                 push({
-                  id: "commodity-rates",
-                  vertical: getVertical(r.commodity),
-                  commodity: r.commodity,
+                  id: "product-rates",
+                  vertical: getVertical(r.product),
+                  product: r.product,
                   byproduct: r.byproduct,
                   initialRateType: r.rateType,
                   initialMandi: mandi.name,
@@ -16097,7 +17009,7 @@ function MandiDetailScreen({
                   initialColor: ma?.color?.[0],
                   initialSpec: ma?.spec?.[0],
                   initialCondition: ma?.condition?.[0],
-                })
+                });
               }}
             />
           </div>
@@ -16114,42 +17026,42 @@ function MandiDetailScreen({
         <ZMMessageModal msg={msgModal} onClose={() => setMsgModal(null)} />
       )}
     </div>
-  )
+  );
 }
 
 //  ANALYTICS
 
 function genPts(base: number, len: number, vol = 0.035) {
-  const pts: number[] = []
-  let c = base
+  const pts: number[] = [];
+  let c = base;
   for (let i = 0; i < len; i++) {
-    c = c * (1 + (Math.random() - 0.47) * vol)
-    pts.push(Math.round(c))
+    c = c * (1 + (Math.random() - 0.47) * vol);
+    pts.push(Math.round(c));
   }
-  return pts
+  return pts;
 }
 function LineChart({
   data,
   color = "#2FAE68",
   height = 110,
 }: {
-  data: number[]
-  color?: string
-  height?: number
+  data: number[];
+  color?: string;
+  height?: number;
 }) {
-  if (!data.length) return null
+  if (!data.length) return null;
   const w = 320,
     pd = 4,
     mn = Math.min(...data),
     mx = Math.max(...data),
-    rng = mx - mn || 1
+    rng = mx - mn || 1;
   const pts = data.map((v, i) => [
     (pd + (i / (data.length - 1)) * (w - pd * 2)).toFixed(1),
     (pd + ((mx - v) / rng) * (height - pd * 2)).toFixed(1),
-  ])
+  ]);
   const path = pts
     .map((p, i) => `${i === 0 ? "M" : "L"}${p[0]},${p[1]}`)
-    .join(" ")
+    .join(" ");
   return (
     <svg viewBox={`0 0 ${w} ${height}`} className="w-full" style={{ height }}>
       <defs>
@@ -16187,30 +17099,30 @@ function LineChart({
         />
       )}
     </svg>
-  )
+  );
 }
 function MiniSparkline({
   data,
   color = "#2FAE68",
 }: {
-  data: number[]
-  color?: string
+  data: number[];
+  color?: string;
 }) {
-  if (data.length < 2) return null
+  if (data.length < 2) return null;
   const w = 60,
     h = 24,
     mn = Math.min(...data),
     mx = Math.max(...data),
-    rng = mx - mn || 1
+    rng = mx - mn || 1;
   const pts = data.map((v, i) => [
     (i / (data.length - 1)) * w,
     h - ((v - mn) / rng) * h,
-  ])
+  ]);
   const path = pts
     .map(
       (p, i) => `${i === 0 ? "M" : "L"}${p[0].toFixed(1)},${p[1].toFixed(1)}`,
     )
-    .join(" ")
+    .join(" ");
   return (
     <svg viewBox={`0 0 ${w} ${h}`} width={60} height={24}>
       <path
@@ -16221,32 +17133,39 @@ function MiniSparkline({
         strokeLinecap="round"
       />
     </svg>
-  )
+  );
 }
 
-const A_MANDIS_LIST = ["Pakpattan", "Sahiwal", "Lahore", "Multan", "Faisalabad"]
-const MANDI_COLORS = ["#2FAE68", "#249985", "#D95A51", "#D79A2B", "#2A9D87"]
+const A_MANDIS_LIST = [
+  "Pakpattan",
+  "Sahiwal",
+  "Lahore",
+  "Multan",
+  "Faisalabad",
+];
+const MANDI_COLORS = ["#2FAE68", "#249985", "#D95A51", "#D79A2B", "#2A9D87"];
 
 function AnalyticsScreen() {
-  const { lang, t, tc, tr } = useLang()
-  const [subTab, setSubTab] = useState<AnalyticsTab>("trends")
-  const [commodity, setCommodity] = useState("Wheat")
-  const [timeRange, setTimeRange] = useState<TimeRange>("week")
-  const [priceType, setPriceType] = useState("Mill Rate")
+  const { lang, t, tc, tr } = useLang();
+  const [subTab, setSubTab] = useState<AnalyticsTab>("trends");
+  const [product, setproduct] = useState("Wheat");
+  const [timeRange, setTimeRange] = useState<TimeRange>("week");
+  const [priceType, setPriceType] = useState("Mill Rate");
   const [compareSel, setCompareSel] = useState<string[]>([
     "Pakpattan",
     "Lahore",
-  ])
-  const [regionProvince, setRegionProvince] = useState("Punjab")
-  const [regionDistrict, setRegionDistrict] = useState("Rahim Yar Khan")
-  const [comSheet, setComSheet] = useState(false)
-  const [rateSheet, setRateSheet] = useState(false)
-  const [locSheet, setLocSheet] = useState(false)
+  ]);
+  const [regionProvince, setRegionProvince] = useState("Punjab");
+  const [regionDistrict, setRegionDistrict] = useState("Rahim Yar Khan");
+  const [comSheet, setComSheet] = useState(false);
+  const [rateSheet, setRateSheet] = useState(false);
+  const [locSheet, setLocSheet] = useState(false);
   const [analyticsSelectedBP, setAnalyticsSelectedBP] = useState<string | null>(
     null,
-  )
-  const [analyticsSelectedRateTypes, setAnalyticsSelectedRateTypes] =
-    useState<string[]>([])
+  );
+  const [analyticsSelectedRateTypes, setAnalyticsSelectedRateTypes] = useState<
+    string[]
+  >([]);
 
   const BASE: Record<string, number> = {
     Wheat: 2850,
@@ -16255,14 +17174,14 @@ function AnalyticsScreen() {
     Maize: 2150,
     Mustard: 5900,
     Sugar: 460,
-  }
-  const base = BASE[commodity] || 2850
+  };
+  const base = BASE[product] || 2850;
   const LEN: Record<TimeRange, number> = {
     day: 24,
     week: 7,
     month: 30,
     year: 12,
-  }
+  };
   const XL: Record<TimeRange, string[]> = {
     day: Array.from({ length: 24 }, (_, i) => `${i}h`),
     week: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -16281,14 +17200,14 @@ function AnalyticsScreen() {
       "Nov",
       "Dec",
     ],
-  }
+  };
   const len = LEN[timeRange],
-    xl = XL[timeRange]
-  const mainData = genPts(base, len)
+    xl = XL[timeRange];
+  const mainData = genPts(base, len);
   const cur = mainData[mainData.length - 1],
-    prev = mainData[mainData.length - 2] || cur
-  const trend = cur >= prev ? "up" : "down"
-  const trendPct = Math.abs(((cur - prev) / prev) * 100).toFixed(1)
+    prev = mainData[mainData.length - 2] || cur;
+  const trend = cur >= prev ? "up" : "down";
+  const trendPct = Math.abs(((cur - prev) / prev) * 100).toFixed(1);
   const RATE_MULTS: Record<string, number> = {
     "Farm Rate": 0.88,
     "Broker Rate": 0.95,
@@ -16299,35 +17218,35 @@ function AnalyticsScreen() {
     "Export Rate": 1.12,
     "Retail Rate": 1.18,
     "Wholesale Rate": 1.02,
-  }
+  };
   const allRateSeries = ALL_RATE_TYPES.map((rt) => ({
     label: rt,
     color: RATE_COLORS[rt],
     data: genPts(base * (RATE_MULTS[rt] || 1), len, 0.025),
-  }))
+  }));
   const MANDI_MULT: Record<string, number> = {
     Pakpattan: 1.0,
     Sahiwal: 0.98,
     Lahore: 1.02,
     Multan: 1.01,
     Faisalabad: 1.015,
-  }
+  };
   const compareSeries = compareSel.map((m) => ({
     label: m,
     color: MANDI_COLORS[A_MANDIS_LIST.indexOf(m) % MANDI_COLORS.length],
     data: genPts(base * (MANDI_MULT[m] || 1), len, 0.03),
-  }))
-  const regionStations = LOCATIONS[regionProvince]?.[regionDistrict] || []
+  }));
+  const regionStations = LOCATIONS[regionProvince]?.[regionDistrict] || [];
   const regionData = regionStations.map((s, i) => ({
     station: s,
     price: Math.round(base * (0.96 + i * 0.015 + Math.random() * 0.02)),
     spark: genPts(base * (0.96 + i * 0.015), 8, 0.02),
-    trend: Math.random() > 0.5 ? "up" as const : "down" as const,
-  }))
+    trend: Math.random() > 0.5 ? ("up" as const) : ("down" as const),
+  }));
   const decision =
     trend === "up"
-      ? ` ${commodity} rising at ${priceType} level. Selling recommended next 2–3 days.`
-      : ` ${commodity} softening at ${priceType} level. Hold stock 3–5 days.`
+      ? ` ${product} rising at ${priceType} level. Selling recommended next 2–3 days.`
+      : ` ${product} softening at ${priceType} level. Hold stock 3–5 days.`;
 
   return (
     <div
@@ -16352,7 +17271,7 @@ function AnalyticsScreen() {
               border: "1px solid #E4F2EC",
             }}
           >
-            {tc(commodity)}
+            {tc(product)}
           </button>
           <button
             onClick={() => setLocSheet(true)}
@@ -16379,15 +17298,15 @@ function AnalyticsScreen() {
             {priceType}
           </button>
         </div>
-        {/* Row 1: By-product chips for current commodity */}
+        {/* Row 1: By-product chips for current product */}
         {(() => {
           const analyticsBPs = (() => {
             for (const [, vd] of Object.entries(VERTICALS)) {
-              const cd = vd.commodities[commodity]
-              if (cd) return Array.isArray(cd) ? cd : []
+              const cd = vd.products[product];
+              if (cd) return Array.isArray(cd) ? cd : [];
             }
-            return []
-          })()
+            return [];
+          })();
           return analyticsBPs.length > 0 ? (
             <ScrollRow bg="#fff" style={{ borderTop: "1px solid #E8EFEC" }}>
               <span
@@ -16428,7 +17347,7 @@ function AnalyticsScreen() {
                 </button>
               ))}
             </ScrollRow>
-          ) : null
+          ) : null;
         })()}
         {/* Row 2: Price type chips */}
         <ScrollRow bg="#fff" style={{ borderTop: "1px solid #E8EFEC" }}>
@@ -16455,7 +17374,7 @@ function AnalyticsScreen() {
             All
           </button>
           {ALL_RATE_TYPES.map((rt) => {
-            const on = analyticsSelectedRateTypes.includes(rt)
+            const on = analyticsSelectedRateTypes.includes(rt);
             return (
               <button
                 key={rt}
@@ -16473,16 +17392,18 @@ function AnalyticsScreen() {
               >
                 {rt.replace(" Rate", "")}
               </button>
-            )
+            );
           })}
         </ScrollRow>
         <div className="flex gap-1.5 overflow-x-auto px-4 py-3">
-          {([
-            ["trends", lang === "ur" ? "رجحانات" : " Trends"],
-            ["allrates", lang === "ur" ? "تمام نرخ" : " All Rates"],
-            ["compare", lang === "ur" ? "موازنہ" : " Compare"],
-            ["regional", lang === "ur" ? "علاقائی" : " Regional"],
-          ] as [AnalyticsTab, string][]).map(([t, label]) => (
+          {(
+            [
+              ["trends", lang === "ur" ? "رجحانات" : " Trends"],
+              ["allrates", lang === "ur" ? "تمام نرخ" : " All Rates"],
+              ["compare", lang === "ur" ? "موازنہ" : " Compare"],
+              ["regional", lang === "ur" ? "علاقائی" : " Regional"],
+            ] as [AnalyticsTab, string][]
+          ).map(([t, label]) => (
             <button
               key={t}
               onClick={() => setSubTab(t)}
@@ -16503,7 +17424,7 @@ function AnalyticsScreen() {
           <>
             <div className="rounded-2xl p-5" style={{ background: "#087F63" }}>
               <p className="text-green-200 text-xs">
-                {priceType} · {commodity}
+                {priceType} · {product}
               </p>
               <p className="text-4xl font-extrabold mt-1 text-white">
                 {fmt(cur)}
@@ -16593,7 +17514,7 @@ function AnalyticsScreen() {
               style={{ background: "#F4FAF7", border: "1px solid #D5E2DD" }}
             >
               <p className="text-sm font-bold mb-3">
-                {commodity} · All 9 Price Types
+                {product} · All 9 Price Types
               </p>
               <svg
                 viewBox="0 0 320 160"
@@ -16606,11 +17527,11 @@ function AnalyticsScreen() {
                     allV = s.data,
                     mn2 = Math.min(...allRateSeries.flatMap((x) => x.data)),
                     mx2 = Math.max(...allRateSeries.flatMap((x) => x.data)),
-                    rng2 = mx2 - mn2 || 1
+                    rng2 = mx2 - mn2 || 1;
                   const pts = allV.map((v, i) => [
                     (pd2 + (i / (allV.length - 1)) * (w2 - pd2 * 2)).toFixed(1),
                     (pd2 + ((mx2 - v) / rng2) * (160 - pd2 * 2)).toFixed(1),
-                  ])
+                  ]);
                   return (
                     <path
                       key={s.label}
@@ -16623,7 +17544,7 @@ function AnalyticsScreen() {
                       strokeLinecap="round"
                       strokeOpacity="0.85"
                     />
-                  )
+                  );
                 })}
               </svg>
             </div>
@@ -16704,14 +17625,14 @@ function AnalyticsScreen() {
                         allV2 = compareSeries.flatMap((x) => x.data),
                         mn2 = Math.min(...allV2),
                         mx2 = Math.max(...allV2),
-                        rng2 = mx2 - mn2 || 1
+                        rng2 = mx2 - mn2 || 1;
                       const pts = s.data.map((v, i) => [
                         (
                           pd2 +
                           (i / (s.data.length - 1)) * (w2 - pd2 * 2)
                         ).toFixed(1),
                         (pd2 + ((mx2 - v) / rng2) * (160 - pd2 * 2)).toFixed(1),
-                      ])
+                      ]);
                       return (
                         <path
                           key={s.label}
@@ -16725,7 +17646,7 @@ function AnalyticsScreen() {
                           fill="none"
                           strokeLinecap="round"
                         />
-                      )
+                      );
                     })}
                   </svg>
                   <div className="flex gap-3 mt-3 flex-wrap">
@@ -16743,8 +17664,8 @@ function AnalyticsScreen() {
                 {compareSeries.map((s) => {
                   const cur2 = s.data[s.data.length - 1],
                     base2 =
-                      compareSeries[0].data[compareSeries[0].data.length - 1]
-                  const diff = (((cur2 - base2) / base2) * 100).toFixed(1)
+                      compareSeries[0].data[compareSeries[0].data.length - 1];
+                  const diff = (((cur2 - base2) / base2) * 100).toFixed(1);
                   return (
                     <div
                       key={s.label}
@@ -16777,7 +17698,7 @@ function AnalyticsScreen() {
                       </span>
                       <MiniSparkline data={s.data.slice(-8)} color={s.color} />
                     </div>
-                  )
+                  );
                 })}
               </>
             )}
@@ -16790,7 +17711,7 @@ function AnalyticsScreen() {
               style={{ background: "#F4FAF7", border: "1px solid #D5E2DD" }}
             >
               <p className="font-bold text-sm mb-2">
-                Regional · {regionProvince} · {commodity}
+                Regional · {regionProvince} · {product}
               </p>
               <div className="flex gap-2 overflow-x-auto">
                 {Object.keys(LOCATIONS[regionProvince] || {}).map((d) => (
@@ -16810,7 +17731,7 @@ function AnalyticsScreen() {
               </div>
             </div>
             {regionData.map((rd, i) => {
-              const maxP = Math.max(...regionData.map((r) => r.price))
+              const maxP = Math.max(...regionData.map((r) => r.price));
               return (
                 <div
                   key={i}
@@ -16849,7 +17770,7 @@ function AnalyticsScreen() {
                     color={rd.trend === "up" ? "#2FAE68" : "#D95A51"}
                   />
                 </div>
-              )
+              );
             })}
             {regionData.length === 0 && (
               <div className="text-center py-8 opacity-40">
@@ -16865,7 +17786,7 @@ function AnalyticsScreen() {
                 className="text-sm leading-relaxed"
                 style={{ color: "#14532d" }}
               >
-                Best price for {commodity} in {regionDistrict} is at{" "}
+                Best price for {product} in {regionDistrict} is at{" "}
                 {regionData[0]?.station || "—"} (
                 {fmt(regionData[0]?.price || 0)}). Change district above to
                 compare.
@@ -16886,25 +17807,26 @@ function AnalyticsScreen() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="px-5 pt-4 pb-3 border-b border-[#DCE8E3]">
-              <p className="font-bold text-lg">Select Commodity</p>
+              <p className="font-bold text-lg">Select product</p>
             </div>
             <div
               className="overflow-y-auto p-4 flex flex-col gap-2"
               style={{ maxHeight: "calc(80vh-68px)" }}
             >
               {Object.entries(VERTICALS).map(([v, vd]) =>
-                Object.keys(vd.commodities).map((c) => (
+                Object.keys(vd.products).map((c) => (
                   <button
                     key={`${v}${c}`}
                     onClick={() => {
-                      setCommodity(c)
-                      setComSheet(false)
+                      setproduct(c);
+                      setComSheet(false);
                     }}
                     className="tap-target rounded-2xl px-4 flex items-center gap-3"
                     style={{
-                      background: commodity === c ? "#F1F7F4" : "#F1F7F4",
-                      border: `1.5px solid ${commodity === c ? "#087F63" : "#D5E2DD"
-                        }`,
+                      background: product === c ? "#F1F7F4" : "#F1F7F4",
+                      border: `1.5px solid ${
+                        product === c ? "#087F63" : "#D5E2DD"
+                      }`,
                       minHeight: 48,
                     }}
                   >
@@ -16914,7 +17836,7 @@ function AnalyticsScreen() {
                       style={{ flexShrink: 0 }}
                     />
                     <span className="font-semibold text-sm flex-1">{c}</span>
-                    {commodity === c && (
+                    {product === c && (
                       <span
                         className="text-xs font-bold"
                         style={{ color: "#087F63" }}
@@ -16939,26 +17861,26 @@ function AnalyticsScreen() {
           districtOnly
           onSelect={(_p, d) => {
             if (d) {
-              setRegionProvince(_p)
-              setRegionDistrict(d)
+              setRegionProvince(_p);
+              setRegionDistrict(d);
             }
-            setLocSheet(false)
+            setLocSheet(false);
           }}
           onClose={() => setLocSheet(false)}
         />
       )}
     </div>
-  )
+  );
 }
 
-//  NEWS & VIDEOS
+// ─── NEWS & VIDEOS ────────────────────────────────────────────────────────────
 
 const NEWS_ITEMS = [
   {
     tag: "Government",
     title: "Wheat Support Price Maintained at Rs. 2,600 for Kharif 2026",
     date: "3 Aug 2026",
-    icon: "",
+    icon: "🌾",
     bg: "#EAF5F1",
     tc: "#147D72",
   },
@@ -16966,7 +17888,7 @@ const NEWS_ITEMS = [
     tag: "Market",
     title: "Cotton prices hit 3-month high on strong mill demand",
     date: "2 Aug 2026",
-    icon: "",
+    icon: "📈",
     bg: "#F1F7F4",
     tc: "#147A3F",
   },
@@ -16975,7 +17897,7 @@ const NEWS_ITEMS = [
     title:
       "Monsoon Advisory: Heavy rains in Sindh — onion supply disruption expected",
     date: "2 Aug 2026",
-    icon: "",
+    icon: "🌧️",
     bg: "#FFF8E1",
     tc: "#92400e",
   },
@@ -16984,7 +17906,7 @@ const NEWS_ITEMS = [
     title:
       "Pakistan rice exports up 18% YoY — Basmati demand surges in Middle East",
     date: "1 Aug 2026",
-    icon: "",
+    icon: "🚢",
     bg: "#EAF5F1",
     tc: "#168A76",
   },
@@ -16993,11 +17915,12 @@ const NEWS_ITEMS = [
     title:
       "Locust threat in south Punjab — spray advisory by Dept. of Agriculture",
     date: "31 Jul 2026",
-    icon: "",
+    icon: "⚠️",
     bg: "#FAE9E6",
     tc: "#A83B37",
   },
-]
+];
+
 const VIDEO_ITEMS = [
   {
     title: "Zarai Mandi Weekly Market Review — Jul 28–Aug 3",
@@ -17023,11 +17946,11 @@ const VIDEO_ITEMS = [
     views: "19.7K",
     bg: "#9A6817",
   },
-]
+];
 
 function NewsVideosScreen() {
-  const { lang } = useLang()
-  const [tab, setTab] = useState<"news" | "videos">("news")
+  const { lang } = useLang();
+  const [tab, setTab] = useState<"news" | "videos">("news");
   return (
     <div
       className="flex flex-col h-full screen-enter"
@@ -17053,8 +17976,12 @@ function NewsVideosScreen() {
               }}
             >
               {t === "news"
-                ? (lang === "ur" ? "خبریں" : " News")
-                : (lang === "ur" ? "ویڈیوز" : " Videos")}
+                ? lang === "ur"
+                  ? "خبریں"
+                  : " News"
+                : lang === "ur"
+                  ? "ویڈیوز"
+                  : " Videos"}
             </button>
           ))}
         </div>
@@ -17097,7 +18024,7 @@ function NewsVideosScreen() {
                 className="relative flex items-center justify-center h-36"
                 style={{ background: v.bg }}
               >
-                <span style={{ fontSize: 56 }}></span>
+                <span style={{ fontSize: 56 }}>🎥</span>
                 <div
                   className="absolute flex items-center justify-center w-14 h-14 rounded-full"
                   style={{ background: "rgba(255,255,255,0.9)" }}
@@ -17105,7 +18032,9 @@ function NewsVideosScreen() {
                   <span
                     className="text-2xl"
                     style={{ color: "#087F63", marginLeft: 4 }}
-                  ></span>
+                  >
+                    ▶
+                  </span>
                 </div>
                 <span className="absolute bottom-2 right-2 text-xs font-bold text-white bg-black bg-opacity-60 px-2 py-0.5 rounded">
                   {v.dur}
@@ -17129,36 +18058,37 @@ function NewsVideosScreen() {
           ))}
       </div>
     </div>
-  )
+  );
 }
 
-//  VOICE
+// ─── VOICE ────────────────────────────────────────────────────────────────────
 
 function VoiceScreen({
   onResult,
 }: {
-  onResult: (v: string, c: string) => void
+  onResult: (v: string, c: string) => void;
 }) {
-  const [phase, setPhase] =
-    useState<"idle" | "recording" | "processing" | "result">("idle")
-  const [transcript, setTranscript] = useState("")
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [phase, setPhase] = useState<
+    "idle" | "recording" | "processing" | "result"
+  >("idle");
+  const [transcript, setTranscript] = useState("");
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const start = () => {
-    if (phase === "recording") return
-    setPhase("recording")
-    setTranscript("")
+    if (phase === "recording") return;
+    setPhase("recording");
+    setTranscript("");
     timer.current = setTimeout(
       () => setTranscript("آج گندم کا ملتان میں ریٹ کیا ہے؟"),
       1000,
-    )
-  }
+    );
+  };
   const stop = () => {
-    if (phase !== "recording") return
-    if (timer.current) clearTimeout(timer.current)
-    setTranscript("آج گندم کا ملتان میں ریٹ کیا ہے؟")
-    setPhase("processing")
-    setTimeout(() => setPhase("result"), 1200)
-  }
+    if (phase !== "recording") return;
+    if (timer.current) clearTimeout(timer.current);
+    setTranscript("آج گندم کا ملتان میں ریٹ کیا ہے؟");
+    setPhase("processing");
+    setTimeout(() => setPhase("result"), 1200);
+  };
 
   return (
     <div
@@ -17237,8 +18167,8 @@ function VoiceScreen({
           </button>
           <button
             onClick={() => {
-              setPhase("idle")
-              setTranscript("")
+              setPhase("idle");
+              setTranscript("");
             }}
             className="tap-target w-full rounded-2xl py-4 font-bold text-base"
             style={{ background: "#E8EFEC", color: "#183B34" }}
@@ -17248,10 +18178,1714 @@ function VoiceScreen({
         </div>
       )}
     </div>
-  )
+  );
 }
 
-//  HOME SCREEN
+// ─── COMPLETE YOUR PROFILE MODAL & STATE ──────────────────────────────────────
+
+export interface ProfileSetupData {
+  step: number;
+  furthestStep: number;
+  province: string;
+  district: string;
+  city: string;
+  selectedMandis?: string[];
+  selectedProds: string[];
+  dur: number;
+  customMode: boolean;
+  customMonths: number;
+  paymentType: "card" | "wallet" | "direct";
+  walletProvider: "jazzcash" | "easypaisa" | "sadapay" | "nayapay" | "upaisa";
+  walletNumber: string;
+  walletCnic: string;
+  walletPromptSent?: boolean;
+  directMethod: "jazzcash" | "easypaisa" | "bank";
+  hasReceipt: boolean;
+  cardNumber: string;
+  cardExpiry: string;
+  cardCvv: string;
+  cardHolder: string;
+}
+
+function getMonthlyDiscount(months: number): number {
+  if (months <= 1) return 0;
+  if (months === 2) return 0.05; // 5% for 2 months
+  if (months === 3) return 0.1; // 10% for 3 months
+  if (months === 4 || months === 5) return 0.125; // 12.5% for 4 and 5 months
+  if (months === 6) return 0.15; // 15% for 6 months
+  if (months === 7 || months === 8) return 0.175; // 17.5% for 7 and 8 months
+  if (months >= 9 && months <= 11) return 0.2; // 20% for 9, 10, 11 months
+  if (months >= 12) return 0.25; // 25% for 12 months
+  return 0;
+}
+
+function CompleteProfileModal({
+  data,
+  onUpdateData,
+  onClose,
+  onComplete,
+  initialUserData,
+}: {
+  data: ProfileSetupData;
+  onUpdateData: (partial: Partial<ProfileSetupData>) => void;
+  onClose: () => void;
+  onComplete: (
+    selectedProducts: string[],
+    locationData?: { province: string; district: string; city: string },
+  ) => void;
+  initialUserData?: AppProps["initialUserData"];
+}) {
+  const { lang, tc, tm } = useLang();
+
+  // Step mapping: 3 steps (1: Interested Products, 2: Choose Plan, 3: Payment)
+  const totalSteps = 3;
+  const currentStep = Math.min(Math.max(data.step || 1, 1), totalSteps);
+
+  const activeStepKey: "products" | "plan" | "payment" =
+    currentStep === 1
+      ? "products"
+      : currentStep === 2
+        ? "plan"
+        : "payment";
+
+  // MPIN Dialog State for Mobile Wallet
+  const [mpinModalOpen, setMpinModalOpen] = useState(false);
+  const [mpin, setMpin] = useState(["", "", "", ""]);
+  const [mpinError, setMpinError] = useState("");
+  const [isProcessingMpin, setIsProcessingMpin] = useState(false);
+  const [mpinSuccess, setMpinSuccess] = useState(false);
+
+  const monthlyTotal = data.selectedProds.reduce(
+    (sum, p) => sum + getproductBasePrice(p),
+    0,
+  );
+
+  const { months, discount, regularTotal, discountAmt, finalTotal } =
+    data.customMode
+      ? (() => {
+          const m = data.customMonths || 1;
+          const d = getMonthlyDiscount(m);
+          const reg = monthlyTotal * m;
+          const da = Math.round(reg * d);
+          return {
+            months: m,
+            discount: d,
+            regularTotal: reg,
+            discountAmt: da,
+            finalTotal: reg - da,
+          };
+        })()
+      : (() => {
+          const m = DURATION_MONTHS_BILLING[data.dur] || 1;
+          const d = getMonthlyDiscount(m);
+          const reg = monthlyTotal * m;
+          const da = Math.round(reg * d);
+          return {
+            months: m,
+            discount: d,
+            regularTotal: reg,
+            discountAmt: da,
+            finalTotal: reg - da,
+          };
+        })();
+
+  const walletProviders = [
+    {
+      id: "jazzcash",
+      label: "JazzCash",
+      color: "#E83D2B",
+      iconSrc: "/src/icons/jazz.png",
+      sub: "Instant mobile MPIN prompt",
+    },
+    {
+      id: "easypaisa",
+      label: "EasyPaisa",
+      color: "#4CAF50",
+      iconSrc: "/src/icons/easypaisa.png",
+      sub: "Instant approval MPIN",
+    },
+    {
+      id: "sadapay",
+      label: "SadaPay",
+      color: "#00A389",
+      iconSrc: "/src/icons/sadapay.png",
+      sub: "In-app transfer request",
+    },
+    {
+      id: "nayapay",
+      label: "NayaPay",
+      color: "#FF6F00",
+      iconSrc: "/src/icons/nayapay.png",
+      sub: "Fast wallet checkout",
+    },
+    {
+      id: "upaisa",
+      label: "UPaisa",
+      color: "#F57F17",
+      iconSrc: "/src/icons/upaisa.png",
+      sub: "USSD / Mobile prompt",
+    },
+  ] as const;
+
+  const directMethods = [
+    {
+      id: "jazzcash",
+      label: "JazzCash Manual",
+      color: "#E83D2B",
+      iconSrc: "/src/icons/jazz.png",
+      sub: "Send to Till / Account",
+    },
+    {
+      id: "easypaisa",
+      label: "EasyPaisa Manual",
+      color: "#4CAF50",
+      iconSrc: "/src/icons/easypaisa.png",
+      sub: "Send to EasyPaisa Account",
+    },
+    {
+      id: "bank",
+      label: "Bank Transfer",
+      color: "#1565C0",
+      iconSrc: "/src/icons/banktransfer.png",
+      sub: "Direct IBFT transfer",
+    },
+  ] as const;
+
+  const directDetails: Record<string, { rows: [string, string][] }> = {
+    jazzcash: {
+      rows: [
+        ["Account", "03058107777"],
+        ["Account Name", "Muhammad Ghasharib Ali Shaukat"],
+        ["Amount", `PKR ${finalTotal.toLocaleString()}`],
+      ],
+    },
+    easypaisa: {
+      rows: [
+        ["Account", "03048107777"],
+        ["Account Name", "Abdul Raafey Shaukat"],
+        ["Amount", `PKR ${finalTotal.toLocaleString()}`],
+      ],
+    },
+    bank: {
+      rows: [
+        ["Bank", "HBL"],
+        ["Account Title", "Zarai Mandi Private Limited"],
+        ["Account No.", "5000-7909-9814-03"],
+        ["IBAN", "PK04HABB05000079089814030"],
+        ["Amount", `PKR ${finalTotal.toLocaleString()}`],
+      ],
+    },
+  };
+
+  function formatCardNumber(v: string) {
+    return v
+      .replace(/\D/g, "")
+      .slice(0, 16)
+      .replace(/(.{4})/g, "$1 ")
+      .trim();
+  }
+  function formatExpiry(v: string) {
+    const digits = v.replace(/\D/g, "").slice(0, 4);
+    return digits.length > 2
+      ? digits.slice(0, 2) + "/" + digits.slice(2)
+      : digits;
+  }
+  function formatPhoneInput(v: string) {
+    const digits = v.replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 4) return digits;
+    return digits.slice(0, 4) + " " + digits.slice(4);
+  }
+
+  const toggleProd = (name: string) => {
+    const updated = data.selectedProds.includes(name)
+      ? data.selectedProds.filter((p) => p !== name)
+      : [...data.selectedProds, name];
+    // Keep at least 1 product
+    onUpdateData({ selectedProds: updated.length > 0 ? updated : [name] });
+  };
+
+  const getVerticalForModalProduct = (productName: string) => {
+    return (
+      Object.entries(VERTICALS).find(
+        ([, vd]) => vd.products[productName],
+      )?.[0] || "Grains"
+    );
+  };
+
+  const handleNext = () => {
+    if (currentStep < totalSteps) {
+      const nextStep = currentStep + 1;
+      onUpdateData({
+        step: nextStep,
+        furthestStep: Math.max(data.furthestStep || 1, nextStep),
+      });
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentStep > 1) {
+      onUpdateData({ step: currentStep - 1 });
+    }
+  };
+
+  const handleFinish = () => {
+    onComplete(data.selectedProds, {
+      province: data.province || "Punjab",
+      district: data.district || "Pakpattan",
+      city: data.city || "Pakpattan Mandi",
+    });
+  };
+
+  const handlePaymentConfirmClick = () => {
+    if (data.paymentType === "wallet") {
+      setMpin(["", "", "", ""]);
+      setMpinError("");
+      setMpinSuccess(false);
+      setMpinModalOpen(true);
+    } else {
+      handleFinish();
+    }
+  };
+
+  const handleMpinSubmit = () => {
+    const pinStr = mpin.join("");
+    if (pinStr.length < 4) {
+      setMpinError("Please enter complete 4-digit MPIN");
+      return;
+    }
+    setMpinError("");
+    setIsProcessingMpin(true);
+    setTimeout(() => {
+      setIsProcessingMpin(false);
+      setMpinSuccess(true);
+      setTimeout(() => {
+        setMpinModalOpen(false);
+        handleFinish();
+      }, 700);
+    }, 800);
+  };
+
+  const selectedWp = walletProviders.find(
+    (wp) => wp.id === (data.walletProvider || "jazzcash"),
+  ) || walletProviders[0];
+
+  return (
+    <div
+      className="zm-sheet-overlay"
+      style={{
+        zIndex: 350,
+        display: "flex",
+        alignItems: "flex-end",
+        justifyContent: "center",
+      }}
+      onClick={onClose}
+    >
+      <div
+        className="zm-sheet-high"
+        style={{
+          background: "#F4FAF7",
+          maxHeight: "92vh",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: "28px 28px 0 0",
+          boxShadow: "0 -10px 40px rgba(6,77,64,0.22)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div
+          className="px-5 pt-4 pb-3 flex-shrink-0"
+          style={{ borderBottom: "1px solid #D5E2DD" }}
+        >
+          <div
+            className="w-10 h-1 rounded-full mx-auto mb-3"
+            style={{ background: "#C7D6D0" }}
+          />
+          <div className="flex items-center justify-between">
+            <div>
+              <p
+                className="font-extrabold text-lg"
+                style={{ color: "#183B34" }}
+              >
+                {lang === "ur"
+                  ? "پروفائل سیٹ اپ مکمل کریں"
+                  : "Complete Your Profile"}
+              </p>
+              <p className="text-xs font-semibold" style={{ color: "#52635F" }}>
+                {lang === "ur"
+                  ? `مرحلہ ${currentStep} از ${totalSteps}: ${
+                      activeStepKey === "products"
+                        ? "دلچسپی کی مصنوعات"
+                        : activeStepKey === "plan"
+                          ? "سبسکرپشن پلان"
+                          : "ادائیگی کی تفصیلات"
+                    }`
+                  : `Step ${currentStep} of ${totalSteps}: ${
+                      activeStepKey === "products"
+                        ? "Interested Products"
+                        : activeStepKey === "plan"
+                          ? "Subscription Plan"
+                          : "Card & Payment"
+                    }`}
+              </p>
+            </div>
+            <button
+              onClick={onClose}
+              className="tap-target text-sm font-semibold px-3 py-1 rounded-full"
+              style={{ background: "#E8EFEC", color: "#52635F" }}
+              title="Close & Explore"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Stepper Dots */}
+          <div className="flex gap-2 mt-3">
+            {Array.from({ length: totalSteps }, (_, i) => i + 1).map((s) => (
+              <div
+                key={s}
+                style={{
+                  flex: 1,
+                  height: 4,
+                  borderRadius: 999,
+                  background: s <= currentStep ? "#087F63" : "#D5E2DD",
+                  transition: "background 0.3s",
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Modal Scrollable Body */}
+        <div className="flex-1 overflow-y-auto px-5 py-4">
+          {/* STEP 1: INTERESTED PRODUCTS */}
+          {activeStepKey === "products" && (
+            <div>
+              <div style={{ marginBottom: 14 }}>
+                <h2 style={{ fontSize: 16, fontWeight: 800, color: "#183B34" }}>
+                  {lang === "ur"
+                    ? "اپنی دلچسپی کی مصنوعات منتخب کریں"
+                    : "Select Your Interested Products"}
+                </h2>
+                <p style={{ fontSize: 11.5, color: "#52635F", marginTop: 2 }}>
+                  {lang === "ur"
+                    ? "گندم پہلے سے منتخب ہے، مزید مصنوعات شامل کریں"
+                    : "Wheat is selected by default. Tap to add or remove commodities."}
+                </p>
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: "12px 10px",
+                }}
+              >
+                {PRODUCT_DIVISIONS.map((div) => {
+                  const sel = data.selectedProds.includes(div.name);
+                  const iconSrc = getproductIconSrc(
+                    div.name,
+                    getVerticalForModalProduct(div.name),
+                  );
+
+                  return (
+                    <button
+                      key={div.name}
+                      type="button"
+                      onClick={() => toggleProd(div.name)}
+                      className="tap-target flex flex-col items-center p-2 rounded-2xl relative"
+                      style={{
+                        background: sel ? "#E4F2EC" : "#FFFFFF",
+                        border: sel
+                          ? "2px solid #087F63"
+                          : "1.5px solid #D5E2DD",
+                        boxShadow: sel
+                          ? "0 4px 12px rgba(8,127,99,0.14)"
+                          : "none",
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      {sel && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            top: 6,
+                            right: 6,
+                            width: 18,
+                            height: 18,
+                            borderRadius: "50%",
+                            background: "#087F63",
+                            color: "#fff",
+                            fontSize: 10,
+                            fontWeight: 900,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          ✓
+                        </span>
+                      )}
+                      <img
+                        src={iconSrc}
+                        alt={div.name}
+                        style={{
+                          width: 44,
+                          height: 44,
+                          objectFit: "contain",
+                          marginBottom: 6,
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 700,
+                          color: sel ? "#087F63" : "#183B34",
+                          textAlign: "center",
+                          lineHeight: 1.2,
+                        }}
+                      >
+                        {tc(div.name)}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* STEP 2: SUBSCRIPTION PLAN */}
+          {activeStepKey === "plan" && (
+            <div>
+              <div style={{ marginBottom: 14 }}>
+                <h2 style={{ fontSize: 16, fontWeight: 800, color: "#183B34" }}>
+                  {lang === "ur"
+                    ? "اپنا سبسکرپشن پلان منتخب کریں"
+                    : "Choose Your ZM Plan"}
+                </h2>
+              </div>
+
+              {/* Standard Duration Tabs */}
+              <div
+                style={{
+                  display: "flex",
+                  background: "rgba(15,138,95,0.07)",
+                  borderRadius: 12,
+                  padding: 4,
+                  gap: 3,
+                  marginBottom: 10,
+                }}
+              >
+                {[
+                  { label: "1 Mo", durIdx: 0, badge: "Standard" },
+                  { label: "3 Mos", durIdx: 1, badge: "10% off" },
+                  { label: "6 Mos", durIdx: 2, badge: "15% off" },
+                  { label: "12 Mos", durIdx: 3, badge: "25% off" },
+                ].map((item) => {
+                  const active = !data.customMode && data.dur === item.durIdx;
+                  return (
+                    <button
+                      key={item.label}
+                      type="button"
+                      className={`dur-tab${active ? " active" : ""}`}
+                      onClick={() => {
+                        onUpdateData({ customMode: false, dur: item.durIdx });
+                      }}
+                      style={{
+                        flex: 1,
+                        padding: "8px 2px",
+                        borderRadius: 10,
+                        border: "none",
+                        background: active ? "#087F63" : "transparent",
+                        color: active ? "#fff" : "#183B34",
+                        fontWeight: 700,
+                        fontSize: 11,
+                        cursor: "pointer",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: 2,
+                      }}
+                    >
+                      <span>{item.label}</span>
+                      <span
+                        style={{
+                          fontSize: 8.5,
+                          opacity: active ? 0.95 : 0.65,
+                          fontWeight: 800,
+                        }}
+                      >
+                        {item.badge}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Customize Mode Toggle Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  onUpdateData({
+                    customMode: !data.customMode,
+                    customMonths: data.customMonths || 3,
+                  });
+                }}
+                style={{
+                  width: "100%",
+                  padding: "10px 14px",
+                  borderRadius: 12,
+                  border: data.customMode
+                    ? "2px solid #087F63"
+                    : "1.5px dashed #D5E2DD",
+                  background: data.customMode ? "#E4F2EC" : "#fff",
+                  color: data.customMode ? "#087F63" : "#52635F",
+                  fontSize: 12.5,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: 12,
+                  transition: "all 0.15s",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                  <span>
+                    {lang === "ur"
+                      ? "اپنی مرضی کے مہینے منتخب کریں (1 تا 12)"
+                      : "Customize Specific Months"}
+                  </span>
+                </div>
+                <span
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 800,
+                    color: data.customMode ? "#087F63" : "#80918B",
+                  }}
+                >
+                  {data.customMode ? "Hide Picker ▴" : "Show Picker ▾"}
+                </span>
+              </button>
+
+              {/* Custom Duration Fluid Month Picker */}
+              {data.customMode && (
+                <div
+                  style={{
+                    border: "1.5px solid #087F63",
+                    borderRadius: 16,
+                    padding: "14px",
+                    marginBottom: 12,
+                    background: "#fff",
+                    boxShadow: "0 2px 10px rgba(8,127,99,0.06)",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: 10,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 800,
+                        color: "#183B34",
+                      }}
+                    >
+                      {data.customMonths} Month
+                      {data.customMonths > 1 ? "s" : ""} Plan
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 800,
+                        color: "#16A34A",
+                        background: "rgba(22,163,74,0.12)",
+                        borderRadius: 20,
+                        padding: "2px 9px",
+                      }}
+                    >
+                      {getMonthlyDiscount(data.customMonths) > 0
+                        ? `${Math.round(getMonthlyDiscount(data.customMonths) * 100)}% Discount`
+                        : "Regular Rate"}
+                    </span>
+                  </div>
+
+                  {/* 12 Months Grid Chips */}
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(4, 1fr)",
+                      gap: 6,
+                      marginBottom: 12,
+                    }}
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m) => {
+                      const sel = data.customMonths === m;
+                      const disc = getMonthlyDiscount(m);
+                      return (
+                        <button
+                          key={m}
+                          type="button"
+                          onClick={() => onUpdateData({ customMonths: m })}
+                          style={{
+                            padding: "6px 2px",
+                            borderRadius: 8,
+                            border: sel
+                              ? "2px solid #087F63"
+                              : "1.5px solid #D5E2DD",
+                            background: sel ? "#087F63" : "#F4FAF7",
+                            color: sel ? "#fff" : "#183B34",
+                            cursor: "pointer",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: 1,
+                          }}
+                        >
+                          <span style={{ fontSize: 11.5, fontWeight: 800 }}>
+                            {m} mo
+                          </span>
+                          <span
+                            style={{
+                              fontSize: 8.5,
+                              fontWeight: 700,
+                              color: sel
+                                ? "#D1FAE5"
+                                : disc > 0
+                                  ? "#16A34A"
+                                  : "#80918B",
+                            }}
+                          >
+                            {disc > 0 ? `-${disc * 100}%` : "0%"}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Product Pricing Breakdown Card */}
+              <div
+                style={{
+                  background: "#FFFFFF",
+                  borderRadius: 16,
+                  border: "1.4px solid #D5E2DD",
+                  marginBottom: 12,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "8px 14px 6px",
+                    borderBottom: "1px solid #D5E2DD",
+                    fontSize: 10,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: "#B9822E",
+                    fontWeight: 700,
+                  }}
+                >
+                  Selected products ({data.selectedProds.length} items)
+                </div>
+                <div style={{ maxHeight: 110, overflowY: "auto" }}>
+                  {data.selectedProds.map((pName) => {
+                    const iconSrc = getproductIconSrc(
+                      pName,
+                      getVerticalForModalProduct(pName),
+                    );
+                    const price = getproductBasePrice(pName);
+                    return (
+                      <div
+                        key={pName}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          padding: "6px 14px",
+                          borderBottom: "1px solid rgba(15,138,95,0.06)",
+                          fontSize: 12,
+                          color: "#52635F",
+                        }}
+                      >
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 7,
+                          }}
+                        >
+                          <img
+                            src={iconSrc}
+                            alt=""
+                            style={{
+                              width: 20,
+                              height: 20,
+                              objectFit: "contain",
+                            }}
+                          />
+                          {tc(pName)}
+                        </span>
+                        <span style={{ fontWeight: 600, color: "#183B34" }}>
+                          PKR {price.toLocaleString()}/mo
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div
+                  style={{
+                    borderTop: "1.5px solid rgba(15,138,95,0.1)",
+                    background: "#E4F2EC",
+                    padding: "10px 14px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      fontSize: 12,
+                      color: "#52635F",
+                      marginBottom: 4,
+                    }}
+                  >
+                    <span>
+                      Total/mo × {months} month{months > 1 ? "s" : ""}
+                    </span>
+                    <span>PKR {regularTotal.toLocaleString()}</span>
+                  </div>
+                  {discount > 0 && (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        fontSize: 12,
+                        color: "#16A34A",
+                        fontWeight: 700,
+                        marginBottom: 6,
+                      }}
+                    >
+                      <span>Discount ({discount * 100}% off)</span>
+                      <span>− PKR {discountAmt.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      paddingTop: 6,
+                      borderTop: "1px solid rgba(15,138,95,0.1)",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontWeight: 700,
+                        fontSize: 13.5,
+                        color: "#183B34",
+                      }}
+                    >
+                      Your Total
+                    </span>
+                    <div style={{ textAlign: "right" }}>
+                      <div
+                        style={{
+                          fontSize: 17,
+                          fontWeight: 900,
+                          color: "#087F63",
+                        }}
+                      >
+                        PKR {finalTotal.toLocaleString()}
+                      </div>
+                      <div style={{ fontSize: 10.5, color: "#52635F" }}>
+                        PKR {Math.round(finalTotal / months).toLocaleString()}
+                        /mo
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3: PAYMENT SCREEN */}
+          {activeStepKey === "payment" && (
+            <div>
+              <div style={{ marginBottom: 14 }}>
+                <h2 style={{ fontSize: 16, fontWeight: 800, color: "#183B34" }}>
+                  {lang === "ur"
+                    ? "ادائیگی مکمل کریں"
+                    : "Complete Your Payment"}
+                </h2>
+
+              </div>
+
+              {/* 3 Payment Type Selector Buttons */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: 8,
+                  marginBottom: 14,
+                }}
+              >
+                {[
+                  {
+                    id: "wallet",
+                    iconSrc: "/src/icons/mobilewallet.png",
+                    label: "Mobile Wallet",
+                    sub: "JazzCash, EasyPaisa",
+                  },
+                  {
+                    id: "card",
+                    iconSrc: "/src/icons/cardpayment.png",
+                    label: "Card Payment",
+                    sub: "Debit / Credit",
+                  },
+                  {
+                    id: "direct",
+                    iconSrc: "/src/icons/directtransfer.png",
+                    label: "Direct Transfer",
+                    sub: "Bank IBFT",
+                  },
+                ].map((opt) => {
+                  const active = (data.paymentType || "wallet") === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() =>
+                        onUpdateData({ paymentType: opt.id as any })
+                      }
+                      style={{
+                        padding: "10px 6px",
+                        borderRadius: 14,
+                        border: active
+                          ? "2px solid #087F63"
+                          : "1.5px solid #D5E2DD",
+                        background: active ? "#E4F2EC" : "#fff",
+                        cursor: "pointer",
+                        textAlign: "center",
+                        transition: "all 0.15s",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          height: 24,
+                          marginBottom: 4,
+                        }}
+                      >
+                        <img
+                          src={opt.iconSrc}
+                          alt=""
+                          style={{
+                            width: 22,
+                            height: 22,
+                            objectFit: "contain",
+                          }}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 800,
+                          color: active ? "#087F63" : "#183B34",
+                          lineHeight: 1.2,
+                        }}
+                      >
+                        {opt.label}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 8.5,
+                          color: "#52635F",
+                          marginTop: 2,
+                        }}
+                      >
+                        {opt.sub}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Option 1: Mobile Wallet Form */}
+              {(data.paymentType || "wallet") === "wallet" && (
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 10 }}
+                >
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#52635F",
+                        textTransform: "uppercase",
+                        marginBottom: 6,
+                      }}
+                    >
+                      Select Wallet Provider
+                    </label>
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(3, 1fr)",
+                        gap: 6,
+                        marginBottom: 8,
+                      }}
+                    >
+                      {walletProviders.map((wp) => {
+                        const sel =
+                          (data.walletProvider || "jazzcash") === wp.id;
+                        return (
+                          <button
+                            key={wp.id}
+                            type="button"
+                            onClick={() =>
+                              onUpdateData({
+                                walletProvider: wp.id as any,
+                              })
+                            }
+                            style={{
+                              padding: "8px 4px",
+                              borderRadius: 10,
+                              border: sel
+                                ? `2px solid ${wp.color}`
+                                : "1.5px solid #D5E2DD",
+                              background: sel ? `${wp.color}15` : "#FFFFFF",
+                              cursor: "pointer",
+                              textAlign: "center",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              gap: 2,
+                            }}
+                          >
+                            <img
+                              src={wp.iconSrc}
+                              alt=""
+                              style={{
+                                width: 20,
+                                height: 20,
+                                objectFit: "contain",
+                              }}
+                            />
+                            <div
+                              style={{
+                                fontSize: 10.5,
+                                fontWeight: 800,
+                                color: sel ? wp.color : "#183B34",
+                              }}
+                            >
+                              {wp.label}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#52635F",
+                        textTransform: "uppercase",
+                        marginBottom: 4,
+                      }}
+                    >
+                      Mobile Wallet Number *
+                    </label>
+                    <input
+                      type="tel"
+                      inputMode="numeric"
+                      placeholder="0300 1234567"
+                      value={data.walletNumber || "0300 1234567"}
+                      onChange={(e) =>
+                        onUpdateData({
+                          walletNumber: formatPhoneInput(e.target.value),
+                        })
+                      }
+                      style={{
+                        width: "100%",
+                        height: 42,
+                        padding: "0 12px",
+                        border: "1.5px solid #D5E2DD",
+                        borderRadius: 10,
+                        fontSize: 13.5,
+                        color: "#183B34",
+                        background: "#fff",
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#52635F",
+                        textTransform: "uppercase",
+                        marginBottom: 4,
+                      }}
+                    >
+                      Account Holder Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Muhammad Arif / 123456"
+                      value={data.walletCnic || ""}
+                      onChange={(e) =>
+                        onUpdateData({ walletCnic: e.target.value })
+                      }
+                      style={{
+                        width: "100%",
+                        height: 42,
+                        padding: "0 12px",
+                        border: "1.5px solid #D5E2DD",
+                        borderRadius: 10,
+                        fontSize: 13.5,
+                        color: "#183B34",
+                        background: "#fff",
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Option 2: Card Form */}
+              {data.paymentType === "card" && (
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 9 }}
+                >
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#52635F",
+                        textTransform: "uppercase",
+                        marginBottom: 4,
+                      }}
+                    >
+                      Card Number
+                    </label>
+                    <input
+                      type="tel"
+                      inputMode="numeric"
+                      placeholder="1234 5678 9012 3456"
+                      value={data.cardNumber}
+                      onChange={(e) =>
+                        onUpdateData({
+                          cardNumber: formatCardNumber(e.target.value),
+                        })
+                      }
+                      style={{
+                        width: "100%",
+                        height: 42,
+                        padding: "0 12px",
+                        border: "1.5px solid #D5E2DD",
+                        borderRadius: 10,
+                        fontSize: 13.5,
+                        color: "#183B34",
+                        background: "#fff",
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: 10,
+                    }}
+                  >
+                    <div>
+                      <label
+                        style={{
+                          display: "block",
+                          fontSize: 11,
+                          fontWeight: 700,
+                          color: "#52635F",
+                          textTransform: "uppercase",
+                          marginBottom: 4,
+                        }}
+                      >
+                        Expiry Date
+                      </label>
+                      <input
+                        type="tel"
+                        inputMode="numeric"
+                        placeholder="MM/YY"
+                        value={data.cardExpiry}
+                        onChange={(e) =>
+                          onUpdateData({
+                            cardExpiry: formatExpiry(e.target.value),
+                          })
+                        }
+                        style={{
+                          width: "100%",
+                          height: 42,
+                          padding: "0 12px",
+                          border: "1.5px solid #D5E2DD",
+                          borderRadius: 10,
+                          fontSize: 13.5,
+                          color: "#183B34",
+                          background: "#fff",
+                          outline: "none",
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label
+                        style={{
+                          display: "block",
+                          fontSize: 11,
+                          fontWeight: 700,
+                          color: "#52635F",
+                          textTransform: "uppercase",
+                          marginBottom: 4,
+                        }}
+                      >
+                        Security Code
+                      </label>
+                      <input
+                        type="tel"
+                        inputMode="numeric"
+                        placeholder="CVV"
+                        maxLength={4}
+                        value={data.cardCvv}
+                        onChange={(e) =>
+                          onUpdateData({
+                            cardCvv: e.target.value
+                              .replace(/\D/g, "")
+                              .slice(0, 4),
+                          })
+                        }
+                        style={{
+                          width: "100%",
+                          height: 42,
+                          padding: "0 12px",
+                          border: "1.5px solid #D5E2DD",
+                          borderRadius: 10,
+                          fontSize: 13.5,
+                          color: "#183B34",
+                          background: "#fff",
+                          outline: "none",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#52635F",
+                        textTransform: "uppercase",
+                        marginBottom: 4,
+                      }}
+                    >
+                      Cardholder Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Name on card"
+                      value={data.cardHolder}
+                      onChange={(e) =>
+                        onUpdateData({ cardHolder: e.target.value })
+                      }
+                      style={{
+                        width: "100%",
+                        height: 42,
+                        padding: "0 12px",
+                        border: "1.5px solid #D5E2DD",
+                        borderRadius: 10,
+                        fontSize: 13.5,
+                        color: "#183B34",
+                        background: "#fff",
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      padding: "7px 10px",
+                      background: "#E4F2EC",
+                      borderRadius: 8,
+                    }}
+                  >
+                    <span style={{ fontSize: 12 }}>🔒</span>
+                    <span style={{ fontSize: 11, color: "#52635F" }}>
+                      Your card details are encrypted and never stored.
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Option 3: Direct Transfer */}
+              {data.paymentType === "direct" && (
+                <div>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "#52635F",
+                      textTransform: "uppercase",
+                      marginBottom: 6,
+                    }}
+                  >
+                    Choose Method
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 7,
+                      marginBottom: 10,
+                    }}
+                  >
+                    {directMethods.map((m) => (
+                      <div
+                        key={m.id}
+                        onClick={() =>
+                          onUpdateData({ directMethod: m.id as any })
+                        }
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 10,
+                          padding: "8px 12px",
+                          borderRadius: 12,
+                          border:
+                            data.directMethod === m.id
+                              ? "2px solid #087F63"
+                              : "1.5px solid #D5E2DD",
+                          background:
+                            data.directMethod === m.id ? "#E4F2EC" : "#fff",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <div
+                          style={{
+                            background: `${m.color}18`,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: 36,
+                            height: 36,
+                            borderRadius: 10,
+                            flexShrink: 0,
+                          }}
+                        >
+                          <img
+                            src={m.iconSrc}
+                            alt={m.label}
+                            style={{
+                              width: 24,
+                              height: 24,
+                              objectFit: "contain",
+                            }}
+                          />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div
+                            style={{
+                              fontSize: 12.5,
+                              fontWeight: 700,
+                              color: "#183B34",
+                            }}
+                          >
+                            {m.label}
+                          </div>
+                          <div style={{ fontSize: 10.5, color: "#52635F" }}>
+                            {m.sub}
+                          </div>
+                        </div>
+                        {data.directMethod === m.id && (
+                          <span
+                            style={{
+                              color: "#087F63",
+                              fontWeight: 900,
+                              fontSize: 13,
+                            }}
+                          >
+                            ✓
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Direct Details Box */}
+                  <div
+                    style={{
+                      background: "#fff",
+                      border: "1.5px solid #D5E2DD",
+                      borderRadius: 12,
+                      padding: "10px 12px",
+                      marginBottom: 10,
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: 10,
+                        textTransform: "uppercase",
+                        color: "#B9822E",
+                        fontWeight: 700,
+                        marginBottom: 6,
+                      }}
+                    >
+                      Payment Details
+                    </div>
+                    {directDetails[data.directMethod]?.rows.map(([k, v]) => (
+                      <div
+                        key={k}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          fontSize: 11.5,
+                          padding: "3px 0",
+                          borderBottom: "1px solid #F1F7F4",
+                        }}
+                      >
+                        <span style={{ color: "#52635F" }}>{k}</span>
+                        <strong
+                          style={{
+                            color: "#183B34",
+                            fontFamily:
+                              k === "IBAN" || k === "Account No."
+                                ? "monospace"
+                                : "inherit",
+                          }}
+                        >
+                          {v}
+                        </strong>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Upload Screenshot */}
+                  <div
+                    onClick={() =>
+                      onUpdateData({ hasReceipt: !data.hasReceipt })
+                    }
+                    style={{
+                      padding: "10px",
+                      borderRadius: 12,
+                      border: "1.5px dashed #087F63",
+                      background: data.hasReceipt ? "#E4F2EC" : "#fff",
+                      textAlign: "center",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 8,
+                      fontSize: 11.5,
+                      fontWeight: 700,
+                      color: "#087F63",
+                    }}
+                  >
+                    <span>{data.hasReceipt ? "✅" : "📎"}</span>
+                    <span>
+                      {data.hasReceipt
+                        ? "Screenshot attached (Tap to change)"
+                        : "Tap to upload payment screenshot"}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Footer Actions */}
+        <div
+          className="px-5 pt-3 pb-5 flex-shrink-0"
+          style={{ borderTop: "1px solid #D5E2DD" }}
+        >
+          <div className="flex gap-3">
+            {currentStep > 1 && (
+              <button
+                type="button"
+                onClick={handlePrev}
+                className="tap-target py-3 px-4 rounded-2xl font-bold text-xs"
+                style={{ background: "#E8EFEC", color: "#183B34" }}
+              >
+                ← {lang === "ur" ? "پیچھے" : "Back"}
+              </button>
+            )}
+
+            {currentStep < totalSteps ? (
+              <button
+                type="button"
+                onClick={handleNext}
+                className="tap-target flex-1 py-3 rounded-2xl font-extrabold text-sm text-white"
+                style={{
+                  background: "#087F63",
+                  boxShadow: "0 4px 14px rgba(8,127,99,0.3)",
+                }}
+              >
+                {activeStepKey === "products"
+                  ? lang === "ur"
+                    ? "پلان منتخب کریں →"
+                    : "Choose Plan →"
+                  : lang === "ur"
+                    ? `ادائیگی کی طرف جائیں`
+                    : `Subscribe`}
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handlePaymentConfirmClick}
+                className="tap-target flex-1 py-3 rounded-2xl font-extrabold text-sm text-white flex items-center justify-center gap-2"
+                style={{
+                  background: "linear-gradient(135deg, #087F63, #064D40)",
+                  boxShadow: "0 4px 16px rgba(8,127,99,0.4)",
+                }}
+              >
+                <span>
+                  {lang === "ur"
+                    ? `ادائیگی کی تصدیق کریں — PKR ${finalTotal.toLocaleString()}`
+                    : `Confirm Payment — PKR ${finalTotal.toLocaleString()}`}
+                </span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* MPIN Entry Modal for Mobile Wallet */}
+      {mpinModalOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{
+            zIndex: 400,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 16,
+            background: "rgba(6, 45, 36, 0.75)",
+            backdropFilter: "blur(6px)",
+          }}
+          onClick={() => {
+            if (!isProcessingMpin) setMpinModalOpen(false);
+          }}
+        >
+          <div
+            className="screen-enter"
+            style={{
+              width: "100%",
+              maxWidth: 360,
+              background: "#FFFFFF",
+              borderRadius: 24,
+              padding: "24px 20px",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+              textAlign: "center",
+              position: "relative",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Wallet Icon Badge */}
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: "50%",
+                background: `${selectedWp.color}15`,
+                border: `2px solid ${selectedWp.color}`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 12px",
+              }}
+            >
+              <img
+                src={selectedWp.iconSrc}
+                alt=""
+                style={{ width: 34, height: 34, objectFit: "contain" }}
+              />
+            </div>
+
+            <h3
+              style={{
+                fontSize: 17,
+                fontWeight: 800,
+                color: "#183B34",
+                marginBottom: 4,
+              }}
+            >
+              {lang === "ur"
+                ? `${selectedWp.label} کا MPIN درج کریں`
+                : `Enter ${selectedWp.label} MPIN`}
+            </h3>
+            <p
+              style={{
+                fontSize: 12,
+                color: "#52635F",
+                marginBottom: 16,
+                lineHeight: 1.4,
+              }}
+            >
+              Authorize payment of{" "}
+              <strong style={{ color: "#087F63" }}>
+                PKR {finalTotal.toLocaleString()}
+              </strong>{" "}
+              for Zarai Mandi subscription.
+            </p>
+
+            {/* 4 Digit PIN Inputs */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 12,
+                marginBottom: 14,
+              }}
+            >
+              {[0, 1, 2, 3].map((idx) => (
+                <input
+                  key={idx}
+                  id={`mpin-box-${idx}`}
+                  type="password"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={mpin[idx]}
+                  autoFocus={idx === 0}
+                  disabled={isProcessingMpin || mpinSuccess}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "");
+                    const updated = [...mpin];
+                    updated[idx] = val ? val.slice(-1) : "";
+                    setMpin(updated);
+                    setMpinError("");
+                    if (val && idx < 3) {
+                      const nextInput = document.getElementById(
+                        `mpin-box-${idx + 1}`,
+                      );
+                      nextInput?.focus();
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Backspace" && !mpin[idx] && idx > 0) {
+                      const prevInput = document.getElementById(
+                        `mpin-box-${idx - 1}`,
+                      );
+                      prevInput?.focus();
+                    }
+                  }}
+                  style={{
+                    width: 48,
+                    height: 52,
+                    textAlign: "center",
+                    fontSize: 24,
+                    fontWeight: 900,
+                    color: "#183B34",
+                    border: mpin[idx]
+                      ? "2px solid #087F63"
+                      : "1.5px solid #D5E2DD",
+                    borderRadius: 12,
+                    background: mpin[idx] ? "#E4F2EC" : "#FAFCFB",
+                    outline: "none",
+                    boxShadow: mpin[idx]
+                      ? "0 2px 8px rgba(8,127,99,0.15)"
+                      : "none",
+                  }}
+                />
+              ))}
+            </div>
+
+            {mpinError && (
+              <div
+                style={{
+                  fontSize: 11.5,
+                  color: "#D95A51",
+                  fontWeight: 700,
+                  marginBottom: 12,
+                }}
+              >
+                {mpinError}
+              </div>
+            )}
+
+            {mpinSuccess ? (
+              <div
+                style={{
+                  background: "#E8F5E9",
+                  border: "1.5px solid #81C784",
+                  borderRadius: 14,
+                  padding: "12px",
+                  color: "#1B5E20",
+                  fontWeight: 800,
+                  fontSize: 13,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                }}
+              >
+                <span>✅</span>
+                <span>Payment Authorized Successfully!</span>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <button
+                  type="button"
+                  onClick={handleMpinSubmit}
+                  disabled={isProcessingMpin}
+                  className="tap-target w-full py-3 rounded-2xl font-extrabold text-sm text-white"
+                  style={{
+                    background: isProcessingMpin
+                      ? "#80918B"
+                      : "linear-gradient(135deg, #087F63, #064D40)",
+                    boxShadow: "0 4px 14px rgba(8,127,99,0.3)",
+                    cursor: isProcessingMpin ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {isProcessingMpin
+                    ? "Authorizing Payment..."
+                    : `Authorize PKR ${finalTotal.toLocaleString()}`}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMpinModalOpen(false)}
+                  disabled={isProcessingMpin}
+                  className="tap-target py-2 text-xs font-bold"
+                  style={{ color: "#80918B", background: "none", border: "none" }}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── HOME SCREEN ──────────────────────────────────────────────────────────────
 
 function HomeScreen({
   push,
@@ -17263,18 +19897,43 @@ function HomeScreen({
   voiceGuideActive = false,
   onVoiceGuideClose,
   initialUserData,
+  activeRole = "customer",
+  hasRepAccount = false,
+  onSwitchRole,
+  onStartRepOnboarding,
   onRestartOnboarding,
+  profileCompleted: parentProfileCompleted = false,
+  setProfileCompleted: parentSetProfileCompleted,
+  completeProfileOpen: parentCompleteProfileOpen = false,
+  setCompleteProfileOpen: parentSetCompleteProfileOpen,
+  profileSetupData: parentProfileSetupData,
+  updateProfileSetupData: parentUpdateProfileSetupData,
+  onCompleteProfileSubmit: parentOnCompleteProfileSubmit,
 }: {
-  push: (s: Screen) => void
-  setFeedOpen: (v: boolean) => void
-  pickedByproducts: RateItem[]
-  togglePickBP: (item: RateItem) => void
-  isPickedBP: (item: RateItem) => boolean
-  setPickedByproducts: React.Dispatch<React.SetStateAction<RateItem[]>>
-  voiceGuideActive?: boolean
-  onVoiceGuideClose?: () => void
-  initialUserData?: AppProps["initialUserData"]
-  onRestartOnboarding?: () => void
+  push: (s: Screen) => void;
+  setFeedOpen: (v: boolean) => void;
+  pickedByproducts: RateItem[];
+  togglePickBP: (item: RateItem) => void;
+  isPickedBP: (item: RateItem) => boolean;
+  setPickedByproducts: React.Dispatch<React.SetStateAction<RateItem[]>>;
+  voiceGuideActive?: boolean;
+  onVoiceGuideClose?: () => void;
+  initialUserData?: AppProps["initialUserData"];
+  activeRole?: "customer" | "representative";
+  hasRepAccount?: boolean;
+  onSwitchRole?: (role: "customer" | "representative") => void;
+  onStartRepOnboarding?: () => void;
+  onRestartOnboarding?: (mode?: "register" | "signin") => void;
+  profileCompleted?: boolean;
+  setProfileCompleted?: React.Dispatch<React.SetStateAction<boolean>>;
+  completeProfileOpen?: boolean;
+  setCompleteProfileOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  profileSetupData?: ProfileSetupData;
+  updateProfileSetupData?: (partial: Partial<ProfileSetupData>) => void;
+  onCompleteProfileSubmit?: (
+    selected: string[],
+    locationData?: { province: string; district: string; city: string },
+  ) => void;
 }) {
   const {
     lang,
@@ -17283,17 +19942,142 @@ function HomeScreen({
     tc,
     voiceEnabled: homeVoiceEnabled,
     setVoiceEnabled: homeSetVoiceEnabled,
-  } = useLang()
+  } = useLang();
 
-  const [notifOpen, setNotifOpen] = useState(false)
-  const [profileOpen, setProfileOpen] = useState(false)
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [localProfileCompleted, setLocalProfileCompleted] = useState(false);
+  const profileCompleted = parentProfileCompleted ?? localProfileCompleted;
+  const setProfileCompleted =
+    parentSetProfileCompleted || setLocalProfileCompleted;
+
+  const [localCompleteProfileOpen, setLocalCompleteProfileOpen] =
+    useState(false);
+  const completeProfileOpen =
+    parentCompleteProfileOpen ?? localCompleteProfileOpen;
+  const setCompleteProfileOpen =
+    parentSetCompleteProfileOpen || setLocalCompleteProfileOpen;
+
+  const [favLockModalOpen, setFavLockModalOpen] = useState(false);
+  const [todayOnlyUnlocked, setTodayOnlyUnlocked] = useState<string[]>([]);
+
+  // Persistent Profile Setup Data
+  const totalSteps = 3;
+
+  const [localProfileSetupData, setLocalProfileSetupData] =
+    useState<ProfileSetupData>(() => ({
+      step: 1,
+      furthestStep: 1,
+      province: initialUserData?.province || "Punjab",
+      district:
+        initialUserData?.district || initialUserData?.city || "Pakpattan",
+      city: initialUserData?.city || "Pakpattan Mandi",
+      selectedMandis: [initialUserData?.city || "Pakpattan Mandi"],
+      selectedProds: ["Wheat"],
+      dur: 0,
+      customMode: false,
+      customMonths: 3,
+      paymentType: "wallet",
+      walletProvider: "jazzcash",
+      walletNumber: initialUserData?.phone || "0300 1234567",
+      walletCnic: "",
+      walletPromptSent: false,
+      directMethod: "jazzcash",
+      hasReceipt: false,
+      cardNumber: "",
+      cardExpiry: "",
+      cardCvv: "",
+      cardHolder: initialUserData?.name || "Muhammad Arif",
+    }));
+
+  const profileSetupData = parentProfileSetupData || localProfileSetupData;
+  const updateProfileSetupData = (partial: Partial<ProfileSetupData>) => {
+    if (parentUpdateProfileSetupData) parentUpdateProfileSetupData(partial);
+    else setLocalProfileSetupData((prev) => ({ ...prev, ...partial }));
+  };
+
+  // User Profile State (allows interactive editing and reflects across the screen)
+  const [profileName, setProfileName] = useState(
+    initialUserData?.name || (lang === "ur" ? "محمد عارف" : "Muhammad Arif"),
+  );
+  const [profilePhone, setProfilePhone] = useState(
+    initialUserData?.phone || "0300 1234567",
+  );
+  const [profileRole, setProfileRole] = useState("Trader / بیوپاری");
+  const [profileBusiness, setProfileBusiness] = useState(
+    "Arif Grain Trading Co.",
+  );
+  const [profileProvince, setProfileProvince] = useState(
+    initialUserData?.province || "Punjab",
+  );
+  const [profileDistrict, setProfileDistrict] = useState(
+    initialUserData?.district || initialUserData?.city || "Pakpattan",
+  );
+  const [profileCity, setProfileCity] = useState(
+    initialUserData?.city || "Pakpattan Mandi",
+  );
+
+  // Edit Profile Form State & OTP Verification
+  const [editName, setEditName] = useState(profileName);
+  const [editPhone, setEditPhone] = useState(profilePhone);
+  const [showContactVerify, setShowContactVerify] = useState(false);
+  const [contactOtp, setContactOtp] = useState(["", "", "", ""]);
+  const [contactOtpError, setContactOtpError] = useState("");
+  const [contactOtpSuccess, setContactOtpSuccess] = useState(false);
+
+  // Account Modals State
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
+  const [locationPrefOpen, setLocationPrefOpen] = useState(false);
+  const [subsModalOpen, setSubsModalOpen] = useState(false);
+  const [voiceLangModalOpen, setVoiceLangModalOpen] = useState(false);
+  const [repModalOpen, setRepModalOpen] = useState(false);
+  const [repConfirmModalOpen, setRepConfirmModalOpen] = useState(false);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
+  const [aboutModalOpen, setAboutModalOpen] = useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [showSwitchToast, setShowSwitchToast] = useState<string | null>(null);
+  const lastProfileTapRef = useRef<number>(0);
+
+  // Settings & Preferences State
+  const [weightUnit, setWeightUnit] = useState<"maund" | "kg100" | "ton">(
+    "maund",
+  );
+  const [alertSms, setAlertSms] = useState(true);
+  const [alertWhatsApp, setAlertWhatsApp] = useState(true);
+  const [alertMorningBell, setAlertMorningBell] = useState(true);
+  const [autoRefreshRates, setAutoRefreshRates] = useState(true);
+  const [speechRate, setSpeechRate] = useState<"1.0x" | "0.8x" | "1.2x">(
+    "1.0x",
+  );
+
+  // Representative Form State
+  const [repFullName, setRepFullName] = useState(profileName);
+  const [repPhone, setRepPhone] = useState(profilePhone);
+  const [repMandi, setRepMandi] = useState(profileCity);
+  const [repExperience, setRepExperience] = useState(
+    "5+ Years (تجربہ کار)",
+  );
+  const [repSubmitted, setRepSubmitted] = useState(false);
+
+  // Feedback form state
+  const [supportFeedback, setSupportFeedback] = useState("");
+  const [supportSent, setSupportSent] = useState(false);
+  const [faqExpanded, setFaqExpanded] = useState<number | null>(0);
+
+  // Calculate dynamic progress percentage
+  const currentStepNum = profileSetupData.step;
+  const furthestStepNum = profileSetupData.furthestStep;
+  const progressPct = profileCompleted
+    ? 100
+    : Math.min(Math.round(((furthestStepNum) / totalSteps) * 100), 99);
 
   // Your Picks sheet
-  const [picksFavSheet, setPicksFavSheet] = useState(false)
-  const [picksSearch, setPicksSearch] = useState("")
+  const [picksFavSheet, setPicksFavSheet] = useState(false);
+  const [picksSearch, setPicksSearch] = useState("");
   const [picksVertical, setPicksVertical] = useState<string>(
     Object.keys(VERTICALS)[0],
-  )
+  );
 
   // ---------------------------------------------------------
   // ORIENTATION / VOICE
@@ -17305,16 +20089,16 @@ function HomeScreen({
     navigateFn: () => void,
   ) => {
     if (voiceGuideActive) {
-      speakText(speakMsg)
-      return
+      speakText(speakMsg);
+      return;
     }
 
     if (homeVoiceEnabled) {
-      speakText(speakMsg)
+      speakText(speakMsg);
     }
 
-    navigateFn()
-  }
+    navigateFn();
+  };
 
   // ---------------------------------------------------------
   // MANDI DATA FOR NOTIFICATIONS
@@ -17322,23 +20106,85 @@ function HomeScreen({
 
   const allMandiRows: RichRow[] = Object.entries(MANDI_ROWS).flatMap(
     ([mandiId, rows]) => {
-      const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId)
-      const mandiName = mandi?.name || mandiId
+      const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
+      const mandiName = mandi?.name || mandiId;
 
       return rows.map((r) =>
         enrichRowWithAttrs({
           ...r,
           vertical:
             Object.entries(VERTICALS).find(
-              ([, vd]) => vd.commodities[r.commodity],
+              ([, vd]) => vd.products[r.product],
             )?.[0] || "Grains",
           mandiName,
           mandiCity: mandi?.city || "",
           province: mandi?.province || "",
         }),
-      )
+      );
     },
-  )
+  );
+
+  // ---------------------------------------------------------
+  // PRODUCT HELPERS
+  // ---------------------------------------------------------
+
+  const getVerticalForProduct = (productName: string) => {
+    return (
+      Object.entries(VERTICALS).find(
+        ([, vd]) => vd.products[productName],
+      )?.[0] || "Grains"
+    );
+  };
+
+  const isAccessible = (name: string) =>
+    SUBSCRIBED_PRODUCTS.has(name) ||
+    TODAY_ONLY_PRODUCTS.has(name) ||
+    todayOnlyUnlocked.includes(name);
+
+  const isTodayOnly = (name: string) =>
+    (TODAY_ONLY_PRODUCTS.has(name) || todayOnlyUnlocked.includes(name)) &&
+    !SUBSCRIBED_PRODUCTS.has(name);
+
+  const activeProducts = PRODUCT_DIVISIONS.filter((d) => isAccessible(d.name));
+  const lockedProducts = PRODUCT_DIVISIONS.filter(
+    (d) => !isAccessible(d.name),
+  ).slice(0, 10);
+
+  const handleLockedProductClick = (divName: string, verticalFor: string) => {
+    if (divName === "Maize") {
+      TODAY_ONLY_PRODUCTS.add("Maize");
+      setTodayOnlyUnlocked((prev) => [...prev, "Maize"]);
+      push({
+        id: "byproduct-combined",
+        products: [{ vertical: verticalFor, product: "Maize" }],
+        active: 0,
+      });
+    } else {
+      push({
+        id: "billing",
+        product: divName,
+        vertical: verticalFor,
+      });
+    }
+  };
+
+  const handleCompleteProfileSubmit = (
+    selected: string[],
+    locationData?: { province: string; district: string; city: string },
+  ) => {
+    selected.forEach((p) => {
+      const mapped = PRODUCT_ID_TO_NAME[p.toLowerCase()] || p;
+      SUBSCRIBED_PRODUCTS.add(mapped);
+      TODAY_ONLY_PRODUCTS.add(mapped);
+    });
+    if (locationData && initialUserData) {
+      initialUserData.province = locationData.province;
+      initialUserData.district = locationData.district;
+      initialUserData.city = locationData.city;
+    }
+    setProfileCompleted(true);
+    setCompleteProfileOpen(false);
+  };
 
   // ---------------------------------------------------------
   // FAVORITES
@@ -17352,27 +20198,11 @@ function HomeScreen({
     "Semolina",
     "Straw",
     "Sorghum",
-  ]
+  ];
 
   const getFavoriteImage = (bp: string) => {
-    return getCommodityIconSrc(bp, "Grains")
-  }
-
-  // ---------------------------------------------------------
-  // PRODUCT HELPERS
-  // ---------------------------------------------------------
-
-  const getVerticalForProduct = (productName: string) => {
-    return (
-      Object.entries(VERTICALS).find(
-        ([, vd]) => vd.commodities[productName],
-      )?.[0] || "Grains"
-    )
-  }
-
-  const lockedProducts = PRODUCT_DIVISIONS.filter(
-    (d) => d.name !== "Wheat",
-  ).slice(0, 10)
+    return getproductIconSrc(bp, "Grains");
+  };
 
   // ---------------------------------------------------------
   // PICKED BYPRODUCT DATA
@@ -17381,207 +20211,234 @@ function HomeScreen({
   const picksRowsRaw: RichRow[] =
     pickedByproducts.length > 0
       ? pickedByproducts.map((item) => {
-        const found = allMandiRows.find(
-          (r) =>
-            r.commodity === item.commodity &&
-            r.byproduct === item.byproduct,
-        )
+          const found = allMandiRows.find(
+            (r) => r.product === item.product && r.byproduct === item.byproduct,
+          );
 
-        return (
-          found || {
-            vertical: item.vertical,
-            commodity: item.commodity,
-            byproduct: item.byproduct,
-            emoji: "",
-            rateType: "Mill Rate",
-            arrival: "—",
-            min: 0,
-            max: 0,
-            trend: "stable" as const,
-            trendPct: 0,
-            mandiName: "—",
-            mandiCity: "—",
-            province: "—",
-          }
-        )
-      })
-      : allMandiRows.slice(0, 8)
+          return (
+            found || {
+              vertical: item.vertical,
+              product: item.product,
+              byproduct: item.byproduct,
+              emoji: "",
+              rateType: "Mill Rate",
+              arrival: "—",
+              min: 0,
+              max: 0,
+              trend: "stable" as const,
+              trendPct: 0,
+              mandiName: "—",
+              mandiCity: "—",
+              province: "—",
+            }
+          );
+        })
+      : allMandiRows.slice(0, 8);
 
-  const seenPickKeys = new Set<string>()
+  const seenPickKeys = new Set<string>();
 
   const picksRows: RichRow[] = picksRowsRaw.filter((r) => {
-    const key = `${r.commodity}|${r.byproduct}`
+    const key = `${r.product}|${r.byproduct}`;
 
-    if (seenPickKeys.has(key)) return false
+    if (seenPickKeys.has(key)) return false;
 
-    seenPickKeys.add(key)
-    return true
-  })
+    seenPickKeys.add(key);
+    return true;
+  });
 
   // ---------------------------------------------------------
-  // HOME SCREEN
+  // RENDER
   // ---------------------------------------------------------
 
   return (
     <div
-      className={`flex flex-col h-full ${lang === "ur" ? "lang-ur" : ""
-        }`}
+      className="flex flex-col h-full overflow-hidden"
       style={{
-        background: "#EEF7F2",
-        position: "relative",
-        overflow: "hidden",
+        background: "#F1F7F4",
       }}
     >
       {/* =====================================================
-          VOICE GUIDE DIM
-          ===================================================== */}
-
-      {voiceGuideActive && (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "rgba(5,25,15,0.52)",
-            zIndex: 40,
-            pointerEvents: "none",
-          }}
-        />
-      )}
-
-      {voiceGuideActive && (
-        <button
-          onClick={onVoiceGuideClose}
-          style={{
-            position: "absolute",
-            top: 54,
-            right: 14,
-            width: 32,
-            height: 32,
-            borderRadius: "50%",
-            background: "rgba(255,255,255,0.22)",
-            border: "1px solid rgba(255,255,255,0.3)",
-            color: "#fff",
-            fontWeight: 700,
-            fontSize: 16,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 50,
-          }}
-        >
-          ✕
-        </button>
-      )}
-
-      {/* =====================================================
-          FARM HEADER + FLOATING SEARCH
+          HERO BANNER (Optimized compact height)
           ===================================================== */}
 
       <div
         className="relative flex-shrink-0"
         style={{
-          height: 254,
-          zIndex: 20,
+          height: 175,
+          background: "linear-gradient(135deg, #064D40 0%, #087F63 100%)",
         }}
       >
-        {/* Farm image header */}
+        <img
+          src={farmHeroBg}
+          alt="Agriculture"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0.38 }}
+        />
         <div
+          className="absolute inset-0"
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 226,
-            backgroundImage: `linear-gradient(180deg, rgba(6, 68, 54, 0.72) 0%, rgba(8, 110, 86, 0.52) 55%, rgba(6, 65, 52, 0.88) 100%), url(${farmHeroBg})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center 30%",
-            borderBottomLeftRadius: "50% 30px",
-            borderBottomRightRadius: "50% 30px",
-            overflow: "hidden",
+            background:
+              "linear-gradient(180deg, rgba(6,77,64,0.3) 0%, rgba(6,77,64,0.85) 100%)",
           }}
         />
 
-        {/* Header content */}
-        <div
-          className="relative h-full px-4 flex flex-col"
-          style={{
-            paddingTop: "max(44px, env(safe-area-inset-top, 44px))",
-          }}
-        >
-          {/* Top controls */}
+        <div className="relative h-full flex flex-col justify-between px-4 pt-4 pb-9 z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              {/* Language toggle: in EN shows 'اردو', in UR shows 'انگریزی' */}
               <button
-                onClick={() => setLang(lang === "en" ? "ur" : "en")}
-                className="tap-target rounded-full px-3.5 py-1.5 flex items-center justify-center"
+                onClick={() => setLang(lang === "ur" ? "en" : "ur")}
+                className="tap-target flex items-center justify-center rounded-full px-2.5 py-1"
                 style={{
                   background: "rgba(255,255,255,0.22)",
-                  border: "1.5px solid rgba(255,255,255,0.4)",
+                  border: "1.2px solid rgba(255,255,255,0.4)",
                   color: "#fff",
-                  fontSize: lang === "ur" ? 17 : 14,
+                  fontSize: lang === "ur" ? 14 : 11.5,
                   fontWeight: 800,
-                  minHeight: lang === "ur" ? 42 : 38,
-                  padding: lang === "ur" ? "6px 16px" : "6px 14px",
                   backdropFilter: "blur(8px)",
                 }}
               >
-                {lang === "en" ? "اردو" : "انگریزی"}
+                {lang === "ur" ? "English" : "اردو"}
               </button>
 
-              {/* Voice */}
               <button
                 onClick={() => homeSetVoiceEnabled(!homeVoiceEnabled)}
-                className="tap-target flex items-center gap-2 rounded-full px-3.5 py-1.5"
+                className="tap-target flex items-center gap-1.5 rounded-full px-3 py-1"
                 style={{
                   background: "rgba(255,255,255,0.22)",
-                  border: "1.5px solid rgba(255,255,255,0.4)",
+                  border: "1.2px solid rgba(255,255,255,0.4)",
                   color: "#fff",
-                  fontSize: lang === "ur" ? 17 : 14,
+                  fontSize: lang === "ur" ? 15 : 12,
                   fontWeight: 800,
-                  minHeight: lang === "ur" ? 42 : 38,
-                  padding: lang === "ur" ? "6px 16px" : "6px 14px",
                   backdropFilter: "blur(8px)",
                 }}
               >
-                <VoiceBadgeIconSVG active={homeVoiceEnabled} size={lang === "ur" ? 18 : 14} />
-                <span>
-                  {homeVoiceEnabled ? t("Voice On") : t("Voice Off")}
-                </span>
+                <VoiceBadgeIconSVG
+                  active={homeVoiceEnabled}
+                  size={lang === "ur" ? 16 : 13}
+                />
+                <span>{homeVoiceEnabled ? t("Voice On") : t("Voice Off")}</span>
               </button>
             </div>
 
-            {/* Profile */}
-            <button
-              onClick={() => setProfileOpen(true)}
-              className="tap-target flex items-center justify-center rounded-full"
-              style={{
-                width: 44,
-                height: 44,
-                background: "rgba(255,255,255,0.22)",
-                border: "1.5px solid rgba(255,255,255,0.4)",
-                backdropFilter: "blur(8px)",
-                zIndex: voiceGuideActive ? 45 : undefined,
-              }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-              </svg>
-            </button>
+            {/* Top Right: Free Trial Chip + Profile */}
+            <div className="flex items-center gap-2">
+              {!profileCompleted && (
+                <button
+                  type="button"
+                  onClick={() => setCompleteProfileOpen(true)}
+                  className="tap-target flex items-center gap-1.5 px-3 py-1 rounded-full font-extrabold text-xs"
+                  style={{
+                    background: "linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)",
+                    border: "1.3px solid #F59E0B",
+                    color: "#92400E",
+                    boxShadow: "0 2px 8px rgba(245, 158, 11, 0.35)",
+                    cursor: "pointer",
+                    backdropFilter: "blur(8px)",
+                  }}
+                  title="Tap to Complete Profile & Unlock Full App"
+                >
+                  <span style={{ fontSize: 11, fontWeight: 800 }}>
+                    {lang === "ur" ? "مفت ٹرائل: ۲ دن باقی" : "Free Trial: 2 Days Left"}
+                  </span>
+                </button>
+              )}
+
+              {/* Profile Avatar Button with Double-Tap Switching */}
+              <button
+                onClick={() => {
+                  const now = Date.now();
+                  if (now - lastProfileTapRef.current < 350 && hasRepAccount) {
+                    const targetRole = activeRole === "representative" ? "customer" : "representative";
+                    onSwitchRole?.(targetRole);
+                    setShowSwitchToast(
+                      targetRole === "representative"
+                        ? (lang === "ur" ? "نمائندہ ڈیش بورڈ پر تبدیل ہو گئے" : "Switched to Rep Dashboard")
+                        : (lang === "ur" ? "کسٹمر ڈیش بورڈ پر تبدیل ہو گئے" : "Switched to Customer App")
+                    );
+                    setTimeout(() => setShowSwitchToast(null), 2500);
+                  } else {
+                    setProfileOpen(true);
+                  }
+                  lastProfileTapRef.current = now;
+                }}
+                className="tap-target relative flex items-center justify-center rounded-full"
+                style={{
+                  width: 38,
+                  height: 38,
+                  background: activeRole === "representative" ? "rgba(15, 138, 95, 0.45)" : "rgba(255,255,255,0.22)",
+                  border: activeRole === "representative" ? "1.5px solid #2FAE68" : "1.2px solid rgba(255,255,255,0.4)",
+                  backdropFilter: "blur(8px)",
+                  zIndex: voiceGuideActive ? 45 : undefined,
+                }}
+                title={hasRepAccount ? "Tap for Profile • Double tap to switch dashboard" : "Tap for Profile"}
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+                {hasRepAccount && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      bottom: -2,
+                      right: -2,
+                      background: "#2FAE68",
+                      color: "#fff",
+                      fontSize: 8,
+                      fontWeight: 900,
+                      padding: "1px 3px",
+                      borderRadius: 6,
+                      border: "1px solid #fff",
+                      lineHeight: 1,
+                    }}
+                  >
+                    {activeRole === "representative" ? "REP" : "CUST"}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
 
+          {/* Switch Toast Notification */}
+          {showSwitchToast && (
+            <div
+              style={{
+                position: "absolute",
+                top: 54,
+                left: "50%",
+                transform: "translateX(-50%)",
+                background: "rgba(6, 45, 36, 0.95)",
+                color: "#B4E6D2",
+                padding: "6px 14px",
+                borderRadius: 20,
+                fontSize: 11,
+                fontWeight: 800,
+                boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+                zIndex: 999,
+                border: "1px solid #2FAE68",
+                animation: "screenEnter 0.2s ease-out",
+                whiteSpace: "nowrap",
+              }}
+            >
+              ✓ {showSwitchToast}
+            </div>
+          )}
+
           {/* User information */}
-          <div
-            className="mt-auto"
-            style={{
-              paddingBottom: 58,
-            }}
-          >
+          <div className="mt-auto" style={{ paddingBottom: 6 }}>
             <h1
               style={{
                 color: "#fff",
-                fontSize: 26,
+                fontSize: 20,
                 lineHeight: 1.2,
                 fontWeight: 800,
                 fontFamily:
@@ -17591,61 +20448,48 @@ function HomeScreen({
                 textShadow: "0 2px 6px rgba(0,0,0,0.3)",
               }}
             >
-              {initialUserData?.name
-              ? (lang === "ur" ? t(initialUserData.name) || initialUserData.name : initialUserData.name)
-              : t("Muhammad Arif")}
+              {profileName || (lang === "ur" ? "محمد عارف" : "Muhammad Arif")}
             </h1>
-
-            {/* Location row */}
-            <div
-              className="flex items-center gap-2 mt-1"
+            <p
               style={{
-                color: "rgba(255,255,255,0.96)",
-                fontSize: 14,
-                fontWeight: 700,
-                fontFamily:
-                  lang === "ur"
-                    ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                    : "inherit",
+                color: "#B4E6D2",
+                fontSize: 12,
+                fontWeight: 600,
+                marginTop: 2,
+                textShadow: "0 1px 3px rgba(0,0,0,0.4)",
               }}
             >
-              <PinIconSVG size={14} color="#85E2B8" />
-              <span>
-                {initialUserData?.city
-                  ? (lang === "ur" ? t(initialUserData.city) || initialUserData.city : initialUserData.city) + " Mandi"
-                  : t("home.pakpattan")}
-              </span>
-            </div>
+              📍 {profileCity} {profileProvince ? `(${profileProvince})` : ""}
+            </p>
           </div>
         </div>
 
         {/* Floating Search Bar */}
         <button
           onClick={() =>
-            handleOrientationTap(
-              "search",
-              t("orient.search"),
-              () => push({ id: "search" }),
+            handleOrientationTap("search", t("orient.search"), () =>
+              push({ id: "search" }),
             )
           }
-          className={`tap-target flex items-center gap-3 ${lang === "ur" ? "text-right" : "text-left"}`}
+          className={`tap-target flex items-center gap-2.5 ${
+            lang === "ur" ? "text-right" : "text-left"
+          }`}
           style={{
             position: "absolute",
             left: 16,
             right: 16,
-            bottom: 0,
-            height: 56,
-            paddingLeft: 20,
-            paddingRight: 20,
+            bottom: -22,
+            height: 46,
+            paddingLeft: 18,
+            paddingRight: 18,
             borderRadius: 9999,
             background: "#FFFFFF",
             border: "1.5px solid rgba(8,127,99,0.18)",
-            boxShadow: "0 8px 24px rgba(6,77,64,0.16)",
+            boxShadow: "0 6px 20px rgba(6,77,64,0.14)",
             zIndex: 30,
           }}
         >
-          {/* Search icon */}
-          <svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+          <svg width={18} height={18} viewBox="0 0 24 24" fill="none">
             <circle
               cx="11"
               cy="11"
@@ -17660,18 +20504,16 @@ function HomeScreen({
               strokeLinecap="round"
             />
           </svg>
-
           <span
             className="flex-1"
             style={{
-              fontSize: 15,
+              fontSize: 13.5,
               color: "#6B7C77",
               fontFamily:
                 lang === "ur"
                   ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
                   : "'Inter', sans-serif",
               fontWeight: 600,
-              lineHeight: 1.2,
             }}
           >
             {t("home.search")}
@@ -17680,34 +20522,156 @@ function HomeScreen({
       </div>
 
       {/* =====================================================
-          MAIN HOME CONTENT
+          MAIN HOME CONTENT (Non-scrollable, responsive to iPhone 15 & 15 Pro Max)
           ===================================================== */}
 
       <div
-        className="flex-1 min-h-0 overflow-y-auto relative flex flex-col justify-between"
+        className="flex-1 min-h-0 overflow-hidden relative flex flex-col justify-between"
         style={{
           background:
             "linear-gradient(180deg,#EAF7F1 0%,#F2F8F5 45%,#EEF7F2 100%)",
-          scrollbarWidth: "none",
         }}
       >
         <AgriAmbientCanvas />
 
-        <div className="relative z-10">
+        <div
+          className={`relative z-10 flex-1 flex flex-col ${
+            profileCompleted ? "justify-around" : "justify-between"
+          }`}
+          style={{
+            paddingBottom: profileCompleted
+              ? "clamp(8px, 1.6vh, 16px)"
+              : "clamp(8px, 1.8vh, 20px)",
+          }}
+        >
           {/* ===================================================
-              MY PRODUCTS
+              COMPLETE YOUR PROFILE PROGRESS CARD
+              (Only visible when profile is NOT yet completed)
+              =================================================== */}
+          {!profileCompleted && (
+            <div className="px-4 pt-7">
+              <div
+                style={{
+                  background: "linear-gradient(135deg, #FFFFFF, #F6FBF8)",
+                  border: "1.5px solid #B8DCCF",
+                  borderRadius: 16,
+                  padding: "clamp(10px, 1.4vh, 14px) 14px",
+                  boxShadow: "0 3px 12px rgba(6,77,64,0.06)",
+                  position: "relative",
+                  overflow: "hidden",
+                }}
+              >
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 800,
+                        color: "#183B34",
+                        fontFamily:
+                          lang === "ur"
+                            ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                            : "inherit",
+                      }}
+                    >
+                      {lang === "ur"
+                        ? "پروفائل سیٹ اپ"
+                        : "Complete Your Profile"}
+                    </span>
+                  </div>
+                  <span
+                    style={{
+                      background: "#E8F5E9",
+                      color: "#087F63",
+                      borderRadius: 999,
+                      padding: "2px 8px",
+                      fontSize: 10,
+                      fontWeight: 800,
+                    }}
+                  >
+                    {progressPct}%
+                  </span>
+                </div>
+
+                {/* Progress bar track */}
+                <div
+                  style={{
+                    width: "100%",
+                    height: 5,
+                    background: "#E2EFE9",
+                    borderRadius: 999,
+                    overflow: "hidden",
+                    margin: "4px 0 6px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${progressPct}%`,
+                      height: "100%",
+                      background: "linear-gradient(90deg, #F59E0B, #2FAE68)",
+                      borderRadius: 999,
+                      transition: "width 0.4s ease-in-out",
+                    }}
+                  />
+                </div>
+
+                <p
+                  style={{
+                    fontSize: 11,
+                    color: "#52635F",
+                    lineHeight: 1.35,
+                    marginBottom: 8,
+                    fontFamily:
+                      lang === "ur"
+                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        : "inherit",
+                  }}
+                >
+                  {lang === "ur"
+                    ? `مرحلہ ${currentStepNum} از ${totalSteps} — اپنی پسند کی مصنوعات اور پلان مکمل کریں۔`
+                    : `Step ${currentStepNum} of ${totalSteps} — Resume where you left off.`}
+                </p>
+
+                <button
+                  onClick={() => setCompleteProfileOpen(true)}
+                  className="tap-target w-full py-1.5 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5"
+                  style={{
+                    background: "#087F63",
+                    color: "#fff",
+                    boxShadow: "0 2px 8px rgba(8,127,99,0.2)",
+                    fontFamily:
+                      lang === "ur"
+                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        : "inherit",
+                    fontSize: lang === "ur" ? 13 : 11.5,
+                  }}
+                >
+                  <span>
+                    {lang === "ur"
+                      ? `سیٹ اپ جاری رکھیں (مرحلہ ${currentStepNum})`
+                      : `Continue Setup`}
+                  </span>
+                  <span>➔</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ===================================================
+              MY PRODUCTS (Harmoniously spaced below search bar)
               =================================================== */}
 
           <section
             style={{
-              paddingTop: 16,
+              paddingTop: profileCompleted
+                ? "clamp(42px, 5.5vh, 58px)"
+                : "clamp(4px, 1.2vh, 12px)",
             }}
           >
-            {/* Heading */}
-            <div className="px-4 flex items-center justify-between mb-3">
+            <div className="px-4 flex items-center justify-between mb-2">
               <p
                 style={{
-                  fontSize: 15,
+                  fontSize: profileCompleted ? 15 : 13,
                   fontWeight: 800,
                   color: "#183B34",
                   letterSpacing: lang === "ur" ? "0" : "0.05em",
@@ -17720,92 +20684,70 @@ function HomeScreen({
               >
                 {t("My Products")}
               </p>
-
-              <button
-                onClick={() =>
-                  push({ id: "commodity-select" })
-                }
-                className="tap-target rounded-full px-3.5 py-1.5 flex items-center justify-center"
-                style={{
-                  background: "#E4F2EC",
-                  border: "1.5px solid #B8DCCF",
-                  color: "#087F63",
-                  fontSize: 12,
-                  fontWeight: 800,
-                  minHeight: 36,
-                  padding: "6px 14px",
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                      : "inherit",
-                }}
-              >
-                {t("+ Subscribe")}
-              </button>
             </div>
 
-            {/* Products Row */}
             <div
-              className="flex items-start overflow-x-auto px-4 pb-2"
+              className="flex items-start overflow-x-auto px-4 pb-1"
               style={{
                 scrollbarWidth: "none",
-                gap: 16,
+                gap: profileCompleted
+                  ? "clamp(16px, 4.5vw, 22px)"
+                  : "clamp(12px, 3.5vw, 16px)",
               }}
             >
-              {/* Active Wheat */}
-              {PRODUCT_DIVISIONS.filter(
-                (d) => d.name === "Wheat",
-              ).map((div) => {
-                const verticalFor =
-                  getVerticalForProduct(div.name)
+              {activeProducts.map((div) => {
+                const verticalFor = getVerticalForProduct(div.name);
 
                 return (
                   <button
                     key={div.name}
                     onClick={() =>
-                      handleOrientationTap(
-                        "product",
-                        t("orient.product"),
-                        () =>
-                          push({
-                            id: "byproduct-combined",
-                            products: [
-                              {
-                                vertical: verticalFor,
-                                commodity: div.name,
-                              },
-                            ],
-                            active: 0,
-                          }),
+                      handleOrientationTap("product", t("orient.product"), () =>
+                        push({
+                          id: "byproduct-combined",
+                          products: [
+                            {
+                              vertical: verticalFor,
+                              product: div.name,
+                            },
+                          ],
+                          active: 0,
+                        }),
                       )
                     }
                     className="flex-shrink-0 flex flex-col items-center tap-target"
                     style={{
-                      width: 120,
+                      width: profileCompleted
+                        ? "clamp(96px, 25vw, 116px)"
+                        : "clamp(82px, 20vw, 92px)",
                       zIndex: voiceGuideActive ? 45 : undefined,
                     }}
                   >
-                    {/* Wheat Circle */}
+                    {/* Active Circle */}
                     <div
                       style={{
-                        width: 112,
-                        height: 112,
+                        width: profileCompleted
+                          ? "clamp(92px, 12vh, 108px)"
+                          : "clamp(76px, 9.2vh, 84px)",
+                        height: profileCompleted
+                          ? "clamp(92px, 12vh, 108px)"
+                          : "clamp(76px, 9.2vh, 84px)",
                         borderRadius: "50%",
-                        border: "3.5px solid #087F63",
+                        border: "3px solid #087F63",
                         background: "#F4FAF7",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         position: "relative",
-                        boxShadow: "0 6px 22px rgba(8,127,99,0.24)",
+                        boxShadow: "0 5px 16px rgba(8,127,99,0.2)",
                       }}
                     >
                       <img
-                        src={getCommodityIconSrc(div.name, verticalFor)}
+                        src={getproductIconSrc(div.name, verticalFor)}
                         alt={div.name}
                         style={{
-                          width: "78%",
-                          height: "78%",
+                          width: profileCompleted ? "78%" : "74%",
+                          height: profileCompleted ? "78%" : "74%",
                           objectFit: "contain",
                         }}
                       />
@@ -17816,16 +20758,16 @@ function HomeScreen({
                           position: "absolute",
                           bottom: 1,
                           right: 1,
-                          width: 24,
-                          height: 24,
+                          width: profileCompleted ? 22 : 18,
+                          height: profileCompleted ? 22 : 18,
                           borderRadius: "50%",
                           background: "#087F63",
                           color: "#fff",
-                          border: "2.5px solid #EEF7F2",
+                          border: "2px solid #EEF7F2",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          fontSize: 13,
+                          fontSize: profileCompleted ? 12 : 10,
                           fontWeight: 900,
                         }}
                       >
@@ -17836,15 +20778,15 @@ function HomeScreen({
                     {/* Name */}
                     <span
                       style={{
-                        marginTop: 6,
-                        fontSize: 16,
+                        marginTop: profileCompleted ? 6 : 4,
+                        fontSize: profileCompleted ? 14.5 : 13,
                         fontWeight: 800,
                         color: "#183B34",
                         fontFamily:
                           lang === "ur"
                             ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
                             : "inherit",
-                        lineHeight: 1.2,
+                        lineHeight: 1.15,
                       }}
                     >
                       {tc(div.name)}
@@ -17853,14 +20795,14 @@ function HomeScreen({
                     {/* Active Badge */}
                     <span
                       style={{
-                        marginTop: 4,
-                        padding: "3px 14px",
+                        marginTop: 2,
+                        padding: profileCompleted ? "2.5px 11px" : "1.5px 8px",
                         borderRadius: 9999,
                         background: "#087F63",
                         color: "#fff",
-                        fontSize: 10,
+                        fontSize: profileCompleted ? 9.5 : 8.5,
                         fontWeight: 800,
-                        letterSpacing: "0.05em",
+                        letterSpacing: "0.04em",
                         fontFamily:
                           lang === "ur"
                             ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
@@ -17870,13 +20812,13 @@ function HomeScreen({
                       {t("ACTIVE")}
                     </span>
                   </button>
-                )
+                );
               })}
 
               {/* Locked Products */}
               {lockedProducts.map((div) => {
-                const verticalFor = getVerticalForProduct(div.name)
-                const iconSrc = getCommodityIconSrc(div.name, verticalFor)
+                const verticalFor = getVerticalForProduct(div.name);
+                const iconSrc = getproductIconSrc(div.name, verticalFor);
 
                 return (
                   <button
@@ -17884,21 +20826,27 @@ function HomeScreen({
                     onClick={() =>
                       push({
                         id: "billing",
-                        commodity: div.name,
+                        product: div.name,
                         vertical: verticalFor,
                       })
                     }
                     className="flex-shrink-0 flex flex-col items-center tap-target"
                     style={{
-                      width: 66,
+                      width: profileCompleted
+                        ? "clamp(66px, 17vw, 78px)"
+                        : "clamp(54px, 14vw, 62px)",
                     }}
                   >
-                    {/* Locked circle with blurred product image */}
+                    {/* Locked circle */}
                     <div
                       style={{
-                        width: 56,
-                        height: 56,
-                        marginTop: 28,
+                        width: profileCompleted
+                          ? "clamp(58px, 7.5vh, 68px)"
+                          : "clamp(48px, 5.8vh, 54px)",
+                        height: profileCompleted
+                          ? "clamp(58px, 7.5vh, 68px)"
+                          : "clamp(48px, 5.8vh, 54px)",
+                        marginTop: profileCompleted ? 18 : 14,
                         borderRadius: "50%",
                         background: "#E4EFE9",
                         border: "1.5px solid #BDD9CD",
@@ -17907,53 +20855,53 @@ function HomeScreen({
                         justifyContent: "center",
                         position: "relative",
                         overflow: "hidden",
-                        boxShadow: "0 2px 8px rgba(18,65,48,0.06)",
+                        boxShadow: "0 2px 6px rgba(18,65,48,0.06)",
                       }}
                     >
-                      {/* Blurred product picture preview */}
                       <img
                         src={iconSrc}
                         alt={div.name}
                         style={{
-                          width: "80%",
-                          height: "80%",
+                          width: "75%",
+                          height: "75%",
                           objectFit: "contain",
-                          filter: "blur(2.5px) grayscale(20%)",
+                          filter: "blur(2px) grayscale(20%)",
                           opacity: 0.55,
                           position: "absolute",
                         }}
                       />
 
-                      {/* Frosted lock badge */}
                       <div
                         style={{
-                          width: 26,
-                          height: 26,
+                          width: profileCompleted ? 24 : 20,
+                          height: profileCompleted ? 24 : 20,
                           borderRadius: "50%",
-                          background: "rgba(255, 255, 255, 0.78)",
-                          backdropFilter: "blur(3px)",
+                          background: "rgba(255, 255, 255, 0.85)",
+                          backdropFilter: "blur(2px)",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                           position: "relative",
                           zIndex: 2,
-                          border: "1px solid rgba(255, 255, 255, 0.85)",
-                          boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+                          border: "1px solid rgba(255, 255, 255, 0.9)",
                         }}
                       >
-                        <LockIconSVG size={13} color="#2A483E" />
+                        <LockIconSVG
+                          size={profileCompleted ? 12 : 10}
+                          color="#2A483E"
+                        />
                       </div>
                     </div>
 
                     <span
                       style={{
-                        marginTop: 6,
-                        fontSize: 12,
+                        marginTop: 4,
+                        fontSize: profileCompleted ? 12 : 10.5,
                         color: "#475F57",
                         fontWeight: 700,
                         textAlign: "center",
-                        lineHeight: 1.2,
-                        maxWidth: 66,
+                        lineHeight: 1.15,
+                        maxWidth: 72,
                         fontFamily:
                           lang === "ur"
                             ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
@@ -17965,13 +20913,13 @@ function HomeScreen({
 
                     <span
                       style={{
-                        marginTop: 4,
-                        padding: "2px 8px",
+                        marginTop: 2,
+                        padding: "1.5px 6px",
                         borderRadius: 9999,
                         background: "#E4F0EA",
                         border: "1px solid #C6DFD4",
                         color: "#35594C",
-                        fontSize: 9,
+                        fontSize: profileCompleted ? 8.5 : 8,
                         fontWeight: 700,
                         whiteSpace: "nowrap",
                         fontFamily:
@@ -17983,82 +20931,89 @@ function HomeScreen({
                       {t("Subscribe")}
                     </span>
                   </button>
-                )
+                );
               })}
             </div>
           </section>
 
           {/* ===================================================
-              FAVORITES
+              FAVORITES (Balanced vertical spacing)
               =================================================== */}
 
           <section
-            className="px-4 pb-8"
+            className="px-4"
             style={{
-              marginTop: 14,
               position: "relative",
               zIndex: voiceGuideActive ? 45 : 10,
+              paddingTop: profileCompleted ? "8px" : "0px",
             }}
           >
             {/* Favorites heading */}
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-2">
               <div>
-                <p
-                  style={{
-                    fontSize: 22,
-                    fontWeight: 800,
-                    color: "#183B34",
-                    lineHeight: 1.25,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                        : "inherit",
-                  }}
-                >
-                  {t("Favorites")}
-                </p>
-                <p
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 700,
-                    color: "#5E7A71",
-                    marginTop: 2,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                        : "inherit",
-                  }}
-                >
-                  {t("Today's Rates")}
-                </p>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <p
+                    style={{
+                      fontSize: profileCompleted
+                        ? "clamp(18px, 2.5vh, 22px)"
+                        : "clamp(16px, 2.2vh, 19px)",
+                      fontWeight: 800,
+                      color: "#183B34",
+                      lineHeight: 1.2,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {t("Favorites")}
+                  </p>
+                  {!profileCompleted && (
+                    <span
+                      style={{
+                        fontSize: 9.5,
+                        fontWeight: 800,
+                        color: "#2A483E",
+                        background: "#E4F0EA",
+                        padding: "2px 8px",
+                        borderRadius: 999,
+                        border: "1px solid #C6DFD4",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 4,
+                      }}
+                    >
+                    </span>
+                  )}
+                </div>
               </div>
 
               {/* Arrow Button */}
               <button
-                onClick={() =>
+                onClick={() => {
                   push({
                     id: "byproduct-combined",
                     products: [
                       {
                         vertical: "Grains",
-                        commodity: "Wheat",
+                        product: "Wheat",
                       },
                     ],
                     active: 0,
-                  })
-                }
+                  });
+                }}
                 className="tap-target flex items-center justify-center rounded-full"
                 style={{
-                  width: 44,
-                  height: 44,
+                  width: "clamp(38px, 4.8vh, 44px)",
+                  height: "clamp(38px, 4.8vh, 44px)",
                   background: "#E3F1EB",
-                  border: "1.5px solid #A0CEBC",
+                  border: "1.2px solid #A0CEBC",
                   color: "#087F63",
                 }}
               >
                 <span
                   style={{
-                    fontSize: 22,
+                    fontSize: "clamp(18px, 2.5vh, 22px)",
                     fontWeight: 800,
                     lineHeight: 1,
                   }}
@@ -18068,57 +21023,53 @@ function HomeScreen({
               </button>
             </div>
 
-            {/* Favorite cards */}
+            {/* Favorite cards — Unlocked for Free Trial */}
             <div
-              className="flex gap-3.5 overflow-x-auto pb-2"
+              className="flex gap-3 overflow-x-auto pb-1"
               style={{
                 scrollbarWidth: "none",
                 scrollSnapType: "x mandatory",
               }}
             >
               {FAVE_BPS.map((bp) => {
-                const imgSrc = getFavoriteImage(bp)
+                const imgSrc = getFavoriteImage(bp);
 
                 return (
                   <button
                     key={bp}
-                    onClick={() =>
+                    onClick={() => {
                       push({
-                        id: "commodity-rates",
+                        id: "product-rates",
                         vertical: "Grains",
-                        commodity: "Wheat",
+                        product: "Wheat",
                         byproduct: bp,
-                      })
-                    }
+                      });
+                    }}
                     className="flex-shrink-0 flex flex-col items-center relative tap-target"
                     style={{
-                      width: 136,
-                      minWidth: 130,
-                      height: 180,
-                      padding: "12px 10px 14px",
+                      width: "clamp(136px, 34vw, 160px)",
+                      minWidth: "clamp(130px, 33vw, 154px)",
+                      height: "clamp(185px, 24vh, 215px)",
+                      padding: "clamp(10px, 1.5vh, 14px) 10px clamp(12px, 1.7vh, 16px)",
                       borderRadius: 20,
                       background: "#FFFFFF",
                       border: "1.5px solid #D5E5DE",
-                      boxShadow: "0 4px 14px rgba(18,65,48,0.08)",
+                      boxShadow: "0 4px 14px rgba(18,65,48,0.07)",
                       scrollSnapAlign: "start",
                     }}
                   >
-                    {/* Star instead of heart */}
+                    {/* Star indicator */}
                     <div
                       style={{
                         position: "absolute",
-                        top: 10,
-                        right: 10,
-                        width: 22,
-                        height: 22,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        top: 8,
+                        right: 8,
+                        zIndex: 3,
                       }}
                     >
                       <svg
-                        width="16"
-                        height="16"
+                        width="14"
+                        height="14"
                         viewBox="0 0 24 24"
                         fill="#087F63"
                       >
@@ -18129,13 +21080,14 @@ function HomeScreen({
                     {/* Image */}
                     <div
                       style={{
-                        width: 80,
-                        height: 80,
-                        marginTop: 8,
-                        marginBottom: 6,
+                        width: "clamp(74px, 9.5vh, 88px)",
+                        height: "clamp(74px, 9.5vh, 88px)",
+                        marginTop: 4,
+                        marginBottom: 4,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
+                        position: "relative",
                       }}
                     >
                       {imgSrc ? (
@@ -18144,14 +21096,24 @@ function HomeScreen({
                           alt={bp}
                           loading="lazy"
                           style={{
-                            width: 74,
-                            height: 74,
+                            width: "90%",
+                            height: "90%",
                             objectFit: "contain",
                             display: "block",
+                            filter: "none",
+                            opacity: 1,
                           }}
                         />
                       ) : (
-                        <CommodityIcon name={bp} vertical="Grains" size={54} />
+                        <ProductIcon
+                          name={bp}
+                          vertical="Grains"
+                          size={56}
+                          style={{
+                            filter: "none",
+                            opacity: 1,
+                          }}
+                        />
                       )}
                     </div>
 
@@ -18159,11 +21121,11 @@ function HomeScreen({
                     <span
                       style={{
                         marginTop: "auto",
-                        fontSize: 15,
+                        fontSize: "clamp(14px, 1.9vh, 16px)",
                         fontWeight: 800,
                         color: "#183B34",
                         textAlign: "center",
-                        lineHeight: 1.2,
+                        lineHeight: 1.15,
                         fontFamily:
                           lang === "ur"
                             ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
@@ -18173,14 +21135,14 @@ function HomeScreen({
                       {tc(bp)}
                     </span>
                   </button>
-                )
+                );
               })}
             </div>
           </section>
         </div>
 
         {/* ===================================================
-            AGRICULTURAL FOREGROUND CANVAS LAYER
+            AGRICULTURAL FOREGROUND CANVAS LAYER (Leaves anchored above Nav)
             =================================================== */}
 
         <AgriForegroundCanvas />
@@ -18193,9 +21155,7 @@ function HomeScreen({
           <div
             className="zm-sheet-overlay"
             style={{ zIndex: 200 }}
-            onClick={() =>
-              setPicksFavSheet(false)
-            }
+            onClick={() => setPicksFavSheet(false)}
           >
             <div
               className="zm-sheet-high"
@@ -18203,23 +21163,18 @@ function HomeScreen({
                 background: "#F4FAF7",
                 height: "88vh",
               }}
-              onClick={(e) =>
-                e.stopPropagation()
-              }
+              onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
               <div
                 className="px-5 pt-5 pb-3 flex-shrink-0"
                 style={{
-                  borderBottom:
-                    "1px solid #D5E2DD",
+                  borderBottom: "1px solid #D5E2DD",
                 }}
               >
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    <p className="font-bold text-lg">
-                      Select Your Picks
-                    </p>
+                    <p className="font-bold text-lg">Select Your Picks</p>
 
                     <p
                       className="text-xs mt-0.5"
@@ -18227,29 +21182,22 @@ function HomeScreen({
                         color: "#52635F",
                       }}
                     >
-                      Choose byproducts to
-                      track on your home
-                      screen
+                      Choose byproducts to track on your home screen
                     </p>
                   </div>
 
-                  {pickedByproducts.length >
-                    0 && (
-                      <button
-                        onClick={() =>
-                          setPickedByproducts(
-                            [],
-                          )
-                        }
-                        className="tap-target text-xs font-bold px-3 py-1.5 rounded-full"
-                        style={{
-                          background: "#F9E1DE",
-                          color: "#A83B37",
-                        }}
-                      >
-                        Clear all
-                      </button>
-                    )}
+                  {pickedByproducts.length > 0 && (
+                    <button
+                      onClick={() => setPickedByproducts([])}
+                      className="tap-target text-xs font-bold px-3 py-1.5 rounded-full"
+                      style={{
+                        background: "#F9E1DE",
+                        color: "#A83B37",
+                      }}
+                    >
+                      Clear all
+                    </button>
+                  )}
                 </div>
 
                 {/* Search */}
@@ -18258,8 +21206,7 @@ function HomeScreen({
                   style={{
                     height: 40,
                     background: "#F1F7F4",
-                    border:
-                      "1px solid #D5E2DD",
+                    border: "1px solid #D5E2DD",
                   }}
                 >
                   <span
@@ -18272,11 +21219,7 @@ function HomeScreen({
 
                   <input
                     value={picksSearch}
-                    onChange={(e) =>
-                      setPicksSearch(
-                        e.target.value,
-                      )
-                    }
+                    onChange={(e) => setPicksSearch(e.target.value)}
                     placeholder="Search byproducts…"
                     className="flex-1 text-sm bg-transparent outline-none"
                     style={{
@@ -18292,29 +21235,17 @@ function HomeScreen({
                     scrollbarWidth: "none",
                   }}
                 >
-                  {Object.entries(
-                    VERTICALS,
-                  ).map(([v, vd]) => (
+                  {Object.entries(VERTICALS).map(([v, vd]) => (
                     <button
                       key={v}
-                      onClick={() =>
-                        setPicksVertical(v)
-                      }
+                      onClick={() => setPicksVertical(v)}
                       className="tap-target flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
                       style={{
-                        background:
-                          picksVertical === v
-                            ? "#087F63"
-                            : "#F1F7F4",
-                        color:
-                          picksVertical === v
-                            ? "#fff"
-                            : "#52635F",
-                        border:
-                          `1px solid ${picksVertical === v
-                            ? "#087F63"
-                            : "#D5E2DD"
-                          }`,
+                        background: picksVertical === v ? "#087F63" : "#F1F7F4",
+                        color: picksVertical === v ? "#fff" : "#52635F",
+                        border: `1px solid ${
+                          picksVertical === v ? "#087F63" : "#D5E2DD"
+                        }`,
                       }}
                     >
                       <SpriteIcon
@@ -18337,128 +21268,93 @@ function HomeScreen({
               {/* Byproducts */}
               <div className="overflow-y-auto flex-1 min-h-0 px-4 pt-3 pb-2 flex flex-col gap-2">
                 {Object.entries(
-                  VERTICALS[
-                    picksVertical
-                  ]?.commodities || {},
-                ).flatMap(
-                  ([commodity, byproducts]) =>
-                    byproducts
-                      .filter(
-                        (bp) =>
-                          !picksSearch ||
-                          bp
-                            .toLowerCase()
-                            .includes(
-                              picksSearch.toLowerCase(),
-                            ) ||
-                          commodity
-                            .toLowerCase()
-                            .includes(
-                              picksSearch.toLowerCase(),
-                            ),
-                      )
-                      .map((bp) => {
-                        const item: RateItem = {
-                          vertical:
-                            picksVertical,
-                          commodity,
-                          byproduct: bp,
-                        }
+                  VERTICALS[picksVertical]?.products || {},
+                ).flatMap(([product, byproducts]) =>
+                  byproducts
+                    .filter(
+                      (bp) =>
+                        !picksSearch ||
+                        bp.toLowerCase().includes(picksSearch.toLowerCase()) ||
+                        product
+                          .toLowerCase()
+                          .includes(picksSearch.toLowerCase()),
+                    )
+                    .map((bp) => {
+                      const item: RateItem = {
+                        vertical: picksVertical,
+                        product,
+                        byproduct: bp,
+                      };
 
-                        const selected =
-                          isPickedBP(item)
+                      const selected = isPickedBP(item);
 
-                        return (
-                          <button
-                            key={`${commodity}|${bp}`}
-                            onClick={() =>
-                              togglePickBP(
-                                item,
-                              )
-                            }
-                            className="tap-target flex-shrink-0 rounded-2xl overflow-hidden flex items-center"
+                      return (
+                        <button
+                          key={`${product}|${bp}`}
+                          onClick={() => togglePickBP(item)}
+                          className="tap-target flex-shrink-0 rounded-2xl overflow-hidden flex items-center"
+                          style={{
+                            height: 64,
+                            background: selected ? "#E4F2EC" : "#fff",
+                            border: `1.5px solid ${
+                              selected ? "#087F63" : "#D5E2DD"
+                            }`,
+                          }}
+                        >
+                          <div
+                            className="flex-shrink-0 flex items-center justify-center"
                             style={{
+                              width: 56,
                               height: 64,
-                              background:
-                                selected
-                                  ? "#E4F2EC"
-                                  : "#fff",
-                              border:
-                                `1.5px solid ${selected
-                                  ? "#087F63"
-                                  : "#D5E2DD"
-                                }`,
+                              background: selected ? "#D9EEE4" : "#F1F7F4",
                             }}
                           >
-                            <div
-                              className="flex-shrink-0 flex items-center justify-center"
+                            <ProductIcon
+                              name={bp}
+                              vertical={picksVertical}
+                              size={36}
+                            />
+                          </div>
+
+                          <div className="flex-1 px-3 text-left">
+                            <p
+                              className="font-bold text-sm"
                               style={{
-                                width: 56,
-                                height: 64,
-                                background:
-                                  selected
-                                    ? "#D9EEE4"
-                                    : "#F1F7F4",
+                                color: selected ? "#087F63" : "#183B34",
                               }}
                             >
-                              <CommodityIcon
-                                name={bp}
-                                vertical={
-                                  picksVertical
-                                }
-                                size={36}
-                              />
-                            </div>
+                              {bp}
+                            </p>
 
-                            <div className="flex-1 px-3 text-left">
-                              <p
-                                className="font-bold text-sm"
-                                style={{
-                                  color:
-                                    selected
-                                      ? "#087F63"
-                                      : "#183B34",
-                                }}
-                              >
-                                {bp}
-                              </p>
-
-                              <p
-                                className="text-[10px]"
-                                style={{
-                                  color:
-                                    "#52635F",
-                                }}
-                              >
-                                {commodity} ·{" "}
-                                {picksVertical}
-                              </p>
-                            </div>
-
-                            <div
-                              className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center mr-3"
+                            <p
+                              className="text-[10px]"
                               style={{
-                                background:
-                                  selected
-                                    ? "#087F63"
-                                    : "#D5E2DD",
+                                color: "#52635F",
                               }}
                             >
-                              <span
-                                style={{
-                                  color: "#fff",
-                                  fontSize: 14,
-                                  fontWeight: 800,
-                                }}
-                              >
-                                {selected
-                                  ? "✓"
-                                  : "+"}
-                              </span>
-                            </div>
-                          </button>
-                        )
-                      }),
+                              {product} · {picksVertical}
+                            </p>
+                          </div>
+
+                          <div
+                            className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center mr-3"
+                            style={{
+                              background: selected ? "#087F63" : "#D5E2DD",
+                            }}
+                          >
+                            <span
+                              style={{
+                                color: "#fff",
+                                fontSize: 14,
+                                fontWeight: 800,
+                              }}
+                            >
+                              {selected ? "✓" : "+"}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    }),
                 )}
               </div>
 
@@ -18466,27 +21362,20 @@ function HomeScreen({
               <div
                 className="px-4 pb-6 pt-3 flex-shrink-0"
                 style={{
-                  borderTop:
-                    "1px solid #D5E2DD",
+                  borderTop: "1px solid #D5E2DD",
                 }}
               >
                 <button
-                  onClick={() =>
-                    setPicksFavSheet(false)
-                  }
+                  onClick={() => setPicksFavSheet(false)}
                   className="tap-target w-full rounded-2xl py-4 font-bold text-white text-base"
                   style={{
                     background: "#087F63",
                   }}
                 >
-                  {pickedByproducts.length >
-                    0
-                    ? `Show ${pickedByproducts.length
-                    } Pick${pickedByproducts.length >
-                      1
-                      ? "s"
-                      : ""
-                    }`
+                  {pickedByproducts.length > 0
+                    ? `Show ${pickedByproducts.length} Pick${
+                        pickedByproducts.length > 1 ? "s" : ""
+                      }`
                     : "Done · Show All"}
                 </button>
               </div>
@@ -18503,7 +21392,7 @@ function HomeScreen({
           ===================================================== */}
 
       {/* =====================================================
-          PROFILE MODAL
+          PROFILE MODAL (DRAWER & ACCOUNT MANAGEMENT)
           ===================================================== */}
       {profileOpen && (
         <div
@@ -18513,67 +21402,1498 @@ function HomeScreen({
         >
           <div
             className="zm-sheet-high"
-            style={{ background: "#F4FAF7", maxHeight: "90vh" }}
+            style={{ background: "#F4FAF7", maxHeight: "92vh" }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="px-5 pt-4 pb-3 flex-shrink-0" style={{ borderBottom: "1px solid #D5E2DD" }}>
-              <div className="w-10 h-1 rounded-full mx-auto mb-3" style={{ background: "#C7D6D0" }} />
+            <div
+              className="px-5 pt-4 pb-3 flex-shrink-0"
+              style={{ borderBottom: "1px solid #D5E2DD" }}
+            >
+              <div
+                className="w-10 h-1 rounded-full mx-auto mb-3"
+                style={{ background: "#C7D6D0" }}
+              />
               <div className="flex items-center justify-between">
-                <p className="font-bold text-lg" style={{ color: "#183B34" }}>Profile</p>
-                <button onClick={() => setProfileOpen(false)} className="tap-target text-sm font-semibold px-3 py-1 rounded-full" style={{ background: "#E8EFEC", color: "#52635F" }}>Done</button>
+                <p
+                  className="font-bold text-lg"
+                  style={{
+                    color: "#183B34",
+                    fontFamily:
+                      lang === "ur"
+                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        : "inherit",
+                  }}
+                >
+                  {lang === "ur" ? "اکاؤنٹ اور پروفائل" : "Account & Profile"}
+                </p>
+                <button
+                  onClick={() => setProfileOpen(false)}
+                  className="tap-target text-sm font-semibold px-3.5 py-1.5 rounded-full"
+                  style={{ background: "#E8EFEC", color: "#52635F" }}
+                >
+                  {lang === "ur" ? "بند کریں" : "Done"}
+                </button>
               </div>
             </div>
 
             {/* Profile content */}
             <div className="flex-1 overflow-y-auto">
               {/* Avatar + name */}
-              <div className="flex flex-col items-center py-6 px-5" style={{ borderBottom: "1px solid #E8EFEC" }}>
-                <div className="w-20 h-20 rounded-full flex items-center justify-center mb-3" style={{ background: "linear-gradient(135deg,#087F63,#064D40)" }}>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+              <div
+                className="flex flex-col items-center py-5 px-5"
+                style={{ borderBottom: "1px solid #E8EFEC" }}
+              >
+                <div
+                  className="w-20 h-20 rounded-full flex items-center justify-center mb-3 shadow-md relative"
+                  style={{
+                    background: "linear-gradient(135deg, #087F63, #064D40)",
+                  }}
+                >
+                  <svg
+                    width="38"
+                    height="38"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                   </svg>
+                  <button
+                    onClick={() => {
+                      setProfileOpen(false);
+                      setEditName(profileName);
+                      setEditPhone(profilePhone);
+                      setShowContactVerify(false);
+                      setContactOtp(["", "", "", ""]);
+                      setContactOtpError("");
+                      setContactOtpSuccess(false);
+                      setEditProfileOpen(true);
+                    }}
+                    className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#2FAE68] text-white flex items-center justify-center border-2 border-white shadow"
+                    title="Edit Profile"
+                  >
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
+                      <path d="M12 20h9" />
+                      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                    </svg>
+                  </button>
                 </div>
-                <p className="font-extrabold text-xl" style={{ color: "#183B34" }}>
-                  {initialUserData?.name || (lang === "ur" ? "محمد عارف" : "Muhammad Arif")}
+                <p
+                  className="font-extrabold text-xl"
+                  style={{
+                    color: "#183B34",
+                    fontFamily:
+                      lang === "ur"
+                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        : "inherit",
+                  }}
+                >
+                  {profileName}
                 </p>
-                <p className="text-sm mt-1" style={{ color: "#52635F" }}>
-                  {initialUserData?.city
-                    ? (initialUserData.city + (initialUserData.province ? ", " + initialUserData.province : ""))
-                    : (lang === "ur" ? "پاکپتن منڈی" : "Pakpattan Mandi")}
-                </p>
-                {initialUserData?.phone && (
-                  <p className="text-xs mt-0.5" style={{ color: "#80918B" }}>{initialUserData.phone}</p>
+                {profilePhone && (
+                  <p className="text-xs font-semibold mt-1 text-[#52635F]">
+                    {profilePhone}
+                  </p>
+                )}
+              </div>
+
+              {/* Profile Completion Bar in Drawer */}
+              <div
+                style={{
+                  margin: "14px 18px 8px",
+                  padding: "14px 16px",
+                  background: profileCompleted ? "#E8F8F0" : "#FFF8EB",
+                  border: profileCompleted
+                    ? "1.5px solid #2FAE68"
+                    : "1.5px solid #F59E0B",
+                  borderRadius: 16,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 6,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 800,
+                      color: profileCompleted ? "#064D40" : "#92400E",
+                    }}
+                  >
+                    {profileCompleted
+                      ? lang === "ur"
+                        ? "پروفائل 100% مکمل ہے ✓"
+                        : "Profile 100% Complete ✓"
+                      : lang === "ur"
+                        ? `پروفائل مکمل کریں`
+                        : `Complete Profile`}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: profileCompleted ? "#087F63" : "#D97706",
+                    }}
+                  >
+                    {profileCompleted ? "100%" : `${progressPct}%`}
+                  </span>
+                </div>
+                <div
+                  style={{
+                    width: "100%",
+                    height: 8,
+                    background: "#E5E7EB",
+                    borderRadius: 999,
+                    overflow: "hidden",
+                    marginBottom: 8,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: profileCompleted ? "100%" : `${progressPct}%`,
+                      height: "100%",
+                      background: profileCompleted ? "#2FAE68" : "#F59E0B",
+                      borderRadius: 999,
+                      transition: "width 0.4s ease",
+                    }}
+                  />
+                </div>
+                {!profileCompleted && (
+                  <button
+                    onClick={() => {
+                    setProfileOpen(false);
+                      setCompleteProfileOpen(true);
+                    }}
+                    style={{
+                      width: "100%",
+                      padding: "8px 12px",
+                      background: "#087F63",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: 10,
+                      fontSize: 12,
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      marginTop: 4,
+                    }}
+                  >
+                    {lang === "ur"
+                      ? `سیٹ اپ جاری رکھیں (مرحلہ ${currentStepNum}) →`
+                      : `Continue Setup (Step ${currentStepNum} of ${totalSteps}) →`}
+                  </button>
                 )}
               </div>
 
               {/* Menu items */}
               {[
-                { label: lang === "ur" ? "پروفائل ترمیم کریں" : "Edit Profile", action: () => { setProfileOpen(false) } },
-                { label: lang === "ur" ? "مقام" : "Location", action: () => { setProfileOpen(false) } },
-                { label: lang === "ur" ? "میری سبسکرپشنز" : "My Subscriptions", action: () => { setProfileOpen(false); push({ id: "commodity-select" }) } },
-                { label: lang === "ur" ? "اطلاعات" : "Notifications", action: () => { setProfileOpen(false); setNotifOpen(true) } },
-                { label: lang === "ur" ? "آواز اور زبان" : "Voice & Language", action: () => { setProfileOpen(false); homeSetVoiceEnabled(!homeVoiceEnabled) } },
-                { label: lang === "ur" ? "نمائندہ بنیں" : "Become a Representative", action: () => { setProfileOpen(false) } },
-                { label: lang === "ur" ? "سیٹنگز" : "Settings", action: () => { setProfileOpen(false) } },
-                { label: lang === "ur" ? "مدد اور سپورٹ" : "Help & Support", action: () => { setProfileOpen(false) } },
-                { label: lang === "ur" ? "زرعی منڈی کے بارے میں" : "About ZaraiMandi", action: () => { setProfileOpen(false) } },
-                { label: lang === "ur" ? "لاگ آؤٹ" : "Log Out",  danger: true, action: () => { setProfileOpen(false); if (onRestartOnboarding) onRestartOnboarding() } },
+                {
+                  id: "edit",
+                  label: lang === "ur" ? "پروفائل ترمیم کریں" : "Edit Profile",
+                  sub: lang === "ur" ? "نام، فون نمبر / ای میل" : "Name, phone number / email",
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 20h9" />
+                      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                    </svg>
+                  ),
+                  action: () => {
+                    setProfileOpen(false);
+                    setEditName(profileName);
+                    setEditPhone(profilePhone);
+                    setShowContactVerify(false);
+                    setContactOtp(["", "", "", ""]);
+                    setContactOtpError("");
+                    setContactOtpSuccess(false);
+                    setEditProfileOpen(true);
+                  },
+                },
+                {
+                  id: "subs",
+                  label: lang === "ur" ? "میری سبسکرپشنز" : "My Subscriptions",
+                  sub: profileCompleted
+                    ? (lang === "ur" ? "فعال زرعی منڈی پرو پلان" : "Active Zarai Mandi Pro Plan")
+                    : (lang === "ur" ? "مفت ٹرائل جاری ہے (۲ دن)" : "Free Trial Active (2 Days)"),
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                    </svg>
+                  ),
+                  action: () => {
+                    setProfileOpen(false);
+                    setSubsModalOpen(true);
+                  },
+                },
+                {
+                  id: "voice",
+                  label: lang === "ur" ? "آواز اور زبان" : "Voice & Language",
+                  sub: `${lang === "ur" ? "اردو" : "English"} · ${homeVoiceEnabled ? (lang === "ur" ? "آواز فعال" : "Voice On") : (lang === "ur" ? "آواز بند" : "Voice Off")}`,
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                  ),
+                  action: () => {
+                    setProfileOpen(false);
+                    setVoiceLangModalOpen(true);
+                  },
+                },
+                {
+                  id: "rep",
+                  label: hasRepAccount
+                    ? (lang === "ur" ? "نمائندہ ڈیش بورڈ پر جائیں" : "Switch to Representative Dashboard")
+                    : (lang === "ur" ? "نمائندہ بنیں (پارٹنر)" : "Become a Representative"),
+                  sub: hasRepAccount
+                    ? (lang === "ur" ? "اکاؤنٹ تبدیل کریں" : "Switch accounts")
+                    : (lang === "ur" ? "منڈی کے لیے نمائندہ اکاؤنٹ بنائیں" : "Set up your representative account"),
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                  ),
+                  action: () => {
+                    setProfileOpen(false);
+                    if (hasRepAccount) {
+                      onSwitchRole?.("representative");
+                    } else {
+                      setRepConfirmModalOpen(true);
+                    }
+                  },
+                },
+                {
+                  id: "help",
+                  label: lang === "ur" ? "مدد اور کسٹمر سپورٹ" : "Help & Support",
+                  sub: lang === "ur" ? "24/7 واٹس ایپ اور ہیلپ لائن" : "24/7 WhatsApp & Helpline",
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                      <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                  ),
+                  action: () => {
+                    setProfileOpen(false);
+                    setHelpModalOpen(true);
+                  },
+                },
+                {
+                  id: "logout",
+                  label: lang === "ur" ? "لاگ آؤٹ" : "Log Out",
+                  sub: lang === "ur" ? "سائن آؤٹ کریں اور محفوظ رہیں" : "Sign out of your account",
+                  danger: true,
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                      <polyline points="16 17 21 12 16 7" />
+                      <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                  ),
+                  action: () => {
+                    setProfileOpen(false);
+                    setLogoutModalOpen(true);
+                  },
+                },
               ].map((item, i) => (
                 <button
                   key={i}
-                  className="tap-target w-full flex items-center gap-4 px-5 py-4"
-                  style={{ borderBottom: "1px solid #F1F7F4", background: "#fff", textAlign: lang === "ur" ? "right" : "left" }}
+                  className="tap-target w-full flex items-center gap-3.5 px-5 py-3.5"
+                  style={{
+                    borderBottom: "1px solid #F1F7F4",
+                    background: "#fff",
+                    textAlign: lang === "ur" ? "right" : "left",
+                  }}
                   onClick={item.action}
                 >
-                  <span style={{ fontSize: 20, flexShrink: 0 }}>{item.icon}</span>
-                  <span className="flex-1 font-semibold text-sm" style={{ color: item.danger ? "#DC2626" : "#183B34", fontFamily: lang === "ur" ? "'Jameel Noori Nastaleeq','Noto Nastaliq Urdu',serif" : "inherit", fontSize: lang === "ur" ? 16 : 14 }}>
-                    {item.label}
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background: item.danger ? "#FEE2E2" : "#E8F5EF",
+                    }}
+                  >
+                    {item.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p
+                      className="font-bold text-sm leading-tight"
+                      style={{
+                        color: item.danger ? "#DC2626" : "#183B34",
+                        fontFamily:
+                          lang === "ur"
+                            ? "'Jameel Noori Nastaleeq','Noto Nastaliq Urdu',serif"
+                            : "inherit",
+                        fontSize: lang === "ur" ? 16 : 14,
+                      }}
+                    >
+                      {item.label}
+                    </p>
+                    {item.sub && (
+                      <p className="text-xs text-[#52635F] mt-0.5 truncate">
+                        {item.sub}
+                      </p>
+                    )}
+                  </div>
+                  <span style={{ color: "#A0CEBC", fontSize: 18 }}>
+                    {lang === "ur" ? "‹" : "›"}
                   </span>
-                  <span style={{ color: "#D5E2DD", fontSize: 18 }}>{lang === "ur" ? "‹" : "›"}</span>
                 </button>
               ))}
               <div style={{ height: 24 }} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── 1. EDIT PROFILE MODAL ────────────────────────────────────── */}
+      {editProfileOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{ zIndex: 350 }}
+          onClick={() => {
+            if (!showContactVerify) setEditProfileOpen(false);
+          }}
+        >
+          <div
+            className="zm-sheet-high"
+            style={{ background: "#F4FAF7", maxHeight: "92vh" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-[#D5E2DD]">
+              <h3 className="font-bold text-lg text-[#183B34]">
+                {lang === "ur" ? "پروفائل ترمیم کریں" : "Edit Profile"}
+              </h3>
+              <button
+                onClick={() => setEditProfileOpen(false)}
+                className="text-sm font-semibold px-3 py-1 rounded-full bg-[#E8EFEC] text-[#52635F]"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-5 flex-1 overflow-y-auto space-y-4">
+              {!showContactVerify ? (
+                <>
+                  <div>
+                    <label className="block text-xs font-extrabold text-[#183B34] mb-1.5">
+                      {lang === "ur" ? "نام" : "Name"}
+                    </label>
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="w-full px-3.5 py-3 rounded-xl border border-[#C7D6D0] bg-white text-sm font-semibold text-[#183B34] focus:border-[#087F63] outline-none"
+                      placeholder="e.g. Muhammad Arif"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-extrabold text-[#183B34] mb-1.5">
+                      {lang === "ur" ? "فون نمبر / ای میل" : "Phone Number / Email"}
+                    </label>
+                    <input
+                      type="text"
+                      value={editPhone}
+                      onChange={(e) => setEditPhone(e.target.value)}
+                      className="w-full px-3.5 py-3 rounded-xl border border-[#C7D6D0] bg-white text-sm font-semibold text-[#183B34] focus:border-[#087F63] outline-none"
+                      placeholder="0300 1234567 or email@domain.com"
+                    />
+                    <p className="text-[11px] text-[#52635F] mt-1.5">
+                      {lang === "ur"
+                        ? "فون یا ای میل تبدیل کرنے کی صورت میں OTP تصدیق ضروری ہوگی۔"
+                        : "Changing phone or email will require OTP verification."}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (editPhone.trim() !== profilePhone.trim()) {
+                        setShowContactVerify(true);
+                        setContactOtp(["", "", "", ""]);
+                        setContactOtpError("");
+                        setContactOtpSuccess(false);
+                      } else {
+                        setProfileName(editName);
+                        if (initialUserData) {
+                          initialUserData.name = editName;
+                        }
+                        setEditProfileOpen(false);
+                      }
+                    }}
+                    className="w-full py-3.5 rounded-2xl bg-[#087F63] text-white font-extrabold text-sm shadow-md mt-4"
+                  >
+                    {lang === "ur" ? "تبدیلیاں محفوظ کریں" : "Save Changes"}
+                  </button>
+                </>
+              ) : (
+                /* OTP Verification Step when Phone/Email is changed */
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-white border border-[#D5E2DD] space-y-2.5">
+                    <h4 className="text-xs font-extrabold text-[#183B34] uppercase tracking-wider">
+                      {lang === "ur" ? "فون نمبر / ای میل کی تبدیلی کی تصدیق" : "Verify Contact Change"}
+                    </h4>
+                    <div className="space-y-1.5 text-xs">
+                      <div className="flex justify-between items-center py-1 border-b border-[#F1F7F4]">
+                        <span className="text-[#52635F] font-medium">
+                          {lang === "ur" ? "سابقہ نمبر / ای میل:" : "Current Contact:"}
+                        </span>
+                        <span className="font-bold text-[#183B34]">{profilePhone}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-1">
+                        <span className="text-[#087F63] font-medium">
+                          {lang === "ur" ? "نیا نمبر / ای میل:" : "New Contact:"}
+                        </span>
+                        <span className="font-extrabold text-[#087F63]">{editPhone}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-extrabold text-[#183B34] mb-2 text-center">
+                      {lang === "ur" ? "۴ ہندسوں کا OTP کوڈ درج کریں" : "Enter 4-Digit Verification OTP"}
+                    </label>
+                    <div className="flex justify-center gap-3">
+                      {[0, 1, 2, 3].map((idx) => (
+                        <input
+                          key={idx}
+                          id={`otp-box-${idx}`}
+                          type="text"
+                          maxLength={1}
+                          value={contactOtp[idx] || ""}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/[^0-9]/g, "");
+                            const next = [...contactOtp];
+                            next[idx] = val;
+                            setContactOtp(next);
+                            if (val && idx < 3) {
+                              const nextInput = document.getElementById(`otp-box-${idx + 1}`);
+                              nextInput?.focus();
+                            }
+                          }}
+                          className="w-12 h-12 text-center text-lg font-black rounded-xl border border-[#C7D6D0] bg-white text-[#183B34] focus:border-[#087F63] outline-none"
+                        />
+                      ))}
+                    </div>
+                    {contactOtpError && (
+                      <p className="text-xs text-red-600 font-bold text-center mt-2">
+                        {contactOtpError}
+                      </p>
+                    )}
+                    {contactOtpSuccess && (
+                      <p className="text-xs text-[#087F63] font-bold text-center mt-2">
+                        ✓ {lang === "ur" ? "کامیابی سے تصدیق ہو گئی!" : "Verified successfully!"}
+                      </p>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const entered = contactOtp.join("");
+                      if (entered.length < 4) {
+                        setContactOtpError(
+                          lang === "ur"
+                            ? "براہ کرم مکمل ۴ ہندسوں کا کوڈ درج کریں (جیسے ۱۲۳۴)"
+                            : "Please enter the full 4-digit code (e.g. 1234)"
+                        );
+                        return;
+                      }
+                      setContactOtpSuccess(true);
+                      setTimeout(() => {
+                        setProfileName(editName);
+                        setProfilePhone(editPhone);
+                        if (initialUserData) {
+                          initialUserData.name = editName;
+                          initialUserData.phone = editPhone;
+                          initialUserData.contact = editPhone;
+                        }
+                        setShowContactVerify(false);
+                        setEditProfileOpen(false);
+                      }, 500);
+                    }}
+                    className="w-full py-3.5 rounded-2xl bg-[#087F63] text-white font-extrabold text-sm shadow-md"
+                  >
+                    {lang === "ur" ? "OTP تصدیق اور محفوظ کریں" : "Verify OTP & Save"}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowContactVerify(false)}
+                    className="w-full py-2.5 rounded-xl bg-[#E8EFEC] text-[#52635F] font-bold text-xs"
+                  >
+                    {lang === "ur" ? "← واپس جائیں" : "← Back"}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── 2. LOCATION PREFERENCES MODAL ────────────────────────────── */}
+      {locationPrefOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{ zIndex: 350 }}
+          onClick={() => setLocationPrefOpen(false)}
+        >
+          <div
+            className="zm-sheet-high"
+            style={{ background: "#F4FAF7", maxHeight: "90vh" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-[#D5E2DD]">
+              <h3 className="font-bold text-lg text-[#183B34]">
+                {lang === "ur" ? "مقام اور منڈی کا انتخاب" : "Location & Mandi Preferences"}
+              </h3>
+              <button
+                onClick={() => setLocationPrefOpen(false)}
+                className="text-sm font-semibold px-3 py-1 rounded-full bg-[#E8EFEC] text-[#52635F]"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-5 flex-1 overflow-y-auto space-y-4">
+              <div>
+                <label className="block text-xs font-extrabold text-[#183B34] mb-1.5">
+                  {lang === "ur" ? "صوبہ منتخب کریں" : "Select Province"}
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {Object.keys(LOCATIONS).map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => setProfileProvince(p)}
+                      className="py-2.5 px-3 rounded-xl text-xs font-bold border transition text-left"
+                      style={{
+                        background: profileProvince === p ? "#087F63" : "#fff",
+                        color: profileProvince === p ? "#fff" : "#183B34",
+                        borderColor: profileProvince === p ? "#087F63" : "#D5E2DD",
+                      }}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-extrabold text-[#183B34] mb-1.5">
+                  {lang === "ur" ? "بنیادی منڈی منتخب کریں" : "Primary Mandi"}
+                </label>
+                <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                  {(
+                    LOCATIONS[profileProvince]?.[profileDistrict] || [
+                      "Pakpattan Mandi",
+                      "Lahore Grain Market",
+                      "Multan Grain Market",
+                      "Faisalabad Mandi",
+                      "Bahawalpur Mandi",
+                      "Okara Mandi",
+                    ]
+                  ).map((mandi) => (
+                    <button
+                      key={mandi}
+                      onClick={() => setProfileCity(mandi)}
+                      className="w-full flex items-center justify-between p-3 rounded-xl border transition text-left bg-white"
+                      style={{
+                        borderColor: profileCity === mandi ? "#087F63" : "#D5E2DD",
+                        background: profileCity === mandi ? "#E8F5EF" : "#fff",
+                      }}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-xs font-bold text-[#183B34]">
+                          {mandi}
+                        </span>
+                      </div>
+                      {profileCity === mandi && (
+                        <span className="text-xs font-extrabold text-[#087F63]">
+                          ✓ Active
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setLocationPrefOpen(false)}
+                className="w-full py-3.5 rounded-2xl bg-[#087F63] text-white font-extrabold text-sm shadow-md mt-4"
+              >
+                {lang === "ur" ? "منڈی محفوظ کریں" : "Apply Mandi"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── 3. MY SUBSCRIPTIONS MODAL ────────────────────────────────── */}
+      {subsModalOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{ zIndex: 350 }}
+          onClick={() => setSubsModalOpen(false)}
+        >
+          <div
+            className="zm-sheet-high"
+            style={{ background: "#F4FAF7", maxHeight: "92vh" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-[#D5E2DD]">
+              <h3 className="font-bold text-lg text-[#183B34]">
+                {lang === "ur" ? "میری سبسکرپشنز" : "My Subscriptions"}
+              </h3>
+              <button
+                onClick={() => setSubsModalOpen(false)}
+                className="text-sm font-semibold px-3 py-1 rounded-full bg-[#E8EFEC] text-[#52635F]"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-5 flex-1 overflow-y-auto space-y-4">
+              {!profileCompleted ? (
+                /* FREE TRIAL STATE */
+                <>
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-[#064D40] to-[#087F63] text-white shadow-md space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full text-[#B4E6D2]">
+                        FREE TRIAL
+                      </span>
+                      <span className="text-xs bg-amber-400 text-amber-950 px-2.5 py-0.5 rounded-full font-extrabold shadow-sm">
+                        {lang === "ur" ? "۲ دن باقی" : "2 Days Left"}
+                      </span>
+                    </div>
+                    <h4 className="text-lg font-black">
+                      {lang === "ur" ? "مفت ٹرائل ایکسپلوریشن پاس" : "Free Trial Exploration Pass"}
+                    </h4>
+                  </div>
+
+                  <div>
+                    <h5 className="text-xs font-extrabold text-[#183B34] uppercase tracking-wider mb-2.5">
+                      {lang === "ur" ? "سبسکرائب شدہ اجناس (ٹرائل ایکسس)" : "Subscribed Commodities (Trial Access)"}
+                    </h5>
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {Array.from(SUBSCRIBED_PRODUCTS).slice(0, 8).map((p) => (
+                        <div
+                          key={p}
+                          className="flex items-center gap-2.5 p-3 rounded-xl bg-white border border-[#D5E2DD] shadow-sm"
+                        >
+                          <ProductIcon name={p} vertical="Grains" size={26} />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-bold text-[#183B34] truncate">
+                              {tc(p)}
+                            </p>
+                            <span className="inline-block text-[9.5px] text-[#087F63] font-bold bg-[#E4F2EC] px-1.5 py-0.5 rounded-md mt-0.5">
+                              {lang === "ur" ? "ٹرائل میں فعال" : "Trial Unlocked"}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      onClick={() => {
+                        setSubsModalOpen(false);
+                        setCompleteProfileOpen(true);
+                      }}
+                      className="w-full py-3.5 rounded-2xl bg-[#087F63] text-white font-extrabold text-sm shadow-md flex items-center justify-center gap-2"
+                    >
+                      <span>{lang === "ur" ? "پروفائل مکمل کریں اور مستقل سبسکرائب کریں →" : "Complete Profile & Subscribe →"}</span>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                /* SUBSCRIBED STATE (profileCompleted = true) */
+                <>
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-[#064D40] to-[#087F63] text-white shadow-md space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full text-[#B4E6D2]">
+                        ZARAI MANDI PRO
+                      </span>
+                      <span className="text-xs bg-[#2FAE68] text-white px-2.5 py-0.5 rounded-full font-extrabold shadow-sm">
+                        {lang === "ur" ? "فعال ممبر" : "Active Member"}
+                      </span>
+                    </div>
+                    <h4 className="text-lg font-black">
+                      {lang === "ur" ? "فعال زرعی منڈی پرو پلان" : "Active Pro Subscription"}
+                    </h4>
+                    <p className="text-xs text-[#E4F2EC]">
+                      {lang === "ur"
+                        ? "تمام فعال اجناس کے لائیو اور تاریخی ریٹس تک رسائی"
+                        : "Live mandi rates, full historical archives & daily SMS alerts"}
+                    </p>
+                  </div>
+
+                  {/* Subscribed Commodities with Reg and Expiry Date */}
+                  <div>
+                    <h5 className="text-xs font-extrabold text-[#183B34] uppercase tracking-wider mb-2.5">
+                      {lang === "ur" ? "آپ کی فعال سبسکرائب شدہ اجناس" : "Your Subscribed Commodities"}
+                    </h5>
+                    <div className="space-y-2">
+                      {Array.from(SUBSCRIBED_PRODUCTS).slice(0, 3).map((p) => (
+                        <div
+                          key={p}
+                          className="flex items-center justify-between p-3.5 rounded-xl bg-white border border-[#D5E2DD] shadow-sm"
+                        >
+                          <div className="flex items-center gap-3">
+                            <ProductIcon name={p} vertical="Grains" size={32} />
+                            <div>
+                              <p className="text-xs font-extrabold text-[#183B34]">
+                                {tc(p)}
+                              </p>
+                              <div className="flex items-center gap-2 mt-0.5 text-[10.5px] text-[#52635F]">
+                                <span>{lang === "ur" ? "رجسٹریشن:" : "Reg:"} 21 Aug 2026</span>
+                                <span>•</span>
+                                <span className="text-[#087F63] font-semibold">
+                                  {lang === "ur" ? "تجدید:" : "Expires:"} 21 Sep 2026
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <span className="text-[10px] font-extrabold text-[#087F63] bg-[#E8F5EF] px-2.5 py-1 rounded-full border border-[#A0CEBC]">
+                            Active
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Unlock Other Commodities (Primary Single Unlock + Secondary Multi Unlock) */}
+                  <div className="pt-1">
+                    <h5 className="text-xs font-extrabold text-[#183B34] uppercase tracking-wider mb-2.5">
+                      {lang === "ur" ? "دیگر اجناس ان لاک کریں" : "Unlock Other Commodities"}
+                    </h5>
+                    <div className="space-y-2">
+                      {[
+                        { name: "Cotton", category: "Cash Crops", price: "PKR 3,000 / mo" },
+                        { name: "Rice", category: "Grains & Paddy", price: "PKR 3,000 / mo" },
+                        { name: "Maize", category: "Grains & Feeds", price: "PKR 3,000 / mo" },
+                        { name: "Sugar", category: "Sugar & Sweeteners", price: "PKR 3,000 / mo" },
+                        { name: "Pulses", category: "Lentils & Pulses", price: "PKR 3,000 / mo" },
+                        { name: "Mustard", category: "Oilseeds & Mustard", price: "PKR 3,000 / mo" },
+                      ].map((item) => (
+                        <div
+                          key={item.name}
+                          className="flex items-center justify-between p-3 rounded-xl bg-white border border-[#D5E2DD] shadow-sm"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <ProductIcon name={item.name} vertical="Grains" size={28} />
+                            <div>
+                              <p className="text-xs font-bold text-[#183B34]">{tc(item.name)}</p>
+                              <p className="text-[10.5px] text-[#52635F]">{item.price}</p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setSubsModalOpen(false);
+                              push({
+                                id: "billing",
+                                product: item.name,
+                                vertical: "Grains",
+                              });
+                            }}
+                            className="px-3.5 py-1.5 rounded-xl bg-[#087F63] text-white font-extrabold text-xs shadow-sm hover:bg-[#064D40] transition"
+                          >
+                            {lang === "ur" ? `ان لاک کریں →` : `Unlock →`}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Subtle Multiple Commodities Unlock Link */}
+                    <div className="mt-4 pt-3 border-t border-[#D5E2DD] text-center">
+                      <button
+                        onClick={() => {
+                          setSubsModalOpen(false);
+                          setCompleteProfileOpen(true);
+                        }}
+                        className="text-xs font-bold text-[#087F63] hover:underline px-3 py-1.5 rounded-lg bg-[#E8F5EF] border border-[#A0CEBC]"
+                      >
+                        {lang === "ur" ? "ایک ساتھ متعدد اجناس ان لاک کریں →" : "Unlock Multiple Commodities at Once →"}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── 4. VOICE & LANGUAGE MODAL ───────────────────────────────── */}
+      {voiceLangModalOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{ zIndex: 350 }}
+          onClick={() => setVoiceLangModalOpen(false)}
+        >
+          <div
+            className="zm-sheet-high"
+            style={{ background: "#F4FAF7", maxHeight: "90vh" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-[#D5E2DD]">
+              <h3 className="font-bold text-lg text-[#183B34]">
+                {lang === "ur" ? "آواز اور زبان کی سیٹنگز" : "Voice & Language Settings"}
+              </h3>
+              <button
+                onClick={() => setVoiceLangModalOpen(false)}
+                className="text-sm font-semibold px-3 py-1 rounded-full bg-[#E8EFEC] text-[#52635F]"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-5 flex-1 overflow-y-auto space-y-4">
+              <div>
+                <label className="block text-xs font-extrabold text-[#183B34] mb-2">
+                  {lang === "ur" ? "ایپ کی زبان منتخب کریں" : "Select Language"}
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setLang("ur")}
+                    className="p-4 rounded-2xl border text-center transition font-bold"
+                    style={{
+                      background: lang === "ur" ? "#087F63" : "#fff",
+                      color: lang === "ur" ? "#fff" : "#183B34",
+                      borderColor: lang === "ur" ? "#087F63" : "#D5E2DD",
+                      fontFamily: "'Noto Nastaliq Urdu', serif",
+                    }}
+                  >
+                    اردو (Urdu)
+                  </button>
+                  <button
+                    onClick={() => setLang("en")}
+                    className="p-4 rounded-2xl border text-center transition font-bold"
+                    style={{
+                      background: lang === "en" ? "#087F63" : "#fff",
+                      color: lang === "en" ? "#fff" : "#183B34",
+                      borderColor: lang === "en" ? "#087F63" : "#D5E2DD",
+                    }}
+                  >
+                    English
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white border border-[#D5E2DD] space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-bold text-sm text-[#183B34]">
+                      {lang === "ur" ? "آواز کا معاون (Voice Assistant)" : "Voice Assistance"}
+                    </p>
+                    <p className="text-xs text-[#52635F]">
+                      {lang === "ur"
+                        ? "منڈی کے ریٹس پر کلک کرنے پر بول کر بتائیں"
+                        : "Read out rates when tapping cards"}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => homeSetVoiceEnabled(!homeVoiceEnabled)}
+                    className="w-12 h-6 rounded-full transition relative"
+                    style={{ background: homeVoiceEnabled ? "#087F63" : "#D1D5DB" }}
+                  >
+                    <span
+                      className="w-5 h-5 rounded-full bg-white block absolute top-0.5 transition"
+                      style={{ left: homeVoiceEnabled ? "26px" : "2px" }}
+                    />
+                  </button>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#52635F] mb-1.5">
+                    {lang === "ur" ? "بولنے کی رفتار" : "Speech Speed"}
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(["0.8x", "1.0x", "1.2x"] as const).map((spd) => (
+                      <button
+                        key={spd}
+                        onClick={() => setSpeechRate(spd)}
+                        className="py-1.5 rounded-lg text-xs font-bold border"
+                        style={{
+                          background: speechRate === spd ? "#087F63" : "#F4FAF7",
+                          color: speechRate === spd ? "#fff" : "#183B34",
+                          borderColor: speechRate === spd ? "#087F63" : "#D5E2DD",
+                        }}
+                      >
+                        {spd}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    speakText(
+                      lang === "ur"
+                        ? "زرعی منڈی میں خوش آمدید۔ آواز کا نظام بالکل ٹھیک کام کر رہا ہے۔"
+                        : "Welcome to ZaraiMandi. The voice assistance system is functioning properly.",
+                    );
+                  }}
+                  className="w-full py-2.5 rounded-xl bg-[#E8F5EF] text-[#087F63] font-bold text-xs flex items-center justify-center gap-2 border border-[#A0CEBC]"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span>{lang === "ur" ? "آواز کا نمونہ سنیں" : "Test Voice Audio"}</span>
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setVoiceLangModalOpen(false)}
+                className="w-full py-3.5 rounded-2xl bg-[#087F63] text-white font-extrabold text-sm shadow-md"
+              >
+                {lang === "ur" ? "سیٹنگز محفوظ کریں" : "Save Preferences"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── 5. BECOME A REPRESENTATIVE CONFIRMATION DIALOGUE MODAL ─ */}
+      {repConfirmModalOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{ zIndex: 350 }}
+          onClick={() => setRepConfirmModalOpen(false)}
+        >
+          <div
+            className="zm-sheet-high"
+            style={{ background: "#F4FAF7", maxHeight: "85vh" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-[#D5E2DD]">
+              <h3 className="font-bold text-lg text-[#183B34]">
+                {lang === "ur" ? "زرعی منڈی کے باضابطہ نمائندہ بنیں" : "Become a Representative"}
+              </h3>
+              <button
+                onClick={() => setRepConfirmModalOpen(false)}
+                className="text-sm font-semibold px-3 py-1 rounded-full bg-[#E8EFEC] text-[#52635F]"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-5 flex-1 overflow-y-auto space-y-4 text-center">
+              <div className="w-14 h-14 rounded-2xl bg-[#E8F5EF] text-[#087F63] flex items-center justify-center mx-auto border border-[#A0CEBC]">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+              </div>
+
+              <div className="space-y-1.5">
+                <h4 className="text-base font-black text-[#183B34]">
+                  {lang === "ur" ? "منڈی پارٹنر اور نمائندہ اکاؤنٹ" : "Mandi Representative Account"}
+                </h4>
+                <p className="text-xs text-[#52635F] leading-relaxed max-w-sm mx-auto">
+                  {lang === "ur"
+                    ? "اپنے علاقے کی منڈی کے لیے نمائندہ اکاؤنٹ رجسٹر کریں۔ رجسٹریشن کے بعد آپ ایک ہی اکاؤنٹ سے کسٹمر اور نمائندہ ڈیش بورڈ کے درمیان کسی بھی وقت سوئچ کر سکتے ہیں۔"
+                    : "Register as an authorized representative for your local mandi. Once set up under this phone/email, you can seamlessly switch between Customer and Representative dashboards anytime."}
+                </p>
+              </div>
+
+              {/* <div className="p-3.5 rounded-xl bg-white border border-[#D5E2DD] text-xs text-[#183B34] font-semibold text-left space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-[#087F63] font-bold">✓</span>
+                  <span>15% recurring mandi commission</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[#087F63] font-bold">✓</span>
+                  <span>Dual account switching with double-tap on profile icon</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[#087F63] font-bold">✓</span>
+                  <span>Direct mandi daily rate submissions</span>
+                </div>
+              </div> */}
+
+              <div className="pt-2 space-y-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setRepConfirmModalOpen(false);
+                    onStartRepOnboarding?.();
+                  }}
+                  className="w-full py-3.5 rounded-2xl bg-[#087F63] text-white font-extrabold text-sm shadow-md"
+                >
+                  {lang === "ur" ? "رجسٹریشن شروع کریں →" : "Continue to Registration →"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRepConfirmModalOpen(false)}
+                  className="w-full py-2.5 rounded-xl bg-[#E8EFEC] text-[#52635F] font-bold text-xs"
+                >
+                  {lang === "ur" ? "منسوخ کریں" : "Cancel"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── 6. SETTINGS MODAL ───────────────────────────────────────── */}
+      {settingsModalOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{ zIndex: 350 }}
+          onClick={() => setSettingsModalOpen(false)}
+        >
+          <div
+            className="zm-sheet-high"
+            style={{ background: "#F4FAF7", maxHeight: "90vh" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-[#D5E2DD]">
+              <h3 className="font-bold text-lg text-[#183B34]">
+                {lang === "ur" ? "ایپ سیٹنگز اور الرٹس" : "App Settings & Alerts"}
+              </h3>
+              <button
+                onClick={() => setSettingsModalOpen(false)}
+                className="text-sm font-semibold px-3 py-1 rounded-full bg-[#E8EFEC] text-[#52635F]"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-5 flex-1 overflow-y-auto space-y-4">
+              <div>
+                <label className="block text-xs font-extrabold text-[#183B34] mb-2">
+                  {lang === "ur" ? "وزن اور قیمت کی اکائی" : "Rate & Weight Unit"}
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: "maund", label: lang === "ur" ? "من (40kg)" : "40kg Maund" },
+                    { id: "kg100", label: "100 kg" },
+                    { id: "ton", label: lang === "ur" ? "ٹن (Metric Ton)" : "Metric Ton" },
+                  ].map((u) => (
+                    <button
+                      key={u.id}
+                      onClick={() => setWeightUnit(u.id as any)}
+                      className="py-2 px-2 rounded-xl text-xs font-bold border text-center transition"
+                      style={{
+                        background: weightUnit === u.id ? "#087F63" : "#fff",
+                        color: weightUnit === u.id ? "#fff" : "#183B34",
+                        borderColor: weightUnit === u.id ? "#087F63" : "#D5E2DD",
+                      }}
+                    >
+                      {u.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white border border-[#D5E2DD] space-y-3">
+                <h4 className="text-xs font-extrabold text-[#183B34] uppercase tracking-wider">
+                  {lang === "ur" ? "الرٹس اور اطلاعات" : "Alert Channels"}
+                </h4>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold text-[#183B34]">WhatsApp Rate Alerts</p>
+                    <p className="text-[11px] text-[#52635F]">
+                      {lang === "ur" ? "صبح اور شام واٹس ایپ پر ریٹس حاصل کریں" : "Daily rates on WhatsApp"}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setAlertWhatsApp(!alertWhatsApp)}
+                    className="w-10 h-5 rounded-full transition relative"
+                    style={{ background: alertWhatsApp ? "#087F63" : "#D1D5DB" }}
+                  >
+                    <span
+                      className="w-4 h-4 rounded-full bg-white block absolute top-0.5 transition"
+                      style={{ left: alertWhatsApp ? "22px" : "2px" }}
+                    />
+                  </button>
+                </div>
+                <div className="flex items-center justify-between border-t border-[#F1F7F4] pt-2">
+                  <div>
+                    <p className="text-xs font-bold text-[#183B34]">SMS Summary Alerts</p>
+                    <p className="text-[11px] text-[#52635F]">
+                      {lang === "ur" ? "بغیر انٹرنیٹ ایس ایم ایس ریٹس" : "Offline SMS daily closing"}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setAlertSms(!alertSms)}
+                    className="w-10 h-5 rounded-full transition relative"
+                    style={{ background: alertSms ? "#087F63" : "#D1D5DB" }}
+                  >
+                    <span
+                      className="w-4 h-4 rounded-full bg-white block absolute top-0.5 transition"
+                      style={{ left: alertSms ? "22px" : "2px" }}
+                    />
+                  </button>
+                </div>
+                <div className="flex items-center justify-between border-t border-[#F1F7F4] pt-2">
+                  <div>
+                    <p className="text-xs font-bold text-[#183B34]">Morning Mandi Bell</p>
+                    <p className="text-[11px] text-[#52635F]">
+                      {lang === "ur" ? "صبح منڈی کھلنے پر نوٹیفکیشن" : "Notify when trading begins"}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setAlertMorningBell(!alertMorningBell)}
+                    className="w-10 h-5 rounded-full transition relative"
+                    style={{ background: alertMorningBell ? "#087F63" : "#D1D5DB" }}
+                  >
+                    <span
+                      className="w-4 h-4 rounded-full bg-white block absolute top-0.5 transition"
+                      style={{ left: alertMorningBell ? "22px" : "2px" }}
+                    />
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSettingsModalOpen(false)}
+                className="w-full py-3.5 rounded-2xl bg-[#087F63] text-white font-extrabold text-sm shadow-md"
+              >
+                {lang === "ur" ? "سیٹنگز محفوظ کریں" : "Save Settings"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── 7. HELP & SUPPORT MODAL ─────────────────────────────────── */}
+      {helpModalOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{ zIndex: 350 }}
+          onClick={() => setHelpModalOpen(false)}
+        >
+          <div
+            className="zm-sheet-high"
+            style={{ background: "#F4FAF7", maxHeight: "92vh" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-[#D5E2DD]">
+              <h3 className="font-bold text-lg text-[#183B34]">
+                {lang === "ur" ? "مدد اور کسٹمر سپورٹ" : "Help & Customer Support"}
+              </h3>
+              <button
+                onClick={() => setHelpModalOpen(false)}
+                className="text-sm font-semibold px-3 py-1 rounded-full bg-[#E8EFEC] text-[#52635F]"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-5 flex-1 overflow-y-auto space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <a
+                  href="https://wa.me/923001234567"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-3.5 rounded-2xl bg-[#25D366] text-white font-bold text-xs flex flex-col items-center justify-center text-center shadow gap-1"
+                >
+                  <span className="text-xl">💬</span>
+                  <span>{lang === "ur" ? "واٹس ایپ سپورٹ" : "WhatsApp Chat"}</span>
+                  <span className="text-[10px] opacity-90">0300 1234567</span>
+                </a>
+                <a
+                  href="tel:080092724"
+                  className="p-3.5 rounded-2xl bg-[#087F63] text-white font-bold text-xs flex flex-col items-center justify-center text-center shadow gap-1"
+                >
+                  <span className="text-xl">📞</span>
+                  <span>{lang === "ur" ? "ٹول فری ہیلپ لائن" : "Toll-Free Call"}</span>
+                  <span className="text-[10px] opacity-90">0800-ZARAI (92724)</span>
+                </a>
+              </div>
+
+              <div>
+                <h4 className="text-xs font-extrabold text-[#183B34] uppercase tracking-wider mb-2">
+                  {lang === "ur" ? "اکثر پوچھے گئے سوالات (FAQ)" : "Frequently Asked Questions"}
+                </h4>
+                <div className="space-y-2">
+                  {[
+                    {
+                      q: lang === "ur" ? "منڈی کے ریٹس کتنی بار اپ ڈیٹ ہوتے ہیں؟" : "How often are mandi rates updated?",
+                      a: lang === "ur" ? "صبح 8 بجے سے شام 6 بجے تک ہر 15 منٹ بعد لائیو ریٹس منڈیوں سے براہ راست اپ ڈیٹ کیے جاتے ہیں۔" : "Rates are updated live every 15 minutes during active trading hours (8:00 AM to 6:00 PM).",
+                    },
+                    {
+                      q: lang === "ur" ? "کیا میں اپنے پسندیدہ اجناس منتخب کر سکتا ہوں؟" : "Can I customize my favorite commodities?",
+                      a: lang === "ur" ? "جی ہاں، آپ کسی بھی وقت اپنی پسندیدہ اجناس اور منڈیاں تبدیل کر سکتے ہیں۔" : "Yes, you can customize your tracked commodities and mandis in the app anytime.",
+                    },
+                    {
+                      q: lang === "ur" ? "ادائیگی کے کون سے طریقے دستیاب ہیں؟" : "What payment methods are supported?",
+                      a: lang === "ur" ? "JazzCash، EasyPaisa، SadaPay، NayaPay اور تمام پاکستانی بینک ٹرانسفرز دستیاب ہیں۔" : "JazzCash, EasyPaisa, SadaPay, NayaPay, and direct 1Link Bank Transfers are supported.",
+                    },
+                  ].map((faq, idx) => (
+                    <div
+                      key={idx}
+                      className="rounded-xl border border-[#D5E2DD] bg-white overflow-hidden"
+                    >
+                      <button
+                        onClick={() =>
+                          setFaqExpanded(faqExpanded === idx ? null : idx)
+                        }
+                        className="w-full px-3.5 py-2.5 flex items-center justify-between text-left font-bold text-xs text-[#183B34]"
+                      >
+                        <span>{faq.q}</span>
+                        <span>{faqExpanded === idx ? "▲" : "▼"}</span>
+                      </button>
+                      {faqExpanded === idx && (
+                        <p className="px-3.5 pb-3 text-xs text-[#52635F] leading-relaxed border-t border-[#F1F7F4] pt-2">
+                          {faq.a}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-xs font-extrabold text-[#183B34] uppercase tracking-wider mb-1.5">
+                  {lang === "ur" ? "رائے یا شکایت درج کریں" : "Send Feedback / Report Issue"}
+                </h4>
+                {supportSent ? (
+                  <div className="p-3 rounded-xl bg-[#E8F5EF] text-[#087F63] text-xs font-bold text-center">
+                    {lang === "ur" ? "شکریہ! آپ کا پیغام موصول ہو گیا ہے۔" : "Thank you! Your feedback has been sent."}
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <textarea
+                      rows={3}
+                      value={supportFeedback}
+                      onChange={(e) => setSupportFeedback(e.target.value)}
+                      placeholder={lang === "ur" ? "اپنا پیغام یہاں لکھیں..." : "Type your message or issue..."}
+                      className="w-full p-3 rounded-xl border border-[#C7D6D0] bg-white text-xs text-[#183B34] outline-none resize-none"
+                    />
+                    <button
+                      onClick={() => {
+                        if (supportFeedback.trim()) {
+                          setSupportSent(true);
+                          setSupportFeedback("");
+                        }
+                      }}
+                      className="w-full py-2.5 rounded-xl bg-[#087F63] text-white font-bold text-xs shadow"
+                    >
+                      {lang === "ur" ? "پیغام بھیجیں" : "Submit Feedback"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── 8. ABOUT ZARAIMANDI MODAL ──────────────────────────────── */}
+      {aboutModalOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{ zIndex: 350 }}
+          onClick={() => setAboutModalOpen(false)}
+        >
+          <div
+            className="zm-sheet-high"
+            style={{ background: "#F4FAF7", maxHeight: "88vh" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-[#D5E2DD]">
+              <h3 className="font-bold text-lg text-[#183B34]">
+                {lang === "ur" ? "زرعی منڈی کے بارے میں" : "About ZaraiMandi"}
+              </h3>
+              <button
+                onClick={() => setAboutModalOpen(false)}
+                className="text-sm font-semibold px-3 py-1 rounded-full bg-[#E8EFEC] text-[#52635F]"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-5 flex-1 overflow-y-auto space-y-4 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#064D40] to-[#2FAE68] text-white flex items-center justify-center text-3xl mx-auto shadow-md">
+                🌾
+              </div>
+              <div>
+                <h4 className="text-xl font-black text-[#183B34]">ZaraiMandi</h4>
+                <p className="text-xs font-bold text-[#087F63]">
+                  v2.4.0 (Live Mandi Network Engine)
+                </p>
+              </div>
+              <p className="text-xs text-[#52635F] leading-relaxed max-w-sm mx-auto">
+                {lang === "ur"
+                  ? "زرعی منڈی پاکستان کے تمام کسانوں، بیوپاریوں، آڑھتیوں اور مل مالکان کے لیے ایک جدید ترین ڈیجیٹل مارکیٹ پلیٹ فارم ہے جہاں روزانہ کے ریٹس، آمد کے اعداد و شمار اور منڈی رپورٹس براہ راست دستیاب ہیں۔"
+                  : "ZaraiMandi is Pakistan's premier digital grain & agri-product market network, providing live mandi rates, transparent price discovery, and trade analytics for farmers, traders, and millers."}
+              </p>
+              <div className="p-3.5 rounded-xl bg-white border border-[#D5E2DD] text-xs text-[#52635F] space-y-1 text-left">
+                <p>• <strong>{lang === "ur" ? "ڈیٹا سورس" : "Data Coverage"}:</strong> 120+ Mandis across Punjab, Sindh, KPK, Balochistan</p>
+                <p>• <strong>{lang === "ur" ? "سپورٹڈ اجناس" : "Commodities"}:</strong> Wheat, Rice, Maize, Cotton, Pulses, Mustard, Oilseeds</p>
+                <p>• <strong>{lang === "ur" ? "لائسنس" : "License"}:</strong> ZaraiMandi Technologies Pakistan</p>
+              </div>
+              <button
+                onClick={() => setAboutModalOpen(false)}
+                className="w-full py-3 rounded-xl bg-[#087F63] text-white font-bold text-xs"
+              >
+                {lang === "ur" ? "بند کریں" : "Close"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── 9. LOG OUT CONFIRMATION MODAL ──────────────────────────── */}
+      {logoutModalOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{
+            zIndex: 360,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "16px",
+          }}
+          onClick={() => setLogoutModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-3xl p-6 shadow-2xl max-w-sm w-full text-center"
+            style={{
+              animation: "screenEnter 0.2s ease-out",
+              border: "1.5px solid #D5E2DD",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-base font-extrabold text-[#183B34] mb-1.5">
+              {lang === "ur" ? "کیا آپ واقعی لاگ آؤٹ کرنا چاہتے ہیں؟" : "Are you sure you want to log out?"}
+            </h3> 
+            <div className="flex gap-2.5">
+              <button
+                onClick={() => setLogoutModalOpen(false)}
+                className="flex-1 py-3 rounded-xl bg-[#F1F7F4] text-[#52635F] font-bold text-xs"
+              >
+                {lang === "ur" ? "منسوخ کریں" : "Cancel"}
+              </button>
+              <button
+                onClick={() => {
+                  setLogoutModalOpen(false);
+                  if (onRestartOnboarding) onRestartOnboarding("signin");
+                }}
+                className="flex-1 py-3 rounded-xl bg-[#DC2626] text-white font-extrabold text-xs shadow"
+              >
+                {lang === "ur" ? "لاگ آؤٹ کریں" : "Yes, Log Out"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {completeProfileOpen && (
+        <CompleteProfileModal
+          data={profileSetupData}
+          onUpdateData={updateProfileSetupData}
+          onClose={() => setCompleteProfileOpen(false)}
+          onComplete={handleCompleteProfileSubmit}
+          initialUserData={initialUserData}
+        />
+      )}
+
+      {/* Favorites Subscription Prompt Modal */}
+      {favLockModalOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{
+            zIndex: 360,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "16px",
+          }}
+          onClick={() => setFavLockModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-3xl p-6 shadow-2xl max-w-sm w-full text-center"
+            style={{
+              animation: "screenEnter 0.2s ease-out",
+              border: "1.5px solid #D5E2DD",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: "50%",
+                background: "#E4F2EC",
+                color: "#087F63",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 26,
+                margin: "0 auto 12px",
+              }}
+            >
+              🔒
+            </div>
+            <h3
+              style={{
+                fontSize: 17,
+                fontWeight: 800,
+                color: "#183B34",
+                marginBottom: 6,
+              }}
+            >
+              {lang === "ur"
+                ? "پسندیدہ اشیاء شامل کرنے کے لیے سبسکرائب کریں"
+                : "Subscribe to Add Favorites"}
+            </h3>
+            <p
+              style={{
+                fontSize: 12.5,
+                color: "#52635F",
+                lineHeight: 1.5,
+                marginBottom: 18,
+              }}
+            >
+              {lang === "ur"
+                ? "اپنی پسندیدہ زرعی اجناس کو محفوظ کرنے، لائیو منڈی ریٹ الرٹس اور روزانہ تجزیاتی رپورٹس حاصل کرنے کے لیے اپنا پروفائل سیٹ اپ یا سبسکرپشن پلان مکمل کریں۔"
+                : "Complete your profile setup and subscribe to customize your favorite products."}
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <button
+                type="button"
+                onClick={() => {
+                  setFavLockModalOpen(false);
+                  setCompleteProfileOpen(true);
+                }}
+                className="tap-target w-full py-3 rounded-2xl font-extrabold text-sm text-white"
+                style={{
+                  background: "#087F63",
+                  boxShadow: "0 4px 14px rgba(8,127,99,0.3)",
+                }}
+              >
+                {lang === "ur"
+                  ? "پروفائل مکمل کریں اور سبسکرائب کریں →"
+                  : "Complete Profile →"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setFavLockModalOpen(false)}
+                className="tap-target w-full py-2.5 rounded-2xl font-bold text-xs"
+                style={{ background: "#F1F7F4", color: "#52635F" }}
+              >
+                {lang === "ur" ? "بعد میں" : "Not Now"}
+              </button>
             </div>
           </div>
         </div>
@@ -18583,9 +22903,7 @@ function HomeScreen({
         <div
           className="zm-sheet-overlay"
           style={{ zIndex: 300 }}
-          onClick={() =>
-            setNotifOpen(false)
-          }
+          onClick={() => setNotifOpen(false)}
         >
           <div
             className="zm-sheet-high"
@@ -18593,16 +22911,13 @@ function HomeScreen({
               background: "#F4FAF7",
               maxHeight: "80vh",
             }}
-            onClick={(e) =>
-              e.stopPropagation()
-            }
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
             <div
               className="px-5 pt-4 pb-3 flex-shrink-0"
               style={{
-                borderBottom:
-                  "1px solid #D5E2DD",
+                borderBottom: "1px solid #D5E2DD",
               }}
             >
               <div
@@ -18613,14 +22928,10 @@ function HomeScreen({
               />
 
               <div className="flex items-center justify-between">
-                <p className="font-bold text-lg">
-                  Notifications
-                </p>
+                <p className="font-bold text-lg">Notifications</p>
 
                 <button
-                  onClick={() =>
-                    setNotifOpen(false)
-                  }
+                  onClick={() => setNotifOpen(false)}
                   className="tap-target text-sm font-semibold px-3 py-1 rounded-full"
                   style={{
                     background: "#E8EFEC",
@@ -18634,8 +22945,7 @@ function HomeScreen({
 
             {/* Notification list */}
             <div className="flex-1 overflow-y-auto">
-              {pickedByproducts.length ===
-                0 ? (
+              {pickedByproducts.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
                   <span
                     style={{
@@ -18660,125 +22970,105 @@ function HomeScreen({
                       color: "#52635F",
                     }}
                   >
-                    Star a by-product to
-                    get rate alerts here.
+                    Star a by-product to get rate alerts here.
                   </p>
                 </div>
               ) : (
-                pickedByproducts.map(
-                  (item, i) => {
-                    const row =
-                      allMandiRows.find(
-                        (r) =>
-                          r.commodity ===
-                          item.commodity &&
-                          r.byproduct ===
-                          item.byproduct,
-                      )
+                pickedByproducts.map((item, i) => {
+                  const row = allMandiRows.find(
+                    (r) =>
+                      r.product === item.product &&
+                      r.byproduct === item.byproduct,
+                  );
 
-                    const hoursAgo = [
-                      2, 5, 1, 8, 3, 6,
-                      12, 4,
-                    ][i % 8]
+                  const hoursAgo = [2, 5, 1, 8, 3, 6, 12, 4][i % 8];
 
-                    const trendRow =
-                      row?.trend || "stable"
+                  const trendRow = row?.trend || "stable";
 
-                    return (
+                  return (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 px-5 py-3.5"
+                      style={{
+                        borderBottom: "1px solid #E8EFEC",
+                      }}
+                    >
+                      {/* Trend icon */}
                       <div
-                        key={i}
-                        className="flex items-center gap-3 px-5 py-3.5"
+                        className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
                         style={{
-                          borderBottom:
-                            "1px solid #E8EFEC",
+                          background:
+                            trendRow === "up"
+                              ? "#E4F2EC"
+                              : trendRow === "down"
+                                ? "#F9E1DE"
+                                : "#E8EFEC",
                         }}
                       >
-                        {/* Trend icon */}
-                        <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                          style={{
-                            background:
-                              trendRow ===
-                                "up"
-                                ? "#E4F2EC"
-                                : trendRow ===
-                                  "down"
-                                  ? "#F9E1DE"
-                                  : "#E8EFEC",
-                          }}
-                        >
-                          <span
-                            style={{
-                              fontSize: 18,
-                              color:
-                                trendRow ===
-                                  "up"
-                                  ? "#087F63"
-                                  : trendRow ===
-                                    "down"
-                                    ? "#A83B37"
-                                    : "#52635F",
-                            }}
-                          >
-                            {trendRow ===
-                              "up"
-                              ? "↗"
-                              : trendRow ===
-                                "down"
-                                ? "↘"
-                                : "→"}
-                          </span>
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <p
-                            className="font-bold text-sm truncate"
-                            style={{
-                              color: "#183B34",
-                            }}
-                          >
-                            {item.byproduct ||
-                              item.commodity}
-                          </p>
-
-                          <p
-                            className="text-xs"
-                            style={{
-                              color:
-                                trendRow ===
-                                  "up"
-                                  ? "#075E4F"
-                                  : trendRow ===
-                                    "down"
-                                    ? "#A83B37"
-                                    : "#52635F",
-                            }}
-                          >
-                            {row
-                              ? `Rate updated · Rs.${row.min.toLocaleString()}–${row.max.toLocaleString()} / 40 kg`
-                              : "Rate updated"}
-                          </p>
-                        </div>
-
                         <span
-                          className="text-[11px] flex-shrink-0"
                           style={{
-                            color: "#80918B",
+                            fontSize: 18,
+                            color:
+                              trendRow === "up"
+                                ? "#087F63"
+                                : trendRow === "down"
+                                  ? "#A83B37"
+                                  : "#52635F",
                           }}
                         >
-                          {hoursAgo}h ago
+                          {trendRow === "up"
+                            ? "↗"
+                            : trendRow === "down"
+                              ? "↘"
+                              : "→"}
                         </span>
                       </div>
-                    )
-                  },
-                )
+
+                      <div className="flex-1 min-w-0">
+                        <p
+                          className="font-bold text-sm truncate"
+                          style={{
+                            color: "#183B34",
+                          }}
+                        >
+                          {item.byproduct || item.product}
+                        </p>
+
+                        <p
+                          className="text-xs"
+                          style={{
+                            color:
+                              trendRow === "up"
+                                ? "#075E4F"
+                                : trendRow === "down"
+                                  ? "#A83B37"
+                                  : "#52635F",
+                          }}
+                        >
+                          {row
+                            ? `Rate updated · Rs.${row.min.toLocaleString()}–${row.max.toLocaleString()} / 40 kg`
+                            : "Rate updated"}
+                        </p>
+                      </div>
+
+                      <span
+                        className="text-[11px] flex-shrink-0"
+                        style={{
+                          color: "#80918B",
+                        }}
+                      >
+                        {hoursAgo}h ago
+                      </span>
+                    </div>
+                  );
+                })
               )}
             </div>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // VOICE ASSISTANT SYSTEM
@@ -18787,8 +23077,8 @@ function MicSVG({
   size = 24,
   color = "#fff",
 }: {
-  size?: number
-  color?: string
+  size?: number;
+  color?: string;
 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -18819,17 +23109,17 @@ function MicSVG({
         strokeLinecap="round"
       />
     </svg>
-  )
+  );
 }
 
 function VoiceWaveform({
   color = "#2FAE68",
   count = 10,
 }: {
-  color?: string
-  count?: number
+  color?: string;
+  count?: number;
 }) {
-  const hs = [4, 7, 5, 10, 6, 9, 4, 8, 5, 7]
+  const hs = [4, 7, 5, 10, 6, 9, 4, 8, 5, 7];
   return (
     <div className="flex gap-[3px] items-end" style={{ height: 32 }}>
       {Array.from({ length: count }).map((_, i) => (
@@ -18846,7 +23136,7 @@ function VoiceWaveform({
         />
       ))}
     </div>
-  )
+  );
 }
 
 // Orientation overlay — dims home screen, shows tooltip cards anchored near each button.
@@ -18895,101 +23185,116 @@ const ORIENT_CARDS = [
     descUr: "آپ کے منتخب کردہ پسندیدہ آئٹمز کے ریٹس یہاں ملیں گے",
     pos: { top: 418, left: 16, right: 16 } as React.CSSProperties,
   },
-]
+];
 
 function translateVoiceUrdu(text: string): string {
-  if (!text) return ""
+  if (!text) return "";
   // If text already contains Urdu characters, return as is
-  if (/[\u0600-\u06FF]/.test(text)) return text
+  if (/[\u0600-\u06FF]/.test(text)) return text;
 
-  const trimmed = text.trim()
-  if (AUTO_URDU_DICT[trimmed]) return AUTO_URDU_DICT[trimmed]
+  const trimmed = text.trim();
+  if (AUTO_URDU_DICT[trimmed]) return AUTO_URDU_DICT[trimmed];
 
   const PHRASES: Record<string, string> = {
-    "All products selected. All prices are shown.": "تمام مصنوعات منتخب ہیں۔ تمام قیمتیں دکھائی جا رہی ہیں۔",
+    "All products selected. All prices are shown.":
+      "تمام مصنوعات منتخب ہیں۔ تمام قیمتیں دکھائی جا رہی ہیں۔",
     "All byproducts shown.": "تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔",
     "All price types are shown.": "تمام ریٹس دکھائے جا رہے ہیں۔",
     "Prices of my country shown.": "پورے ملک کی قیمتیں دکھائی جا رہی ہیں۔",
-    "Search. Find any commodity or byproduct by name to see its prices.": "تلاش۔ کسی بھی اجناس یا ضمنی مصنوع کا نام بول کر یا لکھ کر قیمت دیکھیں۔",
-    "Product. Select a crop or commodity to discover its byproduct prices.": "مصنوعات۔ اپنی فصل منتخب کریں اور اس کی تمام ضمنی مصنوعات کے ریٹ دیکھیں۔",
-    "Live Market. See real-time prices from active mandis across Pakistan.": "لائیو مارکیٹ۔ پاکستان کی تمام فعال منڈیوں کے تازہ ترین براہ راست ریٹس دیکھیں۔",
-    "Mandi. Browse all markets across Pakistan and see today's rates.": "منڈی۔ پاکستان کی منڈیاں دیکھیں اور آج کے تازہ ریٹس جانیں۔",
-    "Notification bell. All market updates and alerts are shown here.": "اطلاعات۔ تمام مارکیٹ اپڈیٹس اور اہم اعلانات یہاں ملیں گے۔",
-    "Your Picks. Your favourite byproducts are shown here on your homescreen.": "آپ کی پسند۔ آپ کی پسندیدہ ضمنی مصنوعات یہاں دکھائی دیتی ہیں۔",
-    "This product is locked. Please upgrade to access it.": "یہ مصنوع لاک ہے۔ رسائی کے لیے اکاؤنٹ اپگریڈ کریں۔",
-  }
-  if (PHRASES[trimmed]) return PHRASES[trimmed]
+    "Search. Find any product or byproduct by name to see its prices.":
+      "تلاش۔ کسی بھی اجناس یا ضمنی مصنوع کا نام بول کر یا لکھ کر قیمت دیکھیں۔",
+    "Product. Select a crop or product to discover its byproduct prices.":
+      "مصنوعات۔ اپنی فصل منتخب کریں اور اس کی تمام ضمنی مصنوعات کے ریٹ دیکھیں۔",
+    "Live Market. See real-time prices from active mandis across Pakistan.":
+      "لائیو مارکیٹ۔ پاکستان کی تمام فعال منڈیوں کے تازہ ترین براہ راست ریٹس دیکھیں۔",
+    "Mandi. Browse all markets across Pakistan and see today's rates.":
+      "منڈی۔ پاکستان کی منڈیاں دیکھیں اور آج کے تازہ ریٹس جانیں۔",
+    "Notification bell. All market updates and alerts are shown here.":
+      "اطلاعات۔ تمام مارکیٹ اپڈیٹس اور اہم اعلانات یہاں ملیں گے۔",
+    "Your Picks. Your favourite byproducts are shown here on your homescreen.":
+      "آپ کی پسند۔ آپ کی پسندیدہ ضمنی مصنوعات یہاں دکھائی دیتی ہیں۔",
+    "This product is locked. Please upgrade to access it.":
+      "یہ مصنوع لاک ہے۔ رسائی کے لیے اکاؤنٹ اپگریڈ کریں۔",
+  };
+  if (PHRASES[trimmed]) return PHRASES[trimmed];
 
   // Dynamic patterns
-  let m = trimmed.match(/^All (.*?) byproduct prices are shown\.$/i)
+  let m = trimmed.match(/^All (.*?) byproduct prices are shown\.$/i);
   if (m) {
-    const c = AUTO_URDU_DICT[m[1]] || m[1]
-    return `${c} کی تمام ضمنی مصنوعات کے ریٹس دکھائے جا رہے ہیں۔`
+    const c = AUTO_URDU_DICT[m[1]] || m[1];
+    return `${c} کی تمام ضمنی مصنوعات کے ریٹس دکھائے جا رہے ہیں۔`;
   }
 
-  m = trimmed.match(/^All byproducts of (.*?) shown\.$/i)
+  m = trimmed.match(/^All byproducts of (.*?) shown\.$/i);
   if (m) {
-    const c = AUTO_URDU_DICT[m[1]] || m[1]
-    return `${c} کی تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔`
+    const c = AUTO_URDU_DICT[m[1]] || m[1];
+    return `${c} کی تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔`;
   }
 
-  m = trimmed.match(/^Prices of (.*?) are shown\.$/i)
+  m = trimmed.match(/^Prices of (.*?) are shown\.$/i);
   if (m) {
-    const item = AUTO_URDU_DICT[m[1]] || m[1]
-    return `${item} کی قیمتیں دکھائی جا رہی ہیں۔`
+    const item = AUTO_URDU_DICT[m[1]] || m[1];
+    return `${item} کی قیمتیں دکھائی جا رہی ہیں۔`;
   }
 
-  m = trimmed.match(/^All (.*?) rates are shown\.$/i)
+  m = trimmed.match(/^All (.*?) rates are shown\.$/i);
   if (m) {
-    const rt = AUTO_URDU_DICT[m[1]] || m[1]
-    return `تمام ${rt} دکھائے جا رہے ہیں۔`
+    const rt = AUTO_URDU_DICT[m[1]] || m[1];
+    return `تمام ${rt} دکھائے جا رہے ہیں۔`;
   }
 
-  m = trimmed.match(/^Prices of (.*?) district are shown\.$/i)
+  m = trimmed.match(/^Prices of (.*?) district are shown\.$/i);
   if (m) {
-    const d = AUTO_URDU_DICT[m[1]] || m[1]
-    return `ضلع ${d} کی قیمتیں دکھائی جا رہی ہیں۔`
+    const d = AUTO_URDU_DICT[m[1]] || m[1];
+    return `ضلع ${d} کی قیمتیں دکھائی جا رہی ہیں۔`;
   }
 
-  m = trimmed.match(/^Prices of (\d+) locations are shown\.$/i)
+  m = trimmed.match(/^Prices of (\d+) locations are shown\.$/i);
   if (m) {
-    return `${m[1]} مقامات کی قیمتیں دکھائی جا رہی ہیں۔`
+    return `${m[1]} مقامات کی قیمتیں دکھائی جا رہی ہیں۔`;
   }
 
-  return AUTO_URDU_DICT[trimmed] || trimmed
+  return AUTO_URDU_DICT[trimmed] || trimmed;
 }
 
 function speakText(text: string) {
   if (typeof window !== "undefined" && "speechSynthesis" in window) {
-    window.speechSynthesis.cancel()
+    window.speechSynthesis.cancel();
 
-    let textToSpeak = text
+    let textToSpeak = text;
     if (appLang === "ur") {
-      textToSpeak = translateVoiceUrdu(text)
+      textToSpeak = translateVoiceUrdu(text);
     }
 
-    const u = new SpeechSynthesisUtterance(textToSpeak)
-    u.lang = appLang === "ur" ? "ur-PK" : "en-US"
-    u.rate = appLang === "ur" ? 0.85 : 0.95
+    const u = new SpeechSynthesisUtterance(textToSpeak);
+    u.lang = appLang === "ur" ? "ur-PK" : "en-US";
+    u.rate = appLang === "ur" ? 0.85 : 0.95;
 
     if (appLang === "ur") {
-      const voices = window.speechSynthesis.getVoices()
+      const voices = window.speechSynthesis.getVoices();
       const urVoice =
-        voices.find((v) => v.lang === "ur-PK" || v.lang === "ur" || v.lang.startsWith("ur-")) ||
-        voices.find((v) => v.name.toLowerCase().includes("urdu") || v.lang.toLowerCase().includes("ur")) ||
-        voices.find((v) => v.lang.startsWith("hi") || v.lang.startsWith("ar"))
+        voices.find(
+          (v) =>
+            v.lang === "ur-PK" || v.lang === "ur" || v.lang.startsWith("ur-"),
+        ) ||
+        voices.find(
+          (v) =>
+            v.name.toLowerCase().includes("urdu") ||
+            v.lang.toLowerCase().includes("ur"),
+        ) ||
+        voices.find((v) => v.lang.startsWith("hi") || v.lang.startsWith("ar"));
       if (urVoice) {
-        u.voice = urVoice
+        u.voice = urVoice;
       }
     }
 
-    window.speechSynthesis.speak(u)
+    window.speechSynthesis.speak(u);
   }
 }
 
 function VoiceOrientationOverlay({ onClose }: { onClose: () => void }) {
-  const { lang, t } = useLang()
-  const [activeCard, setActiveCard] = useState<string | null>(null)
+  const { lang, t } = useLang();
+  const [activeCard, setActiveCard] = useState<string | null>(null);
 
   const handleCardTap = (
     key: string,
@@ -18998,18 +23303,18 @@ function VoiceOrientationOverlay({ onClose }: { onClose: () => void }) {
     descEn: string,
     descUr: string,
   ) => {
-    const next = activeCard === key ? null : key
-    setActiveCard(next)
+    const next = activeCard === key ? null : key;
+    setActiveCard(next);
     if (next) {
       if (lang === "ur") {
-        speakText(`${labelUr}۔ ${descUr}`)
+        speakText(`${labelUr}۔ ${descUr}`);
       } else {
-        speakText(`${labelEn}. ${descEn}`)
+        speakText(`${labelEn}. ${descEn}`);
       }
     } else {
-      window.speechSynthesis?.cancel()
+      window.speechSynthesis?.cancel();
     }
-  }
+  };
 
   return (
     // pointer-events:none on backdrop so home-screen buttons remain tappable
@@ -19051,7 +23356,12 @@ function VoiceOrientationOverlay({ onClose }: { onClose: () => void }) {
       {/* Tap-to-hear hint pill */}
       <div
         className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center"
-        style={{ top: 48, pointerEvents: "none", width: "max-content", maxWidth: "90%" }}
+        style={{
+          top: 48,
+          pointerEvents: "none",
+          width: "max-content",
+          maxWidth: "90%",
+        }}
       >
         <span
           className="text-[11px] font-semibold px-3.5 py-1.5 rounded-full text-center"
@@ -19070,9 +23380,9 @@ function VoiceOrientationOverlay({ onClose }: { onClose: () => void }) {
 
       {/* Tooltip cards — individually pointer-events:auto, positioned near their button */}
       {ORIENT_CARDS.map((card) => {
-        const isActive = activeCard === card.key
-        const titleText = lang === "ur" ? card.labelUr : card.label
-        const descText = lang === "ur" ? card.descUr : card.desc
+        const isActive = activeCard === card.key;
+        const titleText = lang === "ur" ? card.labelUr : card.label;
+        const descText = lang === "ur" ? card.descUr : card.desc;
 
         return (
           <button
@@ -19091,8 +23401,14 @@ function VoiceOrientationOverlay({ onClose }: { onClose: () => void }) {
               ...card.pos,
               pointerEvents: "auto",
               background: isActive ? "#087F63" : "rgba(255,255,255,0.96)",
-              borderLeft: lang === "ur" ? undefined : `3.5px solid ${isActive ? "#2FAE68" : "#087F63"}`,
-              borderRight: lang === "ur" ? `3.5px solid ${isActive ? "#2FAE68" : "#087F63"}` : undefined,
+              borderLeft:
+                lang === "ur"
+                  ? undefined
+                  : `3.5px solid ${isActive ? "#2FAE68" : "#087F63"}`,
+              borderRight:
+                lang === "ur"
+                  ? `3.5px solid ${isActive ? "#2FAE68" : "#087F63"}`
+                  : undefined,
               boxShadow: isActive
                 ? "0 4px 18px rgba(15,138,95,0.55)"
                 : "0 2px 12px rgba(0,0,0,0.22)",
@@ -19146,10 +23462,10 @@ function VoiceOrientationOverlay({ onClose }: { onClose: () => void }) {
               <span style={{ fontSize: 13, flexShrink: 0 }}>🔊</span>
             )}
           </button>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
 // Voice listening / processing / speaking overlay
@@ -19157,23 +23473,23 @@ function VoiceQueryOverlay({
   onClose,
   onNavigate,
 }: {
-  onClose: () => void
-  onNavigate: (s: Screen) => void
+  onClose: () => void;
+  onNavigate: (s: Screen) => void;
 }) {
-  const { lang, t } = useLang()
+  const { lang, t } = useLang();
   const [phase, setPhase] = useState<"listening" | "processing" | "speaking">(
     "listening",
-  )
-  const [transcript, setTranscript] = useState("")
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  );
+  const [transcript, setTranscript] = useState("");
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const clearT = () => {
-    if (timerRef.current) clearTimeout(timerRef.current)
-  }
+    if (timerRef.current) clearTimeout(timerRef.current);
+  };
 
   useEffect(() => {
     // Speak initial listening cue
     if (lang === "ur") {
-      speakText("فرمائیے، میں سن رہا ہوں")
+      speakText("فرمائیے، میں سن رہا ہوں");
     }
 
     // Simulate: after 2.5s user finishes speaking
@@ -19181,24 +23497,24 @@ function VoiceQueryOverlay({
       const userSpoken =
         lang === "ur"
           ? "پاکپتن منڈی میں گندم کا مل ریٹ"
-          : "Wheat in Pakpattan Mandi, Mill Rate"
-      setTranscript(userSpoken)
-      setPhase("processing")
+          : "Wheat in Pakpattan Mandi, Mill Rate";
+      setTranscript(userSpoken);
+      setPhase("processing");
 
       timerRef.current = setTimeout(() => {
-        setPhase("speaking")
+        setPhase("speaking");
         if (lang === "ur") {
-          speakText("پاکپتن منڈی میں گندم کا مل ریٹ ۲۸۵۰ روپے ہے۔")
+          speakText("پاکپتن منڈی میں گندم کا مل ریٹ ۲۸۵۰ روپے ہے۔");
         } else {
-          speakText("Wheat Mill Rate in Pakpattan Mandi is 2850 rupees.")
+          speakText("Wheat Mill Rate in Pakpattan Mandi is 2850 rupees.");
         }
 
         timerRef.current = setTimeout(() => {
-          onClose()
+          onClose();
           onNavigate({
-            id: "commodity-rates",
+            id: "product-rates",
             vertical: "Grains",
-            commodity: "Wheat",
+            product: "Wheat",
             byproduct: "Wheat",
             initialRateType: "Mill Rate",
             initialMandi: "Pakpattan Mandi",
@@ -19207,12 +23523,12 @@ function VoiceQueryOverlay({
             initialColor: "Golden",
             initialSpec: "Seed Quality",
             initialCondition: "Dry",
-          })
-        }, 2200)
-      }, 1400)
-    }, 2500)
-    return clearT
-  }, [lang])
+          });
+        }, 2200);
+      }, 1400);
+    }, 2500);
+    return clearT;
+  }, [lang]);
 
   return (
     <div
@@ -19230,9 +23546,9 @@ function VoiceQueryOverlay({
     >
       <button
         onClick={() => {
-          clearT()
-          window.speechSynthesis?.cancel()
-          onClose()
+          clearT();
+          window.speechSynthesis?.cancel();
+          onClose();
         }}
         className="absolute flex items-center justify-center rounded-full text-white font-bold"
         style={{
@@ -19322,18 +23638,12 @@ function VoiceQueryOverlay({
                 {lang === "ur" ? "آواز کا اسسٹنٹ" : "Voice Assistant"}
               </span>
             </div>
-            <p
-              className="font-semibold text-base"
-              style={{ color: "#16352F" }}
-            >
+            <p className="font-semibold text-base" style={{ color: "#16352F" }}>
               {lang === "ur"
                 ? "آپ کا مطلوبہ ریٹ تلاش کر لیا گیا ہے۔"
                 : "Let me bring you the data."}
             </p>
-            <p
-              className="text-sm mt-1 font-bold"
-              style={{ color: "#087F63" }}
-            >
+            <p className="text-sm mt-1 font-bold" style={{ color: "#087F63" }}>
               {lang === "ur"
                 ? "گندم · پاکپتن منڈی · مل ریٹ"
                 : "Wheat · Pakpattan Mandi · Mill Rate"}
@@ -19342,7 +23652,7 @@ function VoiceQueryOverlay({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 //  BOTTOM NAV
@@ -19354,11 +23664,11 @@ function BottomNav({
   onVoiceHold,
   voiceActive,
 }: {
-  active: NavTab
-  onNav: (t: NavTab) => void
-  onVoiceTap: () => void
-  onVoiceHold: () => void
-  voiceActive: boolean
+  active: NavTab;
+  onNav: (t: NavTab) => void;
+  onVoiceTap: () => void;
+  onVoiceHold: () => void;
+  voiceActive: boolean;
 }) {
   const NAV_ICONS: Record<string, (active: boolean) => React.ReactNode> = {
     home: (on) => (
@@ -19445,34 +23755,34 @@ function BottomNav({
         />
       </svg>
     ),
-  }
-  const { t, lang } = useLang()
+  };
+  const { t, lang } = useLang();
   const regularTabs: { id: NavTab; label: string }[] = [
     { id: "home", label: t("nav.home") },
     { id: "analytics", label: t("nav.analytics") },
     { id: "news", label: t("nav.news") },
-  ]
+  ];
 
   // Tap = orientation, Hold (≥380ms) = voice query
-  const holdTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const didHoldRef = useRef(false)
-  const pointerDownRef = useRef(false) // guards against spurious onPointerLeave after release
+  const holdTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const didHoldRef = useRef(false);
+  const pointerDownRef = useRef(false); // guards against spurious onPointerLeave after release
 
   const handleVoiceDown = () => {
-    pointerDownRef.current = true
-    didHoldRef.current = false
+    pointerDownRef.current = true;
+    didHoldRef.current = false;
     holdTimerRef.current = setTimeout(() => {
-      didHoldRef.current = true
-      pointerDownRef.current = false
-      onVoiceHold()
-    }, 380)
-  }
+      didHoldRef.current = true;
+      pointerDownRef.current = false;
+      onVoiceHold();
+    }, 380);
+  };
   const handleVoiceUp = () => {
-    if (!pointerDownRef.current) return // already released — ignore spurious leave events
-    pointerDownRef.current = false
-    if (holdTimerRef.current) clearTimeout(holdTimerRef.current)
-    if (!didHoldRef.current) onVoiceTap()
-  }
+    if (!pointerDownRef.current) return; // already released — ignore spurious leave events
+    pointerDownRef.current = false;
+    if (holdTimerRef.current) clearTimeout(holdTimerRef.current);
+    if (!didHoldRef.current) onVoiceTap();
+  };
 
   return (
     <nav
@@ -19487,7 +23797,7 @@ function BottomNav({
       }}
     >
       {regularTabs.map((t) => {
-        const isActive = active === t.id
+        const isActive = active === t.id;
         return (
           <button
             key={t.id}
@@ -19523,7 +23833,7 @@ function BottomNav({
               />
             )}
           </button>
-        )
+        );
       })}
 
       {/* Voice button — rightmost, tap=orientation, hold=listen */}
@@ -19566,36 +23876,36 @@ function BottomNav({
         </span>
       </button>
     </nav>
-  )
+  );
 }
 
 //  ROOT APP
 
 //  LIVE MARKET
 
-type LMCommodityRow = {
-  name: string
-  change: number
-  lTrade: string
-  dir: "up" | "down" | "flat"
-  high: number
-  low: number
-  volume: number
-  oInt: number
-}
+type LMproductRow = {
+  name: string;
+  change: number;
+  lTrade: string;
+  dir: "up" | "down" | "flat";
+  high: number;
+  low: number;
+  volume: number;
+  oInt: number;
+};
 
 type LMForexRow = {
-  name: string
-  change: number
-  lTrade: number
-  dir: "up" | "down" | "flat"
-  high: number
-  low: number
-  ask: number
-  bid: number
-}
+  name: string;
+  change: number;
+  lTrade: number;
+  dir: "up" | "down" | "flat";
+  high: number;
+  low: number;
+  ask: number;
+  bid: number;
+};
 
-const LM_COMMODITY_DATA: LMCommodityRow[] = [
+const LM_product_DATA: LMproductRow[] = [
   {
     name: "CT 2610",
     change: +0.37,
@@ -19886,7 +24196,7 @@ const LM_COMMODITY_DATA: LMCommodityRow[] = [
     volume: 1067,
     oInt: 74529,
   },
-]
+];
 
 const LM_FOREX_DATA: LMForexRow[] = [
   {
@@ -19969,42 +24279,42 @@ const LM_FOREX_DATA: LMForexRow[] = [
     ask: 65.398,
     bid: 65.353,
   },
-]
+];
 
 function LiveMarketScreen({ onBack }: { onBack: () => void }) {
-  const { lang } = useLang()
-  const now = new Date()
+  const { lang } = useLang();
+  const now = new Date();
   const timeStr = now.toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
-  })
-  const dateStr = now.toLocaleDateString("en-GB").replace(/\//g, "/")
-  const dayStr = now.toLocaleDateString("en-US", { weekday: "long" })
-  const timestamp = `${timeStr} · ${dateStr} · ${dayStr}`
+  });
+  const dateStr = now.toLocaleDateString("en-GB").replace(/\//g, "/");
+  const dayStr = now.toLocaleDateString("en-US", { weekday: "long" });
+  const timestamp = `${timeStr} · ${dateStr} · ${dayStr}`;
 
   const fmtNum = (n: number, decimals = 2) =>
     n === 0
       ? "—"
       : n.toLocaleString("en-US", {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-      })
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        });
 
   const fmtChange = (n: number) => {
-    const s = n > 0 ? `+${n}` : `${n}`
-    return s
-  }
+    const s = n > 0 ? `+${n}` : `${n}`;
+    return s;
+  };
 
   const DirArrow = ({ dir }: { dir: "up" | "down" | "flat" }) => {
     if (dir === "up")
-      return <span style={{ color: "#159447", fontSize: 11 }}></span>
+      return <span style={{ color: "#159447", fontSize: 11 }}></span>;
     if (dir === "down")
-      return <span style={{ color: "#C94A43", fontSize: 11 }}></span>
-    return null
-  }
+      return <span style={{ color: "#C94A43", fontSize: 11 }}></span>;
+    return null;
+  };
 
   const changeColor = (n: number) =>
-    n > 0 ? "#159447" : n < 0 ? "#C94A43" : "#52635F"
+    n > 0 ? "#159447" : n < 0 ? "#C94A43" : "#52635F";
 
   const TH_STYLE: React.CSSProperties = {
     padding: "8px 10px",
@@ -20014,14 +24324,14 @@ function LiveMarketScreen({ onBack }: { onBack: () => void }) {
     textAlign: "right",
     whiteSpace: "nowrap",
     background: "#075E4F",
-  }
+  };
   const TD_STYLE: React.CSSProperties = {
     padding: "7px 10px",
     fontSize: 11,
     textAlign: "right",
     whiteSpace: "nowrap",
     color: "#183B34",
-  }
+  };
 
   return (
     <div className="flex flex-col h-full" style={{ background: "#EFF8F3" }}>
@@ -20045,7 +24355,9 @@ function LiveMarketScreen({ onBack }: { onBack: () => void }) {
             className="font-extrabold text-base text-white leading-tight"
             style={{ fontFamily: "'Poppins', sans-serif" }}
           >
-            {lang === "ur" ? "لائیو مارکیٹ انٹرنیشنل ریٹ" : "Live Market International Rate"}
+            {lang === "ur"
+              ? "لائیو مارکیٹ انٹرنیشنل ریٹ"
+              : "Live Market International Rate"}
           </h1>
           <p
             className="text-xs mt-0.5"
@@ -20078,20 +24390,20 @@ function LiveMarketScreen({ onBack }: { onBack: () => void }) {
       </header>
 
       <div className="flex-1 overflow-y-auto" style={{ paddingBottom: 16 }}>
-        {/*  Section 1: Commodity Futures  */}
+        {/*  Section 1: product Futures  */}
         <div className="px-3 pt-4 pb-1">
           <div className="flex items-center gap-2 mb-2">
             <span
               className="font-extrabold text-sm"
               style={{ color: "#075E4F", fontFamily: "'Poppins', sans-serif" }}
             >
-              Commodity Futures
+              product Futures
             </span>
             <span
               className="text-[10px] font-semibold rounded-full px-2 py-0.5"
               style={{ background: "#DDF3E7", color: "#147A3F" }}
             >
-              {LM_COMMODITY_DATA.length} instruments
+              {LM_product_DATA.length} instruments
             </span>
           </div>
         </div>
@@ -20137,7 +24449,7 @@ function LiveMarketScreen({ onBack }: { onBack: () => void }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {LM_COMMODITY_DATA.map((row, i) => (
+                  {LM_product_DATA.map((row, i) => (
                     <tr
                       key={row.name}
                       style={{ background: i % 2 === 0 ? "#fff" : "#EFF8F3" }}
@@ -20333,39 +24645,20 @@ function LiveMarketScreen({ onBack }: { onBack: () => void }) {
         </p>
       </div>
     </div>
-  )
+  );
 }
 
-interface AppProps {
-  initialUserData?: {
-    name?: string
-    phone?: string
-    role?: string
-    products?: string[]
-    city?: string
-    district?: string
-    province?: string
-  }
-  onRestartOnboarding?: () => void
-}
+// CustomerFaceProps alias
+export type CustomerFaceProps = AppProps;
 
-export type CustomerFaceProps = AppProps
-
-export default function CustomerFaceApp({ initialUserData, onRestartOnboarding }: CustomerFaceProps = {}) {
-  return (
-    <LangProvider>
-      <AppInner initialUserData={initialUserData} onRestartOnboarding={onRestartOnboarding} />
-    </LangProvider>
-  )
-}
 
 
 // ─── BILLING / SUBSCRIPTION SCREEN (MATCHING ONBOARDING) ─────────────────────
-const DURATION_MONTHS_BILLING = [1, 3, 6, 12]
-const DURATION_LABELS_BILLING = ["1 Month", "3 Months", "6 Months", "1 Year"]
-const DISCOUNTS_BILLING = [0, 0.1, 0.15, 0.25]
+const DURATION_MONTHS_BILLING = [1, 3, 6, 12];
+const DURATION_LABELS_BILLING = ["1 Month", "3 Months", "6 Months", "1 Year"];
+const DISCOUNTS_BILLING = [0, 0.1, 0.15, 0.25];
 
-const COMMODITY_BASE_PRICES: Record<string, number> = {
+const product_BASE_PRICES: Record<string, number> = {
   wheat: 3000,
   maize: 3000,
   sesame: 3000,
@@ -20394,71 +24687,203 @@ const COMMODITY_BASE_PRICES: Record<string, number> = {
   "dry fruit": 3000,
   herbs: 3000,
   herbals: 3000,
-}
+};
 
-function getCommodityBasePrice(commodity: string): number {
-  const k = (commodity || "").toLowerCase().trim()
-  if (COMMODITY_BASE_PRICES[k] !== undefined) return COMMODITY_BASE_PRICES[k]
-  for (const [key, price] of Object.entries(COMMODITY_BASE_PRICES)) {
-    if (k.includes(key) || key.includes(k)) return price
+function getproductBasePrice(product: string): number {
+  const k = (product || "").toLowerCase().trim();
+  if (product_BASE_PRICES[k] !== undefined) return product_BASE_PRICES[k];
+  for (const [key, price] of Object.entries(product_BASE_PRICES)) {
+    if (k.includes(key) || key.includes(k)) return price;
   }
-  return 3000
+  return 3000;
 }
 
 function BillingScreen({
-  commodity,
+  product,
   vertical,
   onBack,
   push,
 }: {
-  commodity: string
-  vertical?: string
-  onBack: () => void
-  push: (s: Screen) => void
+  product: string;
+  vertical?: string;
+  onBack: () => void;
+  push: (s: Screen) => void;
 }) {
-  const { lang, tc, tm } = useLang()
-  const [step, setStep] = useState<"plan" | "pay">("plan")
-  const [dur, setDur] = useState(0) // 0: 1 Month, 1: 3 Months, 2: 6 Months, 3: 1 Year
-  const [payMethod, setPayMethod] = useState<"jazzcash" | "easypaisa" | "bank">("jazzcash")
-  const [hasReceipt, setHasReceipt] = useState(false)
-  const [subscribedModal, setSubscribedModal] = useState(false)
+  const { lang, tc, tm } = useLang();
+  const [step, setStep] = useState<"plan" | "pay">("plan");
+  const [dur, setDur] = useState(0); // 0: 1 Month, 1: 3 Months, 2: 6 Months, 3: 1 Year
+  const [customMode, setCustomMode] = useState(false);
+  const [customMonths, setCustomMonths] = useState<number>(3);
 
-  const v = vertical || getVerticalForProduct(commodity) || "Grains"
-  const iconSrc = getCommodityIconSrc(commodity, v)
-  const basePrice = getCommodityBasePrice(commodity)
+  // Payment method state
+  const [paymentType, setPaymentType] = useState<"wallet" | "card" | "direct">(
+    "wallet",
+  );
+  const [walletProvider, setWalletProvider] = useState<
+    "jazzcash" | "easypaisa" | "sadapay" | "nayapay" | "upaisa"
+  >("jazzcash");
+  const [walletNumber, setWalletNumber] = useState("0300 1234567");
+  const [walletCnic, setWalletCnic] = useState("");
+  const [walletPromptSent, setWalletPromptSent] = useState(false);
+  const [walletPromptSending, setWalletPromptSending] = useState(false);
 
-  const months = DURATION_MONTHS_BILLING[dur]
-  const discount = DISCOUNTS_BILLING[dur]
-  const regularTotal = basePrice * months
-  const discountAmt = Math.round(regularTotal * discount)
-  const finalTotal = regularTotal - discountAmt
+  const [directMethod, setDirectMethod] = useState<
+    "jazzcash" | "easypaisa" | "bank"
+  >("jazzcash");
+  const [hasReceipt, setHasReceipt] = useState(false);
+  const [subscribedModal, setSubscribedModal] = useState(false);
 
-  const handleActivate = () => {
-    SUBSCRIBED_PRODUCTS.add(commodity)
-    const mapped = PRODUCT_ID_TO_NAME[commodity.toLowerCase()] || commodity
-    SUBSCRIBED_PRODUCTS.add(mapped)
-    setSubscribedModal(true)
-  }
+  // Card fields
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvv, setCvv] = useState("");
+  const [cardHolder, setCardHolder] = useState("Muhammad Arif");
 
-  const paymentDetails = {
-    jazzcash: {
-      account: "0300-1234567",
-      title: "Zarai Mandi Pvt Ltd",
+  const v = vertical || getVerticalForProduct(product) || "Grains";
+  const iconSrc = getproductIconSrc(product, v);
+  const basePrice = getproductBasePrice(product);
+
+  const { months, discount, regularTotal, discountAmt, finalTotal } = customMode
+    ? (() => {
+        const m = customMonths || 1;
+        const d = getMonthlyDiscount(m);
+        const reg = basePrice * m;
+        const da = Math.round(reg * d);
+        return {
+          months: m,
+          discount: d,
+          regularTotal: reg,
+          discountAmt: da,
+          finalTotal: reg - da,
+        };
+      })()
+    : (() => {
+        const m = DURATION_MONTHS_BILLING[dur] || 1;
+        const d = getMonthlyDiscount(m);
+        const reg = basePrice * m;
+        const da = Math.round(reg * d);
+        return {
+          months: m,
+          discount: d,
+          regularTotal: reg,
+          discountAmt: da,
+          finalTotal: reg - da,
+        };
+      })();
+
+  const walletProviders = [
+    {
+      id: "jazzcash",
+      label: "JazzCash",
       color: "#E83D2B",
+      iconSrc: "/src/icons/jazz.png",
+      sub: "Instant mobile prompt",
+    },
+    {
+      id: "easypaisa",
+      label: "EasyPaisa",
+      color: "#4CAF50",
+      iconSrc: "/src/icons/easypaisa.png",
+      sub: "Instant approval OTP",
+    },
+    {
+      id: "sadapay",
+      label: "SadaPay",
+      color: "#00A389",
+      iconSrc: "/src/icons/sadapay.png",
+      sub: "In-app transfer request",
+    },
+    {
+      id: "nayapay",
+      label: "NayaPay",
+      color: "#FF6F00",
+      iconSrc: "/src/icons/nayapay.png",
+      sub: "Fast wallet checkout",
+    },
+    {
+      id: "upaisa",
+      label: "UPaisa",
+      color: "#F57F17",
+      iconSrc: "/src/icons/upaisa.png",
+      sub: "USSD / Mobile prompt",
+    },
+  ] as const;
+
+  const directMethods = [
+    {
+      id: "jazzcash",
+      label: "JazzCash Manual",
+      color: "#E83D2B",
+      iconSrc: "/src/icons/jazz.png",
+      sub: "Send via JazzCash mobile wallet",
+    },
+    {
+      id: "easypaisa",
+      label: "EasyPaisa Manual",
+      color: "#4CAF50",
+      iconSrc: "/src/icons/easypaisa.png",
+      sub: "Send via EasyPaisa mobile wallet",
+    },
+    {
+      id: "bank",
+      label: "Bank Transfer",
+      color: "#1565C0",
+      iconSrc: "/src/icons/banktransfer.png",
+      sub: "Direct bank / IBFT transfer",
+    },
+  ] as const;
+
+  const directDetails: Record<string, { rows: [string, string][] }> = {
+    jazzcash: {
+      rows: [
+        ["Account", "03058107777"],
+        ["Account Name", "Muhammad Ghasharib Ali Shaukat"],
+        ["Amount", `PKR ${finalTotal.toLocaleString()}`],
+      ],
     },
     easypaisa: {
-      account: "0333-9876543",
-      title: "Zarai Mandi Pvt Ltd",
-      color: "#4CAF50",
+      rows: [
+        ["Account", "03048107777"],
+        ["Account Name", "Abdul Raafey Shaukat"],
+        ["Amount", `PKR ${finalTotal.toLocaleString()}`],
+      ],
     },
     bank: {
-      bank: "HBL",
-      title: "Zarai Mandi Pvt Ltd",
-      account: "0001-2345678-901",
-      iban: "PK36HABB0000012345678901",
-      color: "#1565C0",
+      rows: [
+        ["Bank", "HBL"],
+        ["Account Title", "Zarai Mandi Private Limited"],
+        ["Account No.", "5000-7909-9814-03"],
+        ["IBAN", "PK04HABB05000079089814030"],
+        ["Amount", `PKR ${finalTotal.toLocaleString()}`],
+      ],
     },
+  };
+
+  function formatCardNumber(v: string) {
+    return v
+      .replace(/\D/g, "")
+      .slice(0, 16)
+      .replace(/(.{4})/g, "$1 ")
+      .trim();
   }
+  function formatExpiry(v: string) {
+    const digits = v.replace(/\D/g, "").slice(0, 4);
+    return digits.length > 2
+      ? digits.slice(0, 2) + "/" + digits.slice(2)
+      : digits;
+  }
+  function formatPhoneInput(v: string) {
+    const digits = v.replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 4) return digits;
+    return digits.slice(0, 4) + " " + digits.slice(4);
+  }
+
+  const handleActivate = () => {
+    SUBSCRIBED_PRODUCTS.add(product);
+    const mapped = PRODUCT_ID_TO_NAME[product.toLowerCase()] || product;
+    SUBSCRIBED_PRODUCTS.add(mapped);
+    setSubscribedModal(true);
+  };
 
   return (
     <div
@@ -20466,7 +24891,10 @@ function BillingScreen({
       style={{
         background: "#F8FAF8",
         overflowY: "auto",
-        fontFamily: lang === "ur" ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', sans-serif" : "'Inter', sans-serif",
+        fontFamily:
+          lang === "ur"
+            ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', sans-serif"
+            : "'Inter', sans-serif",
       }}
     >
       {/* Top Header */}
@@ -20493,10 +24921,14 @@ function BillingScreen({
             className="font-extrabold text-base truncate"
             style={{ color: "#0A5E43" }}
           >
-            {lang === "ur" ? (tc(commodity) + " سبسکرپشن") : (commodity + " Subscription")}
+            {lang === "ur"
+              ? tc(product) + " سبسکرپشن"
+              : product + " Subscription"}
           </h1>
           <p className="text-[11px] truncate" style={{ color: "#6B7280" }}>
-            {lang === "ur" ? "تمام منڈی ریٹس اور تجزیات تک رسائی حاصل کریں" : "Unlock Live Mandi Rates & Analytics"}
+            {lang === "ur"
+              ? "تمام منڈی ریٹس اور تجزیات تک رسائی حاصل کریں"
+              : "Unlock Live Mandi Rates & Analytics"}
           </p>
         </div>
       </header>
@@ -20528,61 +24960,209 @@ function BillingScreen({
                 marginBottom: 4,
               }}
             >
-              {lang === "ur" ? "زرعی منڈی سبسکرپشن پلان" : "Choose your ZM plan"}
-            </div>
-            <div
-              style={{
-                fontSize: 12,
-                color: "#6B7280",
-                marginBottom: 16,
-              }}
-            >
               {lang === "ur"
-                ? "قیمتیں آپ کے منتخب کردہ پراڈکٹ کے مطابق ہیں۔"
-                : "Prices are based on your selected product."}
+                ? "زرعی منڈی سبسکرپشن پلان"
+                : "Choose your ZM plan"}
             </div>
-
-            {/* Duration tabs */}
+            {/* Standard Duration Tabs */}
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4, 1fr)",
-                background: "rgba(15,138,95,0.08)",
-                borderRadius: 14,
+                display: "flex",
+                background: "rgba(15,138,95,0.07)",
+                borderRadius: 12,
                 padding: 4,
-                gap: 4,
-                marginBottom: 16,
+                gap: 3,
+                marginBottom: 10,
               }}
             >
-              {DURATION_LABELS_BILLING.map((d, i) => (
-                <button
-                  key={d}
-                  onClick={() => setDur(i)}
-                  className="tap-target py-2 px-1 rounded-xl text-center transition-all"
-                  style={{
-                    background: dur === i ? "#0F8A5F" : "transparent",
-                    color: dur === i ? "#FFFFFF" : "#0A5E43",
-                    fontWeight: dur === i ? 800 : 600,
-                    fontSize: 11,
-                    boxShadow: dur === i ? "0 2px 8px rgba(15,138,95,0.25)" : "none",
-                  }}
-                >
-                  {d}
-                  {DISCOUNTS_BILLING[i] > 0 && (
+              {[
+                { label: "1 Mo", durIdx: 0, badge: "Standard" },
+                { label: "3 Mos", durIdx: 1, badge: "10% off" },
+                { label: "6 Mos", durIdx: 2, badge: "15% off" },
+                { label: "12 Mos", durIdx: 3, badge: "25% off" },
+              ].map((item) => {
+                const active = !customMode && dur === item.durIdx;
+                return (
+                  <button
+                    key={item.label}
+                    type="button"
+                    className={`dur-tab${active ? " active" : ""}`}
+                    onClick={() => {
+                      setCustomMode(false);
+                      setDur(item.durIdx);
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: "8px 2px",
+                      borderRadius: 10,
+                      border: "none",
+                      background: active ? "#087F63" : "transparent",
+                      color: active ? "#fff" : "#183B34",
+                      fontWeight: 700,
+                      fontSize: 11,
+                      cursor: "pointer",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 2,
+                    }}
+                  >
+                    <span>{item.label}</span>
                     <span
                       style={{
-                        display: "block",
-                        fontSize: 9,
-                        color: dur === i ? "#B4E6D2" : "#16A34A",
-                        fontWeight: 700,
+                        fontSize: 8.5,
+                        opacity: active ? 0.95 : 0.65,
+                        fontWeight: 800,
                       }}
                     >
-                      {Math.round(DISCOUNTS_BILLING[i] * 100)}% off
+                      {item.badge}
                     </span>
-                  )}
-                </button>
-              ))}
+                  </button>
+                );
+              })}
             </div>
+
+            {/* Customize Mode Toggle Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setCustomMode(!customMode);
+                if (!customMode) setCustomMonths(3);
+              }}
+              style={{
+                width: "100%",
+                padding: "10px 14px",
+                borderRadius: 12,
+                border: customMode
+                  ? "2px solid #087F63"
+                  : "1.5px dashed #D5E2DD",
+                background: customMode ? "#E4F2EC" : "#fff",
+                color: customMode ? "#087F63" : "#52635F",
+                fontSize: 12.5,
+                fontWeight: 700,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: 12,
+                transition: "all 0.15s",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                <span>
+                  {lang === "ur"
+                    ? "اپنی مرضی کے مہینے منتخب کریں (1 تا 12)"
+                    : "Customize Specific Months"}
+                </span>
+              </div>
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 800,
+                  color: customMode ? "#087F63" : "#80918B",
+                }}
+              >
+                {customMode ? "Hide Picker ▴" : "Show Picker ▾"}
+              </span>
+            </button>
+
+            {/* Custom 1-12 Month Picker */}
+            {customMode && (
+              <div
+                style={{
+                  border: "1.5px solid #087F63",
+                  borderRadius: 16,
+                  padding: "14px",
+                  marginBottom: 14,
+                  background: "#fff",
+                  boxShadow: "0 2px 10px rgba(8,127,99,0.06)",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 10,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 800,
+                      color: "#183B34",
+                    }}
+                  >
+                    {customMonths} Month{customMonths > 1 ? "s" : ""} Plan
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 800,
+                      color: "#16A34A",
+                      background: "rgba(22,163,74,0.12)",
+                      borderRadius: 20,
+                      padding: "2px 9px",
+                    }}
+                  >
+                    {getMonthlyDiscount(customMonths) > 0
+                      ? `${Math.round(getMonthlyDiscount(customMonths) * 100)}% Discount`
+                      : "Regular Rate"}
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(4, 1fr)",
+                    gap: 6,
+                  }}
+                >
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m) => {
+                    const sel = customMonths === m;
+                    const disc = getMonthlyDiscount(m);
+                    return (
+                      <button
+                        key={m}
+                        type="button"
+                        onClick={() => setCustomMonths(m)}
+                        style={{
+                          padding: "6px 2px",
+                          borderRadius: 8,
+                          border: sel
+                            ? "2px solid #087F63"
+                            : "1.5px solid #D5E2DD",
+                          background: sel ? "#087F63" : "#F4FAF7",
+                          color: sel ? "#fff" : "#183B34",
+                          cursor: "pointer",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          gap: 1,
+                        }}
+                      >
+                        <span style={{ fontSize: 11.5, fontWeight: 800 }}>
+                          {m} mo
+                        </span>
+                        <span
+                          style={{
+                            fontSize: 8.5,
+                            fontWeight: 700,
+                            color: sel
+                              ? "#D1FAE5"
+                              : disc > 0
+                                ? "#16A34A"
+                                : "#80918B",
+                          }}
+                        >
+                          {disc > 0 ? `-${disc * 100}%` : "0%"}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Pricing Breakdown Card */}
             <div
@@ -20624,7 +25204,7 @@ function BillingScreen({
                 </span>
               </div>
 
-              {/* Commodity Row */}
+              {/* product Row */}
               <div
                 style={{
                   display: "flex",
@@ -20635,13 +25215,20 @@ function BillingScreen({
                   color: "#1F2937",
                 }}
               >
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 10, fontWeight: 700 }}>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 10,
+                    fontWeight: 700,
+                  }}
+                >
                   <img
                     src={iconSrc}
                     alt=""
                     style={{ width: 28, height: 28, objectFit: "contain" }}
                   />
-                  {tc(commodity)}
+                  {tc(product)}
                 </span>
                 <span style={{ fontWeight: 800, color: "#0A5E43" }}>
                   PKR {basePrice.toLocaleString()}/mo
@@ -20649,15 +25236,51 @@ function BillingScreen({
               </div>
 
               {/* Calculations Box */}
-              <div style={{ borderTop: "1.5px solid rgba(15,138,95,0.1)", background: "#EAF8F2" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 16px", fontSize: 12, color: "#52635F" }}>
-                  <span>{lang === "ur" ? ("کل رقم (" + months + " ماہ)") : ("Total/mo × " + months + " month" + (months > 1 ? "s" : ""))}</span>
-                  <span style={{ fontWeight: 600 }}>PKR {regularTotal.toLocaleString()}</span>
+              <div
+                style={{
+                  borderTop: "1.5px solid rgba(15,138,95,0.1)",
+                  background: "#EAF8F2",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    padding: "8px 16px",
+                    fontSize: 12,
+                    color: "#52635F",
+                  }}
+                >
+                  <span>
+                    {lang === "ur"
+                      ? "کل رقم (" + months + " ماہ)"
+                      : "Total/mo × " +
+                        months +
+                        " month" +
+                        (months > 1 ? "s" : "")}
+                  </span>
+                  <span style={{ fontWeight: 600 }}>
+                    PKR {regularTotal.toLocaleString()}
+                  </span>
                 </div>
                 {discount > 0 && (
-                  <div style={{ display: "flex", justifyContent: "space-between", padding: "6px 16px", fontSize: 12, color: "#16A34A" }}>
-                    <span style={{ fontWeight: 700 }}>{lang === "ur" ? ("ڈسکاؤنٹ (" + Math.round(discount * 100) + "% بچت)") : ("Discount (" + Math.round(discount * 100) + "% off)")}</span>
-                    <span style={{ fontWeight: 800 }}>− PKR {discountAmt.toLocaleString()}</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      padding: "6px 16px",
+                      fontSize: 12,
+                      color: "#16A34A",
+                    }}
+                  >
+                    <span style={{ fontWeight: 700 }}>
+                      {lang === "ur"
+                        ? "ڈسکاؤنٹ (" + discount * 100 + "% بچت)"
+                        : "Discount (" + discount * 100 + "% off)"}
+                    </span>
+                    <span style={{ fontWeight: 800 }}>
+                      − PKR {discountAmt.toLocaleString()}
+                    </span>
                   </div>
                 )}
                 <div
@@ -20669,7 +25292,13 @@ function BillingScreen({
                     borderTop: "1px solid rgba(15,138,95,0.15)",
                   }}
                 >
-                  <span style={{ fontWeight: 800, fontSize: 14, color: "#0A5E43" }}>
+                  <span
+                    style={{
+                      fontWeight: 800,
+                      fontSize: 14,
+                      color: "#0A5E43",
+                    }}
+                  >
                     {lang === "ur" ? "آپ کی قیمت" : "Your Price"}
                   </span>
                   <div style={{ textAlign: "right" }}>
@@ -20683,7 +25312,13 @@ function BillingScreen({
                     >
                       PKR {finalTotal.toLocaleString()}
                     </div>
-                    <div style={{ fontSize: 11, color: "#52635F", fontWeight: 600 }}>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: "#52635F",
+                        fontWeight: 600,
+                      }}
+                    >
                       PKR {Math.round(finalTotal / months).toLocaleString()}/mo
                     </div>
                   </div>
@@ -20691,41 +25326,7 @@ function BillingScreen({
               </div>
             </div>
 
-            {/* Included features pill */}
-            <div
-              style={{
-                background: "#F8FAF8",
-                border: "1px solid #E5E7EB",
-                borderRadius: 14,
-                padding: "10px 14px",
-                marginBottom: 16,
-                display: "flex",
-                gap: 8,
-                alignItems: "center",
-                fontSize: 12,
-                color: "#52635F",
-              }}
-            >
-              <span style={{ fontSize: 16 }}>✓</span>
-              <span>
-                {lang === "ur"
-                  ? "تمام ۱۵۰+ غلہ منڈیوں کے براہِ راست ریٹس اور روزانہ الرٹس شامل ہیں"
-                  : "Includes live rates across 150+ mandis & daily alerts"}
-              </span>
-            </div>
-
-            {/* Two Action Buttons */}
-            <button
-              onClick={handleActivate}
-              className="tap-target w-full py-3.5 rounded-2xl text-white font-extrabold text-sm mb-2.5 shadow-lg flex items-center justify-center gap-2"
-              style={{
-                background: "#0F8A5F",
-                boxShadow: "0 4px 14px rgba(15,138,95,0.35)",
-              }}
-            >
-              {lang === "ur" ? "۳ دن کا مفت ٹرائل شروع کریں →" : "Start 3-Day Free Trial →"}
-            </button>
-
+            {/* Action Buttons */}
             <button
               onClick={() => setStep("pay")}
               className="tap-target w-full py-3.5 rounded-2xl font-extrabold text-sm mb-2 flex items-center justify-center gap-2"
@@ -20736,25 +25337,12 @@ function BillingScreen({
               }}
             >
               {lang === "ur"
-                ? ("ادائیگی کریں اور سبسکرائب کریں — PKR " + finalTotal.toLocaleString())
-                : ("Pay & Subscribe — PKR " + finalTotal.toLocaleString())}
+                ? "ادائیگی کی طرف جائیں — PKR " + finalTotal.toLocaleString()
+                : "Proceed to Payment — PKR " + finalTotal.toLocaleString()}
             </button>
-
-            <div
-              style={{
-                textAlign: "center",
-                marginTop: 6,
-                fontSize: 11,
-                color: "#6B7280",
-              }}
-            >
-              {lang === "ur"
-                ? "مفت ٹرائل کے لیے کسی پیشگی ادائیگی کی ضرورت نہیں ہے۔"
-                : "Free trial requires no payment. Review before subscribing."}
-            </div>
           </div>
         ) : (
-          /* Step 2: Payment Confirmation */
+          /* Step 2: Payment Confirmation (Mobile Wallet, Card, Direct Transfer) */
           <div
             className="w-full bg-white rounded-3xl p-5 shadow-sm border border-[#E5E7EB]"
             style={{ animation: "screenEnter 0.25s ease-out" }}
@@ -20769,7 +25357,7 @@ function BillingScreen({
                 marginBottom: 4,
               }}
             >
-              {lang === "ur" ? "ادائیگی کی تصدیق" : "Payment Confirmation"}
+              {lang === "ur" ? "ادائیگی کی تصدیق" : "Step 2 of 2"}
             </div>
             <div
               style={{
@@ -20788,135 +25376,648 @@ function BillingScreen({
                 marginBottom: 16,
               }}
             >
-              {lang === "ur" ? (
-                <>
-                  <strong style={{ color: "#0A5E43" }}>{DURATION_LABELS_BILLING[dur]}</strong> پلان کے لیے{" "}
-                  <strong style={{ color: "#0A5E43" }}>PKR {finalTotal.toLocaleString()}</strong> رقم منتقل کریں۔
-                </>
-              ) : (
-                <>
-                  Send <strong style={{ color: "#0A5E43" }}>PKR {finalTotal.toLocaleString()}</strong> for the{" "}
-                  <strong style={{ color: "#0A5E43" }}>{DURATION_LABELS_BILLING[dur]}</strong> plan.
-                </>
-              )}
+              Pay{" "}
+              <strong style={{ color: "#0A5E43" }}>
+                PKR {finalTotal.toLocaleString()}
+              </strong>{" "}
+              for the{" "}
+              <strong style={{ color: "#0A5E43" }}>
+                {months} Month{months > 1 ? "s" : ""}
+              </strong>{" "}
+              plan.
             </div>
 
-            {/* Payment Method Selector */}
-            <div style={{ fontSize: 12, fontWeight: 700, color: "#1F2937", marginBottom: 8 }}>
-              {lang === "ur" ? "ادائیگی کا طریقہ منتخب کریں" : "Choose Payment Method"}
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 8, marginBottom: 16 }}>
+            {/* 3 Payment Type Selector Buttons */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: 8,
+                marginBottom: 14,
+              }}
+            >
               {[
-                { id: "jazzcash", label: "JazzCash", color: "#E83D2B" },
-                { id: "easypaisa", label: "EasyPaisa", color: "#4CAF50" },
-                { id: "bank", label: lang === "ur" ? "بینک ٹرانسفر" : "Bank Transfer", color: "#1565C0" },
-              ].map((m) => {
-                const active = payMethod === m.id
+                {
+                  id: "wallet",
+                  iconSrc: "/src/icons/mobilewallet.png",
+                  label: "Mobile Wallet",
+                  sub: "JazzCash, EasyPaisa",
+                },
+                {
+                  id: "card",
+                  iconSrc: "/src/icons/cardpayment.png",
+                  label: "Card Payment",
+                  sub: "Debit or credit",
+                },
+                {
+                  id: "direct",
+                  iconSrc: "/src/icons/directtransfer.png",
+                  label: "Direct Transfer",
+                  sub: "IBFT / Manual",
+                },
+              ].map((opt) => {
+                const active = paymentType === opt.id;
                 return (
                   <button
-                    key={m.id}
-                    onClick={() => setPayMethod(m.id as any)}
-                    className="tap-target p-3 rounded-2xl flex items-center gap-3 transition-all text-left"
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setPaymentType(opt.id as any)}
                     style={{
-                      background: active ? "#EAF8F2" : "#FFFFFF",
-                      border: active ? "2px solid #0F8A5F" : "1.5px solid #E5E7EB",
+                      padding: "10px 6px",
+                      borderRadius: 14,
+                      border: active
+                        ? "2px solid #087F63"
+                        : "1.5px solid #D5E2DD",
+                      background: active ? "#E4F2EC" : "#fff",
+                      cursor: "pointer",
+                      textAlign: "center",
+                      transition: "all 0.15s",
                     }}
                   >
                     <div
                       style={{
-                        width: 38,
-                        height: 38,
-                        borderRadius: 12,
-                        background: m.color + "15",
-                        color: m.color,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        fontWeight: 900,
-                        fontSize: 15,
-                        flexShrink: 0,
+                        height: 24,
+                        marginBottom: 4,
                       }}
                     >
-                      {m.id === "bank" ? "🏦" : "📱"}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 800, fontSize: 13, color: "#1F2937" }}>{m.label}</div>
-                      <div style={{ fontSize: 11, color: "#6B7280" }}>
-                        {m.id === "bank" ? "HBL Account / IBAN" : "Mobile Account"}
-                      </div>
+                      <img
+                        src={opt.iconSrc}
+                        alt=""
+                        style={{
+                          width: 22,
+                          height: 22,
+                          objectFit: "contain",
+                        }}
+                      />
                     </div>
                     <div
                       style={{
-                        width: 18,
-                        height: 18,
-                        borderRadius: "50%",
-                        border: active ? "5px solid #0F8A5F" : "2px solid #D1D5DB",
-                        background: "#fff",
+                        fontSize: 11,
+                        fontWeight: 800,
+                        color: active ? "#087F63" : "#183B34",
+                        lineHeight: 1.2,
                       }}
-                    />
+                    >
+                      {opt.label}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 8.5,
+                        color: "#52635F",
+                        marginTop: 2,
+                      }}
+                    >
+                      {opt.sub}
+                    </div>
                   </button>
-                )
+                );
               })}
             </div>
 
-            {/* Account Details Box */}
-            <div
-              style={{
-                background: "#F8FAF8",
-                border: "1.5px dashed #0F8A5F",
-                borderRadius: 18,
-                padding: "14px 16px",
-                marginBottom: 16,
-              }}
-            >
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#0F8A5F", textTransform: "uppercase", marginBottom: 6 }}>
-                {lang === "ur" ? "اکاؤنٹ کی تفصیلات" : "Account Transfer Details"}
-              </div>
-              {payMethod === "jazzcash" && (
-                <div style={{ fontSize: 12.5, color: "#1F2937", lineHeight: 1.6 }}>
-                  <div><span style={{ color: "#6B7280" }}>Account:</span> <strong>{paymentDetails.jazzcash.account}</strong></div>
-                  <div><span style={{ color: "#6B7280" }}>Title:</span> <strong>{paymentDetails.jazzcash.title}</strong></div>
-                  <div><span style={{ color: "#6B7280" }}>Amount:</span> <strong style={{ color: "#0A5E43" }}>PKR {finalTotal.toLocaleString()}</strong></div>
+            {/* Option 1: Mobile Wallet */}
+            {paymentType === "wallet" && (
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: 10 }}
+              >
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "#52635F",
+                      textTransform: "uppercase",
+                      marginBottom: 6,
+                    }}
+                  >
+                    Select Wallet Provider
+                  </label>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, 1fr)",
+                      gap: 6,
+                      marginBottom: 8,
+                    }}
+                  >
+                    {walletProviders.map((wp) => {
+                      const sel = walletProvider === wp.id;
+                      return (
+                        <button
+                          key={wp.id}
+                          type="button"
+                          onClick={() => {
+                            setWalletProvider(wp.id as any);
+                            setWalletPromptSent(false);
+                          }}
+                          style={{
+                            padding: "8px 4px",
+                            borderRadius: 10,
+                            border: sel
+                              ? `2px solid ${wp.color}`
+                              : "1.5px solid #D5E2DD",
+                            background: sel ? `${wp.color}15` : "#FFFFFF",
+                            cursor: "pointer",
+                            textAlign: "center",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: 2,
+                          }}
+                        >
+                          <img
+                            src={wp.iconSrc}
+                            alt=""
+                            style={{
+                              width: 20,
+                              height: 20,
+                              objectFit: "contain",
+                            }}
+                          />
+                          <div
+                            style={{
+                              fontSize: 10.5,
+                              fontWeight: 800,
+                              color: sel ? wp.color : "#183B34",
+                            }}
+                          >
+                            {wp.label}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              )}
-              {payMethod === "easypaisa" && (
-                <div style={{ fontSize: 12.5, color: "#1F2937", lineHeight: 1.6 }}>
-                  <div><span style={{ color: "#6B7280" }}>Account:</span> <strong>{paymentDetails.easypaisa.account}</strong></div>
-                  <div><span style={{ color: "#6B7280" }}>Title:</span> <strong>{paymentDetails.easypaisa.title}</strong></div>
-                  <div><span style={{ color: "#6B7280" }}>Amount:</span> <strong style={{ color: "#0A5E43" }}>PKR {finalTotal.toLocaleString()}</strong></div>
-                </div>
-              )}
-              {payMethod === "bank" && (
-                <div style={{ fontSize: 12.5, color: "#1F2937", lineHeight: 1.6 }}>
-                  <div><span style={{ color: "#6B7280" }}>Bank:</span> <strong>{paymentDetails.bank.bank}</strong></div>
-                  <div><span style={{ color: "#6B7280" }}>Title:</span> <strong>{paymentDetails.bank.title}</strong></div>
-                  <div><span style={{ color: "#6B7280" }}>Account:</span> <strong>{paymentDetails.bank.account}</strong></div>
-                  <div><span style={{ color: "#6B7280" }}>IBAN:</span> <strong style={{ fontSize: 11 }}>{paymentDetails.bank.iban}</strong></div>
-                  <div><span style={{ color: "#6B7280" }}>Amount:</span> <strong style={{ color: "#0A5E43" }}>PKR {finalTotal.toLocaleString()}</strong></div>
-                </div>
-              )}
-            </div>
 
-            {/* Receipt Upload Mock */}
-            <div
-              onClick={() => setHasReceipt(!hasReceipt)}
-              className="tap-target p-3.5 rounded-2xl border border-dashed border-[#B8DCCF] bg-[#F4FAF7] text-center cursor-pointer mb-4 flex items-center justify-center gap-2 text-xs font-bold"
-              style={{ color: "#0A5E43" }}
-            >
-              <span>{hasReceipt ? "✓" : "📷"}</span>
-              <span>{hasReceipt ? (lang === "ur" ? "رسید منسلک ہو گئی ہے" : "Receipt Uploaded!") : (lang === "ur" ? "ادائیگی کا اسکرین شاٹ / رسید اپ لوڈ کریں" : "Upload Payment Screenshot (Optional)")}</span>
-            </div>
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "#52635F",
+                      textTransform: "uppercase",
+                      marginBottom: 4,
+                    }}
+                  >
+                    Mobile Wallet Number *
+                  </label>
+                  <input
+                    type="tel"
+                    inputMode="numeric"
+                    placeholder="0300 1234567"
+                    value={walletNumber}
+                    onChange={(e) =>
+                      setWalletNumber(formatPhoneInput(e.target.value))
+                    }
+                    style={{
+                      width: "100%",
+                      height: 42,
+                      padding: "0 12px",
+                      border: "1.5px solid #D5E2DD",
+                      borderRadius: 10,
+                      fontSize: 13.5,
+                      color: "#183B34",
+                      background: "#fff",
+                      outline: "none",
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "#52635F",
+                      textTransform: "uppercase",
+                      marginBottom: 4,
+                    }}
+                  >
+                    Account Holder Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Muhammad Arif / 123456"
+                    value={walletCnic}
+                    onChange={(e) => setWalletCnic(e.target.value)}
+                    style={{
+                      width: "100%",
+                      height: 42,
+                      padding: "0 12px",
+                      border: "1.5px solid #D5E2DD",
+                      borderRadius: 10,
+                      fontSize: 13.5,
+                      color: "#183B34",
+                      background: "#fff",
+                      outline: "none",
+                    }}
+                  />
+                </div>
+
+                {!walletPromptSent ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setWalletPromptSending(true);
+                      setTimeout(() => {
+                        setWalletPromptSending(false);
+                        setWalletPromptSent(true);
+                      }, 800);
+                    }}
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      background: "#087F63",
+                      color: "#fff",
+                      borderRadius: 10,
+                      border: "none",
+                      fontWeight: 700,
+                      fontSize: 12.5,
+                      cursor: "pointer",
+                    }}
+                  >
+                    {walletPromptSending
+                      ? "Sending Authorization Request..."
+                      : "Send Approval Prompt to Mobile Phone"}
+                  </button>
+                ) : (
+                  <div
+                    style={{
+                      background: "#E8F5E9",
+                      border: "1.5px solid #81C784",
+                      borderRadius: 10,
+                      padding: "10px 12px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 11.5,
+                        color: "#1B5E20",
+                        fontWeight: 700,
+                      }}
+                    >
+                      Approval prompt sent to {walletNumber}. Please enter your
+                      MPIN in your wallet app to complete.
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Option 2: Card Payment */}
+            {paymentType === "card" && (
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: 10 }}
+              >
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "#52635F",
+                      textTransform: "uppercase",
+                      marginBottom: 4,
+                    }}
+                  >
+                    Card Number
+                  </label>
+                  <input
+                    type="tel"
+                    inputMode="numeric"
+                    placeholder="1234 5678 9012 3456"
+                    value={cardNumber}
+                    onChange={(e) =>
+                      setCardNumber(formatCardNumber(e.target.value))
+                    }
+                    style={{
+                      width: "100%",
+                      height: 44,
+                      padding: "0 12px",
+                      border: "1.5px solid #D5E2DD",
+                      borderRadius: 10,
+                      fontSize: 13.5,
+                      color: "#183B34",
+                      background: "#fff",
+                      outline: "none",
+                    }}
+                  />
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 10,
+                  }}
+                >
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#52635F",
+                        textTransform: "uppercase",
+                        marginBottom: 4,
+                      }}
+                    >
+                      Expiry Date
+                    </label>
+                    <input
+                      type="tel"
+                      inputMode="numeric"
+                      placeholder="MM/YY"
+                      value={expiry}
+                      onChange={(e) => setExpiry(formatExpiry(e.target.value))}
+                      style={{
+                        width: "100%",
+                        height: 44,
+                        padding: "0 12px",
+                        border: "1.5px solid #D5E2DD",
+                        borderRadius: 10,
+                        fontSize: 13.5,
+                        color: "#183B34",
+                        background: "#fff",
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#52635F",
+                        textTransform: "uppercase",
+                        marginBottom: 4,
+                      }}
+                    >
+                      Security Code
+                    </label>
+                    <input
+                      type="tel"
+                      inputMode="numeric"
+                      placeholder="CVV"
+                      maxLength={4}
+                      value={cvv}
+                      onChange={(e) =>
+                        setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))
+                      }
+                      style={{
+                        width: "100%",
+                        height: 44,
+                        padding: "0 12px",
+                        border: "1.5px solid #D5E2DD",
+                        borderRadius: 10,
+                        fontSize: 13.5,
+                        color: "#183B34",
+                        background: "#fff",
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "#52635F",
+                      textTransform: "uppercase",
+                      marginBottom: 4,
+                    }}
+                  >
+                    Cardholder Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Name on card"
+                    value={cardHolder}
+                    onChange={(e) => setCardHolder(e.target.value)}
+                    style={{
+                      width: "100%",
+                      height: 44,
+                      padding: "0 12px",
+                      border: "1.5px solid #D5E2DD",
+                      borderRadius: 10,
+                      fontSize: 13.5,
+                      color: "#183B34",
+                      background: "#fff",
+                      outline: "none",
+                    }}
+                  />
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "8px 10px",
+                    background: "#E4F2EC",
+                    borderRadius: 8,
+                  }}
+                >
+                  <span style={{ fontSize: 13 }}>🔒</span>
+                  <span style={{ fontSize: 11, color: "#52635F" }}>
+                    Your card details are encrypted and never stored.
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Option 3: Direct Transfer */}
+            {paymentType === "direct" && (
+              <div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: "#52635F",
+                    textTransform: "uppercase",
+                    marginBottom: 8,
+                  }}
+                >
+                  Choose Method
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                    marginBottom: 12,
+                  }}
+                >
+                  {directMethods.map((m) => (
+                    <div
+                      key={m.id}
+                      onClick={() => setDirectMethod(m.id as any)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        padding: "10px 12px",
+                        borderRadius: 12,
+                        border:
+                          directMethod === m.id
+                            ? "2px solid #087F63"
+                            : "1.5px solid #D5E2DD",
+                        background: directMethod === m.id ? "#E4F2EC" : "#fff",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <div
+                        style={{
+                          background: `${m.color}18`,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: 40,
+                          height: 40,
+                          borderRadius: 10,
+                          flexShrink: 0,
+                        }}
+                      >
+                        <img
+                          src={m.iconSrc}
+                          alt={m.label}
+                          style={{
+                            width: 26,
+                            height: 26,
+                            objectFit: "contain",
+                          }}
+                        />
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div
+                          style={{
+                            fontSize: 13,
+                            fontWeight: 700,
+                            color: "#183B34",
+                          }}
+                        >
+                          {m.label}
+                        </div>
+                        <div style={{ fontSize: 11, color: "#52635F" }}>
+                          {m.sub}
+                        </div>
+                      </div>
+                      {directMethod === m.id && (
+                        <span
+                          style={{
+                            color: "#087F63",
+                            fontWeight: 900,
+                            fontSize: 14,
+                          }}
+                        >
+                          ✓
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Direct Details Box */}
+                <div
+                  style={{
+                    background: "#fff",
+                    border: "1.5px solid #D5E2DD",
+                    borderRadius: 12,
+                    padding: "12px",
+                    marginBottom: 12,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 10.5,
+                      textTransform: "uppercase",
+                      color: "#B9822E",
+                      fontWeight: 700,
+                      marginBottom: 8,
+                    }}
+                  >
+                    Payment Details
+                  </div>
+                  {directDetails[directMethod]?.rows.map(([k, v]) => (
+                    <div
+                      key={k}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        fontSize: 12,
+                        padding: "4px 0",
+                        borderBottom: "1px solid #F1F7F4",
+                      }}
+                    >
+                      <span style={{ color: "#52635F" }}>{k}</span>
+                      <strong
+                        style={{
+                          color: "#183B34",
+                          fontFamily:
+                            k === "IBAN" || k === "Account No."
+                              ? "monospace"
+                              : "inherit",
+                        }}
+                      >
+                        {v}
+                      </strong>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Upload Screenshot */}
+                <div
+                  onClick={() => setHasReceipt(!hasReceipt)}
+                  style={{
+                    padding: "12px",
+                    borderRadius: 12,
+                    border: "1.5px dashed #087F63",
+                    background: hasReceipt ? "#E4F2EC" : "#fff",
+                    textAlign: "center",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: "#087F63",
+                  }}
+                >
+                  <span>{hasReceipt ? "✅" : "📎"}</span>
+                  <span>
+                    {hasReceipt
+                      ? "Screenshot attached (Tap to change)"
+                      : "Tap to upload payment screenshot"}
+                  </span>
+                </div>
+              </div>
+            )}
 
             {/* Confirm Payment Button */}
             <button
               onClick={handleActivate}
-              className="tap-target w-full py-3.5 rounded-2xl text-white font-extrabold text-sm mb-2.5 shadow-lg flex items-center justify-center gap-2"
+              className="tap-target w-full py-3.5 rounded-2xl text-white font-extrabold text-sm mt-4 mb-2.5 shadow-lg flex items-center justify-center gap-2"
               style={{
                 background: "#0F8A5F",
                 boxShadow: "0 4px 14px rgba(15,138,95,0.35)",
               }}
             >
-              {lang === "ur" ? "ادائیگی کی تصدیق اور ایکٹیویشن ✓" : "Confirm Payment & Activate ✓"}
+              {lang === "ur"
+                ? `ادائیگی کی تصدیق اور ایکٹیویشن (PKR ${finalTotal.toLocaleString()}) ✓`
+                : `Confirm Payment & Activate (PKR ${finalTotal.toLocaleString()}) ✓`}
             </button>
 
             <button
@@ -20931,7 +26032,16 @@ function BillingScreen({
 
       {/* Subscription Success Modal */}
       {subscribedModal && (
-        <div className="zm-sheet-overlay" style={{ zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+        <div
+          className="zm-sheet-overlay"
+          style={{
+            zIndex: 300,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 16,
+          }}
+        >
           <div
             className="w-full max-w-sm bg-white rounded-3xl p-6 text-center shadow-2xl border border-[#E5E7EB]"
             style={{ animation: "screenEnter 0.25s ease-out" }}
@@ -20953,18 +26063,31 @@ function BillingScreen({
             >
               ✓
             </div>
-            <h2 style={{ fontSize: 20, fontWeight: 900, color: "#0A5E43", marginBottom: 6 }}>
-              {lang === "ur" ? "سبسکرپشن فعال ہو گئی!" : "Subscription Activated!"}
+            <h2
+              style={{
+                fontSize: 20,
+                fontWeight: 900,
+                color: "#0A5E43",
+                marginBottom: 6,
+              }}
+            >
+              {lang === "ur"
+                ? "سبسکرپشن فعال ہو گئی!"
+                : "Subscription Activated!"}
             </h2>
             <p style={{ fontSize: 12.5, color: "#52635F", marginBottom: 20 }}>
               {lang === "ur"
-                ? ("آپ کے پاس اب " + tc(commodity) + " کے تمام منڈی ریٹس اور تجزیات تک مکمل رسائی ہے۔")
-                : ("You now have full active access to " + commodity + " live rates, analytics & market alerts.")}
+                ? "آپ کے پاس اب " +
+                  tc(product) +
+                  " کے تمام منڈی ریٹس اور تجزیات تک مکمل رسائی ہے۔"
+                : "You now have full active access to " +
+                  product +
+                  " live rates, analytics & market alerts."}
             </p>
             <button
               onClick={() => {
-                setSubscribedModal(false)
-                onBack()
+                setSubscribedModal(false);
+                onBack();
               }}
               className="tap-target w-full py-3.5 rounded-2xl text-white font-extrabold text-sm"
               style={{
@@ -20972,16 +26095,376 @@ function BillingScreen({
                 boxShadow: "0 4px 14px rgba(15,138,95,0.35)",
               }}
             >
-              {lang === "ur" ? "منڈی ڈیش بورڈ پر جائیں" : "Go to Mandi Dashboard"}
+              {lang === "ur"
+                ? "منڈی ڈیش بورڈ پر جائیں"
+                : "Go to Mandi Dashboard"}
             </button>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
 
-function AppInner({ initialUserData, onRestartOnboarding }: { initialUserData?: AppProps["initialUserData"]; onRestartOnboarding?: () => void }) {
+{/* ─── REPRESENTATIVE DASHBOARD SCREEN ─────────────────────────────────── */}
+function RepDashboardScreen({
+  push,
+  initialUserData,
+  onSwitchRole,
+  hasRepAccount,
+}: {
+  push: (s: Screen) => void;
+  initialUserData?: AppProps["initialUserData"];
+  onSwitchRole?: (role: "customer" | "representative") => void;
+  hasRepAccount?: boolean;
+}) {
+  const { lang, setLang, t, voiceEnabled, setVoiceEnabled } = useLang();
+  const [showSwitchToast, setShowSwitchToast] = useState<string | null>(null);
+  const lastProfileTapRef = useRef<number>(0);
+  const [submittedModalOpen, setSubmittedModalOpen] = useState(false);
+
+  const repName = initialUserData?.name || (lang === "ur" ? "محمد عارف" : "Muhammad Arif");
+  const repCity = initialUserData?.city || "Pakpattan Mandi";
+  const repProvince = initialUserData?.province || "Punjab";
+
+  return (
+    <div className="flex-1 overflow-y-auto bg-[#F1F7F4] flex flex-col">
+      {/* ─── Identical Top Header ─── */}
+      <div
+        className="relative overflow-hidden flex-shrink-0"
+        style={{
+          background: "linear-gradient(170deg, #04362C 0%, #064D40 50%, #087F63 100%)",
+          padding: "16px 16px 36px",
+          minHeight: 180,
+          borderBottomLeftRadius: 28,
+          borderBottomRightRadius: 28,
+          boxShadow: "0 8px 30px rgba(4,54,44,0.3)",
+        }}
+      >
+        {/* Background farm hero */}
+        <img
+          src={farmHeroBg}
+          alt=""
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            opacity: 0.18,
+            pointerEvents: "none",
+          }}
+        />
+
+        <div className="relative z-10 flex flex-col justify-between" style={{ minHeight: 140 }}>
+          {/* Top Bar */}
+          <div className="flex items-center justify-between">
+            {/* Lang & Voice buttons */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setLang(lang === "ur" ? "en" : "ur")}
+                className="tap-target px-2.5 py-1 rounded-full text-white font-extrabold text-xs"
+                style={{
+                  background: "rgba(255,255,255,0.18)",
+                  border: "1px solid rgba(255,255,255,0.35)",
+                  backdropFilter: "blur(8px)",
+                }}
+              >
+                {lang === "ur" ? "English" : "اردو"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setVoiceEnabled(!voiceEnabled)}
+                className="tap-target flex items-center gap-1.5 px-2.5 py-1 rounded-full text-white font-extrabold text-xs"
+                style={{
+                  background: voiceEnabled ? "rgba(47, 174, 104, 0.45)" : "rgba(255,255,255,0.18)",
+                  border: voiceEnabled ? "1.2px solid #2FAE68" : "1px solid rgba(255,255,255,0.35)",
+                  backdropFilter: "blur(8px)",
+                }}
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                </svg>
+                <span>{voiceEnabled ? t("Voice On") : t("Voice Off")}</span>
+              </button>
+            </div>
+
+            {/* Profile Avatar with double tap and REP badge */}
+            <button
+              onClick={() => {
+                const now = Date.now();
+                if (now - lastProfileTapRef.current < 350) {
+                  onSwitchRole?.("customer");
+                  setShowSwitchToast(lang === "ur" ? "کسٹمر ڈیش بورڈ پر تبدیل ہو گئے" : "Switched to Customer App");
+                  setTimeout(() => setShowSwitchToast(null), 2500);
+                } else {
+                  onSwitchRole?.("customer");
+                }
+                lastProfileTapRef.current = now;
+              }}
+              className="tap-target relative flex items-center justify-center rounded-full"
+              style={{
+                width: 38,
+                height: 38,
+                background: "rgba(15, 138, 95, 0.45)",
+                border: "1.5px solid #2FAE68",
+                backdropFilter: "blur(8px)",
+              }}
+              title="Tap or double tap to switch to Customer face"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+              </svg>
+              <span
+                style={{
+                  position: "absolute",
+                  bottom: -2,
+                  right: -2,
+                  background: "#2FAE68",
+                  color: "#fff",
+                  fontSize: 8,
+                  fontWeight: 900,
+                  padding: "1px 3px",
+                  borderRadius: 6,
+                  border: "1px solid #fff",
+                  lineHeight: 1,
+                }}
+              >
+                REP
+              </span>
+            </button>
+          </div>
+
+          {/* Switch Toast */}
+          {showSwitchToast && (
+            <div
+              style={{
+                position: "absolute",
+                top: 54,
+                left: "50%",
+                transform: "translateX(-50%)",
+                background: "rgba(6, 45, 36, 0.95)",
+                color: "#B4E6D2",
+                padding: "6px 14px",
+                borderRadius: 20,
+                fontSize: 11,
+                fontWeight: 800,
+                boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+                zIndex: 999,
+                border: "1px solid #2FAE68",
+                whiteSpace: "nowrap",
+              }}
+            >
+              ✓ {showSwitchToast}
+            </div>
+          )}
+
+          {/* Rep Greeting */}
+          <div className="mt-auto" style={{ paddingBottom: 6 }}>
+            <h1
+              style={{
+                color: "#fff",
+                fontSize: 20,
+                lineHeight: 1.2,
+                fontWeight: 800,
+                fontFamily: lang === "ur" ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif" : "'Poppins', sans-serif",
+                textShadow: "0 2px 6px rgba(0,0,0,0.3)",
+              }}
+            >
+              {repName}
+            </h1>
+            <p
+              style={{
+                color: "#B4E6D2",
+                fontSize: 12,
+                fontWeight: 600,
+                marginTop: 2,
+                textShadow: "0 1px 3px rgba(0,0,0,0.4)",
+              }}
+            >
+              📍 {repCity} ({repProvince}) · {lang === "ur" ? "باضابطہ منڈی نمائندہ" : "Verified Mandi Representative"}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── Representative Workspace Body ─── */}
+      <div className="p-4 space-y-4 flex-1">
+        {/* Switch to Customer Face Banner */}
+        <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white border border-[#D5E2DD] shadow-sm">
+          <div>
+            <span className="text-[10px] font-black uppercase tracking-wider bg-[#E4F2EC] text-[#087F63] px-2 py-0.5 rounded-md">
+              {lang === "ur" ? "نمائندہ موڈ فعال" : "Representative Mode Active"}
+            </span>
+            <p className="text-xs font-bold text-[#183B34] mt-1">
+              {lang === "ur" ? "کسٹمر ایپ پر واپس جائیں" : "Switch to Customer Face"}
+            </p>
+          </div>
+          <button
+            onClick={() => onSwitchRole?.("customer")}
+            className="px-3.5 py-2 rounded-xl bg-[#087F63] text-white font-extrabold text-xs shadow hover:bg-[#064D40] transition"
+          >
+            {lang === "ur" ? "کسٹمر ایپ ➔" : "Customer App ➔"}
+          </button>
+        </div>
+
+        {/* Mandi KPI Stats Grid */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-3.5 rounded-2xl bg-white border border-[#D5E2DD] shadow-sm space-y-1">
+            <span className="text-[10.5px] font-bold text-[#52635F]">
+              {lang === "ur" ? "منسلک ممبران" : "Active Members"}
+            </span>
+            <h3 className="text-xl font-black text-[#183B34]">18</h3>
+            <span className="text-[10px] text-[#087F63] font-bold bg-[#E8F5EF] px-1.5 py-0.5 rounded">
+              {lang === "ur" ? "کسان اور بیوپاری" : "Farmers & Traders"}
+            </span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-white border border-[#D5E2DD] shadow-sm space-y-1">
+            <span className="text-[10.5px] font-bold text-[#52635F]">
+              {lang === "ur" ? "ماہانہ کمیشن" : "Monthly Commission"}
+            </span>
+            <h3 className="text-xl font-black text-[#087F63]">PKR 14,200</h3>
+            <span className="text-[10px] text-[#52635F] font-semibold">
+              {lang === "ur" ? "۱۵ فیصد ریونیو شیئر" : "15% Revenue Share"}
+            </span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-white border border-[#D5E2DD] shadow-sm space-y-1">
+            <span className="text-[10.5px] font-bold text-[#52635F]">
+              {lang === "ur" ? "بنیادی منڈی" : "Assigned Mandi"}
+            </span>
+            <h3 className="text-sm font-black text-[#183B34] truncate">{repCity}</h3>
+            <span className="text-[10px] text-[#52635F] font-semibold">{repProvince}</span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-white border border-[#D5E2DD] shadow-sm space-y-1">
+            <span className="text-[10.5px] font-bold text-[#52635F]">
+              {lang === "ur" ? "ریٹس رپورٹنگ" : "Rates Reporting"}
+            </span>
+            <h3 className="text-sm font-black text-[#2FAE68]">
+              {lang === "ur" ? "آج فعال ہے" : "Active Today"}
+            </h3>
+            <span className="text-[10px] text-[#52635F] font-semibold">21 Aug 2026</span>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="space-y-2">
+          <h4 className="text-xs font-extrabold text-[#183B34] uppercase tracking-wider">
+            {lang === "ur" ? "نمائندہ فوری اقدامات" : "Representative Actions"}
+          </h4>
+          <div className="grid grid-cols-2 gap-2.5">
+            <button
+              onClick={() => setSubmittedModalOpen(true)}
+              className="p-3 rounded-xl bg-white border border-[#D5E2DD] text-left hover:border-[#087F63] transition shadow-sm space-y-1"
+            >
+              <div className="w-8 h-8 rounded-lg bg-[#E8F5EF] flex items-center justify-center text-[#087F63]">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+              <p className="text-xs font-bold text-[#183B34]">
+                {lang === "ur" ? "منڈی ریٹ جمع کروائیں" : "Submit Mandi Rate"}
+              </p>
+              <p className="text-[10px] text-[#52635F]">
+                {lang === "ur" ? "آج کی آمد اور ریٹ" : "Daily arrivals & rate"}
+              </p>
+            </button>
+
+            <button
+              onClick={() => setSubmittedModalOpen(true)}
+              className="p-3 rounded-xl bg-white border border-[#D5E2DD] text-left hover:border-[#087F63] transition shadow-sm space-y-1"
+            >
+              <div className="w-8 h-8 rounded-lg bg-[#E8F5EF] flex items-center justify-center text-[#087F63]">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+              </div>
+              <p className="text-xs font-bold text-[#183B34]">
+                {lang === "ur" ? "نیا ممبر شامل کریں" : "Onboard Member"}
+              </p>
+              <p className="text-[10px] text-[#52635F]">
+                {lang === "ur" ? "۱۵ فیصد کمیشن کمائیں" : "Earn 15% commission"}
+              </p>
+            </button>
+          </div>
+        </div>
+
+        {/* Recent Rate Submissions */}
+        <div className="p-4 rounded-2xl bg-white border border-[#D5E2DD] shadow-sm space-y-3">
+          <div className="flex justify-between items-center">
+            <h4 className="text-xs font-extrabold text-[#183B34] uppercase tracking-wider">
+              {lang === "ur" ? "حالیہ تصدیق شدہ ریٹس" : "Recent Rate Submissions"}
+            </h4>
+            <span className="text-[10px] text-[#087F63] font-extrabold">21 Aug 2026</span>
+          </div>
+          <div className="space-y-2">
+            {[
+              { crop: "Wheat (گندم)", mandi: "Pakpattan Mandi", rate: "PKR 4,100", arrival: "1,200 Bags" },
+              { crop: "Rice (باسمتی)", mandi: "Pakpattan Mandi", rate: "PKR 9,500", arrival: "450 Bags" },
+              { crop: "Maize (مکئی)", mandi: "Pakpattan Mandi", rate: "PKR 2,850", arrival: "800 Bags" },
+            ].map((sub, idx) => (
+              <div key={idx} className="flex items-center justify-between py-2 border-b border-[#F1F7F4] last:border-b-0 text-xs">
+                <div>
+                  <p className="font-bold text-[#183B34]">{sub.crop}</p>
+                  <p className="text-[10.5px] text-[#52635F]">{sub.mandi} · {sub.arrival}</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-extrabold text-[#087F63]">{sub.rate}</p>
+                  <span className="text-[9.5px] font-bold text-[#2FAE68] bg-[#E8F5EF] px-1.5 py-0.5 rounded">
+                    Verified ✓
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Confirmation Modal */}
+      {submittedModalOpen && (
+        <div className="zm-sheet-overlay" style={{ zIndex: 400 }} onClick={() => setSubmittedModalOpen(false)}>
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 text-center shadow-2xl m-4" onClick={(e) => e.stopPropagation()}>
+            <div className="w-14 h-14 rounded-full bg-[#E4F2EC] text-[#087F63] flex items-center justify-center text-2xl mx-auto mb-3">
+              ✓
+            </div>
+            <h3 className="text-base font-black text-[#183B34] mb-1">
+              {lang === "ur" ? "نمائندہ پورٹل فعال ہے" : "Representative Workspace Active"}
+            </h3>
+            <p className="text-xs text-[#52635F] mb-4 leading-relaxed">
+              {lang === "ur"
+                ? "آپ کا نمائندہ اکاؤنٹ کامیابی سے کام کر رہا ہے۔ آپ کسی بھی وقت ڈبل ٹیپ کر کے کسٹمر فیس پر سوئچ کر سکتے ہیں۔"
+                : "Your mandi representative workspace is fully synchronized. Double tap your profile icon anytime to toggle to Customer face."}
+            </p>
+            <button
+              onClick={() => setSubmittedModalOpen(false)}
+              className="w-full py-3 rounded-xl bg-[#087F63] text-white font-bold text-xs"
+            >
+              {lang === "ur" ? "ٹھیک ہے" : "Done"}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AppInner({
+  initialUserData,
+  activeRole = "customer",
+  hasRepAccount = false,
+  onSwitchRole,
+  onStartRepOnboarding,
+  onRestartOnboarding,
+}: AppProps) {
   useEffect(() => {
     if (initialUserData?.products && Array.isArray(initialUserData.products)) {
       initialUserData.products.forEach((p) => {
@@ -20991,96 +26474,149 @@ function AppInner({ initialUserData, onRestartOnboarding }: { initialUserData?: 
     }
   }, [initialUserData]);
 
-  const { lang } = useLang()
-  const [stack, setStack] = useState<Screen[]>([{ id: "home" }])
-  const [activeNav, setActiveNav] = useState<NavTab>("home")
-  const [feedOpen, setFeedOpen] = useState(false)
+  const { lang } = useLang();
+  const [stack, setStack] = useState<Screen[]>([{ id: "home" }]);
+  const [activeNav, setActiveNav] = useState<NavTab>("home");
+  const [feedOpen, setFeedOpen] = useState(false);
   const [feedFilter, setFeedFilter] = useState<FeedFilter>({
-    commodities: [],
+    products: [],
     byproducts: [],
     stations: [],
     rateTypes: [],
-  })
+  });
+
+  // Lifted Profile & Subscription state shared across screens
+  const [profileCompleted, setProfileCompleted] = useState(false);
+  const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
+  const [profileSetupData, setProfileSetupData] = useState<ProfileSetupData>(
+    () => ({
+      step: 1,
+      furthestStep: 1,
+      province: initialUserData?.province || "Punjab",
+      district:
+        initialUserData?.district || initialUserData?.city || "Pakpattan",
+      city: initialUserData?.city || "Pakpattan Mandi",
+      selectedMandis: [initialUserData?.city || "Pakpattan Mandi"],
+      selectedProds: ["Wheat"],
+      dur: 0,
+      customMode: false,
+      customMonths: 3,
+      paymentType: "wallet",
+      walletProvider: "jazzcash",
+      walletNumber: initialUserData?.phone || "0300 1234567",
+      walletCnic: "",
+      walletPromptSent: false,
+      directMethod: "jazzcash",
+      hasReceipt: false,
+      cardNumber: "",
+      cardExpiry: "",
+      cardCvv: "",
+      cardHolder: initialUserData?.name || "Muhammad Arif",
+    }),
+  );
+
+  const updateProfileSetupData = (partial: Partial<ProfileSetupData>) => {
+    setProfileSetupData((prev) => ({ ...prev, ...partial }));
+  };
+
+  const handleCompleteProfileSubmit = (
+    selected: string[],
+    locationData?: { province: string; district: string; city: string },
+  ) => {
+    selected.forEach((p) => {
+      const mapped = PRODUCT_ID_TO_NAME[p.toLowerCase()] || p;
+      SUBSCRIBED_PRODUCTS.add(mapped);
+      TODAY_ONLY_PRODUCTS.add(mapped);
+    });
+    if (locationData && initialUserData) {
+      initialUserData.province = locationData.province;
+      initialUserData.district = locationData.district;
+      initialUserData.city = locationData.city;
+    }
+    setProfileCompleted(true);
+    setCompleteProfileOpen(false);
+  };
 
   // Your Picks — user-favourited byproducts, shared app-wide
-  const [pickedByproducts, setPickedByproducts] = useState<RateItem[]>([])
+  const [pickedByproducts, setPickedByproducts] = useState<RateItem[]>([]);
   const togglePickBP = (item: RateItem) =>
     setPickedByproducts((prev) => {
-      const key = `${item.vertical}|${item.commodity}|${item.byproduct}`
+      const key = `${item.vertical}|${item.product}|${item.byproduct}`;
       const exists = prev.some(
-        (p) => `${p.vertical}|${p.commodity}|${p.byproduct}` === key,
-      )
+        (p) => `${p.vertical}|${p.product}|${p.byproduct}` === key,
+      );
       return exists
         ? prev.filter(
-          (p) => `${p.vertical}|${p.commodity}|${p.byproduct}` !== key,
-        )
-        : [...prev, item]
-    })
+            (p) => `${p.vertical}|${p.product}|${p.byproduct}` !== key,
+          )
+        : [...prev, item];
+    });
   const isPickedBP = (item: RateItem) =>
     pickedByproducts.some(
       (p) =>
         p.vertical === item.vertical &&
-        p.commodity === item.commodity &&
+        p.product === item.product &&
         p.byproduct === item.byproduct,
-    )
+    );
 
   // Contextual location scope, shared across the product/detail flow
   const [locationScope, setLocationScope] = useState<LocationScope>({
     kind: "province",
     label: "Punjab",
-  })
-  const [locSheet, setLocSheet] = useState(false)
+  });
+  const [locSheet, setLocSheet] = useState(false);
 
-  const current = stack[stack.length - 1]
-  const push = (s: Screen) => setStack((p) => [...p, s])
-  const pop = () => setStack((p) => (p.length > 1 ? p.slice(0, -1) : p))
-  const replace = (s: Screen) => setStack((p) => [...p.slice(0, -1), s])
+  const current = stack[stack.length - 1];
+  const push = (s: Screen) => setStack((p) => [...p, s]);
+  const pop = () => setStack((p) => (p.length > 1 ? p.slice(0, -1) : p));
+  const replace = (s: Screen) => setStack((p) => [...p.slice(0, -1), s]);
 
   const handleNav = (tab: NavTab) => {
-    setVoicePhase("idle")
-    setActiveNav(tab)
+    setVoicePhase("idle");
+    setActiveNav(tab);
     if (tab === "home" || tab === "analytics" || tab === "news") {
-      setStack([{ id: tab }])
+      setStack([{ id: tab }]);
     }
-  }
+  };
 
   const openFeed = (filter?: Partial<FeedFilter>) => {
     setFeedFilter({
-      commodities: [],
+      products: [],
       byproducts: [],
       stations: [],
       rateTypes: [],
       ...filter,
-    })
-    setFeedOpen(true)
-  }
+    });
+    setFeedOpen(true);
+  };
 
-  type RatesScr = Extract<Screen, { id: "rates-result" }>
-  type MandiScr = Extract<Screen, { id: "mandi-detail" }>
-  type ComRatesScr = Extract<Screen, { id: "commodity-rates" }>
-  type CombinedScr = Extract<Screen, { id: "byproduct-combined" }>
-  type BillingScr = Extract<Screen, { id: "billing" }>
+  type RatesScr = Extract<Screen, { id: "rates-result" }>;
+  type MandiScr = Extract<Screen, { id: "mandi-detail" }>;
+  type ComRatesScr = Extract<Screen, { id: "product-rates" }>;
+  type CombinedScr = Extract<Screen, { id: "byproduct-combined" }>;
+  type BillingScr = Extract<Screen, { id: "billing" }>;
 
-  const [voicePhase, setVoicePhase] =
-    useState<"idle" | "orientation" | "query">("idle")
+  const [voicePhase, setVoicePhase] = useState<
+    "idle" | "orientation" | "query"
+  >("idle");
 
   const handleVoiceTap = () => {
     if (voicePhase !== "idle") {
-      setVoicePhase("idle")
-      return
+      setVoicePhase("idle");
+      return;
     }
     // Orientation guide only makes sense on home screen
-    if (current.id === "home") setVoicePhase("orientation")
-  }
+    if (current.id === "home") setVoicePhase("orientation");
+  };
   const handleVoiceHold = () => {
-    setVoicePhase("query")
-  }
+    setVoicePhase("query");
+  };
 
   const navActive: NavTab =
     (["analytics", "news"] as NavTab[]).includes(activeNav) &&
-      stack.length === 1
+    stack.length === 1
       ? activeNav
-      : "home"
+      : "home";
 
   return (
     <div
@@ -21108,25 +26644,45 @@ function AppInner({ initialUserData, onRestartOnboarding }: { initialUserData?: 
           style={{ minHeight: 0 }}
         >
           {current.id === "home" && (
-            <HomeScreen
-              push={push}
-              setFeedOpen={(v) => {
-                if (v) openFeed({})
-                else setFeedOpen(false)
-              }}
-              pickedByproducts={pickedByproducts}
-              togglePickBP={togglePickBP}
-              isPickedBP={isPickedBP}
-              setPickedByproducts={setPickedByproducts}
-              voiceGuideActive={voicePhase === "orientation"}
-              onVoiceGuideClose={() => setVoicePhase("idle")}
-              initialUserData={initialUserData}
-              onRestartOnboarding={onRestartOnboarding}
-            />
+            activeRole === "representative" ? (
+              <RepDashboardScreen
+                push={push}
+                initialUserData={initialUserData}
+                onSwitchRole={onSwitchRole}
+                hasRepAccount={hasRepAccount}
+              />
+            ) : (
+              <HomeScreen
+                push={push}
+                setFeedOpen={(v) => {
+                  if (v) openFeed({});
+                  else setFeedOpen(false);
+                }}
+                pickedByproducts={pickedByproducts}
+                togglePickBP={togglePickBP}
+                isPickedBP={isPickedBP}
+                setPickedByproducts={setPickedByproducts}
+                voiceGuideActive={voicePhase === "orientation"}
+                onVoiceGuideClose={() => setVoicePhase("idle")}
+                initialUserData={initialUserData}
+                activeRole={activeRole}
+                hasRepAccount={hasRepAccount}
+                onSwitchRole={onSwitchRole}
+                onStartRepOnboarding={onStartRepOnboarding}
+                onRestartOnboarding={onRestartOnboarding}
+                profileCompleted={profileCompleted}
+                setProfileCompleted={setProfileCompleted}
+                completeProfileOpen={completeProfileOpen}
+                setCompleteProfileOpen={setCompleteProfileOpen}
+                profileSetupData={profileSetupData}
+                updateProfileSetupData={updateProfileSetupData}
+                onCompleteProfileSubmit={handleCompleteProfileSubmit}
+              />
+            )
           )}
           {current.id === "search" && <SearchScreen push={push} onBack={pop} />}
-          {current.id === "commodity-select" && (
-            <CommoditySelectScreen push={push} onBack={pop} />
+          {current.id === "product-select" && (
+            <ProductSelectScreen push={push} onBack={pop} />
           )}
           {current.id === "byproduct-select" && (
             <ByProductSelectScreen push={push} onBack={pop} />
@@ -21142,6 +26698,8 @@ function AppInner({ initialUserData, onRestartOnboarding }: { initialUserData?: 
               togglePickBP={togglePickBP}
               locationScope={locationScope}
               onOpenLocation={() => setLocSheet(true)}
+              profileCompleted={profileCompleted}
+              onOpenSubscribe={() => setCompleteProfileOpen(true)}
             />
           )}
           {current.id === "rates-result" && (
@@ -21161,10 +26719,10 @@ function AppInner({ initialUserData, onRestartOnboarding }: { initialUserData?: 
               push={push}
             />
           )}
-          {current.id === "commodity-rates" && (
-            <CommodityRatesScreen
+          {current.id === "product-rates" && (
+            <ProductRatesScreen
               vertical={(current as ComRatesScr).vertical}
-              commodity={(current as ComRatesScr).commodity}
+              product={(current as ComRatesScr).product}
               byproduct={(current as ComRatesScr).byproduct}
               onBack={pop}
               push={push}
@@ -21187,7 +26745,7 @@ function AppInner({ initialUserData, onRestartOnboarding }: { initialUserData?: 
           {current.id === "news" && <NewsVideosScreen />}
           {current.id === "billing" && (
             <BillingScreen
-              commodity={(current as BillingScr).commodity}
+              product={(current as BillingScr).product}
               vertical={(current as BillingScr).vertical}
               onBack={pop}
               push={push}
@@ -21205,9 +26763,9 @@ function AppInner({ initialUserData, onRestartOnboarding }: { initialUserData?: 
           <VoiceQueryOverlay
             onClose={() => setVoicePhase("idle")}
             onNavigate={(s) => {
-              setVoicePhase("idle")
-              setActiveNav("home")
-              setStack([{ id: "home" }, s])
+              setVoicePhase("idle");
+              setActiveNav("home");
+              setStack([{ id: "home" }, s]);
             }}
           />
         )}
@@ -21221,13 +26779,31 @@ function AppInner({ initialUserData, onRestartOnboarding }: { initialUserData?: 
           <LocationScopeSheet
             scope={locationScope}
             onSelect={(s) => {
-              setLocationScope(s)
-              setLocSheet(false)
+              setLocationScope(s);
+              setLocSheet(false);
             }}
             onClose={() => setLocSheet(false)}
           />
         )}
+        {completeProfileOpen && (
+          <CompleteProfileModal
+            data={profileSetupData}
+            onUpdateData={updateProfileSetupData}
+            onClose={() => setCompleteProfileOpen(false)}
+            onComplete={handleCompleteProfileSubmit}
+            initialUserData={initialUserData}
+          />
+        )}
       </div>
     </div>
-  )
+  );
 }
+
+export default function CustomerFaceApp(props: AppProps) {
+  return (
+    <LangProvider>
+      <AppInner {...props} />
+    </LangProvider>
+  );
+}
+

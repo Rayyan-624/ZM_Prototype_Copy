@@ -4,21 +4,52 @@ import CustomerFaceApp from "./CustomerFaceApp"
 
 export default function App() {
   const [stage, setStage] = useState<"onboarding" | "customer_face">("onboarding")
+  const [authMode, setAuthMode] = useState<"register" | "signin">("register")
+  const [initialRole, setInitialRole] = useState<"customer" | "representative">("customer")
+  const [activeRole, setActiveRole] = useState<"customer" | "representative">("customer")
+  const [hasRepAccount, setHasRepAccount] = useState(false)
   const [userData, setUserData] = useState<OnboardingUserData | null>(null)
 
   const handleOnboardingComplete = (data: OnboardingUserData) => {
     console.log("Onboarding completed with user data:", data)
     setUserData(data)
+    if (data.role === "representative") {
+      setHasRepAccount(true)
+      setActiveRole("representative")
+    } else {
+      setActiveRole("customer")
+    }
     setStage("customer_face")
   }
 
-  const handleRestartOnboarding = () => {
+  const handleRestartOnboarding = (mode: "register" | "signin" = "signin") => {
+    setAuthMode(mode)
+    setInitialRole("customer")
     setStage("onboarding")
   }
 
+  const handleStartRepOnboarding = () => {
+    setAuthMode("register")
+    setInitialRole("representative")
+    setStage("onboarding")
+  }
+
+  const handleSwitchRole = (newRole: "customer" | "representative") => {
+    setActiveRole(newRole)
+  }
+
   return (
-    <div className="w-full h-full min-h-screen flex items-center justify-center bg-[#111] overflow-hidden">
-      {/* Compact Floating Flow Control Pill */}
+    <main
+      className="w-full h-full min-h-screen flex justify-center bg-[#F1F7F4] overflow-hidden"
+      style={{
+        width: "100vw",
+        height: "100dvh",
+        margin: 0,
+        padding: 0,
+        background: "#F1F7F4",
+      }}
+    >
+      {/* Floating Mode Toggle Pill for Testing & Role Switching */}
       <div
         style={{
           position: "fixed",
@@ -28,28 +59,42 @@ export default function App() {
           display: "flex",
           alignItems: "center",
           gap: 6,
-          background: "rgba(6, 45, 36, 0.94)",
+          background: "rgba(6, 45, 36, 0.92)",
           backdropFilter: "blur(12px)",
-          padding: "3px 6px 3px 10px",
+          padding: "4px 10px",
           borderRadius: 24,
           border: "1px solid rgba(255, 255, 255, 0.2)",
-          boxShadow: "0 4px 18px rgba(0,0,0,0.4)",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.25)",
         }}
       >
         <span
           style={{
-            fontSize: 9.5,
+            fontSize: 10,
             fontWeight: 800,
             color: "#B4E6D2",
             letterSpacing: "0.03em",
           }}
         >
-          {stage === "onboarding" ? "Onboarding" : "App"}
+          {stage === "onboarding"
+            ? initialRole === "representative"
+              ? "Rep Onboarding"
+              : authMode === "signin"
+                ? "Sign In"
+                : "Onboarding"
+            : activeRole === "representative"
+              ? "Rep Dashboard"
+              : "Customer App"}
         </span>
         <button
-          onClick={() =>
-            setStage(stage === "onboarding" ? "customer_face" : "onboarding")
-          }
+          onClick={() => {
+            if (stage === "onboarding") {
+              setStage("customer_face")
+            } else {
+              setAuthMode("register")
+              setInitialRole("customer")
+              setStage("onboarding")
+            }
+          }}
           className="tap-target"
           style={{
             background: "#2FAE68",
@@ -70,14 +115,33 @@ export default function App() {
         </button>
       </div>
 
-      {stage === "onboarding" ? (
-        <OnboardingFlow onComplete={handleOnboardingComplete} />
-      ) : (
-        <CustomerFaceApp
-          initialUserData={userData || undefined}
-          onRestartOnboarding={handleRestartOnboarding}
-        />
-      )}
-    </div>
+      {/* Responsive Mobile Container — fits any screen width/height */}
+      <div
+        className="w-full h-full flex flex-col mx-auto relative overflow-hidden"
+        style={{
+          width: "100%",
+          maxWidth: "480px",
+          height: "100dvh",
+          background: "#F1F7F4",
+        }}
+      >
+        {stage === "onboarding" ? (
+          <OnboardingFlow
+            initialMode={authMode}
+            initialRole={initialRole}
+            onComplete={handleOnboardingComplete}
+          />
+        ) : (
+          <CustomerFaceApp
+            initialUserData={userData || undefined}
+            activeRole={activeRole}
+            hasRepAccount={hasRepAccount}
+            onSwitchRole={handleSwitchRole}
+            onStartRepOnboarding={handleStartRepOnboarding}
+            onRestartOnboarding={handleRestartOnboarding}
+          />
+        )}
+      </div>
+    </main>
   )
 }

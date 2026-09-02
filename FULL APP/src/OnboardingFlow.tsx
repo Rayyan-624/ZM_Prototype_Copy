@@ -192,11 +192,11 @@ const REP_PROFESSIONS = [
 const LANGUAGES = [
   { code: "en", native: "English", urdu: false },
   { code: "ur", native: "اردو", urdu: true },
-  { code: "pa", native: "پنجابی", urdu: true },
-  { code: "sd", native: "سنڌي", urdu: true },
-  { code: "bl", native: "بلوچی", urdu: true },
-  { code: "ps", native: "پښتو", urdu: true },
-  { code: "sk", native: "سرائیکی", urdu: true, centered: true },
+  // { code: "pa", native: "پنجابی", urdu: true },
+  // { code: "sd", native: "سنڌي", urdu: true },
+  // { code: "bl", native: "بلوچی", urdu: true },
+  // { code: "ps", native: "پښتو", urdu: true },
+  // { code: "sk", native: "سرائیکی", urdu: true, centered: true },
 ]
 
 const DURATION_MONTHS = [1, 3, 6, 12]
@@ -283,12 +283,14 @@ function TermsToggle({
         alignItems: "flex-start",
         gap: 10,
         margin: "6px 0 14px",
+        cursor: "pointer",
+        userSelect: "none",
       }}
+      onClick={() => onChange(!agreed)}
     >
       <div
         className={`toggle-track${agreed ? " on" : ""}`}
         style={{ marginTop: 2, flexShrink: 0 }}
-        onClick={() => onChange(!agreed)}
       >
         <div className="toggle-thumb" />
       </div>
@@ -305,7 +307,11 @@ function TermsToggle({
           style={{
             color: "var(--zm-green)",
             fontWeight: 600,
-            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+          onClick={(e) => {
+            e.stopPropagation()
+            onChange(!agreed)
           }}
         >
           Terms &amp; Conditions
@@ -315,7 +321,11 @@ function TermsToggle({
           style={{
             color: "var(--zm-green)",
             fontWeight: 600,
-            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+          onClick={(e) => {
+            e.stopPropagation()
+            onChange(!agreed)
           }}
         >
           Privacy Policy
@@ -423,9 +433,11 @@ function LangScreen({ onNext }: { onNext: () => void }) {
 function RoleScreen({
   onNext,
   onBack,
+  onSignIn,
 }: {
   onNext: (role: Role) => void
   onBack: () => void
+  onSignIn?: () => void
 }) {
   const [role, setRole] = useState<Role | "">("")
 
@@ -444,8 +456,8 @@ function RoleScreen({
       }}
     >
       <div className="auth-card">
-        <Progress total={6} current={0} />
-        <div className="eyebrow">Step 1 of 6</div>
+        <Progress total={2} current={0} />
+        <div className="eyebrow">Step 1 of 2</div>
         <div className="headline">Who are you?</div>
         <div className="subline">
           Select your role to personalise Zarai Mandi.
@@ -475,6 +487,31 @@ function RoleScreen({
         >
           Continue →
         </button>
+
+        {onSignIn && (
+          <div style={{ textAlign: "center", marginTop: 14 }}>
+            <span style={{ fontSize: 13, color: "var(--zm-muted)" }}>
+              Already have an account?{" "}
+            </span>
+            <button
+              type="button"
+              onClick={onSignIn}
+              style={{
+                background: "none",
+                border: "none",
+                color: "var(--zm-green)",
+                fontWeight: 700,
+                fontSize: 13,
+                cursor: "pointer",
+                padding: 0,
+                textDecoration: "underline",
+              }}
+            >
+              Sign In
+            </button>
+          </div>
+        )}
+
         <button
           className="btn-ghost"
           style={{
@@ -541,6 +578,7 @@ function ContactField({
   emailValue,
   countryCode,
   tab,
+  mode = "register",
   onPhoneChange,
   onEmailChange,
   onCountryChange,
@@ -551,6 +589,7 @@ function ContactField({
   emailValue: string
   countryCode: string
   tab: ContactInputTab
+  mode?: "register" | "signin"
   onPhoneChange: (v: string) => void
   onEmailChange: (v: string) => void
   onCountryChange: (v: string) => void
@@ -649,7 +688,7 @@ function ContactField({
                 textUnderlineOffset: 2,
               }}
             >
-              Sign up with Email instead
+              {mode === "signin" ? "Sign in with Email instead" : "Sign up with Email instead"}
             </button>
           )}
         </div>
@@ -710,7 +749,7 @@ function ContactField({
                 textUnderlineOffset: 2,
               }}
             >
-              Sign up with Phone instead
+              {mode === "signin" ? "Sign in with Mobile Number instead" : "Sign up with Phone instead"}
             </button>
           )}
         </div>
@@ -790,26 +829,80 @@ function ProfileFields({
 
   return (
     <>
-      <div className="field"><div style={{ position: "relative" }}><input className={`fl-input${name ? " filled" : ""}`} value={name} onChange={(e) => setName(e.target.value)} style={{ width: "100%" }} /><label className="fl-label">Name *</label><div className="fl-underline" /></div></div>
       <div className="field">
-        <div className="role-sub-label">Profession *</div>
-        <button type="button" className="profile-select" onClick={() => setProfessionOpen((v) => !v)}><span style={{ color: profession ? "var(--zm-text)" : "var(--zm-muted)" }}>{profession || "Select profession"}</span><span>⌄</span></button>
-        {professionOpen && <div className="dropdown-panel"><input className="dropdown-search" placeholder="Search profession…" value={professionSearch} onChange={(e) => setProfessionSearch(e.target.value)} autoFocus /><div className="dropdown-list">{filteredProfessions.map((p) => <div key={p} className={`occ-option${profession === p ? " selected" : ""}`} onClick={() => { setProfession(p); setProfessionOpen(false) }}><span className="occ-dot" /><span>{p}</span></div>)}{!filteredProfessions.length && <div className="dropdown-empty">No professions found</div>}</div></div>}
+        <div className="role-sub-label">Name *</div>
+        <input
+          className="profile-input"
+          type="text"
+          placeholder="Enter your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
       </div>
-      {showLocation && <div className="field">
-        <div className="role-sub-label">Location *</div>
-        <button type="button" className="profile-select" onClick={() => setLocationOpen((v) => !v)}><span style={{ color: location ? "var(--zm-text)" : "var(--zm-muted)" }}>{location || "Select location"}</span><span>⌄</span></button>
-        {locationOpen && <div className="dropdown-panel"><input className="dropdown-search" placeholder="Search city, district or province…" value={locationSearch} onChange={(e) => setLocationSearch(e.target.value)} autoFocus /><div className="dropdown-list">{filteredLocations.map((c) => <div key={`${c.city}-${c.province}`} className={`occ-option${location === c.city ? " selected" : ""}`} onClick={() => { setLocation(c.city); setLocationOpen(false) }}><span className="occ-dot" /><div><div>{c.city}</div><span style={{ fontSize: 11, color: "var(--zm-muted)" }}>{c.district}, {c.province}</span></div></div>)}{!filteredLocations.length && <div className="dropdown-empty">No locations found</div>}</div></div>}
-      </div>}
+      <div className="field">
+        <div className="role-sub-label">Profession <span style={{ fontSize: 11, fontWeight: "normal", color: "var(--zm-muted)", textTransform: "none", letterSpacing: "normal" }}>(Optional)</span></div>
+        <button type="button" className="profile-select" onClick={() => setProfessionOpen((v) => !v)}>
+          <span style={{ color: profession ? "var(--zm-text)" : "var(--zm-muted)" }}>{profession || "Select profession (optional)"}</span>
+          <span>⌄</span>
+        </button>
+        {professionOpen && (
+          <div className="dropdown-panel">
+            <input className="dropdown-search" placeholder="Search profession…" value={professionSearch} onChange={(e) => setProfessionSearch(e.target.value)} autoFocus />
+            <div className="dropdown-list">
+              {filteredProfessions.map((p) => (
+                <div key={p} className={`occ-option${profession === p ? " selected" : ""}`} onClick={() => { setProfession(p); setProfessionOpen(false) }}>
+                  <span className="occ-dot" />
+                  <span>{p}</span>
+                </div>
+              ))}
+              {!filteredProfessions.length && <div className="dropdown-empty">No professions found</div>}
+            </div>
+          </div>
+        )}
+      </div>
+      {showLocation && (
+        <div className="field">
+          <div className="role-sub-label">Location *</div>
+          <button type="button" className="profile-select" onClick={() => setLocationOpen((v) => !v)}>
+            <span style={{ color: location ? "var(--zm-text)" : "var(--zm-muted)" }}>{location || "Select location"}</span>
+            <span>⌄</span>
+          </button>
+          {locationOpen && (
+            <div className="dropdown-panel">
+              <input className="dropdown-search" placeholder="Search city, district or province…" value={locationSearch} onChange={(e) => setLocationSearch(e.target.value)} autoFocus />
+              <div className="dropdown-list">
+                {filteredLocations.map((c) => (
+                  <div key={`${c.city}-${c.province}`} className={`occ-option${location === c.city ? " selected" : ""}`} onClick={() => { setLocation(c.city); setLocationOpen(false) }}>
+                    <span className="occ-dot" />
+                    <div>
+                      <div>{c.city}</div>
+                      <span style={{ fontSize: 11, color: "var(--zm-muted)" }}>{c.district}, {c.province}</span>
+                    </div>
+                  </div>
+                ))}
+                {!filteredLocations.length && <div className="dropdown-empty">No locations found</div>}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </>
   )
 }
 
-// ─── Screen 3 – Registration / OTP / Profile ──────────────────────────────────
-function AccountScreen({ role, onNext, onBack }: {
+// ─── Screen 3 – Registration / Sign In / OTP / Profile ────────────────────────
+function AccountScreen({
+  role,
+  mode = "register",
+  onNext,
+  onBack,
+  onSwitchMode,
+}: {
   role: Role
+  mode?: "register" | "signin"
   onNext: (data: { name: string; contact: string; location: string; profession: string }) => void
   onBack: () => void
+  onSwitchMode?: (mode: "register" | "signin") => void
 }) {
   const [tab, setTab] = useState<ContactInputTab>("phone")
   const [phoneValue, setPhoneValue] = useState("")
@@ -820,6 +913,7 @@ function AccountScreen({ role, onNext, onBack }: {
   const [name, setName] = useState("")
   const [profession, setProfession] = useState("")
   const [location, setLocation] = useState("")
+  const [agreedTerms, setAgreedTerms] = useState(true)
 
   // Google picker state
   const [googleStage, setGoogleStage] = useState<"closed" | "picker" | "consent">("closed")
@@ -828,6 +922,7 @@ function AccountScreen({ role, onNext, onBack }: {
   const [customEmailErr, setCustomEmailErr] = useState("")
   const [showCustomInput, setShowCustomInput] = useState(false)
 
+  const isSignIn = mode === "signin"
   const phoneValid = isValidPhone(phoneValue, countryCode)
   const emailValid = isValidEmail(emailValue)
   const currentValid = tab === "phone" ? phoneValid : emailValid
@@ -837,7 +932,8 @@ function AccountScreen({ role, onNext, onBack }: {
     ? normalizePhone(phoneValue, countryCode)
     : emailValue.trim()
 
-  const profileComplete = name.trim().length > 1 && profession !== "" && (role === "customer" || location !== "")
+  // For customer: only Name is compulsory. For representative: Name and Location are compulsory.
+  const profileComplete = name.trim().length >= 1 && (role === "customer" || location.trim().length >= 1) && agreedTerms
 
   function nameFromEmail(email: string) {
     return (email.split("@")[0] || "Google User")
@@ -846,12 +942,38 @@ function AccountScreen({ role, onNext, onBack }: {
       .trim() || "Google User"
   }
 
+  function handlePhoneChange(v: string) {
+    setPhoneValue(v)
+    // Autofill WhatsApp profile name if user hasn't typed a custom name yet
+    const digits = v.replace(/\D/g, "")
+    if (!name || name === "Ahmed Khan" || name === "Muhammad Arif") {
+      if (digits.length >= 7) {
+        setName("Ahmed Khan")
+      }
+    }
+  }
+
   function handleSendOtp() {
+    if (tab === "phone" && !name) {
+      setName("Ahmed Khan")
+    }
     setOtpSent(true)
   }
 
   function handleVerified() {
     setVerified(true)
+    if (!name) {
+      setName(tab === "phone" ? "Ahmed Khan" : "Muhammad Arif")
+    }
+    if (isSignIn) {
+      // In sign in mode, verifying OTP completes sign in directly
+      onNext({
+        name: name.trim() || (pickedAccount?.name || (tab === "phone" ? "Ahmed Khan" : "Muhammad Arif")),
+        contact: contactDisplay || "0300 1234567",
+        location: location || "Pakpattan",
+        profession,
+      })
+    }
   }
 
   function handleChangeContact() {
@@ -886,20 +1008,36 @@ function AccountScreen({ role, onNext, onBack }: {
     setOtpSent(false)
     setVerified(true)
     setGoogleStage("closed")
+    if (isSignIn) {
+      onNext({
+        name: pickedAccount.name || "Muhammad Arif",
+        contact: pickedAccount.email,
+        location: "Pakpattan",
+        profession: "",
+      })
+    }
   }
 
   return (
     <div className="screen-scroll s-enter" style={{ alignItems: "center", justifyContent: "center", padding: "55px 16px 32px" }}>
       <div className="auth-card" style={{ maxHeight: "none" }}>
-        <Progress total={role === "representative" ? 2 : 6} current={1} />
-        <div className="eyebrow">Step 2 of {role === "representative" ? 2 : 6}</div>
-        <div className="headline">{role === "customer" ? "Customer Registration" : "Representative Registration"}</div>
+        <Progress total={2} current={1} />
+        <div className="eyebrow">
+          {isSignIn ? "Welcome Back" : "Step 2 of 2"}
+        </div>
+        <div className="headline">
+          {isSignIn
+            ? "Sign In"
+            : role === "customer"
+              ? "Customer Registration"
+              : "Representative Registration"}
+        </div>
         <div className="subline">
           {!otpSent && !verified
-            ? "How would you like to sign up?"
+            ? (isSignIn ? "Sign in with your mobile number or email to access your account." : "How would you like to sign up?")
             : otpSent && !verified
-            ? "Enter the OTP we sent you."
-            : "Complete your profile to continue."}
+              ? "Enter the OTP we sent you."
+              : "Complete your profile to continue."}
         </div>
 
         {/* ── Step 1: contact entry ── */}
@@ -910,7 +1048,8 @@ function AccountScreen({ role, onNext, onBack }: {
               emailValue={emailValue}
               countryCode={countryCode}
               tab={tab}
-              onPhoneChange={setPhoneValue}
+              mode={mode}
+              onPhoneChange={handlePhoneChange}
               onEmailChange={setEmailValue}
               onCountryChange={setCountryCode}
               onTabChange={setTab}
@@ -927,8 +1066,31 @@ function AccountScreen({ role, onNext, onBack }: {
 
             <button type="button" className="google-signup-btn" onClick={openGoogle}>
               {SocialIcon.google}
-              <span>Continue with Google</span>
+              <span>{isSignIn ? "Sign in with Google" : "Continue with Google"}</span>
             </button>
+
+            {/* Switch between Sign In and Register */}
+            <div style={{ textAlign: "center", marginTop: 18 }}>
+              <span style={{ fontSize: 13, color: "var(--zm-muted)" }}>
+                {isSignIn ? "Don't have an account? " : "Already have an account? "}
+              </span>
+              <button
+                type="button"
+                onClick={() => onSwitchMode?.(isSignIn ? "register" : "signin")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "var(--zm-green)",
+                  fontWeight: 700,
+                  fontSize: 13,
+                  cursor: "pointer",
+                  padding: 0,
+                  textDecoration: "underline",
+                }}
+              >
+                {isSignIn ? "Register / Sign Up" : "Sign In"}
+              </button>
+            </div>
           </>
         )}
 
@@ -946,35 +1108,29 @@ function AccountScreen({ role, onNext, onBack }: {
           </>
         )}
 
-        {/* ── Step 3: profile fields ── */}
-        {verified && (
+        {/* ── Step 3: profile fields (Registration only) ── */}
+        {verified && !isSignIn && (
           <>
-            {/* Verified badge */}
-            <div style={{
-              display: "flex", alignItems: "center", gap: 8,
-              background: "var(--zm-light)", borderRadius: 10,
-              padding: "10px 14px", marginBottom: 16, fontSize: 13, color: "var(--zm-dark)",
-            }}>
-              <span style={{ color: "var(--zm-green)", fontWeight: 800, fontSize: 16 }}>✓</span>
-              <span>
-                {pickedAccount
-                  ? `Signed in via Google as ${pickedAccount.email}`
-                  : `Verified: ${contactDisplay}`}
-              </span>
-            </div>
             <ProfileFields
               name={name} setName={setName}
               profession={profession} setProfession={setProfession}
               location={location} setLocation={setLocation}
               showLocation={role === "representative"}
             />
-            <TermsToggle agreed={true} onChange={() => {}} />
+            <TermsToggle agreed={agreedTerms} onChange={setAgreedTerms} />
             <button
               className="btn-primary"
               disabled={!profileComplete}
-              onClick={() => onNext({ name, contact: contactDisplay, location, profession })}
+              onClick={() => {
+                onNext({
+                  name: name.trim() || (pickedAccount?.name || (tab === "phone" ? "Ahmed Khan" : "Muhammad Arif")),
+                  contact: contactDisplay || (pickedAccount?.email || "0300 1234567"),
+                  location,
+                  profession,
+                })
+              }}
             >
-              Continue →
+              Continue to Zarai Mandi →
             </button>
           </>
         )}
@@ -1624,12 +1780,12 @@ function SubscriptionScreen({
   const { months, discount, regularTotal, discountAmt, finalTotal } =
     customMode
       ? (() => {
-          const m = customMonths ?? 1
-          const d = getCustomDiscount(m)
-          const reg = monthlyTotal * m
-          const da = Math.round(reg * d)
-          return { months: m, discount: d, regularTotal: reg, discountAmt: da, finalTotal: reg - da }
-        })()
+        const m = customMonths ?? 1
+        const d = getCustomDiscount(m)
+        const reg = monthlyTotal * m
+        const da = Math.round(reg * d)
+        return { months: m, discount: d, regularTotal: reg, discountAmt: da, finalTotal: reg - da }
+      })()
       : calcPricing(products, dur)
 
   const CUSTOM_MONTH_OPTIONS = [2, 4, 5, 7, 8, 9, 10, 11]
@@ -1962,7 +2118,7 @@ function PaymentScreen({
   onConfirm: () => void
   onBack: () => void
 }) {
-  const [paymentType, setPaymentType] = useState<"card" | "direct" | "">("") 
+  const [paymentType, setPaymentType] = useState<"card" | "direct" | "">("")
   const [directMethod, setDirectMethod] = useState<"jazzcash" | "easypaisa" | "bank" | "">("")
   const [hasFile, setHasFile] = useState(false)
 
@@ -2758,6 +2914,9 @@ const ZM_OB_THEME = `
   @keyframes screenEnter { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: translateX(0); } }
   @keyframes loadBar { from { width: 0%; } to { width: 100%; } }
   .btn-txt { font-weight: 700; }
+  .profile-input { width: 100%; padding: 13px 14px; border: 1.5px solid var(--zm-border); border-radius: 12px; background: #fff; color: var(--zm-text); font: 14px 'Inter', sans-serif; text-align: left; outline: none; box-sizing: border-box; }
+  .profile-input:focus { outline: 2px solid rgba(8,127,99,0.16); border-color: #087F63; }
+  .profile-input::placeholder { color: var(--zm-muted); }
   .profile-select { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 13px 14px; border: 1.5px solid var(--zm-border); border-radius: 12px; background: #fff; color: var(--zm-text); font: 14px 'Inter', sans-serif; cursor: pointer; text-align: left; }
   .profile-select:focus { outline: 2px solid rgba(8,127,99,0.16); border-color: #087F63; }
   .dropdown-panel { margin-top: 6px; border: 1.5px solid var(--zm-border); border-radius: 12px; background: #fff; overflow: hidden; box-shadow: 0 8px 22px rgba(6,77,64,0.10); }
@@ -2772,7 +2931,7 @@ const ZM_OB_THEME = `
 
 // ─── App ─────────────────────────────────────────────────────────────────────
 // ─── Rep Pending Screen ───────────────────────────────────────────────────────
-function RepPendingScreen({ name }: { name: string }) {
+function RepPendingScreen({ name, onProceed }: { name: string; onProceed: () => void }) {
   return (
     <div
       className="screen-scroll s-enter"
@@ -2819,62 +2978,151 @@ function RepPendingScreen({ name }: { name: string }) {
           details and verify your account within <strong style={{ color: "var(--zm-dark)" }}>24–48 hours</strong>.
         </div>
 
-        {/* Steps */}
+        {/* Horizontal Status Progress Card */}
         <div
           style={{
-            background: "var(--zm-surface)",
-            border: "1px solid var(--zm-border)",
-            borderRadius: 14,
-            overflow: "hidden",
-            marginBottom: 22,
+            background: "linear-gradient(135deg, #FFFFFF, #F6FBF8)",
+            border: "1.5px solid #B8DCCF",
+            borderRadius: 16,
+            padding: "16px 14px",
+            boxShadow: "0 4px 16px rgba(6,77,64,0.06)",
+            marginBottom: 20,
             textAlign: "left",
           }}
         >
-          {[
-            { label: "Details submitted", done: true },
-            { label: "Ops team review", done: false },
-            { label: "You'll receive a WhatsApp / call", done: false },
-            { label: "Account activated", done: false },
-          ].map((step, i, arr) => (
+          {/* Header */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ fontSize: 13, fontWeight: 800, color: "#183B34", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                Application Status
+              </span>
+            </div>
+          </div>
+
+          {/* Animated Horizontal Progress Bar */}
+          <div
+            style={{
+              width: "100%",
+              height: 6,
+              background: "#E2EFE9",
+              borderRadius: 999,
+              overflow: "hidden",
+              margin: "6px 0 14px",
+              position: "relative",
+            }}
+          >
             <div
-              key={i}
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                padding: "12px 16px",
-                borderBottom: i < arr.length - 1 ? "1px solid var(--zm-border)" : "none",
-                background: step.done ? "var(--zm-light)" : "transparent",
+                width: "50%",
+                height: "100%",
+                background: "linear-gradient(90deg, #087F63, #2FAE68)",
+                borderRadius: 999,
+                transition: "width 0.4s ease-in-out",
               }}
-            >
-              <span style={{ fontSize: 18, flexShrink: 0 }}>{step.icon}</span>
-              <span
+            />
+          </div>
+
+          {/* 3-Stage Horizontal Stepper */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 8,
+              textAlign: "center",
+              marginBottom: 12,
+            }}
+          >
+            {/* Step 1: Submitted */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div
                 style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: "50%",
+                  background: "#087F63",
+                  color: "#fff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   fontSize: 13,
-                  fontWeight: step.done ? 700 : 500,
-                  color: step.done ? "var(--zm-green)" : "var(--zm-muted)",
+                  fontWeight: 900,
+                  marginBottom: 4,
+                  boxShadow: "0 2px 6px rgba(8,127,99,0.25)",
                 }}
               >
-                {step.label}
+                ✓
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#087F63", lineHeight: 1.15 }}>
+                Submitted
               </span>
-              {step.done && (
-                <span
-                  style={{
-                    marginLeft: "auto",
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: "var(--zm-green)",
-                    background: "rgba(8,127,99,0.10)",
-                    borderRadius: 20,
-                    padding: "2px 8px",
-                  }}
-                >
-                  Done
-                </span>
-              )}
             </div>
-          ))}
+
+            {/* Step 2: Ops Review (Active) */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: "50%",
+                  background: "#E4F2EC",
+                  border: "2px solid #087F63",
+                  color: "#087F63",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 13,
+                  marginBottom: 4,
+                  boxShadow: "0 0 0 3px rgba(8,127,99,0.15)",
+                }}
+              >
+                ⏳
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 800, color: "#087F63", lineHeight: 1.15 }}>
+                Ops Review
+              </span>
+            </div>
+
+            {/* Step 3: Active */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: "50%",
+                  background: "#F1F7F4",
+                  border: "1.5px solid #D5E2DD",
+                  color: "#80918B",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 13,
+                  marginBottom: 4,
+                }}
+              >
+                🚀
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 600, color: "#80918B", lineHeight: 1.15 }}>
+                Verified
+              </span>
+            </div>
+          </div>
         </div>
+
+        {/* Action button to proceed to Zarai Mandi app */}
+        <button
+          type="button"
+          className="btn-primary"
+          onClick={onProceed}
+          style={{
+            marginBottom: 16,
+            background: "linear-gradient(135deg, #087F63, #064D40)",
+            boxShadow: "0 4px 16px rgba(8,127,99,0.35)",
+            fontSize: 14,
+            fontWeight: 800,
+          }}
+        >
+          Proceed to Zarai Mandi App →
+        </button>
 
         <div
           style={{
@@ -2901,114 +3149,184 @@ function RepPendingScreen({ name }: { name: string }) {
   )
 }
 
-export default function OnboardingFlow({ onComplete }: { onComplete: (data: OnboardingUserData) => void }) {
-  const [screen, setScreen] = useState<Screen>("lang")
-  const [role, setRole] = useState<Role>("customer")
+export default function OnboardingFlow({
+  onComplete,
+  initialMode = "register",
+  initialRole = "customer",
+}: {
+  onComplete: (data: OnboardingUserData) => void
+  initialMode?: "register" | "signin"
+  initialRole?: Role
+}) {
+  const [authMode, setAuthMode] = useState<"register" | "signin">(initialMode)
+  const [screen, setScreen] = useState<Screen>(
+    initialRole === "representative"
+      ? "account"
+      : initialMode === "signin"
+        ? "account"
+        : "lang"
+  )
+  const [role, setRole] = useState<Role>(initialRole)
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
   const [profession, setProfession] = useState("")
-  const [products, setProducts] = useState<string[]>([])
-  const [city, setCity] = useState("")
-  const [district, setDistrict] = useState("")
-  const [province, setProvince] = useState("")
+  const [products, setProducts] = useState<string[]>(["wheat"])
+  const [city, setCity] = useState("Pakpattan")
+  const [district, setDistrict] = useState("Pakpattan")
+  const [province, setProvince] = useState("Punjab")
   const [payAmount, setPayAmount] = useState(0)
   const [payDur, setPayDur] = useState(0)
+
+  useEffect(() => {
+    setAuthMode(initialMode)
+    setRole(initialRole)
+    if (initialRole === "representative") {
+      setScreen("account")
+    } else if (initialMode === "signin") {
+      setScreen("account")
+    }
+  }, [initialMode, initialRole])
 
   function go(s: Screen) {
     setScreen(s)
   }
 
   const handleDone = () => {
-    onComplete({ name, phone, profession, contact: phone, role, products, city, district, province })
+    onComplete({
+      name: name || "Muhammad Arif",
+      phone,
+      profession,
+      contact: phone,
+      role,
+      products: products.length ? products : ["wheat"],
+      city: city || "Pakpattan",
+      district: district || "Pakpattan",
+      province: province || "Punjab",
+    })
   }
 
   return (
     <>
       <style>{ZM_OB_THEME}</style>
-    <div className="phone-shell">
-      {screen === "lang" && <LangScreen onNext={() => go("role")} />}
+      <div className="phone-shell">
+        {screen === "lang" && <LangScreen onNext={() => go("role")} />}
 
-      {screen === "role" && (
-        <RoleScreen
-          onNext={(r) => {
-            setRole(r)
-            go("account")
-          }}
-          onBack={() => go("lang")}
-        />
-      )}
+        {screen === "role" && (
+          <RoleScreen
+            onNext={(r) => {
+              setRole(r)
+              setAuthMode("register")
+              go("account")
+            }}
+            onBack={() => go("lang")}
+            onSignIn={() => {
+              setRole("customer")
+              setAuthMode("signin")
+              go("account")
+            }}
+          />
+        )}
 
-      {screen === "account" && (
-        <AccountScreen
-          role={role}
-          onNext={({ name: n, contact, location: repLocation, profession }) => {
-            setName(n)
-            setPhone(contact)
-            setProfession(profession)
-            if (role === "representative" && repLocation) {
-              const match = CITIES.find((c) => c.city === repLocation)
-              if (match) {
-                setCity(match.city)
-                setDistrict(match.district)
-                setProvince(match.province)
+        {screen === "account" && (
+          <AccountScreen
+            role={role}
+            mode={authMode}
+            onSwitchMode={(newMode) => {
+              setAuthMode(newMode)
+            }}
+            onNext={({ name: n, contact, location: repLocation, profession: prof }) => {
+              setName(n)
+              setPhone(contact)
+              setProfession(prof)
+              if (role === "representative") {
+                if (repLocation) {
+                  const match = CITIES.find((c) => c.city === repLocation)
+                  if (match) {
+                    setCity(match.city)
+                    setDistrict(match.district)
+                    setProvince(match.province)
+                  }
+                }
+                go("rep-pending")
+              } else {
+                // Customer is directly taken to the home screen with 1 default product (Wheat)!
+                onComplete({
+                  name: n || "Muhammad Arif",
+                  phone: contact,
+                  profession: prof,
+                  contact,
+                  role: "customer",
+                  products: ["wheat"],
+                  city: "Pakpattan",
+                  district: "Pakpattan",
+                  province: "Punjab",
+                })
               }
-            }
-            // Representatives skip interests/location/subscription
-            go(role === "representative" ? "rep-pending" : "interests")
-          }}
-          onBack={() => go("role")}
-        />
-      )}
+            }}
+            onBack={() => {
+              if (authMode === "signin") {
+                go("role")
+              } else {
+                go("role")
+              }
+            }}
+          />
+        )}
 
-      {screen === "interests" && (
-        <InterestsScreen
-          onNext={(prods) => {
-            setProducts(prods)
-            go("location")
-          }}
-          onBack={() => go("account")}
-        />
-      )}
+        {screen === "interests" && (
+          <InterestsScreen
+            onNext={(prods) => {
+              setProducts(prods)
+              go("location")
+            }}
+            onBack={() => go("account")}
+          />
+        )}
 
-      {screen === "location" && (
-        <LocationScreen
-          onNext={(c, d, p) => {
-            setCity(c)
-            setDistrict(d)
-            setProvince(p)
-            go("subscription")
-          }}
-          onBack={() => go("interests")}
-        />
-      )}
+        {screen === "location" && (
+          <LocationScreen
+            onNext={(c, d, p) => {
+              setCity(c)
+              setDistrict(d)
+              setProvince(p)
+              go("subscription")
+            }}
+            onBack={() => go("interests")}
+          />
+        )}
 
-      {screen === "subscription" && (
-        <SubscriptionScreen
-          products={products}
-          city={city}
-          province={province}
-          onTrial={() => handleDone()}
-          onPay={(amt, dur) => {
-            setPayAmount(amt)
-            setPayDur(dur)
-            go("payment")
-          }}
-          onBack={() => go("location")}
-        />
-      )}
+        {screen === "subscription" && (
+          <SubscriptionScreen
+            products={products}
+            city={city}
+            province={province}
+            onTrial={() => handleDone()}
+            onPay={(amt, dur) => {
+              setPayAmount(amt)
+              setPayDur(dur)
+              go("payment")
+            }}
+            onBack={() => go("location")}
+          />
+        )}
 
-      {screen === "payment" && (
-        <PaymentScreen
-          amount={payAmount}
-          durIdx={payDur}
-          onConfirm={() => go("loading")}
-          onBack={() => go("subscription")}
-        />
-      )}
+        {screen === "payment" && (
+          <PaymentScreen
+            amount={payAmount}
+            durIdx={payDur}
+            onConfirm={() => go("loading")}
+            onBack={() => go("subscription")}
+          />
+        )}
 
-      {screen === "loading" && <LoadingScreen onDone={() => handleDone()} />}
-      {screen === "rep-pending" && <RepPendingScreen name={name} />}
-    </div>
+        {screen === "loading" && <LoadingScreen onDone={() => handleDone()} />}
+        {screen === "rep-pending" && (
+          <RepPendingScreen
+            name={name}
+            onProceed={() => handleDone()}
+          />
+        )}
+      </div>
     </>
   )
 }
