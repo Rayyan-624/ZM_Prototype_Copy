@@ -12875,7 +12875,10 @@ function ProductRatesScreen({
   const [tableDateCalMonth, setTableDateCalMonth] = useState<Date>(
     new Date(2026, 7, 21),
   );
-  const [tableTrendInterval, setTableTrendInterval] = useState<"24h" | "72h" | "monthly">("24h");
+  const [tableTrendInterval, setTableTrendInterval] = useState<
+    "24h" | "72h" | "weekly" | "monthly"
+  >("24h");
+  const [trendDropdownOpen, setTrendDropdownOpen] = useState(false);
   // Date table + its filters
   const [dateTableOpen, setDateTableOpen] = useState(false);
   const [dtSelDate, setDtSelDate] = useState<Date>(new Date());
@@ -14227,7 +14230,7 @@ function ProductRatesScreen({
                       </button>
                     </div>
 
-                    {/* Filter row: Province chips + Trend interval toggle */}
+                    {/* Filter row: Province chips */}
                     <div className="flex items-center justify-between gap-2 flex-wrap pt-1">
                       {/* Province filter chips */}
                       <div
@@ -14258,36 +14261,6 @@ function ProductRatesScreen({
                               : lang === "ur"
                                 ? "تمام صوبے"
                                 : "All Provinces"}
-                          </button>
-                        ))}
-                      </div>
-
-                      {/* Trend Interval Toggle Pill */}
-                      <div
-                        className="flex items-center rounded-lg p-0.5 bg-[#E4F2EC] border border-[#C7E8D8] flex-shrink-0"
-                      >
-                        {(
-                          [
-                            ["24h", lang === "ur" ? "24 گھنٹے" : "24h"],
-                            ["72h", lang === "ur" ? "72 گھنٹے" : "72h"],
-                            ["monthly", lang === "ur" ? "ماہانہ" : "Monthly"],
-                          ] as ["24h" | "72h" | "monthly", string][]
-                        ).map(([tKey, tLbl]) => (
-                          <button
-                            key={tKey}
-                            onClick={() => setTableTrendInterval(tKey)}
-                            className="tap-target px-2 py-0.5 rounded-md font-extrabold text-[10px] transition-colors"
-                            style={{
-                              background:
-                                tableTrendInterval === tKey ? "#087F63" : "transparent",
-                              color: tableTrendInterval === tKey ? "#fff" : "#075E4F",
-                              fontFamily:
-                                lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                  : "inherit",
-                            }}
-                          >
-                            {tLbl}
                           </button>
                         ))}
                       </div>
@@ -14546,21 +14519,85 @@ function ProductRatesScreen({
                     >
                       {lang === "ur" ? "قسم" : "Type"}
                     </span>
-                    <span
-                      className="font-extrabold uppercase tracking-wide text-right"
-                      style={{
-                        color: "#087F63",
-                        fontSize: lang === "ur" ? 13 : 9,
-                        fontFamily:
-                          lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                            : "inherit",
-                      }}
-                    >
-                      {lang === "ur"
-                        ? `رجحان (${tableTrendInterval === "24h" ? "24گھنٹے" : tableTrendInterval === "72h" ? "72گھنٹے" : "ماہانہ"})`
-                        : `Trend (${tableTrendInterval})`}
-                    </span>
+                    <div className="relative text-right flex justify-end items-center">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setTrendDropdownOpen(!trendDropdownOpen);
+                        }}
+                        className="tap-target inline-flex items-center gap-1 font-extrabold uppercase tracking-wide px-1.5 py-0.5 rounded-md hover:bg-[#E4F2EC] transition"
+                        style={{
+                          color: "#087F63",
+                          fontSize: lang === "ur" ? 13 : 9,
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                        title={lang === "ur" ? "رجحان کا دورانیہ منتخب کریں" : "Select trend duration"}
+                      >
+                        <span>
+                          {lang === "ur"
+                            ? `رجحان (${tableTrendInterval === "24h" ? "24گھنٹے" : tableTrendInterval === "72h" ? "72گھنٹے" : tableTrendInterval === "weekly" ? "ہفتہ وار" : "ماہانہ"})`
+                            : `Trend (${tableTrendInterval === "24h" ? "24H" : tableTrendInterval === "72h" ? "72H" : tableTrendInterval === "weekly" ? "7D" : "30D"})`}
+                        </span>
+                        <span className="text-[10px] text-[#087F63]">▾</span>
+                      </button>
+
+                      {/* Elevated Dropdown Menu for Trend Interval */}
+                      {trendDropdownOpen && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-40"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setTrendDropdownOpen(false);
+                            }}
+                          />
+                          <div
+                            className="absolute right-0 top-full mt-1 z-50 bg-white rounded-xl shadow-2xl border border-[#C7E8D8] py-1 min-w-[140px] text-left"
+                            style={{
+                              direction: lang === "ur" ? "rtl" : "ltr",
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <div className="px-3 py-1 text-[10px] font-bold text-[#80918B] border-b border-[#E8EFEC] uppercase tracking-wider">
+                              {lang === "ur" ? "دورانیہ منتخب کریں" : "Select Interval"}
+                            </div>
+                            {[
+                              { id: "24h", labelUr: "24 گھنٹے (24h)", labelEn: "24 Hours (24h)" },
+                              { id: "72h", labelUr: "72 گھنٹے (72h)", labelEn: "72 Hours (72h)" },
+                              { id: "weekly", labelUr: "ہفتہ وار (7 دن)", labelEn: "Weekly (7 Days)" },
+                              { id: "monthly", labelUr: "ماہانہ (30 دن)", labelEn: "Monthly (30 Days)" },
+                            ].map((opt) => (
+                              <button
+                                key={opt.id}
+                                type="button"
+                                onClick={() => {
+                                  setTableTrendInterval(opt.id as any);
+                                  setTrendDropdownOpen(false);
+                                }}
+                                className="w-full px-3 py-2 text-xs font-bold flex items-center justify-between hover:bg-[#E8F5EF] transition text-left"
+                                style={{
+                                  color: tableTrendInterval === opt.id ? "#087F63" : "#183B34",
+                                  background: tableTrendInterval === opt.id ? "#F0F9F5" : "transparent",
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                <span>{lang === "ur" ? opt.labelUr : opt.labelEn}</span>
+                                {tableTrendInterval === opt.id && (
+                                  <span className="text-[#087F63] font-black text-xs">✓</span>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                   {/* Scrollable table body — keeps the deep-view card compact */}
                   <div
@@ -14615,9 +14652,11 @@ function ProductRatesScreen({
                       const intervalPct =
                         tableTrendInterval === "72h"
                           ? Math.round(r.trendPct * 2.2 * 10) / 10
-                          : tableTrendInterval === "monthly"
-                            ? Math.round(r.trendPct * 5.4 * 10) / 10
-                            : r.trendPct;
+                          : tableTrendInterval === "weekly"
+                            ? Math.round(r.trendPct * 3.1 * 10) / 10
+                            : tableTrendInterval === "monthly"
+                              ? Math.round(r.trendPct * 5.4 * 10) / 10
+                              : r.trendPct;
                       return (
                         <button
                           key={`${r.mandiName}-${r.rateType}-${ci}`}
@@ -15741,92 +15780,67 @@ function ProductRatesScreen({
           </>
         )}
 
-        {tab === "trends" && rows.length > 0 && isProductTodayOnly(product) && (
-          <div
-            style={{
-              background: "#FFFFFF",
-              border: "1.5px solid #D5E2DD",
-              borderRadius: 20,
-              padding: "28px 20px",
-              textAlign: "center",
-              boxShadow: "0 4px 20px rgba(6,77,64,0.06)",
-            }}
-          >
-            <div
-              style={{
-                width: 64,
-                height: 64,
-                borderRadius: "50%",
-                background: "#FFF4E5",
-                color: "#D97706",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 30,
-                margin: "0 auto 16px",
-              }}
-            >
-              🔒
+        {tab === "trends" && rows.length > 0 && (
+          <>
+            {/* Location filter row — same as overview tab */}
+            <div className="flex items-center justify-between">
+              <p
+                className="text-xs font-bold uppercase tracking-wide"
+                style={{
+                  color: "#52635F",
+                  fontSize: lang === "ur" ? 16 : 12,
+                  fontFamily:
+                    lang === "ur"
+                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      : "inherit",
+                }}
+              >
+                {lang === "ur" ? "قیمتوں کے رجحانات" : "Price Trends"}
+              </p>
+              <button
+                onClick={() => setLocSheet(true)}
+                className="tap-target flex items-center gap-1 rounded-xl font-semibold text-xs px-2.5 py-1.5"
+                style={{
+                  background:
+                    locScope.kind === "mandi" ? "#087F63" : "#E4F2EC",
+                  color: locScope.kind === "mandi" ? "#fff" : "#075E4F",
+                  border:
+                    locScope.kind === "mandi" ? "none" : "1px solid #C7E8D8",
+                  fontSize: lang === "ur" ? 14 : 12,
+                  fontFamily:
+                    lang === "ur"
+                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      : "inherit",
+                }}
+              >
+                {locScope.kind === "mandi"
+                  ? tm(locScope.label.replace(" Mandi", ""))
+                  : locScope.kind === "province"
+                    ? tm(locScope.label)
+                    : locScope.kind === "district"
+                      ? tm(locScope.label)
+                      : lang === "ur"
+                        ? "قومی سطح"
+                        : "National"}
+              </button>
             </div>
-            <h3
-              style={{
-                fontSize: 18,
-                fontWeight: 800,
-                color: "#183B34",
-                marginBottom: 8,
-                fontFamily:
-                  lang === "ur"
-                    ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                    : "inherit",
-              }}
-            >
-              {lang === "ur"
-                ? "ماضی کے رجحانات اور گراف لاک ہیں"
-                : "Historical Trends & Charts Locked"}
-            </h3>
-            <p
-              style={{
-                fontSize: 13,
-                color: "#52635F",
-                lineHeight: 1.5,
-                marginBottom: 22,
-                fontFamily:
-                  lang === "ur"
-                    ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                    : "inherit",
-              }}
-            >
-              {lang === "ur"
-                ? `${tc(product)} کے 7 دن، 30 دن اور 90 دن کے تاریخی نرخ، تجزیات اور آمد کے رجحانات دیکھنے کے لیے سبسکرائب کریں۔`
-                : `Subscribe to unlock full 7-day, 30-day and 90-day price trend graphs, arrival patterns and historical market intelligence for ${product}.`}
-            </p>
-            <button
-              onClick={() => push?.({ id: "billing", product, vertical })}
-              className="tap-target w-full py-3.5 rounded-2xl text-white font-extrabold text-sm flex items-center justify-center gap-2"
-              style={{
-                background: "linear-gradient(135deg, #087F63, #064D40)",
-                boxShadow: "0 4px 14px rgba(8,127,99,0.35)",
-              }}
-            >
-              <span>
-                {lang === "ur"
-                  ? "ماضی کا ڈیٹا ان لاک کریں (PKR 3,000/ماہ) →"
-                  : "Subscribe to Unlock Past History (PKR 3,000/mo) →"}
-              </span>
-            </button>
-          </div>
-        )}
-
-        {tab === "trends" &&
-          rows.length > 0 &&
-          !isProductTodayOnly(product) && (
-            <>
-              {/* Location filter row — same as overview tab */}
-              <div className="flex items-center justify-between">
-                <p
-                  className="text-xs font-bold uppercase tracking-wide"
+            <div className="flex gap-2">
+              {(
+                [
+                  ["week", lang === "ur" ? "ہفتہ" : "Week"],
+                  ["month", lang === "ur" ? "مہینہ" : "Month"],
+                  ["quarter", lang === "ur" ? "تین ماہ" : "Quarter"],
+                ] as ["week" | "month" | "quarter", string][]
+              ).map(([rKey, label]) => (
+                <button
+                  key={rKey}
+                  onClick={() => setRange(rKey)}
+                  className="tap-target flex-1 rounded-xl font-bold text-xs capitalize"
                   style={{
-                    color: "#52635F",
+                    height: lang === "ur" ? 42 : 38,
+                    background: range === rKey ? "#087F63" : "#fff",
+                    color: range === rKey ? "#fff" : "#183B34",
+                    border: range === rKey ? "none" : "1px solid #D5E2DD",
                     fontSize: lang === "ur" ? 16 : 12,
                     fontFamily:
                       lang === "ur"
@@ -15834,459 +15848,95 @@ function ProductRatesScreen({
                         : "inherit",
                   }}
                 >
-                  {lang === "ur" ? "قیمتوں کے رجحانات" : "Price Trends"}
-                </p>
+                  {label}
+                </button>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              {(
+                [
+                  ["price", lang === "ur" ? "قیمت کا رجحان" : "Price Trend"],
+                  [
+                    "arrival",
+                    lang === "ur" ? "آمد کا رجحان" : "Arrival Trend",
+                  ],
+                ] as ["price" | "arrival", string][]
+              ).map(([m, label]) => (
                 <button
-                  onClick={() => setLocSheet(true)}
-                  className="tap-target flex items-center gap-1 rounded-xl font-semibold text-xs px-2.5 py-1.5"
+                  key={m}
+                  onClick={() => setTrendMode(m)}
+                  className="tap-target flex-1 rounded-xl font-bold text-xs"
                   style={{
-                    background:
-                      locScope.kind === "mandi" ? "#087F63" : "#E4F2EC",
-                    color: locScope.kind === "mandi" ? "#fff" : "#075E4F",
-                    border:
-                      locScope.kind === "mandi" ? "none" : "1px solid #C7E8D8",
-                    fontSize: lang === "ur" ? 14 : 12,
+                    height: lang === "ur" ? 42 : 38,
+                    background: trendMode === m ? "#075E4F" : "#E8EFEC",
+                    color: trendMode === m ? "#fff" : "#183B34",
+                    fontSize: lang === "ur" ? 16 : 12,
                     fontFamily:
                       lang === "ur"
                         ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
                         : "inherit",
                   }}
                 >
-                  {locScope.kind === "mandi"
-                    ? tm(locScope.label.replace(" Mandi", ""))
-                    : locScope.kind === "province"
-                      ? tm(locScope.label)
-                      : locScope.kind === "district"
-                        ? tm(locScope.label)
-                        : lang === "ur"
-                          ? "قومی سطح"
-                          : "National"}
+                  {label}
                 </button>
-              </div>
-              <div className="flex gap-2">
-                {(
-                  [
-                    ["week", lang === "ur" ? "ہفتہ" : "Week"],
-                    ["month", lang === "ur" ? "مہینہ" : "Month"],
-                    ["quarter", lang === "ur" ? "تین ماہ" : "Quarter"],
-                  ] as ["week" | "month" | "quarter", string][]
-                ).map(([rKey, label]) => (
-                  <button
-                    key={rKey}
-                    onClick={() => setRange(rKey)}
-                    className="tap-target flex-1 rounded-xl font-bold text-xs capitalize"
-                    style={{
-                      height: lang === "ur" ? 42 : 38,
-                      background: range === rKey ? "#087F63" : "#fff",
-                      color: range === rKey ? "#fff" : "#183B34",
-                      border: range === rKey ? "none" : "1px solid #D5E2DD",
-                      fontSize: lang === "ur" ? 16 : 12,
-                      fontFamily:
-                        lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                          : "inherit",
-                    }}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                {(
-                  [
-                    ["price", lang === "ur" ? "قیمت کا رجحان" : "Price Trend"],
-                    [
-                      "arrival",
-                      lang === "ur" ? "آمد کا رجحان" : "Arrival Trend",
-                    ],
-                  ] as ["price" | "arrival", string][]
-                ).map(([m, label]) => (
-                  <button
-                    key={m}
-                    onClick={() => setTrendMode(m)}
-                    className="tap-target flex-1 rounded-xl font-bold text-xs"
-                    style={{
-                      height: lang === "ur" ? 42 : 38,
-                      background: trendMode === m ? "#075E4F" : "#E8EFEC",
-                      color: trendMode === m ? "#fff" : "#183B34",
-                      fontSize: lang === "ur" ? 16 : 12,
-                      fontFamily:
-                        lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                          : "inherit",
-                    }}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
+              ))}
+            </div>
 
-              {trendMode === "price" ? (
-                <>
-                  {/* Interactive price chart */}
-                  <div
-                    className="rounded-2xl px-3 pt-3 pb-2"
-                    style={{
-                      background: "#F4FAF7",
-                      border: "1px solid #D5E2DD",
-                    }}
-                  >
-                    {/* Hover tooltip */}
-                    {hoverIdx !== null && shownSeries.length > 0 && (
-                      <div
-                        className="rounded-xl px-3 py-2 mb-2 flex flex-wrap gap-2"
+            {trendMode === "price" ? (
+              <>
+                {/* Interactive price chart */}
+                <div
+                  className="rounded-2xl px-3 pt-3 pb-2"
+                  style={{
+                    background: "#F4FAF7",
+                    border: "1px solid #D5E2DD",
+                  }}
+                >
+                  {/* Hover tooltip */}
+                  {hoverIdx !== null && shownSeries.length > 0 && (
+                    <div
+                      className="rounded-xl px-3 py-2 mb-2 flex flex-wrap gap-2"
+                      style={{
+                        background: "#F1F7F4",
+                        border: "1px solid #D5E2DD",
+                      }}
+                    >
+                      <span
+                        className="text-[11px] font-bold"
                         style={{
-                          background: "#F1F7F4",
-                          border: "1px solid #D5E2DD",
+                          color: "#2F4A43",
+                          fontSize: lang === "ur" ? 14 : 11,
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
                         }}
                       >
+                        {xLabels[hoverIdx] ||
+                          (lang === "ur"
+                            ? `دن ${hoverIdx + 1}`
+                            : `Day ${hoverIdx + 1}`)}
+                      </span>
+                      {shownSeries.map((s) => (
                         <span
-                          className="text-[11px] font-bold"
+                          key={s.label}
+                          className="text-[11px] font-semibold"
                           style={{
-                            color: "#2F4A43",
-                            fontSize: lang === "ur" ? 14 : 11,
+                            color: s.color,
+                            fontSize: lang === "ur" ? 13 : 11,
                             fontFamily:
                               lang === "ur"
                                 ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
                                 : "inherit",
                           }}
                         >
-                          {xLabels[hoverIdx] ||
-                            (lang === "ur"
-                              ? `دن ${hoverIdx + 1}`
-                              : `Day ${hoverIdx + 1}`)}
+                          {tr(s.label)
+                            .replace(" ریٹ", "")
+                            .replace(" Rate", "")}{" "}
+                          {lang === "ur" ? "روپے" : "Rs."}{" "}
+                          {Math.round(s.data[hoverIdx]).toLocaleString()}
                         </span>
-                        {shownSeries.map((s) => (
-                          <span
-                            key={s.label}
-                            className="text-[11px] font-semibold"
-                            style={{
-                              color: s.color,
-                              fontSize: lang === "ur" ? 13 : 11,
-                              fontFamily:
-                                lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                  : "inherit",
-                            }}
-                          >
-                            {tr(s.label)
-                              .replace(" ریٹ", "")
-                              .replace(" Rate", "")}{" "}
-                            {lang === "ur" ? "روپے" : "Rs."}{" "}
-                            {Math.round(s.data[hoverIdx]).toLocaleString()}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <svg
-                      viewBox={`0 0 ${CW} ${CH}`}
-                      className="w-full"
-                      style={{ height: CH, display: "block" }}
-                      onMouseMove={(e) => {
-                        const rect = (
-                          e.currentTarget as SVGSVGElement
-                        ).getBoundingClientRect();
-                        const relX =
-                          ((e.clientX - rect.left) / rect.width) * CW - PL;
-                        const i = Math.round((relX / chartW) * (len - 1));
-                        setHoverIdx(Math.max(0, Math.min(len - 1, i)));
-                      }}
-                      onMouseLeave={() => setHoverIdx(null)}
-                      onTouchMove={(e) => {
-                        const rect = (
-                          e.currentTarget as SVGSVGElement
-                        ).getBoundingClientRect();
-                        const touch = e.touches[0];
-                        const relX =
-                          ((touch.clientX - rect.left) / rect.width) * CW - PL;
-                        const i = Math.round((relX / chartW) * (len - 1));
-                        setHoverIdx(Math.max(0, Math.min(len - 1, i)));
-                      }}
-                      onTouchEnd={() => setHoverIdx(null)}
-                    >
-                      {/* Y-axis gridlines + labels */}
-                      {yPriceTicks.map((tick, ti) => {
-                        const y = yOf(tick, pMin, pMax);
-                        return (
-                          <g key={ti}>
-                            <line
-                              x1={PL}
-                              y1={y}
-                              x2={CW - PR}
-                              y2={y}
-                              stroke="#E8EFEC"
-                              strokeWidth="1"
-                            />
-                            <text
-                              x={PL - 4}
-                              y={y + 4}
-                              textAnchor="end"
-                              fontSize="9"
-                              fill="#80918B"
-                            >
-                              {tick >= 1000
-                                ? (tick / 1000).toFixed(1) + "k"
-                                : tick}
-                            </text>
-                          </g>
-                        );
-                      })}
-                      {/* X-axis labels */}
-                      {xLabels.map((lbl, i) =>
-                        lbl ? (
-                          <text
-                            key={i}
-                            x={xOf(i, len)}
-                            y={CH - 4}
-                            textAnchor="middle"
-                            fontSize={lang === "ur" ? "10" : "9"}
-                            fill="#80918B"
-                            fontFamily={
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit"
-                            }
-                          >
-                            {lbl}
-                          </text>
-                        ) : null,
-                      )}
-                      {/* Lines */}
-                      {shownSeries.map((s) => {
-                        const pts = s.data
-                          .map(
-                            (v, i) =>
-                              `${i === 0 ? "M" : "L"
-                              }${xOf(i, len).toFixed(1)},${yOf(v, pMin, pMax).toFixed(1)}`,
-                          )
-                          .join(" ");
-                        return (
-                          <path
-                            key={s.label}
-                            d={pts}
-                            stroke={s.color}
-                            strokeWidth="2"
-                            fill="none"
-                            strokeLinecap="round"
-                          />
-                        );
-                      })}
-                      {/* Hover crosshair */}
-                      {hoverIdx !== null && (
-                        <>
-                          <line
-                            x1={xOf(hoverIdx, len)}
-                            y1={PT}
-                            x2={xOf(hoverIdx, len)}
-                            y2={CH - PB}
-                            stroke="#2F4A43"
-                            strokeWidth="1"
-                            strokeDasharray="3 3"
-                          />
-                          {shownSeries.map((s) => (
-                            <circle
-                              key={s.label}
-                              cx={xOf(hoverIdx!, len)}
-                              cy={yOf(s.data[hoverIdx!], pMin, pMax)}
-                              r="4"
-                              fill={s.color}
-                              stroke="#fff"
-                              strokeWidth="1.5"
-                            />
-                          ))}
-                        </>
-                      )}
-                      {/* Axes */}
-                      <line
-                        x1={PL}
-                        y1={PT}
-                        x2={PL}
-                        y2={CH - PB}
-                        stroke="#C7D6D0"
-                        strokeWidth="1"
-                      />
-                      <line
-                        x1={PL}
-                        y1={CH - PB}
-                        x2={CW - PR}
-                        y2={CH - PB}
-                        stroke="#C7D6D0"
-                        strokeWidth="1"
-                      />
-                      {/* X-axis label */}
-                      <text
-                        x={(PL + CW - PR) / 2}
-                        y={CH - 4}
-                        textAnchor="middle"
-                        fontSize="10"
-                        fontWeight="600"
-                        fill="#52635F"
-                        fontFamily={
-                          lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                            : "inherit"
-                        }
-                      >
-                        {lang === "ur" ? "دن" : "Days"}
-                      </text>
-                      {/* Y-axis label */}
-                      <text
-                        x={12}
-                        y={(PT + CH - PB) / 2}
-                        textAnchor="middle"
-                        fontSize="10"
-                        fontWeight="600"
-                        fill="#52635F"
-                        transform={`rotate(-90, 12, ${(PT + CH - PB) / 2})`}
-                        fontFamily={
-                          lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                            : "inherit"
-                        }
-                      >
-                        {lang === "ur"
-                          ? "قیمت (روپے/۴۰ کلو)"
-                          : "Price (Rs/40kg)"}
-                      </text>
-                    </svg>
-                  </div>
-                  <div className="flex flex-col items-start text-left w-full">
-                    <p
-                      className="text-xs font-bold uppercase tracking-wide text-left self-start"
-                      style={{
-                        color: "#52635F",
-                        letterSpacing: "0.05em",
-                        fontSize: lang === "ur" ? 15 : 12,
-                        fontFamily:
-                          lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                            : "inherit",
-                        textAlign: "left",
-                      }}
-                    >
-                      {lang === "ur" ? "نرخ کی اقسام" : "Price Types"}
-                    </p>
-                    <div
-                      className="flex flex-wrap gap-2 justify-start items-center w-full mt-1"
-                      style={{ direction: "ltr" }}
-                    >
-                      {/* All / سب Button */}
-                      <button
-                        onClick={() => {
-                          if (activeTypes.length === ALL_RATE_TYPES.length) {
-                            setActiveTypes([initialRateType || "Retail"]);
-                          } else {
-                            setActiveTypes([...ALL_RATE_TYPES]);
-                          }
-                        }}
-                        className="tap-target flex items-center gap-1 rounded-full font-bold"
-                        style={{
-                          fontSize: lang === "ur" ? 14 : 11,
-                          padding: "4px 10px",
-                          background:
-                            activeTypes.length === ALL_RATE_TYPES.length
-                              ? "#087F63"
-                              : "#E8EFEC",
-                          border:
-                            "1.5px solid " +
-                            (activeTypes.length === ALL_RATE_TYPES.length
-                              ? "#087F63"
-                              : "#D5E2DD"),
-                          color:
-                            activeTypes.length === ALL_RATE_TYPES.length
-                              ? "#fff"
-                              : "#52635F",
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {lang === "ur" ? "سب" : "All"}
-                      </button>
-
-                      {ALL_RATE_TYPES.map((tRt) => {
-                        const on = activeTypes.includes(tRt);
-                        return (
-                          <button
-                            key={tRt}
-                            onClick={() => toggleType(tRt)}
-                            className="tap-target flex items-center gap-1 rounded-full font-semibold"
-                            style={{
-                              fontSize: lang === "ur" ? 14 : 10,
-                              padding: "4px 8px",
-                              background: on ? "#fff" : "#E8EFEC",
-                              border: `1.5px solid ${on ? RATE_COLORS[tRt] : "#D5E2DD"
-                                }`,
-                              color: on ? "#183B34" : "#80918B",
-                              fontFamily:
-                                lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                  : "inherit",
-                            }}
-                          >
-                            <span
-                              className="rounded-full flex-shrink-0"
-                              style={{
-                                width: 7,
-                                height: 7,
-                                background: on ? RATE_COLORS[tRt] : "#C7D6D0",
-                              }}
-                            />
-                            {on ? " " : ""}
-                            {tr(tRt).replace(" ریٹ", "").replace(" Rate", "")}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                /* Interactive arrival chart */
-                <div
-                  className="rounded-2xl px-3 pt-3 pb-2"
-                  style={{ background: "#F4FAF7", border: "1px solid #D5E2DD" }}
-                >
-                  {arrivalHoverIdx !== null && (
-                    <div
-                      className="rounded-xl px-3 py-2 mb-2"
-                      style={{
-                        background: "#FFF0C7",
-                        border: "1px solid #F2D58A",
-                      }}
-                    >
-                      <span
-                        className="text-[11px] font-bold"
-                        style={{
-                          color: "#9A6817",
-                          fontSize: lang === "ur" ? 14 : 11,
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {xLabels[arrivalHoverIdx] ||
-                          (lang === "ur"
-                            ? `دن ${arrivalHoverIdx + 1}`
-                            : `Day ${arrivalHoverIdx + 1}`)}
-                      </span>
-                      <span
-                        className="text-[11px] font-semibold ml-2"
-                        style={{
-                          color: "#9A6817",
-                          fontSize: lang === "ur" ? 14 : 11,
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {Math.round(
-                          arrivalData[arrivalHoverIdx],
-                        ).toLocaleString()}{" "}
-                        {lang === "ur" ? "میٹرک ٹن" : "MT"}
-                      </span>
+                      ))}
                     </div>
                   )}
                   <svg
@@ -16300,9 +15950,9 @@ function ProductRatesScreen({
                       const relX =
                         ((e.clientX - rect.left) / rect.width) * CW - PL;
                       const i = Math.round((relX / chartW) * (len - 1));
-                      setArrivalHoverIdx(Math.max(0, Math.min(len - 1, i)));
+                      setHoverIdx(Math.max(0, Math.min(len - 1, i)));
                     }}
-                    onMouseLeave={() => setArrivalHoverIdx(null)}
+                    onMouseLeave={() => setHoverIdx(null)}
                     onTouchMove={(e) => {
                       const rect = (
                         e.currentTarget as SVGSVGElement
@@ -16311,12 +15961,13 @@ function ProductRatesScreen({
                       const relX =
                         ((touch.clientX - rect.left) / rect.width) * CW - PL;
                       const i = Math.round((relX / chartW) * (len - 1));
-                      setArrivalHoverIdx(Math.max(0, Math.min(len - 1, i)));
+                      setHoverIdx(Math.max(0, Math.min(len - 1, i)));
                     }}
-                    onPointerLeave={() => setArrivalHoverIdx(null)}
+                    onTouchEnd={() => setHoverIdx(null)}
                   >
-                    {yArrivalTicks.map((tick, ti) => {
-                      const y = yOf(tick, aMin, aMax);
+                    {/* Y-axis gridlines + labels */}
+                    {yPriceTicks.map((tick, ti) => {
+                      const y = yOf(tick, pMin, pMax);
                       return (
                         <g key={ti}>
                           <line
@@ -16336,11 +15987,12 @@ function ProductRatesScreen({
                           >
                             {tick >= 1000
                               ? (tick / 1000).toFixed(1) + "k"
-                              : Math.round(tick)}
+                              : tick}
                           </text>
                         </g>
                       );
                     })}
+                    {/* X-axis labels */}
                     {xLabels.map((lbl, i) =>
                       lbl ? (
                         <text
@@ -16360,55 +16012,52 @@ function ProductRatesScreen({
                         </text>
                       ) : null,
                     )}
-                    {/* Area fill */}
-                    <path
-                      d={[
-                        ...arrivalData.map(
-                          (v, i) =>
-                            `${i === 0 ? "M" : "L"
-                            }${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
-                        ),
-                        `L${xOf(len - 1, len)},${CH - PB}`,
-                        `L${PL},${CH - PB}`,
-                        "Z",
-                      ].join(" ")}
-                      fill="#B9822E"
-                      fillOpacity="0.12"
-                    />
-                    <path
-                      d={arrivalData
+                    {/* Lines */}
+                    {shownSeries.map((s) => {
+                      const pts = s.data
                         .map(
                           (v, i) =>
                             `${i === 0 ? "M" : "L"
-                            }${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
+                            }${xOf(i, len).toFixed(1)},${yOf(v, pMin, pMax).toFixed(1)}`,
                         )
-                        .join(" ")}
-                      stroke="#B9822E"
-                      strokeWidth="2"
-                      fill="none"
-                      strokeLinecap="round"
-                    />
-                    {arrivalHoverIdx !== null && (
+                        .join(" ");
+                      return (
+                        <path
+                          key={s.label}
+                          d={pts}
+                          stroke={s.color}
+                          strokeWidth="2"
+                          fill="none"
+                          strokeLinecap="round"
+                        />
+                      );
+                    })}
+                    {/* Hover crosshair */}
+                    {hoverIdx !== null && (
                       <>
                         <line
-                          x1={xOf(arrivalHoverIdx, len)}
+                          x1={xOf(hoverIdx, len)}
                           y1={PT}
-                          x2={xOf(arrivalHoverIdx, len)}
+                          x2={xOf(hoverIdx, len)}
                           y2={CH - PB}
-                          stroke="#9A6817"
+                          stroke="#2F4A43"
                           strokeWidth="1"
                           strokeDasharray="3 3"
                         />
-                        <circle
-                          cx={xOf(arrivalHoverIdx, len)}
-                          cy={yOf(arrivalData[arrivalHoverIdx], aMin, aMax)}
-                          r="4.5"
-                          fill="#B9822E"
-                          stroke="#fff"
-                          strokeWidth="1.5"
-                        />
+                        {shownSeries.map((s) => (
+                          <circle
+                            key={s.label}
+                            cx={xOf(hoverIdx!, len)}
+                            cy={yOf(s.data[hoverIdx!], pMin, pMax)}
+                            r="4"
+                            fill={s.color}
+                            stroke="#fff"
+                            strokeWidth="1.5"
+                          />
+                        ))}
                       </>
                     )}
+                    {/* Axes */}
                     <line
                       x1={PL}
                       y1={PT}
@@ -16456,13 +16105,336 @@ function ProductRatesScreen({
                           : "inherit"
                       }
                     >
-                      {lang === "ur" ? "آمد (میٹرک ٹن)" : "Arrivals (MT)"}
+                      {lang === "ur"
+                        ? "قیمت (روپے/۴۰ کلو)"
+                        : "Price (Rs/40kg)"}
                     </text>
                   </svg>
                 </div>
-              )}
+                <div className="flex flex-col items-start text-left w-full">
+                  <p
+                    className="text-xs font-bold uppercase tracking-wide text-left self-start"
+                    style={{
+                      color: "#52635F",
+                      letterSpacing: "0.05em",
+                      fontSize: lang === "ur" ? 15 : 12,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                      textAlign: "left",
+                    }}
+                  >
+                    {lang === "ur" ? "نرخ کی اقسام" : "Price Types"}
+                  </p>
+                  {(() => {
+                    const primaryType =
+                      initialRateType ||
+                      (ALL_RATE_TYPES.includes("Mill") ? "Mill" : ALL_RATE_TYPES[0]);
+                    const orderedRateTypes = [
+                      primaryType,
+                      ...ALL_RATE_TYPES.filter((t) => t !== primaryType),
+                    ];
+                    return (
+                      <div
+                        className="flex flex-wrap gap-2 justify-start items-center w-full mt-1"
+                        style={{ direction: "ltr" }}
+                      >
+                        {orderedRateTypes.map((tRt) => {
+                          const on = activeTypes.includes(tRt);
+                          return (
+                            <button
+                              key={tRt}
+                              onClick={() => toggleType(tRt)}
+                              className="tap-target flex items-center gap-1 rounded-full font-semibold"
+                              style={{
+                                fontSize: lang === "ur" ? 14 : 10,
+                                padding: "4px 8px",
+                                background: on ? "#fff" : "#E8EFEC",
+                                border: `1.5px solid ${on ? RATE_COLORS[tRt] : "#D5E2DD"
+                                  }`,
+                                color: on ? "#183B34" : "#80918B",
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              <span
+                                className="rounded-full flex-shrink-0"
+                                style={{
+                                  width: 7,
+                                  height: 7,
+                                  background: on ? RATE_COLORS[tRt] : "#C7D6D0",
+                                }}
+                              />
+                              {on ? " " : ""}
+                              {tr(tRt).replace(" ریٹ", "").replace(" Rate", "")}
+                            </button>
+                          );
+                        })}
 
+                        {/* All / سب Button at the end */}
+                        <button
+                          onClick={() => {
+                            if (activeTypes.length === ALL_RATE_TYPES.length) {
+                              setActiveTypes([primaryType]);
+                            } else {
+                              setActiveTypes([...ALL_RATE_TYPES]);
+                            }
+                          }}
+                          className="tap-target flex items-center gap-1 rounded-full font-bold"
+                          style={{
+                            fontSize: lang === "ur" ? 14 : 11,
+                            padding: "4px 10px",
+                            background:
+                              activeTypes.length === ALL_RATE_TYPES.length
+                                ? "#087F63"
+                                : "#E8EFEC",
+                            border:
+                              "1.5px solid " +
+                              (activeTypes.length === ALL_RATE_TYPES.length
+                                ? "#087F63"
+                                : "#D5E2DD"),
+                            color:
+                              activeTypes.length === ALL_RATE_TYPES.length
+                                ? "#fff"
+                                : "#52635F",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                                : "inherit",
+                          }}
+                        >
+                          {lang === "ur" ? "سب" : "All"}
+                        </button>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </>
+            ) : (
+              /* Interactive arrival chart */
               <div
+                className="rounded-2xl px-3 pt-3 pb-2"
+                style={{ background: "#F4FAF7", border: "1px solid #D5E2DD" }}
+              >
+                {arrivalHoverIdx !== null && (
+                  <div
+                    className="rounded-xl px-3 py-2 mb-2"
+                    style={{
+                      background: "#FFF0C7",
+                      border: "1px solid #F2D58A",
+                    }}
+                  >
+                    <span
+                      className="text-[11px] font-bold"
+                      style={{
+                        color: "#9A6817",
+                        fontSize: lang === "ur" ? 14 : 11,
+                        fontFamily:
+                          lang === "ur"
+                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            : "inherit",
+                      }}
+                    >
+                      {xLabels[arrivalHoverIdx] ||
+                        (lang === "ur"
+                          ? `دن ${arrivalHoverIdx + 1}`
+                          : `Day ${arrivalHoverIdx + 1}`)}
+                    </span>
+                    <span
+                      className="text-[11px] font-semibold ml-2"
+                      style={{
+                        color: "#9A6817",
+                        fontSize: lang === "ur" ? 14 : 11,
+                        fontFamily:
+                          lang === "ur"
+                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            : "inherit",
+                      }}
+                    >
+                      {Math.round(
+                        arrivalData[arrivalHoverIdx],
+                      ).toLocaleString()}{" "}
+                      {lang === "ur" ? "میٹرک ٹن" : "MT"}
+                    </span>
+                  </div>
+                )}
+                <svg
+                  viewBox={`0 0 ${CW} ${CH}`}
+                  className="w-full"
+                  style={{ height: CH, display: "block" }}
+                  onMouseMove={(e) => {
+                    const rect = (
+                      e.currentTarget as SVGSVGElement
+                    ).getBoundingClientRect();
+                    const relX =
+                      ((e.clientX - rect.left) / rect.width) * CW - PL;
+                    const i = Math.round((relX / chartW) * (len - 1));
+                    setArrivalHoverIdx(Math.max(0, Math.min(len - 1, i)));
+                  }}
+                  onMouseLeave={() => setArrivalHoverIdx(null)}
+                  onTouchMove={(e) => {
+                    const rect = (
+                      e.currentTarget as SVGSVGElement
+                    ).getBoundingClientRect();
+                    const touch = e.touches[0];
+                    const relX =
+                      ((touch.clientX - rect.left) / rect.width) * CW - PL;
+                    const i = Math.round((relX / chartW) * (len - 1));
+                    setArrivalHoverIdx(Math.max(0, Math.min(len - 1, i)));
+                  }}
+                  onPointerLeave={() => setArrivalHoverIdx(null)}
+                >
+                  {yArrivalTicks.map((tick, ti) => {
+                    const y = yOf(tick, aMin, aMax);
+                    return (
+                      <g key={ti}>
+                        <line
+                          x1={PL}
+                          y1={y}
+                          x2={CW - PR}
+                          y2={y}
+                          stroke="#E8EFEC"
+                          strokeWidth="1"
+                        />
+                        <text
+                          x={PL - 4}
+                          y={y + 4}
+                          textAnchor="end"
+                          fontSize="9"
+                          fill="#80918B"
+                        >
+                          {tick >= 1000
+                            ? (tick / 1000).toFixed(1) + "k"
+                            : Math.round(tick)}
+                        </text>
+                      </g>
+                    );
+                  })}
+                  {xLabels.map((lbl, i) =>
+                    lbl ? (
+                      <text
+                        key={i}
+                        x={xOf(i, len)}
+                        y={CH - 4}
+                        textAnchor="middle"
+                        fontSize={lang === "ur" ? "10" : "9"}
+                        fill="#80918B"
+                        fontFamily={
+                          lang === "ur"
+                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            : "inherit"
+                        }
+                      >
+                        {lbl}
+                      </text>
+                    ) : null,
+                  )}
+                  {/* Area fill */}
+                  <path
+                    d={[
+                      ...arrivalData.map(
+                        (v, i) =>
+                          `${i === 0 ? "M" : "L"
+                          }${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
+                      ),
+                      `L${xOf(len - 1, len)},${CH - PB}`,
+                      `L${PL},${CH - PB}`,
+                      "Z",
+                    ].join(" ")}
+                    fill="#B9822E"
+                    fillOpacity="0.12"
+                  />
+                  <path
+                    d={arrivalData
+                      .map(
+                        (v, i) =>
+                          `${i === 0 ? "M" : "L"
+                          }${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
+                      )
+                      .join(" ")}
+                    stroke="#B9822E"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+                  {arrivalHoverIdx !== null && (
+                    <>
+                      <line
+                        x1={xOf(arrivalHoverIdx, len)}
+                        y1={PT}
+                        x2={xOf(arrivalHoverIdx, len)}
+                        y2={CH - PB}
+                        stroke="#9A6817"
+                        strokeWidth="1"
+                        strokeDasharray="3 3"
+                      />
+                      <circle
+                        cx={xOf(arrivalHoverIdx, len)}
+                        cy={yOf(arrivalData[arrivalHoverIdx], aMin, aMax)}
+                        r="4.5"
+                        fill="#B9822E"
+                        stroke="#fff"
+                        strokeWidth="1.5"
+                      />
+                    </>
+                  )}
+                  <line
+                    x1={PL}
+                    y1={PT}
+                    x2={PL}
+                    y2={CH - PB}
+                    stroke="#C7D6D0"
+                    strokeWidth="1"
+                  />
+                  <line
+                    x1={PL}
+                    y1={CH - PB}
+                    x2={CW - PR}
+                    y2={CH - PB}
+                    stroke="#C7D6D0"
+                    strokeWidth="1"
+                  />
+                  {/* X-axis label */}
+                  <text
+                    x={(PL + CW - PR) / 2}
+                    y={CH - 4}
+                    textAnchor="middle"
+                    fontSize="10"
+                    fontWeight="600"
+                    fill="#52635F"
+                    fontFamily={
+                      lang === "ur"
+                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                        : "inherit"
+                    }
+                  >
+                    {lang === "ur" ? "دن" : "Days"}
+                  </text>
+                  {/* Y-axis label */}
+                  <text
+                    x={12}
+                    y={(PT + CH - PB) / 2}
+                    textAnchor="middle"
+                    fontSize="10"
+                    fontWeight="600"
+                    fill="#52635F"
+                    transform={`rotate(-90, 12, ${(PT + CH - PB) / 2})`}
+                    fontFamily={
+                      lang === "ur"
+                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                        : "inherit"
+                    }
+                  >
+                    {lang === "ur" ? "آمد (میٹرک ٹن)" : "Arrivals (MT)"}
+                  </text>
+                </svg>
+              </div>
+            )}
+
+            {/* <div
                 className="rounded-2xl p-4 flex items-center gap-3"
                 style={{ background: "#F1F7F4", border: "1px dashed #C7E8D8" }}
               >
@@ -16511,9 +16483,9 @@ function ProductRatesScreen({
                 >
                   {lang === "ur" ? "درخواست کریں ←" : "Request →"}
                 </button>
-              </div>
-            </>
-          )}
+              </div> */}
+          </>
+        )}
       </div>
 
       {msgModal && (
@@ -18133,7 +18105,9 @@ function AnalyticsScreen() {
                       <span
                         className="text-xs font-bold"
                         style={{ color: "#087F63" }}
-                      ></span>
+                      >
+                        ✓
+                      </span>
                     )}
                   </button>
                 )),
@@ -18171,9 +18145,12 @@ function AnalyticsScreen() {
 interface ReelComment {
   id: string;
   author: string;
+  authorUrdu?: string;
   avatar: string;
   time: string;
+  timeUrdu?: string;
   text: string;
+  textUrdu?: string;
   likes: number;
 }
 
@@ -18210,7 +18187,7 @@ const ZARAI_REELS: ZaraiReel[] = [
     author: "Ahmad Khan (Mandi Rep)",
     authorUrdu: "احمد خان (منڈی نمائندہ)",
     handle: "@ahmad_mandi",
-    avatar: "👨‍💼",
+    avatar: "AK",
     isVerified: true,
     category: "Live Mandi Boli",
     categoryUrdu: "لائیو منڈی بولی",
@@ -18222,25 +18199,42 @@ const ZARAI_REELS: ZaraiReel[] = [
     likesCount: 48200,
     commentsCount: 1240,
     sharesCount: 14800,
-    badge: "🔥 Live",
+    badge: "Live",
     gradient: "linear-gradient(180deg, #0A453B 0%, #062822 50%, #031512 100%)",
     liveRateBadge: "گندم: 3,850 | چاول: 14,200",
     comments: [
       {
         id: "c1",
-        author: "حاجی اصغر علی (پاکپتن)",
-        avatar: "👨‍🌾",
-        time: "10 منٹ پہلے",
-        text: "ماشاءاللہ بہت بروقت اور درست معلومات ہیں۔",
+        author: "Haji Asghar Ali",
+        authorUrdu: "حاجی اصغر علی",
+        avatar: "HA",
+        time: "10m ago",
+        timeUrdu: "10 منٹ پہلے",
+        text: "Zabardast report!",
+        textUrdu: "زبردست رپورٹ 👍",
         likes: 24,
       },
       {
         id: "c2",
-        author: "چوہدری ریاض احمد",
-        avatar: "🚜",
-        time: "25 منٹ پہلے",
-        text: "گندم کا ریٹ مزید اوپر جانے کا امکان ہے؟",
+        author: "Chaudhry Riaz Ahmed",
+        authorUrdu: "چوہدری ریاض احمد",
+        avatar: "CR",
+        time: "25m ago",
+        timeUrdu: "25 منٹ پہلے",
+        text: "Behtreen rates",
+        textUrdu: "بہترین ریٹس ✨",
         likes: 18,
+      },
+      {
+        id: "c2b",
+        author: "Malik Aslam Trader",
+        authorUrdu: "ملک اسلم بیوپاری",
+        avatar: "MA",
+        time: "1h ago",
+        timeUrdu: "1 گھنٹہ پہلے",
+        text: "Good rate",
+        textUrdu: "بہت اچھے ریٹ 🌾",
+        likes: 11,
       },
     ],
   },
@@ -18251,7 +18245,7 @@ const ZARAI_REELS: ZaraiReel[] = [
     author: "Malik Naveed (Cotton Rep)",
     authorUrdu: "ملک نوید (کپاس نمائندہ)",
     handle: "@malik_cotton",
-    avatar: "👨‍🌾",
+    avatar: "MN",
     isVerified: true,
     category: "Cotton & Phutti",
     categoryUrdu: "کپاس و پھٹی منڈی",
@@ -18263,17 +18257,31 @@ const ZARAI_REELS: ZaraiReel[] = [
     likesCount: 32100,
     commentsCount: 890,
     sharesCount: 8400,
-    badge: "⚡ Market",
+    badge: "Market",
     gradient: "linear-gradient(180deg, #103B2B 0%, #08261C 50%, #04140F 100%)",
     liveRateBadge: "پھٹی: 8,600 | روئی: 21,500",
     comments: [
       {
         id: "c3",
-        author: "ملک نوید (لودھراں)",
-        avatar: "🌾",
-        time: "15 منٹ پہلے",
-        text: "لودھراں میں آج مال کی آمد بہت اچھی رہی ہے۔",
+        author: "Malik Naveed",
+        authorUrdu: "ملک نوید (لودھراں)",
+        avatar: "MN",
+        time: "15m ago",
+        timeUrdu: "15 منٹ پہلے",
+        text: "Behtreen bhav 👌",
+        textUrdu: "بہترین بھاؤ 👌",
         likes: 12,
+      },
+      {
+        id: "c3b",
+        author: "Rana Tanveer",
+        authorUrdu: "رانا تنویر",
+        avatar: "RT",
+        time: "45m ago",
+        timeUrdu: "45 منٹ پہلے",
+        text: "Zabardast update",
+        textUrdu: "زبردست",
+        likes: 8,
       },
     ],
   },
@@ -18284,7 +18292,7 @@ const ZARAI_REELS: ZaraiReel[] = [
     author: "Dr. Tariq (Agri Expert)",
     authorUrdu: "ڈاکٹر طارق (زرعی ماہر)",
     handle: "@dr_tariq_agri",
-    avatar: "👨‍🔬",
+    avatar: "DT",
     isVerified: true,
     category: "Fertilizer & Pesticides",
     categoryUrdu: "کھاد و ادویات",
@@ -18296,16 +18304,19 @@ const ZARAI_REELS: ZaraiReel[] = [
     likesCount: 19400,
     commentsCount: 640,
     sharesCount: 4100,
-    badge: "🌱 Advisory",
+    badge: "Advisory",
     gradient: "linear-gradient(180deg, #1C3B1A 0%, #0D240F 50%, #051307 100%)",
     liveRateBadge: "یوریا: 4,650 | DAP: 13,800",
     comments: [
       {
         id: "c4",
-        author: "میاں زاہد اقبال",
-        avatar: "👨‍🌾",
-        time: "30 منٹ پہلے",
-        text: "کھاد کے سرکاری ریٹ پر فراہمی کو یقینی بنایا جائے۔",
+        author: "Mian Zahid Iqbal",
+        authorUrdu: "میاں زاہد اقبال",
+        avatar: "MZ",
+        time: "30m ago",
+        timeUrdu: "30 منٹ پہلے",
+        text: "Bohat achi maloomat 👍",
+        textUrdu: "بہت خوب معلومات 👍",
         likes: 9,
       },
     ],
@@ -18317,7 +18328,7 @@ const ZARAI_REELS: ZaraiReel[] = [
     author: "Bilal Malik (Grain Trader)",
     authorUrdu: "بلال ملک (اوکاڑہ بیوپاری)",
     handle: "@bilal_grain",
-    avatar: "🧑‍💼",
+    avatar: "BM",
     isVerified: true,
     category: "Maize & Corn",
     categoryUrdu: "مکئی منڈی",
@@ -18329,16 +18340,19 @@ const ZARAI_REELS: ZaraiReel[] = [
     likesCount: 56200,
     commentsCount: 2100,
     sharesCount: 19200,
-    badge: "🔥 Hot Boli",
+    badge: "Hot Boli",
     gradient: "linear-gradient(180deg, #3B2E0A 0%, #241B05 50%, #120E02 100%)",
     liveRateBadge: "مکئی سائیلج: 2,950 | ڈرائی: 3,400",
     comments: [
       {
         id: "c5",
-        author: "سردار تیمور خان",
-        avatar: "🌾",
-        time: "5 منٹ پہلے",
-        text: "اوکاڑہ میں آج مکئی کی زبردست بولی لگی ہے۔",
+        author: "Sardar Taimoor",
+        authorUrdu: "سردار تیمور",
+        avatar: "ST",
+        time: "5m ago",
+        timeUrdu: "5 منٹ پہلے",
+        text: "Nice zabardast! 🔥",
+        textUrdu: "شاندار مکئی بولی 🔥",
         likes: 31,
       },
     ],
@@ -18350,7 +18364,7 @@ const ZARAI_REELS: ZaraiReel[] = [
     author: "Jam Bashir (Sindh Rep)",
     authorUrdu: "جام بشیر (سندھ نمائندہ)",
     handle: "@jambashir_sindh",
-    avatar: "👳‍♂️",
+    avatar: "JB",
     isVerified: true,
     category: "Sugarcane & Gur",
     categoryUrdu: "کماد و گڑ منڈی",
@@ -18362,16 +18376,19 @@ const ZARAI_REELS: ZaraiReel[] = [
     likesCount: 27300,
     commentsCount: 750,
     sharesCount: 6300,
-    badge: "🎋 Season",
+    badge: "Season",
     gradient: "linear-gradient(180deg, #3B1A0A 0%, #241005 50%, #120702 100%)",
     liveRateBadge: "دیسی گڑ: 6,200 | شکر: 7,100",
     comments: [
       {
         id: "c6",
-        author: "جام بشیر احمد",
-        avatar: "👨‍🌾",
-        time: "1 گھنٹہ پہلے",
-        text: "ماشاءاللہ بہت اعلٰی کوالٹی کا گڑ تیار ہو رہا ہے۔",
+        author: "Jam Bashir",
+        authorUrdu: "جام بشیر",
+        avatar: "JB",
+        time: "1h ago",
+        timeUrdu: "1 گھنٹہ پہلے",
+        text: "Mashallah zabardast",
+        textUrdu: "ماشاءاللہ زبردست",
         likes: 14,
       },
     ],
@@ -18383,7 +18400,7 @@ const ZARAI_REELS: ZaraiReel[] = [
     author: "Khan Gul (Fruit Market)",
     authorUrdu: "خان گل (پشاور منڈی)",
     handle: "@khangul_fruits",
-    avatar: "🧔",
+    avatar: "KG",
     isVerified: false,
     category: "Fruits & Dry Fruits",
     categoryUrdu: "پھل و خشک میوہ جات",
@@ -18395,16 +18412,19 @@ const ZARAI_REELS: ZaraiReel[] = [
     likesCount: 41800,
     commentsCount: 1340,
     sharesCount: 11500,
-    badge: "🍎 Fresh",
+    badge: "Fresh",
     gradient: "linear-gradient(180deg, #3B0A1A 0%, #240510 50%, #120207 100%)",
     liveRateBadge: "سیب: 4,500 | اخروٹ: 18,000",
     comments: [
       {
         id: "c7",
-        author: "خان گل مہمند",
-        avatar: "🚚",
-        time: "40 منٹ پہلے",
-        text: "راولپنڈی بھی مال بھیج رہے ہیں؟",
+        author: "Khan Gul",
+        authorUrdu: "خان گل",
+        avatar: "KG",
+        time: "40m ago",
+        timeUrdu: "40 منٹ پہلے",
+        text: "Good rate 🍎",
+        textUrdu: "بہترین سیب ریٹ 🍎",
         likes: 22,
       },
     ],
@@ -18416,7 +18436,7 @@ const ZARAI_REELS: ZaraiReel[] = [
     author: "Haji Farooq (Grain Rep)",
     authorUrdu: "حاجی فاروق (سرگودھا نمائندہ)",
     handle: "@farooq_grain",
-    avatar: "👴",
+    avatar: "HF",
     isVerified: true,
     category: "Pulses & Dal Market",
     categoryUrdu: "دالیں و اجناس منڈی",
@@ -18428,16 +18448,19 @@ const ZARAI_REELS: ZaraiReel[] = [
     likesCount: 38400,
     commentsCount: 920,
     sharesCount: 8100,
-    badge: "🥣 Pulses",
+    badge: "Pulses",
     gradient: "linear-gradient(180deg, #0A353B 0%, #051F24 50%, #020F12 100%)",
     liveRateBadge: "چنا: 9,400 | مونگ: 11,800",
     comments: [
       {
         id: "c8",
-        author: "حاجی فاروق سرگودھا",
-        avatar: "🌾",
-        time: "2 گھنٹے پہلے",
-        text: "چنا کے ریٹ میں اگلے ہفتے مزید تیزی آئے گی۔",
+        author: "Haji Farooq",
+        authorUrdu: "حاجی فاروق",
+        avatar: "HF",
+        time: "2h ago",
+        timeUrdu: "2 گھنٹے پہلے",
+        text: "Behtreen update",
+        textUrdu: "بہترین اپڈیٹ",
         likes: 16,
       },
     ],
@@ -18449,7 +18472,7 @@ const ZARAI_REELS: ZaraiReel[] = [
     author: "Engr. Atif (AgriTech)",
     authorUrdu: "انجینئر عاطف (ایگری ٹیک)",
     handle: "@atif_agritech",
-    avatar: "👨‍💻",
+    avatar: "EA",
     isVerified: true,
     category: "Agri Machinery & Tech",
     categoryUrdu: "زرعی مشینری و ڈرون",
@@ -18461,25 +18484,34 @@ const ZARAI_REELS: ZaraiReel[] = [
     likesCount: 64500,
     commentsCount: 2800,
     sharesCount: 22100,
-    badge: "🚀 High Tech",
+    badge: "High Tech",
     gradient: "linear-gradient(180deg, #102B3B 0%, #081924 50%, #030B12 100%)",
     liveRateBadge: "ڈرون سپرے: 650/ایکڑ",
     comments: [
       {
         id: "c9",
-        author: "چوہدری عاطف ایڈووکیٹ",
-        avatar: "🚜",
-        time: "15 منٹ پہلے",
-        text: "کیا بہاولنگر میں ڈرون سروس دستیاب ہے؟",
+        author: "Chaudhry Atif",
+        authorUrdu: "چوہدری عاطف",
+        avatar: "CA",
+        time: "15m ago",
+        timeUrdu: "15 منٹ پہلے",
+        text: "Modern technology drone spray 🚀",
+        textUrdu: "بہترین اور جدید ٹیکنالوجی 🚀",
         likes: 35,
       },
     ],
   },
 ];
 
-function ZaraiReelsScreen() {
+function ZaraiReelsScreen({
+  profileCompleted = false,
+  onOpenCompleteProfile,
+}: {
+  profileCompleted?: boolean;
+  onOpenCompleteProfile?: () => void;
+}) {
   const { lang } = useLang();
-  const [feedTab, setFeedTab] = useState<"forYou" | "following">("forYou");
+  const [feedTab, setFeedTab] = useState<"forYou" | "following" | "saved">("forYou");
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMuted, setIsMuted] = useState(false); // Default sound OPEN (unmuted)
   const [likedReelIds, setLikedReelIds] = useState<Set<string>>(
@@ -18517,7 +18549,9 @@ function ZaraiReelsScreen() {
   const displayedReels =
     feedTab === "following"
       ? ZARAI_REELS.filter((r) => followedAuthors.has(r.author))
-      : ZARAI_REELS;
+      : feedTab === "saved"
+        ? ZARAI_REELS.filter((r) => savedReelIds.has(r.id))
+        : ZARAI_REELS;
 
   // Handle intersection / scroll snap active index
   const handleScroll = () => {
@@ -18547,7 +18581,6 @@ function ZaraiReelsScreen() {
               }));
             })
             .catch(() => {
-              // If browser blocks unmuted autoplay before first tap, fallback to play
               v.muted = true;
               v.play().catch(() => { });
               setIsPlayingMap((prev) => ({
@@ -18639,7 +18672,6 @@ function ZaraiReelsScreen() {
       lastTapRef.current = { time: 0, x: 0, y: 0 };
     } else {
       lastTapRef.current = { time: now, x, y };
-      // Single tap -> toggle play/pause after delay if not double tapped
       setTimeout(() => {
         if (Date.now() - lastTapRef.current.time >= 280 && lastTapRef.current.time > 0) {
           togglePlayPause(reel.id, idx);
@@ -18675,27 +18707,36 @@ function ZaraiReelsScreen() {
     e.stopPropagation();
     setFollowedAuthors((prev) => {
       const next = new Set(prev);
-      if (next.has(author)) next.delete(author);
-      else next.add(author);
+      if (next.has(author)) {
+        next.delete(author);
+      } else {
+        next.add(author);
+      }
       return next;
     });
   };
 
-  const handleAddComment = (reelId: string) => {
-    if (!newCommentText.trim()) return;
+  const handleAddComment = (reelId: string, textOverride?: string) => {
+    const textToPost = (textOverride || newCommentText).trim();
+    if (!textToPost) return;
     const newC: ReelComment = {
       id: "cm-" + Date.now(),
-      author: lang === "ur" ? "آپ (کسان ساتھی)" : "You (Farmer Partner)",
-      avatar: "🌾",
-      time: lang === "ur" ? "ابھی" : "Just now",
-      text: newCommentText.trim(),
+      author: "You (Trader)",
+      authorUrdu: "آپ (کسان ساتھی)",
+      avatar: "YOU",
+      time: "Just now",
+      timeUrdu: "ابھی",
+      text: textToPost,
+      textUrdu: textToPost,
       likes: 0,
     };
     setCommentsMap((prev) => ({
       ...prev,
       [reelId]: [newC, ...(prev[reelId] || [])],
     }));
-    setNewCommentText("");
+    if (!textOverride) {
+      setNewCommentText("");
+    }
   };
 
   const scrollNext = (direction: "up" | "down") => {
@@ -18715,7 +18756,6 @@ function ZaraiReelsScreen() {
         color: "#fff",
       }}
     >
-      {/* ── Top Floating Minimal Header (Tabs & Sound Toggle Only) ── */}
       <header
         className="absolute top-0 left-0 right-0 z-40 px-4 pt-10 pb-2 flex items-center justify-between pointer-events-none"
         style={{
@@ -18723,16 +18763,13 @@ function ZaraiReelsScreen() {
             "linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%)",
         }}
       >
-        {/* Left Spacer */}
         <div className="w-8" />
-
-        {/* Tab Switcher: Following vs For You */}
-        <div className="flex items-center gap-5 text-sm font-extrabold drop-shadow pointer-events-auto">
+        <div className="flex items-center gap-4 text-xs font-extrabold drop-shadow pointer-events-auto">
           <button
             onClick={() => setFeedTab("following")}
             className={`tap-target transition-all ${feedTab === "following"
-                ? "text-white scale-105 border-b-2 border-[#32BA46] pb-0.5"
-                : "text-white/60 hover:text-white"
+              ? "text-white scale-105 border-b-2 border-[#32BA46] pb-0.5 font-black"
+              : "text-white/60 hover:text-white"
               }`}
           >
             {lang === "ur" ? "فالونگ" : "Following"}
@@ -18740,15 +18777,22 @@ function ZaraiReelsScreen() {
           <button
             onClick={() => setFeedTab("forYou")}
             className={`tap-target transition-all ${feedTab === "forYou"
-                ? "text-white scale-105 border-b-2 border-[#32BA46] pb-0.5"
-                : "text-white/60 hover:text-white"
+              ? "text-white scale-105 border-b-2 border-[#32BA46] pb-0.5 font-black"
+              : "text-white/60 hover:text-white"
               }`}
           >
             {lang === "ur" ? "آپ کے لیے" : "For You"}
           </button>
+          <button
+            onClick={() => setFeedTab("saved")}
+            className={`tap-target transition-all ${feedTab === "saved"
+              ? "text-white scale-105 border-b-2 border-[#32BA46] pb-0.5 font-black"
+              : "text-white/60 hover:text-white"
+              }`}
+          >
+            {lang === "ur" ? "محفوظ شدہ" : "Saved"}
+          </button>
         </div>
-
-        {/* Sound Toggle Button (Voice open by default) */}
         <button
           onClick={toggleMute}
           className="tap-target w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/15 text-white pointer-events-auto shadow-md"
@@ -18765,8 +18809,6 @@ function ZaraiReelsScreen() {
           )}
         </button>
       </header>
-
-      {/* ── Quick Scroll Up/Down Desktop/Nav Helpers ── */}
       <div className="absolute left-2.5 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-2.5 opacity-50 hover:opacity-100 transition-opacity pointer-events-auto">
         {activeIndex > 0 && (
           <button
@@ -18787,8 +18829,6 @@ function ZaraiReelsScreen() {
           </button>
         )}
       </div>
-
-      {/* ── Flying Double-Tap Hearts Container ── */}
       {flyingHearts.map((h) => (
         <div
           key={h.id}
@@ -18803,8 +18843,6 @@ function ZaraiReelsScreen() {
           ❤️
         </div>
       ))}
-
-      {/* ── Main Snap Scrolling Reels Feed ── */}
       <div
         ref={containerRef}
         onScroll={handleScroll}
@@ -18815,20 +18853,30 @@ function ZaraiReelsScreen() {
       >
         {displayedReels.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center p-6 text-center">
-            <span style={{ fontSize: 44 }}>👨‍💼</span>
-            <p className="font-bold text-sm mt-3 text-white">
-              {lang === "ur"
-                ? "آپ نے ابھی کسی نمائندے کو فالو نہیں کیا"
-                : "You haven't followed any representative yet"}
+            <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white text-2xl mb-3 border border-white/15">
+              {feedTab === "saved" ? "🔖" : "👨‍💼"}
+            </div>
+            <p className="font-bold text-sm text-white">
+              {feedTab === "saved"
+                ? lang === "ur"
+                  ? "کوئی محفوظ شدہ ویڈیو نہیں ہے"
+                  : "No Saved Videos Yet"
+                : lang === "ur"
+                  ? "آپ نے ابھی کسی نمائندے کو فالو نہیں کیا"
+                  : "You haven't followed any representative yet"}
             </p>
             <p className="text-white/60 text-xs mt-1 max-w-[240px]">
-              {lang === "ur"
-                ? "ویڈیو کے ساتھ نمائندے کے پروفائل پر (+) دبا کر فالو کریں"
-                : "Tap (+) on representative's profile to see their videos here"}
+              {feedTab === "saved"
+                ? lang === "ur"
+                  ? "ویڈیو کے ساتھ محفوظ کریں (Save) کا بٹن دبا کر ویڈیوز یہاں دیکھیں"
+                  : "Tap the bookmark/save button on any video to see it here"
+                : lang === "ur"
+                  ? "ویڈیو کے ساتھ نمائندے کے پروفائل پر (+) دبا کر فالو کریں"
+                  : "Tap (+) on representative's profile to see their videos here"}
             </p>
             <button
               onClick={() => setFeedTab("forYou")}
-              className="mt-4 px-4 py-2 rounded-full bg-[#087F63] text-white font-bold text-xs tap-target shadow-lg"
+              className="mt-4 px-5 py-2.5 rounded-full bg-[#087F63] text-white font-extrabold text-xs tap-target shadow-lg"
             >
               {lang === "ur" ? "تمام ویڈیوز دیکھیں" : "Explore For You"}
             </button>
@@ -18839,7 +18887,6 @@ function ZaraiReelsScreen() {
             const isSaved = savedReelIds.has(reel.id);
             const isFollowing = followedAuthors.has(reel.author);
             const isPlaying = isPlayingMap[reel.id] ?? false;
-            const hasVideoError = videoErrors[reel.id] ?? false;
             const commentsList = commentsMap[reel.id] || reel.comments;
 
             return (
@@ -18852,200 +18899,156 @@ function ZaraiReelsScreen() {
                 }}
                 onClick={(e) => handleReelTouch(e, reel, idx)}
               >
-                {/* ── Background Video with Fallback ── */}
                 <div
                   className="absolute inset-0 w-full h-full"
                   style={{
                     background: reel.gradient,
                   }}
                 >
-                  {/* HTML5 Video Element */}
-                  {!hasVideoError && (
-                    <video
-                      ref={(el) => (videoRefs.current[idx] = el)}
-                      src={reel.videoPath}
-                      poster={reel.imagePath}
-                      playsInline
-                      loop
-                      muted={isMuted}
-                      onError={() => {
-                        setVideoErrors((prev) => ({ ...prev, [reel.id]: true }));
-                      }}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-
-                  {/* Fallback Animated Backdrop (Active only if video file missing) */}
-                  {hasVideoError && (
-                    <div className="relative w-full h-full flex flex-col items-center justify-center p-6 overflow-hidden">
-                      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#32BA46_1px,transparent_1px)] [background-size:16px_16px]" />
-                      <div className="relative z-10 flex flex-col items-center text-center">
-                        <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-xl mb-3 bg-white/10 backdrop-blur-md border border-white/20">
-                          <span style={{ fontSize: 34 }}>{reel.avatar}</span>
-                        </div>
-                        <p
-                          className="text-white text-sm font-extrabold max-w-[240px] drop-shadow-md"
-                          style={{
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                          }}
-                        >
-                          {lang === "ur" ? reel.titleUrdu : reel.title}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Subtle Gradient Overlay */}
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background:
-                        "linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 25%, transparent 70%, rgba(0,0,0,0.7) 100%)",
+                  <video
+                    ref={(el) => (videoRefs.current[idx] = el)}
+                    src={reel.videoPath}
+                    playsInline
+                    loop
+                    preload="metadata"
+                    className="w-full h-full object-cover"
+                    onError={() => {
+                      setVideoErrors((prev) => ({ ...prev, [reel.id]: true }));
+                    }}
+                    onPlay={() => {
+                      setIsPlayingMap((prev) => ({ ...prev, [reel.id]: true }));
+                    }}
+                    onPause={() => {
+                      setIsPlayingMap((prev) => ({ ...prev, [reel.id]: false }));
                     }}
                   />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/85 pointer-events-none" />
                 </div>
-
-                {/* ── Play / Pause Overlay Icon (Only shows when user paused) ── */}
                 {!isPlaying && (
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-                    <div
-                      className="w-14 h-14 rounded-full flex items-center justify-center border border-white/25 shadow-2xl"
-                      style={{
-                        background: "rgba(0, 0, 0, 0.45)",
-                        backdropFilter: "blur(6px)",
-                      }}
-                    >
-                      <svg
-                        width="26"
-                        height="26"
-                        viewBox="0 0 24 24"
-                        fill="#fff"
-                        className="ml-1"
-                      >
-                        <path d="M8 5v14l11-7z" />
+                    <div className="w-14 h-14 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white/90 border border-white/20 shadow-2xl animate-pulse">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3" />
                       </svg>
                     </div>
                   </div>
                 )}
-
-                {/* ── Right-Side Floating Action Buttons (Strictly Follow, Like, Comment, Save ONLY) ── */}
-                <div
-                  className="absolute right-3 bottom-20 z-30 flex flex-col items-center gap-4"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {/* 1. Representative Profile & Follow Button */}
-                  <div className="relative mb-0.5">
+                <div className="absolute right-3.5 bottom-16 z-30 flex flex-col items-center gap-5 pointer-events-auto">
+                  <div className="relative mb-1">
+                    <div
+                      className="rounded-full bg-[#087F63] border-2 border-white flex items-center justify-center text-sm font-black text-white shadow-2xl overflow-hidden"
+                      style={{ width: 48, height: 48 }}
+                    >
+                      {reel.avatar}
+                    </div>
                     <button
                       onClick={(e) => toggleFollow(reel.author, e)}
-                      className={`tap-target w-11 h-11 rounded-full border-2 flex items-center justify-center text-xl shadow-xl transition-all duration-200 ${isFollowing
-                          ? "border-[#32BA46] bg-[#087F63]/80 ring-2 ring-[#32BA46]/50"
-                          : "border-white bg-[#087F63]"
+                      className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded-full font-black flex items-center justify-center shadow-lg tap-target border-2 border-white transition-transform duration-150 ${isFollowing
+                        ? "bg-[#064D40] text-white hover:bg-rose-600 scale-95 text-[11px]"
+                        : "bg-[#32BA46] text-[#07332F] hover:scale-110 text-xs font-extrabold"
                         }`}
+                      style={{ width: 22, height: 22 }}
                       title={
                         isFollowing
                           ? lang === "ur"
-                            ? "فالو کیا ہوا ہے (ان فالو کرنے کے لیے ٹیپ کریں)"
-                            : "Following (Tap to unfollow)"
+                            ? "ان فالو کرنے کے لیے کلک کریں"
+                            : "Click to unfollow"
                           : lang === "ur"
-                            ? "نمائندے کو فالو کریں"
-                            : "Follow representative"
+                            ? "فالو کریں"
+                            : "Follow"
                       }
-                    >
-                      {reel.avatar}
-                    </button>
-
-                    {/* Follow Status Badge (+ or ✓) */}
-                    <button
-                      onClick={(e) => toggleFollow(reel.author, e)}
-                      className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full font-black text-[11px] flex items-center justify-center shadow-lg tap-target border border-white transition-transform duration-150 ${isFollowing
-                          ? "bg-[#32BA46] text-[#07332F] scale-90"
-                          : "bg-[#E4B04D] text-[#07332F] hover:scale-110 active:scale-95"
-                        }`}
                     >
                       {isFollowing ? "✓" : "+"}
                     </button>
                   </div>
-
-                  {/* 2. Like Heart Button */}
-                  <div className="flex flex-col items-center">
-                    <button
-                      onClick={(e) => toggleLike(reel.id, e)}
-                      className="tap-target w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/15 text-white"
+                  <button
+                    onClick={(e) => toggleLike(reel.id, e)}
+                    className="flex flex-col items-center tap-target group"
+                  >
+                    <div
+                      className={`rounded-full flex items-center justify-center transition-transform active:scale-125 shadow-lg ${isLiked
+                        ? "bg-[#FF2B54]/25 text-[#FF2B54] border border-[#FF2B54]/40"
+                        : "bg-black/45 text-white backdrop-blur-md border border-white/20"
+                        }`}
+                      style={{ width: 46, height: 46 }}
+                    >
+                      <svg
+                        width="25"
+                        height="25"
+                        viewBox="0 0 24 24"
+                        fill={isLiked ? "#FF2B54" : "none"}
+                        stroke={isLiked ? "#FF2B54" : "currentColor"}
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                      </svg>
+                    </div>
+                    <span className="text-[11px] font-black text-white mt-1 drop-shadow">
+                      {Math.floor((reel.likesCount + (isLiked ? 1 : 0)) / 1000)}k
+                    </span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCommentsDrawerReel(reel);
+                    }}
+                    className="flex flex-col items-center tap-target"
+                  >
+                    <div
+                      className="rounded-full bg-black/45 backdrop-blur-md flex items-center justify-center text-white border border-white/20 shadow-lg active:scale-125 transition-transform"
+                      style={{ width: 46, height: 46 }}
                     >
                       <svg
                         width="24"
                         height="24"
                         viewBox="0 0 24 24"
-                        fill={isLiked ? "#FF2A55" : "none"}
-                        stroke={isLiked ? "#FF2A55" : "#fff"}
-                        strokeWidth="2"
-                        className="transition-transform duration-150 active:scale-125"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       >
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                       </svg>
-                    </button>
-                    <span className="text-[11px] font-bold mt-1 text-white/95 drop-shadow">
-                      {(
-                        (reel.likesCount + (isLiked ? 1 : 0)) /
-                        1000
-                      ).toFixed(1)}
-                      K
+                    </div>
+                    <span className="text-[11px] font-black text-white mt-1 drop-shadow">
+                      {commentsList.length}
                     </span>
-                  </div>
-
-                  {/* 3. Comment Button */}
-                  <div className="flex flex-col items-center">
-                    <button
-                      onClick={() => setCommentsDrawerReel(reel)}
-                      className="tap-target w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/15 text-white"
+                  </button>
+                  <button
+                    onClick={(e) => toggleSave(reel.id, e)}
+                    className="flex flex-col items-center tap-target"
+                  >
+                    <div
+                      className={`rounded-full flex items-center justify-center transition-transform active:scale-125 shadow-lg ${isSaved
+                        ? "bg-[#F59E0B]/25 text-[#F59E0B] border border-[#F59E0B]/40"
+                        : "bg-black/45 text-white backdrop-blur-md border border-white/20"
+                        }`}
+                      style={{ width: 46, height: 46 }}
                     >
                       <svg
                         width="23"
                         height="23"
                         viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#fff"
-                        strokeWidth="2"
-                      >
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                      </svg>
-                    </button>
-                    <span className="text-[11px] font-bold mt-1 text-white/95 drop-shadow">
-                      {commentsList.length}
-                    </span>
-                  </div>
-
-                  {/* 4. Bookmark / Save Button */}
-                  <div className="flex flex-col items-center">
-                    <button
-                      onClick={(e) => toggleSave(reel.id, e)}
-                      className="tap-target w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/15 text-white"
-                    >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill={isSaved ? "#E4B04D" : "none"}
-                        stroke={isSaved ? "#E4B04D" : "#fff"}
-                        strokeWidth="2"
+                        fill={isSaved ? "#F59E0B" : "none"}
+                        stroke={isSaved ? "#F59E0B" : "currentColor"}
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       >
                         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
                       </svg>
-                    </button>
-                  </div>
+                    </div>
+                    <span className="text-[11px] font-black text-white mt-1 drop-shadow">
+                      {lang === "ur" ? "محفوظ" : "Save"}
+                    </span>
+                  </button>
                 </div>
-
-                {/* ── Bottom Overlay Information (Representative Name & Minimal Caption) ── */}
-                <div
-                  className="absolute left-0 right-20 bottom-3 z-30 p-4 pb-3 flex flex-col gap-1 pointer-events-auto"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {/* Creator / Representative Info Row */}
+                <div className="absolute left-4 right-20 bottom-6 z-30 flex flex-col gap-0.5 text-left pointer-events-none">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-extrabold text-sm text-white drop-shadow">
+                    <span className="font-extrabold text-[15px] text-white drop-shadow-md">
                       {lang === "ur" ? reel.authorUrdu : reel.author}
                     </span>
                     {reel.isVerified && (
@@ -19057,10 +19060,8 @@ function ZaraiReelsScreen() {
                       </span>
                     )}
                   </div>
-
-                  {/* Minimal 1-line Caption directly related to video */}
                   <p
-                    className="text-white/95 text-xs font-semibold drop-shadow line-clamp-1"
+                    className="text-white/95 text-xs font-semibold drop-shadow-md line-clamp-1"
                     style={{
                       fontFamily:
                         lang === "ur"
@@ -19071,8 +19072,6 @@ function ZaraiReelsScreen() {
                     {lang === "ur" ? reel.titleUrdu : reel.title}
                   </p>
                 </div>
-
-                {/* ── Bottom Video Progress Scrub Line ── */}
                 <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/20 z-30">
                   <div
                     className="h-full bg-[#32BA46] transition-all duration-300"
@@ -19087,100 +19086,132 @@ function ZaraiReelsScreen() {
           })
         )}
       </div>
-
-      {/* ── Interactive Comments Bottom Sheet Drawer ── */}
       {commentsDrawerReel && (
         <div
-          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/65 backdrop-blur-sm"
           onClick={() => setCommentsDrawerReel(null)}
         >
           <div
-            className="w-full max-w-[480px] mx-auto rounded-t-3xl flex flex-col shadow-2xl border-t border-[#32BA46]/30 animate-in slide-in-from-bottom duration-200"
+            className="w-full max-w-[480px] mx-auto rounded-t-3xl flex flex-col shadow-2xl border-t border-[#D5E2DD] animate-in slide-in-from-bottom duration-200 overflow-hidden"
             style={{
-              background: "#07332F",
-              maxHeight: "70vh",
+              background: "#FFFFFF",
+              height: "72vh",
+              maxHeight: "85vh",
+              color: "#183B34",
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
-            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-white/10">
+            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-[#E8EFEC] flex-shrink-0">
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-sm text-white">
-                  {lang === "ur" ? "تبصرے اور کسان آراء" : "Comments & Discussion"}
+                <span className="font-extrabold text-sm text-[#183B34]">
+                  {lang === "ur" ? "تبصرے" : "Comments"}
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-[#32BA46]/20 text-[#32BA46] text-xs font-bold">
+                <span className="px-2 py-0.5 rounded-full bg-[#E4F2EC] text-[#087F63] text-xs font-black">
                   {(commentsMap[commentsDrawerReel.id] || []).length}
                 </span>
               </div>
               <button
                 onClick={() => setCommentsDrawerReel(null)}
-                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white tap-target"
+                className="w-8 h-8 rounded-full bg-[#F1F7F4] flex items-center justify-center text-[#52635F] tap-target text-sm font-bold hover:bg-[#E4F2EC]"
               >
                 ✕
               </button>
             </div>
-
-            {/* Comments List */}
-            <div className="flex-1 overflow-y-auto px-5 py-3 flex flex-col gap-4">
-              {(commentsMap[commentsDrawerReel.id] || []).map((c) => (
-                <div key={c.id} className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#0E645C] border border-white/20 flex items-center justify-center text-sm flex-shrink-0">
-                    {c.avatar}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-white/90">
-                        {c.author}
-                      </span>
-                      <span className="text-[10px] text-white/50">{c.time}</span>
-                    </div>
-                    <p
-                      className="text-xs text-white/95 mt-1 leading-relaxed"
-                      style={{
-                        fontFamily:
-                          lang === "ur"
-                            ? "'Noto Nastaliq Urdu', serif"
-                            : "inherit",
-                      }}
-                    >
-                      {c.text}
-                    </p>
-                  </div>
+            {!profileCompleted ? (
+              <div className="flex-1 p-6 flex flex-col items-center justify-center text-center gap-3">
+                <div className="w-14 h-14 rounded-full bg-[#E8F8F0] border border-[#C7E8D8] flex items-center justify-center text-2xl shadow-inner">
+                  🔒
                 </div>
-              ))}
-            </div>
+                <div className="space-y-1 max-w-xs">
+                  <p className="text-sm font-extrabold text-[#183B34]">
+                    {lang === "ur"
+                      ? "تبصرے دیکھنے اور کرنے کے لیے پروفائل مکمل کریں"
+                      : "Complete Profile & Subscribe"}
+                  </p>
+                  <p className="text-xs text-[#52635F] leading-relaxed">
+                    {lang === "ur"
+                      ? "منڈی کے کسانوں، بیوپاریوں اور نمائندوں کے تبصرے دیکھنے اور اپنی رائے دینے کے لیے پروفائل مکمل کریں۔"
+                      : "Complete your profile and subscribe to view all mandi community discussions and post your own comments."}
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setCommentsDrawerReel(null);
+                    onOpenCompleteProfile?.();
+                  }}
+                  className="mt-2 px-6 py-2.5 rounded-full bg-[#087F63] text-white text-xs font-extrabold shadow-md hover:bg-[#065E49] tap-target transition-all"
+                >
+                  {lang === "ur" ? "پروفائل مکمل کریں →" : "Complete Profile & Subscribe →"}
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Comments List (High contrast, clean, theme-friendly) */}
+                <div className="flex-1 overflow-y-auto min-h-0 px-5 py-3.5 flex flex-col gap-3">
+                  {(commentsMap[commentsDrawerReel.id] || []).map((c) => (
+                    <div key={c.id} className="flex items-start gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-[#087F63] border border-[#C7E8D8] flex items-center justify-center text-[10px] font-black text-white flex-shrink-0 shadow-sm">
+                        {c.avatar}
+                      </div>
+                      <div className="flex-1 bg-[#F4FAF7] px-3 py-2 rounded-2xl border border-[#D5E2DD]">
+                        <div className="flex items-center justify-between mb-0.5">
+                          <span className="text-xs font-bold text-[#183B34]">
+                            {lang === "ur" ? c.authorUrdu || c.author : c.author}
+                          </span>
+                          <span className="text-[10px] text-[#80918B]">
+                            {lang === "ur" ? c.timeUrdu || c.time : c.time}
+                          </span>
+                        </div>
+                        <p
+                          className="text-xs text-[#2F4A43] font-medium leading-relaxed"
+                          style={{
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                          }}
+                        >
+                          {lang === "ur" ? c.textUrdu || c.text : c.text}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
-            {/* Add Comment Input Bar */}
-            <div className="p-3 border-t border-white/10 bg-[#041E1C] flex items-center gap-2">
-              <input
-                type="text"
-                value={newCommentText}
-                onChange={(e) => setNewCommentText(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleAddComment(commentsDrawerReel.id);
-                  }
-                }}
-                placeholder={
-                  lang === "ur"
-                    ? "اپنی رائے یا سوال لکھیں..."
-                    : "Add your thoughts or question..."
-                }
-                className="flex-1 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-xs text-white placeholder-white/50 outline-none focus:border-[#32BA46]"
-                style={{
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Noto Nastaliq Urdu', serif"
-                      : "inherit",
-                }}
-              />
-              <button
-                onClick={() => handleAddComment(commentsDrawerReel.id)}
-                className="w-9 h-9 rounded-full bg-[#32BA46] text-[#07332F] font-extrabold flex items-center justify-center shadow-lg tap-target flex-shrink-0 text-sm"
-              >
-                ➤
-              </button>
-            </div>
+                {/* Comment Input Bar (Pinned at bottom for subscribed user) */}
+                <div className="flex-shrink-0 p-3 border-t border-[#E8EFEC] bg-[#FFFFFF] flex items-center gap-2 shadow-sm">
+                  <input
+                    type="text"
+                    value={newCommentText}
+                    onChange={(e) => setNewCommentText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleAddComment(commentsDrawerReel.id);
+                      }
+                    }}
+                    placeholder={
+                      lang === "ur"
+                        ? "اپنی رائے یا تبصرہ لکھیں..."
+                        : "Write a comment..."
+                    }
+                    className="flex-1 bg-[#F4FAF7] border border-[#D5E2DD] rounded-full px-4 py-2.5 text-xs text-[#183B34] placeholder-[#80918B] outline-none focus:border-[#087F63] focus:bg-white transition-colors"
+                    style={{
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  />
+                  <button
+                    onClick={() => handleAddComment(commentsDrawerReel.id)}
+                    className="w-10 h-10 rounded-full bg-[#087F63] text-white font-extrabold flex items-center justify-center shadow-md tap-target flex-shrink-0 text-sm hover:bg-[#065E49] active:scale-95 transition-all"
+                    title={lang === "ur" ? "پوسٹ کریں" : "Post comment"}
+                  >
+                    ➤
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -21158,6 +21189,7 @@ function HomeScreen({
   const [locationPrefOpen, setLocationPrefOpen] = useState(false);
   const [subsModalOpen, setSubsModalOpen] = useState(false);
   const [voiceLangModalOpen, setVoiceLangModalOpen] = useState(false);
+  const [historicalModalOpen, setHistoricalModalOpen] = useState(false);
   const [repModalOpen, setRepModalOpen] = useState(false);
   const [repConfirmModalOpen, setRepConfirmModalOpen] = useState(false);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
@@ -22838,6 +22870,26 @@ function HomeScreen({
                   },
                 },
                 {
+                  id: "historical",
+                  label: lang === "ur" ? "تاریخی ڈیٹا کی ضرورت ہے" : "Need Historical Data",
+                  sub:
+                    lang === "ur"
+                      ? "سائن اپ سے پہلے کی تاریخوں کا ڈیٹا حاصل کریں"
+                      : "Access data prior to your subscription",
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                  ),
+                  action: () => {
+                    setProfileOpen(false);
+                    setHistoricalModalOpen(true);
+                  },
+                },
+                {
                   id: "rep",
                   label: hasRepAccount
                     ? (lang === "ur" ? "نمائندہ ڈیش بورڈ پر جائیں" : "Switch to Representative Dashboard")
@@ -23623,6 +23675,94 @@ function HomeScreen({
                   className="w-full py-2.5 rounded-xl bg-[#E8EFEC] text-[#52635F] font-bold text-xs"
                 >
                   {lang === "ur" ? "منسوخ کریں" : "Cancel"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── 5.5. HISTORICAL DATA REQUEST MODAL ─────────────────────────── */}
+      {historicalModalOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{ zIndex: 350 }}
+          onClick={() => setHistoricalModalOpen(false)}
+        >
+          <div
+            className="zm-sheet-high"
+            style={{ background: "#F4FAF7", maxHeight: "85vh" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-[#D5E2DD]">
+              <h3 className="font-bold text-lg text-[#183B34]">
+                {lang === "ur" ? "تاریخی منڈی ڈیٹا آرکائیو" : "Historical Mandi Archives"}
+              </h3>
+              <button
+                onClick={() => setHistoricalModalOpen(false)}
+                className="text-sm font-semibold px-3 py-1 rounded-full bg-[#E8EFEC] text-[#52635F]"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-5 flex-1 overflow-y-auto space-y-4 text-center">
+              <div className="w-14 h-14 rounded-2xl bg-[#E8F5EF] text-[#087F63] flex items-center justify-center mx-auto border border-[#A0CEBC]">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </div>
+
+              <div className="space-y-2">
+                <h4 className="text-base font-black text-[#183B34]">
+                  {lang === "ur" ? "سائن اپ سے پہلے کی تاریخوں کا ریکارڈ" : "Data Prior to Your Subscription"}
+                </h4>
+                <p className="text-xs text-[#52635F] leading-relaxed max-w-sm mx-auto">
+                  {lang === "ur"
+                    ? "ایپ میں آپ کے سائن اپ ہونے کی تاریخ کے بعد کا مکمل ڈیٹا خودکار طور پر محفوظ اور دستیاب ہے۔ اگر آپ کو اپنے سبسکرائب کرنے سے پہلے کی تاریخوں یا پرانے مہینوں کا تفصیلی تاریخی ڈیٹا درکار ہے، تو براہِ کرم ہماری سپورٹ ٹیم سے رابطہ کریں۔"
+                    : "The app provides active rate cards and daily analytics from your signup date onward. If you require historical records or past seasonal data from dates before you subscribed, our data operations team can provide customized historical exports."}
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-white border border-[#D5E2DD] text-left space-y-2.5 shadow-sm">
+                <a
+                  href="https://wa.me/923048107777?text=Hello%20Zarai%20Mandi%20Team%2C%20I%20need%20historical%20data%20prior%20to%20my%20subscription"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-[#E8F8F0] border border-[#2FAE68]/40 hover:bg-[#D4F4E4] transition"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div>
+                      <p className="text-xs font-bold text-[#064D40]">WhatsApp Support</p>
+                      <p className="text-[11px] text-[#2F4A43] font-mono">0304-8107777</p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-bold text-[#087F63]">Chat →</span>
+                </a>
+
+                <a
+                  href="mailto:support@zaraimandi.com?subject=Request%20for%20Prior%20Historical%20Data&body=Hello%20Zarai%20Mandi%20Team%2C%0A%0AI%20need%20historical%20data%20prior%20to%20my%20subscription%20date.%20Please%20assist."
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-[#F4FAF7] border border-[#D5E2DD] hover:bg-[#E8EFEC] transition"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div>
+                      <p className="text-xs font-bold text-[#183B34]">Email Support</p>
+                      <p className="text-[11px] text-[#52635F]">support@zaraimandi.com</p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-bold text-[#087F63]">Send Email →</span>
+                </a>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => setHistoricalModalOpen(false)}
+                  className="w-full py-3 rounded-2xl bg-[#087F63] text-white font-extrabold text-sm shadow-md"
+                >
+                  {lang === "ur" ? "سمجھ آ گیا" : "Got It"}
                 </button>
               </div>
             </div>
@@ -27909,7 +28049,12 @@ function AppInner({
           )}
           {current.id === "live-market" && <LiveMarketScreen onBack={pop} />}
           {current.id === "analytics" && <AnalyticsScreen />}
-          {current.id === "news" && <NewsVideosScreen />}
+          {current.id === "news" && (
+            <NewsVideosScreen
+              profileCompleted={profileCompleted}
+              onOpenCompleteProfile={() => setCompleteProfileOpen(true)}
+            />
+          )}
           {current.id === "billing" && (
             <BillingScreen
               product={(current as BillingScr).product}
