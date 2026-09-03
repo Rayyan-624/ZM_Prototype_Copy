@@ -1,0 +1,11 @@
+{
+  "buildCommand": "cd \"FULL APP\" && npm run build",
+  "outputDirectory": "FULL APP/dist",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
