@@ -13,8 +13,17 @@ import {
 } from "react-native-responsive-screen";
 
 import farmHeroBg from "./assets/farm_hero_bg.jpg";
-
 import agriForegroundImg from "./assets/agri_foreground.png";
+import { div } from "motion/react-client";
+
+import video1 from "./videos/video1.mp4";
+import video2 from "./videos/video2.mp4";
+import video3 from "./videos/video3.mp4";
+import video4 from "./videos/video4.mp4";
+import video5 from "./videos/video5.mp4";
+import video6 from "./videos/video6.mp4";
+import video7 from "./videos/video7.mp4";
+import video8 from "./videos/video8.mp4";
 
 const ZM_THEME_CSS = `
   @font-face {
@@ -509,7 +518,7 @@ const TRANS: Record<string, { en: string; ur: string }> = {
   // Navigation
   "nav.home": { en: "Home", ur: "ہوم" },
   "nav.analytics": { en: "Analytics", ur: "تجزیات" },
-  "nav.news": { en: "News", ur: "خبریں" },
+  "nav.news": { en: "Reels", ur: "ویڈیوز" },
   "nav.voice": { en: "Voice", ur: "آواز" },
 
   // Common
@@ -656,13 +665,13 @@ interface LangCtx {
 
 const LangContext = createContext<LangCtx>({
   lang: "en",
-  setLang: () => {},
+  setLang: () => { },
   t: (k) => TRANS[k]?.en ?? (AUTO_URDU_DICT[k] || k),
   tc: (n) => n,
   tm: (m) => m,
   tr: (r) => r,
   voiceEnabled: false,
-  setVoiceEnabled: () => {},
+  setVoiceEnabled: () => { },
 });
 
 function useLang() {
@@ -740,45 +749,45 @@ type Screen =
   | { id: "search" }
   | { id: "mandi-list" }
   | {
-      id: "mandi-detail";
-      mandiId: string;
-    }
+    id: "mandi-detail";
+    mandiId: string;
+  }
   | { id: "product-select" }
   | { id: "byproduct-select" }
   | {
-      id: "rates-result";
-      items: RateItem[];
-      source: "product" | "byproduct";
-    }
+    id: "rates-result";
+    items: RateItem[];
+    source: "product" | "byproduct";
+  }
   | {
-      id: "byproduct-combined";
-      products: { vertical: string; product: string }[];
-      active: number;
-    }
+    id: "byproduct-combined";
+    products: { vertical: string; product: string }[];
+    active: number;
+  }
   | {
-      id: "product-rates";
-      vertical: string;
-      product: string;
-      byproduct: string;
-      initialRateType?: string;
-      initialMandi?: string;
-      initialVariety?: string;
-      initialNewOld?: string;
-      initialColor?: string;
-      initialSpec?: string;
-      initialCondition?: string;
-      initialStatDate?: string;
-    }
+    id: "product-rates";
+    vertical: string;
+    product: string;
+    byproduct: string;
+    initialRateType?: string;
+    initialMandi?: string;
+    initialVariety?: string;
+    initialNewOld?: string;
+    initialColor?: string;
+    initialSpec?: string;
+    initialCondition?: string;
+    initialStatDate?: string;
+  }
   | { id: "analytics" }
   | { id: "news" }
   | {
-      id: "live-market";
-    }
+    id: "live-market";
+  }
   | {
-      id: "billing";
-      product: string;
-      vertical?: string;
-    };
+    id: "billing";
+    product: string;
+    vertical?: string;
+  };
 
 type LocationScope = {
   kind: "district" | "province" | "pakistan" | "mandi";
@@ -5688,12 +5697,41 @@ const ICON_PATHS: Record<string, string> = {
   grains: `${PRODUCTS_PATH}/wheat200.png`,
   Grains: `${PRODUCTS_PATH}/wheat200.png`,
   fruits: `${PRODUCTS_PATH}/fruits200.png`,
+  Fruits: `${PRODUCTS_PATH}/fruits200.png`,
+  Fruit: `${PRODUCTS_PATH}/fruits200.png`,
+  fruit: `${PRODUCTS_PATH}/fruits200.png`,
   vegetables: `${PRODUCTS_PATH}/vegetables200.png`,
-  livestock: `${PRODUCTS_PATH}/wheat200.png`,
+  Vegetables: `${PRODUCTS_PATH}/vegetables200.png`,
+  vegetable: `${PRODUCTS_PATH}/vegetables200.png`,
+  Vegetable: `${PRODUCTS_PATH}/vegetables200.png`,
+  livestock: `${PRODUCTS_PATH}/livestock200.png`,
+  Livestock: `${PRODUCTS_PATH}/livestock200.png`,
+  livesyock: `${PRODUCTS_PATH}/livestock200.png`,
+  Livesyock: `${PRODUCTS_PATH}/livestock200.png`,
+  liveestock: `${PRODUCTS_PATH}/livestock200.png`,
+  Liveestock: `${PRODUCTS_PATH}/livestock200.png`,
+  liveestockk: `${PRODUCTS_PATH}/livestock200.png`,
   "agri-inputs": `${PRODUCTS_PATH}/fertilizers.png`,
+  "Agri Inputs": `${PRODUCTS_PATH}/fertilizers.png`,
   "dry-fruits": `${PRODUCTS_PATH}/dryfruits200.png`,
+  "Dry Fruits": `${PRODUCTS_PATH}/dryfruits200.png`,
+  "Dry-Fruits": `${PRODUCTS_PATH}/dryfruits200.png`,
+  dryfruits: `${PRODUCTS_PATH}/dryfruits200.png`,
+  dryfruit: `${PRODUCTS_PATH}/dryfruits200.png`,
+  "dry fruit": `${PRODUCTS_PATH}/dryfruits200.png`,
+  "Dry Fruit": `${PRODUCTS_PATH}/dryfruits200.png`,
+  DryFruits: `${PRODUCTS_PATH}/dryfruits200.png`,
+  DryFruit: `${PRODUCTS_PATH}/dryfruits200.png`,
   herbals: `${PRODUCTS_PATH}/herbals200.png`,
-  kiryana: `${PRODUCTS_PATH}/wheat200.png`,
+  Herbals: `${PRODUCTS_PATH}/herbals200.png`,
+  herbal: `${PRODUCTS_PATH}/herbals200.png`,
+  Herbal: `${PRODUCTS_PATH}/herbals200.png`,
+  herbs: `${PRODUCTS_PATH}/herbals200.png`,
+  Herbs: `${PRODUCTS_PATH}/herbals200.png`,
+  herb: `${PRODUCTS_PATH}/herbals200.png`,
+  Herb: `${PRODUCTS_PATH}/herbals200.png`,
+  kiryana: `${PRODUCTS_PATH}/kiryana200.png`,
+  Kiryana: `${PRODUCTS_PATH}/kiryana200.png`,
   wheat: `${PRODUCTS_PATH}/wheat200.png`,
   rice: `${PRODUCTS_PATH}/rice200.png`,
   paddy: `${PRODUCTS_PATH}/paddy200.png`,
@@ -5733,41 +5771,55 @@ const ICON_PATHS: Record<string, string> = {
   ginger: `${PRODUCTS_PATH}/vegetables200.png`,
   "sweet-potato": `${PRODUCTS_PATH}/vegetables200.png`,
   "salad-leaves": `${PRODUCTS_PATH}/vegetables200.png`,
-  "cattle-market": `${PRODUCTS_PATH}/wheat200.png`,
-  "slaughter-house": `${PRODUCTS_PATH}/wheat200.png`,
-  slaughter: `${PRODUCTS_PATH}/wheat200.png`,
-  poultry: `${PRODUCTS_PATH}/wheat200.png`,
-  dairy: `${PRODUCTS_PATH}/wheat200.png`,
-  fisheries: `${PRODUCTS_PATH}/wheat200.png`,
-  feed: `${PRODUCTS_PATH}/wheat200.png`,
-  cattle: `${PRODUCTS_PATH}/wheat200.png`,
-  buffalo: `${PRODUCTS_PATH}/wheat200.png`,
-  goat: `${PRODUCTS_PATH}/wheat200.png`,
-  camel: `${PRODUCTS_PATH}/wheat200.png`,
-  chicken: `${PRODUCTS_PATH}/wheat200.png`,
-  milk: `${PRODUCTS_PATH}/wheat200.png`,
-  eggs: `${PRODUCTS_PATH}/wheat200.png`,
-  alfalfa: `${PRODUCTS_PATH}/wheat200.png`,
-  "rhode-grass": `${PRODUCTS_PATH}/wheat200.png`,
+  "cattle-market": `${PRODUCTS_PATH}/livestock200.png`,
+  "slaughter-house": `${PRODUCTS_PATH}/livestock200.png`,
+  slaughter: `${PRODUCTS_PATH}/livestock200.png`,
+  poultry: `${PRODUCTS_PATH}/livestock200.png`,
+  dairy: `${PRODUCTS_PATH}/livestock200.png`,
+  fisheries: `${PRODUCTS_PATH}/livestock200.png`,
+  feed: `${PRODUCTS_PATH}/livestock200.png`,
+  cattle: `${PRODUCTS_PATH}/livestock200.png`,
+  buffalo: `${PRODUCTS_PATH}/livestock200.png`,
+  goat: `${PRODUCTS_PATH}/livestock200.png`,
+  camel: `${PRODUCTS_PATH}/livestock200.png`,
+  chicken: `${PRODUCTS_PATH}/livestock200.png`,
+  milk: `${PRODUCTS_PATH}/livestock200.png`,
+  eggs: `${PRODUCTS_PATH}/livestock200.png`,
+  alfalfa: `${PRODUCTS_PATH}/livestock200.png`,
+  "rhode-grass": `${PRODUCTS_PATH}/livestock200.png`,
   fertilizer: `${PRODUCTS_PATH}/fertilizers.png`,
   pesticide: `${PRODUCTS_PATH}/fertilizers.png`,
   herbicide: `${PRODUCTS_PATH}/fertilizers.png`,
   weedicide: `${PRODUCTS_PATH}/fertilizers.png`,
   almond: `${PRODUCTS_PATH}/dryfruits200.png`,
+  almonds: `${PRODUCTS_PATH}/dryfruits200.png`,
+  Almonds: `${PRODUCTS_PATH}/dryfruits200.png`,
   cashew: `${PRODUCTS_PATH}/dryfruits200.png`,
   walnut: `${PRODUCTS_PATH}/dryfruits200.png`,
   fig: `${PRODUCTS_PATH}/dryfruits200.png`,
   pistachio: `${PRODUCTS_PATH}/dryfruits200.png`,
   raisin: `${PRODUCTS_PATH}/dryfruits200.png`,
+  raisins: `${PRODUCTS_PATH}/dryfruits200.png`,
+  Raisins: `${PRODUCTS_PATH}/dryfruits200.png`,
   honey: `${PRODUCTS_PATH}/herbals200.png`,
+  Honey: `${PRODUCTS_PATH}/herbals200.png`,
   psyllium: `${PRODUCTS_PATH}/herbals200.png`,
+  Psyllium: `${PRODUCTS_PATH}/herbals200.png`,
   "black-seed": `${PRODUCTS_PATH}/herbals200.png`,
+  "Black Seed": `${PRODUCTS_PATH}/herbals200.png`,
   "basil-seed": `${PRODUCTS_PATH}/herbals200.png`,
+  "Basil Seed": `${PRODUCTS_PATH}/herbals200.png`,
   "chia-seed": `${PRODUCTS_PATH}/herbals200.png`,
+  "Chia Seed": `${PRODUCTS_PATH}/herbals200.png`,
   saffron: `${PRODUCTS_PATH}/herbals200.png`,
+  Saffron: `${PRODUCTS_PATH}/herbals200.png`,
   asafoetida: `${PRODUCTS_PATH}/herbals200.png`,
+  Asafoetida: `${PRODUCTS_PATH}/herbals200.png`,
   "corom-seed": `${PRODUCTS_PATH}/herbals200.png`,
+  "carom-seed": `${PRODUCTS_PATH}/herbals200.png`,
+  "Carom Seed": `${PRODUCTS_PATH}/herbals200.png`,
   "dry-lemon": `${PRODUCTS_PATH}/herbals200.png`,
+  "Dry Lemon": `${PRODUCTS_PATH}/herbals200.png`,
   arugula: `${PRODUCTS_PATH}/edible200.png`,
   castor: `${PRODUCTS_PATH}/edible200.png`,
   soybean: `${PRODUCTS_PATH}/edible200.png`,
@@ -5972,29 +6024,57 @@ const ICON_PATHS: Record<string, string> = {
   Fig: `${BYPRODUCTS_PATH}/dryfruits/Fig.png`,
   Pistachio: `${BYPRODUCTS_PATH}/dryfruits/Pistachio.png`,
 
-  //  Livestock (no livestock/ subfolder — fall back to products/wheat200.png)
-  alfalfa2: `${PRODUCTS_PATH}/wheat200.png`,
-  buffalo2: `${PRODUCTS_PATH}/wheat200.png`,
-  camel2: `${PRODUCTS_PATH}/wheat200.png`,
-  cattle2: `${PRODUCTS_PATH}/wheat200.png`,
-  chicken2: `${PRODUCTS_PATH}/wheat200.png`,
-  goat2: `${PRODUCTS_PATH}/wheat200.png`,
-  milk2: `${PRODUCTS_PATH}/wheat200.png`,
-  "rhode-grass2": `${PRODUCTS_PATH}/wheat200.png`,
-  slaughter2: `${PRODUCTS_PATH}/wheat200.png`,
+  //  Livestock fallback
+  alfalfa2: `${PRODUCTS_PATH}/livestock200.png`,
+  buffalo2: `${PRODUCTS_PATH}/livestock200.png`,
+  camel2: `${PRODUCTS_PATH}/livestock200.png`,
+  cattle2: `${PRODUCTS_PATH}/livestock200.png`,
+  chicken2: `${PRODUCTS_PATH}/livestock200.png`,
+  goat2: `${PRODUCTS_PATH}/livestock200.png`,
+  milk2: `${PRODUCTS_PATH}/livestock200.png`,
+  "rhode-grass2": `${PRODUCTS_PATH}/livestock200.png`,
+  slaughter2: `${PRODUCTS_PATH}/livestock200.png`,
 };
 
 // Map friendly product names to sprite keys
 const product_SPRITE_KEY: Record<string, string> = {
   // Verticals
   Grains: "grains",
+  grains: "grains",
   Fruits: "fruits",
+  fruits: "fruits",
+  Fruit: "fruits",
+  fruit: "fruits",
   Vegetables: "vegetables",
+  vegetables: "vegetables",
+  Vegetable: "vegetables",
+  vegetable: "vegetables",
   Livestock: "livestock",
+  livestock: "livestock",
+  livesyock: "livestock",
+  Livesyock: "livestock",
+  liveestock: "livestock",
+  Liveestock: "livestock",
   "Agri Inputs": "agri-inputs",
+  "agri-inputs": "agri-inputs",
   "Dry Fruits": "dry-fruits",
+  "Dry-Fruits": "dry-fruits",
+  "dry-fruits": "dry-fruits",
+  dryfruits: "dry-fruits",
+  dryfruit: "dry-fruits",
+  "Dry Fruit": "dry-fruits",
+  DryFruits: "dry-fruits",
+  DryFruit: "dry-fruits",
   Herbals: "herbals",
+  herbals: "herbals",
+  Herbal: "herbals",
+  herbal: "herbals",
+  Herbs: "herbals",
+  herbs: "herbals",
+  Herb: "herbals",
+  herb: "herbals",
   Kiryana: "kiryana",
+  kiryana: "kiryana",
   // Wheat & byproducts
   Wheat: "wheat",
   Bran: "Bran",
@@ -6289,32 +6369,64 @@ function getproductIconSrc(
   const hyphenated = n.replace(/\s+/g, "-");
   if (ICON_PATHS[hyphenated]) return ICON_PATHS[hyphenated];
 
-  // 3. product_SPRITE_KEY mapping
-  const spriteKey = product_SPRITE_KEY[n] || product_SPRITE_KEY[hyphenated];
+  // 3. Normalized lowercase & no-hyphen lookups
+  const lower = n.toLowerCase();
+  if (ICON_PATHS[lower]) return ICON_PATHS[lower];
+
+  const lowerHyphen = lower.replace(/\s+/g, "-");
+  if (ICON_PATHS[lowerHyphen]) return ICON_PATHS[lowerHyphen];
+
+  const lowerClean = lower.replace(/[-_\s]+/g, "");
+  if (ICON_PATHS[lowerClean]) return ICON_PATHS[lowerClean];
+
+  // 4. product_SPRITE_KEY mapping
+  const spriteKey =
+    product_SPRITE_KEY[n] ||
+    product_SPRITE_KEY[hyphenated] ||
+    product_SPRITE_KEY[lower] ||
+    product_SPRITE_KEY[lowerHyphen] ||
+    product_SPRITE_KEY[lowerClean];
+
   if (spriteKey) {
     if (ICON_PATHS[spriteKey]) return ICON_PATHS[spriteKey];
     const spriteHyphen = spriteKey.replace(/\s+/g, "-");
     if (ICON_PATHS[spriteHyphen]) return ICON_PATHS[spriteHyphen];
+    const spriteLower = spriteKey.toLowerCase();
+    if (ICON_PATHS[spriteLower]) return ICON_PATHS[spriteLower];
+    const spriteClean = spriteLower.replace(/[-_\s]+/g, "");
+    if (ICON_PATHS[spriteClean]) return ICON_PATHS[spriteClean];
   }
 
-  // 4. Lowercase lookup
-  const lower = n.toLowerCase();
-  if (ICON_PATHS[lower]) return ICON_PATHS[lower];
-
   // 5. Case-insensitive key match in ICON_PATHS
-  const foundKey = Object.keys(ICON_PATHS).find(
-    (k) =>
-      k.toLowerCase() === lower || k.toLowerCase() === hyphenated.toLowerCase(),
-  );
+  const foundKey = Object.keys(ICON_PATHS).find((k) => {
+    const kl = k.toLowerCase();
+    const klClean = kl.replace(/[-_\s]+/g, "");
+    return kl === lower || kl === lowerHyphen || klClean === lowerClean;
+  });
   if (foundKey && ICON_PATHS[foundKey]) return ICON_PATHS[foundKey];
 
   // 6. Vertical fallback
   if (vertical) {
     const vTrim = vertical.trim();
-    const vSprite = product_SPRITE_KEY[vTrim];
-    if (vSprite && ICON_PATHS[vSprite]) return ICON_PATHS[vSprite];
     const vLower = vTrim.toLowerCase();
+    const vLowerHyphen = vLower.replace(/\s+/g, "-");
+    const vClean = vLower.replace(/[-_\s]+/g, "");
+    const vSprite =
+      product_SPRITE_KEY[vTrim] ||
+      product_SPRITE_KEY[vLower] ||
+      product_SPRITE_KEY[vLowerHyphen] ||
+      product_SPRITE_KEY[vClean];
+    if (vSprite && ICON_PATHS[vSprite]) return ICON_PATHS[vSprite];
+    if (ICON_PATHS[vTrim]) return ICON_PATHS[vTrim];
     if (ICON_PATHS[vLower]) return ICON_PATHS[vLower];
+    if (ICON_PATHS[vLowerHyphen]) return ICON_PATHS[vLowerHyphen];
+    if (ICON_PATHS[vClean]) return ICON_PATHS[vClean];
+    const foundVKey = Object.keys(ICON_PATHS).find((k) => {
+      const kl = k.toLowerCase();
+      const klClean = kl.replace(/[-_\s]+/g, "");
+      return kl === vLower || klClean === vClean;
+    });
+    if (foundVKey && ICON_PATHS[foundVKey]) return ICON_PATHS[foundVKey];
   }
 
   // 7. Default
@@ -6322,6 +6434,12 @@ function getproductIconSrc(
 }
 
 function getVerticalForProduct(productName: string): string {
+  if (VERTICALS[productName]) return productName;
+  if (productName === "Vegetable") return "Vegetables";
+  if (productName === "Fruit") return "Fruits";
+  if (productName === "Dry Fruit") return "Dry Fruits";
+  if (productName === "Herbs" || productName === "Herb") return "Herbals";
+  if (productName === "Grain") return "Grains";
   return (
     Object.entries(VERTICALS).find(([, vd]) => vd.products[productName])?.[0] ||
     "Grains"
@@ -7017,9 +7135,8 @@ function PriceTypeSheet({
                 local.length === ALL_RATE_TYPES.length ? "#168A76" : "#F1F7F4",
               color:
                 local.length === ALL_RATE_TYPES.length ? "#fff" : "#183B34",
-              border: `1.5px solid ${
-                local.length === ALL_RATE_TYPES.length ? "#168A76" : "#D5E2DD"
-              }`,
+              border: `1.5px solid ${local.length === ALL_RATE_TYPES.length ? "#168A76" : "#D5E2DD"
+                }`,
             }}
           >
             <div
@@ -7060,9 +7177,8 @@ function PriceTypeSheet({
               className="tap-target rounded-2xl px-4 flex items-center gap-3"
               style={{
                 background: local.includes(rt) ? "#EAF5F1" : "#F1F7F4",
-                border: `1.5px solid ${
-                  local.includes(rt) ? "#168A76" : "#D5E2DD"
-                }`,
+                border: `1.5px solid ${local.includes(rt) ? "#168A76" : "#D5E2DD"
+                  }`,
                 minHeight: 52,
               }}
             >
@@ -7122,8 +7238,8 @@ function MandiPickerSheet({
   const searchResults =
     searchQ.length >= 2
       ? ALL_MANDI_NAMES.filter((n) =>
-          n.toLowerCase().includes(searchQ.toLowerCase()),
-        )
+        n.toLowerCase().includes(searchQ.toLowerCase()),
+      )
       : [];
   const back = () => {
     if (district) setDistrict(null);
@@ -7204,9 +7320,8 @@ function MandiPickerSheet({
                   className="tap-target flex-shrink-0 rounded-2xl px-4 flex items-center gap-3"
                   style={{
                     background: local.includes(name) ? "#F1F7F4" : "#F1F7F4",
-                    border: `1.5px solid ${
-                      local.includes(name) ? "#087F63" : "#D5E2DD"
-                    }`,
+                    border: `1.5px solid ${local.includes(name) ? "#087F63" : "#D5E2DD"
+                      }`,
                     height: 60,
                   }}
                 >
@@ -7256,9 +7371,8 @@ function MandiPickerSheet({
                   key={p}
                   className="flex-shrink-0 rounded-2xl overflow-hidden"
                   style={{
-                    border: `1.5px solid ${
-                      provSelCount > 0 ? "#087F63" : "#D5E2DD"
-                    }`,
+                    border: `1.5px solid ${provSelCount > 0 ? "#087F63" : "#D5E2DD"
+                      }`,
                   }}
                 >
                   <button
@@ -7345,9 +7459,8 @@ function MandiPickerSheet({
                   key={d}
                   className="flex-shrink-0 rounded-2xl overflow-hidden"
                   style={{
-                    border: `1.5px solid ${
-                      distSelCount > 0 ? "#087F63" : "#D5E2DD"
-                    }`,
+                    border: `1.5px solid ${distSelCount > 0 ? "#087F63" : "#D5E2DD"
+                      }`,
                   }}
                 >
                   <button
@@ -7416,9 +7529,8 @@ function MandiPickerSheet({
                 className="tap-target flex-shrink-0 rounded-2xl px-4 flex items-center gap-3"
                 style={{
                   background: local.includes(name) ? "#F1F7F4" : "#F1F7F4",
-                  border: `1.5px solid ${
-                    local.includes(name) ? "#087F63" : "#D5E2DD"
-                  }`,
+                  border: `1.5px solid ${local.includes(name) ? "#087F63" : "#D5E2DD"
+                    }`,
                   height: 60,
                 }}
               >
@@ -7472,9 +7584,8 @@ function MandiPickerSheet({
             style={{ background: "#087F63" }}
           >
             {local.length > 0
-              ? `Show Rates · ${local.length} Mandi${
-                  local.length > 1 ? "s" : ""
-                }`
+              ? `Show Rates · ${local.length} Mandi${local.length > 1 ? "s" : ""
+              }`
               : "Show All Mandis"}
           </button>
         </div>
@@ -7605,10 +7716,10 @@ function LocationScopeSheet({
     sub: string;
     icon: string;
   }[] = [
-    { kind: "pakistan", label: "Pakistan", sub: "My Country", icon: "" },
-    { kind: "province", label: "Punjab", sub: "My Province", icon: "" },
-    { kind: "district", label: "Pakpattan", sub: "My District", icon: "" },
-  ];
+      { kind: "pakistan", label: "Pakistan", sub: "My Country", icon: "" },
+      { kind: "province", label: "Punjab", sub: "My Province", icon: "" },
+      { kind: "district", label: "Pakpattan", sub: "My District", icon: "" },
+    ];
 
   if (mandiPicker) {
     return (
@@ -8085,9 +8196,8 @@ function FeedModal({
                       key={v}
                       className="rounded-2xl overflow-hidden"
                       style={{
-                        border: `1.5px solid ${
-                          selCount > 0 ? "#087F63" : "#D5E2DD"
-                        }`,
+                        border: `1.5px solid ${selCount > 0 ? "#087F63" : "#D5E2DD"
+                          }`,
                       }}
                     >
                       <button
@@ -8600,8 +8710,8 @@ function SearchScreen({
   const results =
     q.length >= 1
       ? allItems
-          .filter((it) => it.label.toLowerCase().includes(q.toLowerCase()))
-          .slice(0, 30)
+        .filter((it) => it.label.toLowerCase().includes(q.toLowerCase()))
+        .slice(0, 30)
       : [];
 
   return (
@@ -9233,8 +9343,24 @@ function ByProductCombinedScreen({
   const byproducts = activeProduct
     ? productByproducts(activeProduct.vertical, activeProduct.product)
     : products
-        .flatMap((p) => productByproducts(p.vertical, p.product))
-        .filter((b, i, a) => a.indexOf(b) === i);
+      .flatMap((p) => productByproducts(p.vertical, p.product))
+      .filter((b, i, a) => a.indexOf(b) === i);
+
+  // One-time historical data explanation modal
+  const [showHistoricalModal, setShowHistoricalModal] = useState(() => {
+    try {
+      return !localStorage.getItem("zm_seen_historical_popup");
+    } catch {
+      return true;
+    }
+  });
+
+  const dismissHistoricalModal = () => {
+    setShowHistoricalModal(false);
+    try {
+      localStorage.setItem("zm_seen_historical_popup", "true");
+    } catch { }
+  };
 
   // Date scroll system - restricted to 2 days (Today & Yesterday) for non-subscribers
   const [visibleDateLabel, setVisibleDateLabel] = useState<{
@@ -9602,40 +9728,8 @@ function ByProductCombinedScreen({
             </div>
           </div>
 
-          {/* Top Right: Free Trial Badge + Date flip indicator + Location selector */}
+          {/* Top Right: Date flip indicator + Location selector */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Free Trial Badge Chip */}
-            {!profileCompleted ? (
-              <button
-                type="button"
-                onClick={() => onOpenSubscribe?.()}
-                className="tap-target flex items-center gap-1 px-2.5 py-1 rounded-full font-extrabold text-xs"
-                style={{
-                  background: "linear-gradient(135deg, #FFF0C7, #FDE68A)",
-                  border: "1.2px solid #F59E0B",
-                  color: "#92400E",
-                  boxShadow: "0 2px 6px rgba(245, 158, 11, 0.2)",
-                  cursor: "pointer",
-                }}
-                title="Tap to Complete Profile & Unlock All Rates"
-              >
-                <span style={{ fontSize: 10 }}>
-                  {lang === "ur" ? "ٹرائل: ۲ دن" : "Trial: 2d"}
-                </span>
-              </button>
-            ) : (
-              <div
-                className="flex items-center gap-1 px-2 py-0.5 rounded-full font-bold text-xs"
-                style={{
-                  background: "#E8F5E9",
-                  color: "#1B5E20",
-                  border: "1px solid #81C784",
-                }}
-              >
-                {/* <span style={{ fontSize: 10 }}>💎</span> */}
-                <span style={{ fontSize: 9.5 }}>VIP</span>
-              </div>
-            )}
 
             {/* Flip calendar date indicator */}
             <div
@@ -10088,24 +10182,24 @@ function ByProductCombinedScreen({
               const showRows =
                 dataRows.length > 0
                   ? dataRows.map((r) => ({
-                      r: {
-                        ...r,
-                        min: Math.round(r.min * priceVariation),
-                        max: Math.round(r.max * priceVariation),
-                      },
-                      hasData: true,
-                    }))
+                    r: {
+                      ...r,
+                      min: Math.round(r.min * priceVariation),
+                      max: Math.round(r.max * priceVariation),
+                    },
+                    hasData: true,
+                  }))
                   : [
-                      {
-                        r: {
-                          ...repRow,
-                          byproduct: bp,
-                          min: Math.round(repRow.min * priceVariation),
-                          max: Math.round(repRow.max * priceVariation),
-                        },
-                        hasData: false,
+                    {
+                      r: {
+                        ...repRow,
+                        byproduct: bp,
+                        min: Math.round(repRow.min * priceVariation),
+                        max: Math.round(repRow.max * priceVariation),
                       },
-                    ];
+                      hasData: false,
+                    },
+                  ];
 
               showRows.forEach((item) => {
                 allDateItems.push({ bp, ...item });
@@ -10371,6 +10465,95 @@ function ByProductCombinedScreen({
           }}
           onClose={() => setLocSheet(false)}
         />
+      )}
+
+      {/* ── One-Time Historical Data Notice Popup ── */}
+      {showHistoricalModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={dismissHistoricalModal}
+        >
+          <div
+            className="w-full max-w-[380px] rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center relative border border-[#32BA46]/30"
+            style={{
+              background: "linear-gradient(165deg, #07332F 0%, #041E1C 100%)",
+              color: "#fff",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Icon Header */}
+            <div className="w-14 h-14 rounded-2xl bg-[#087F63]/30 border border-[#32BA46]/40 flex items-center justify-center text-2xl mb-4 shadow-inner">
+              📅
+            </div>
+
+            {/* Title */}
+            <h3
+              className="text-lg font-black text-white mb-2 leading-snug"
+              style={{
+                fontFamily:
+                  lang === "ur"
+                    ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                    : "inherit",
+              }}
+            >
+              {lang === "ur"
+                ? "آج کے لائیو ریٹس اور تاریخی ڈیٹا"
+                : "Today's Live Rates & Historical Data"}
+            </h3>
+
+            {/* Explanatory Body */}
+            <p
+              className="text-xs text-white/80 leading-relaxed mb-5"
+              style={{
+                fontFamily:
+                  lang === "ur"
+                    ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                    : "inherit",
+              }}
+            >
+              {lang === "ur"
+                ? "یہ پرائس کارڈز آج کے تازہ ترین مارکیٹ ریٹس دکھا رہے ہیں۔ اگر آپ کو اپنے سائن اپ سے پہلے کی تاریخوں کا پرانا تاریخی ڈیٹا درکار ہے، تو زرعی منڈی سپورٹ سے رابطہ کریں۔"
+                : "The price cards shown here reflect today's active market rates. If you require historical price data prior to your signup date, please reach out to our team."}
+            </p>
+
+            {/* Contact Options Row */}
+            <div className="w-full flex flex-col gap-2.5 mb-4">
+              {/* WhatsApp Option */}
+              <a
+                href="https://wa.me/923001234567?text=Assalam%20o%20Alaikum,%20I%20need%20historical%20market%20data%20from%20Zarai%20Mandi."
+                target="_blank"
+                rel="noreferrer"
+                className="tap-target w-full py-2.5 px-4 rounded-xl font-extrabold text-xs flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-md"
+                style={{
+                  background: "#25D366",
+                  color: "#07332F",
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.79 14.07c-.24.67-1.39 1.29-1.92 1.37-.5.08-1.15.11-3.69-.94-3.25-1.34-5.34-4.63-5.5-4.85-.16-.22-1.31-1.74-1.31-3.32s.82-2.36 1.11-2.68c.29-.32.64-.4.85-.4.21 0 .42.01.61.02.2.01.47-.08.73.55.27.64.91 2.22.99 2.38.08.16.13.35.03.56-.11.21-.16.35-.32.53-.16.19-.34.42-.48.56-.16.16-.33.33-.14.65.19.32.84 1.39 1.8 2.25 1.24 1.1 2.28 1.44 2.61 1.6.32.16.51.13.7-.08.19-.21.82-.95 1.04-1.28.21-.32.43-.27.72-.16.29.11 1.85.87 2.17 1.03.32.16.53.24.61.37.08.13.08.77-.16 1.44z" />
+                </svg>
+                <span>{lang === "ur" ? "واٹس ایپ سپورٹ پر رابطہ کریں" : "WhatsApp Support"}</span>
+              </a>
+
+              {/* Email Option */}
+              <a
+                href="mailto:support@zaraimandi.com?subject=Historical%20Data%20Request%20-%20Zarai%20Mandi"
+                className="tap-target w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 border border-white/20 bg-white/10 text-white hover:bg-white/15 transition-transform active:scale-95"
+              >
+                <span>✉️</span>
+                <span>support@zaraimandi.com</span>
+              </a>
+            </div>
+
+            {/* Got It Dismiss Button */}
+            <button
+              onClick={dismissHistoricalModal}
+              className="tap-target w-full py-2.5 rounded-xl font-extrabold text-xs text-white/70 hover:text-white transition-colors"
+            >
+              {lang === "ur" ? "سمجھ آ گئی • جاری رکھیں" : "Got It • Continue"}
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -11078,8 +11261,8 @@ function ByProductSelectScreen({
     setSelected((prev) =>
       prev.some((p) => `${p.vertical}|${p.product}|${p.byproduct}` === key)
         ? prev.filter(
-            (p) => `${p.vertical}|${p.product}|${p.byproduct}` !== key,
-          )
+          (p) => `${p.vertical}|${p.product}|${p.byproduct}` !== key,
+        )
         : [...prev, item],
     );
   };
@@ -11548,9 +11731,9 @@ function RateCard({
               onClick={
                 onPriceChipTap
                   ? (e) => {
-                      e.stopPropagation();
-                      onPriceChipTap(r.rateType);
-                    }
+                    e.stopPropagation();
+                    onPriceChipTap(r.rateType);
+                  }
                   : undefined
               }
               onKeyDown={
@@ -11584,9 +11767,9 @@ function RateCard({
               onClick={
                 onMandiChipTap
                   ? (e) => {
-                      e.stopPropagation();
-                      onMandiChipTap(r.mandiName);
-                    }
+                    e.stopPropagation();
+                    onMandiChipTap(r.mandiName);
+                  }
                   : undefined
               }
               onKeyDown={
@@ -12249,12 +12432,12 @@ function DeepViewLocationSheet({
                     height: 48,
                     background:
                       current.kind === "district" &&
-                      current.label === USER_DISTRICT
+                        current.label === USER_DISTRICT
                         ? "#E4F2EC"
                         : "#F1F7F4",
                     border:
                       current.kind === "district" &&
-                      current.label === USER_DISTRICT
+                        current.label === USER_DISTRICT
                         ? "2px solid #087F63"
                         : "1px solid #D5E2DD",
                   }}
@@ -12288,12 +12471,12 @@ function DeepViewLocationSheet({
                     height: 48,
                     background:
                       current.kind === "province" &&
-                      current.label === USER_PROVINCE
+                        current.label === USER_PROVINCE
                         ? "#E4F2EC"
                         : "#F1F7F4",
                     border:
                       current.kind === "province" &&
-                      current.label === USER_PROVINCE
+                        current.label === USER_PROVINCE
                         ? "2px solid #087F63"
                         : "1px solid #D5E2DD",
                   }}
@@ -12692,6 +12875,7 @@ function ProductRatesScreen({
   const [tableDateCalMonth, setTableDateCalMonth] = useState<Date>(
     new Date(2026, 7, 21),
   );
+  const [tableTrendInterval, setTableTrendInterval] = useState<"24h" | "72h" | "monthly">("24h");
   // Date table + its filters
   const [dateTableOpen, setDateTableOpen] = useState(false);
   const [dtSelDate, setDtSelDate] = useState<Date>(new Date());
@@ -12768,14 +12952,14 @@ function ProductRatesScreen({
   const STAT_BASE_DATE = new Date(2026, 7, 21);
   const statDateVariation = statDateFilter
     ? Math.max(
-        0.88,
-        1 -
-          Math.round(
-            Math.abs(STAT_BASE_DATE.getTime() - statDateFilter.getTime()) /
-              86400000,
-          ) *
-            0.012,
-      )
+      0.88,
+      1 -
+      Math.round(
+        Math.abs(STAT_BASE_DATE.getTime() - statDateFilter.getTime()) /
+        86400000,
+      ) *
+      0.012,
+    )
     : 1;
 
   const baseMax = rows.length ? Math.max(...rows.map((r) => r.max)) : 0;
@@ -13127,38 +13311,38 @@ function ProductRatesScreen({
               >
                 {statDateFilter
                   ? (() => {
-                      const mn = [
-                        "Jan",
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dec",
-                      ];
-                      const mnUr = [
-                        "جنوری",
-                        "فروری",
-                        "مارچ",
-                        "اپریل",
-                        "مئی",
-                        "جون",
-                        "جولائی",
-                        "اگست",
-                        "ستمبر",
-                        "اکتوبر",
-                        "نومبر",
-                        "دسمبر",
-                      ];
-                      return lang === "ur"
-                        ? `${statDateFilter.getDate()} ${mnUr[statDateFilter.getMonth()]} کا جائزہ`
-                        : `${statDateFilter.getDate()} ${mn[statDateFilter.getMonth()]} Overview`;
-                    })()
+                    const mn = [
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ];
+                    const mnUr = [
+                      "جنوری",
+                      "فروری",
+                      "مارچ",
+                      "اپریل",
+                      "مئی",
+                      "جون",
+                      "جولائی",
+                      "اگست",
+                      "ستمبر",
+                      "اکتوبر",
+                      "نومبر",
+                      "دسمبر",
+                    ];
+                    return lang === "ur"
+                      ? `${statDateFilter.getDate()} ${mnUr[statDateFilter.getMonth()]} کا جائزہ`
+                      : `${statDateFilter.getDate()} ${mn[statDateFilter.getMonth()]} Overview`;
+                  })()
                   : lang === "ur"
                     ? "آج کا جائزہ"
                     : "Today's Overview"}
@@ -13199,9 +13383,9 @@ function ProductRatesScreen({
                   lang === "ur"
                     ? `${mnUr[sdMonthIdx]} ${sdYear}`
                     : statDateCalMonth.toLocaleDateString("en-US", {
-                        month: "long",
-                        year: "numeric",
-                      });
+                      month: "long",
+                      year: "numeric",
+                    });
                 const sdFirstDow = new Date(sdYear, sdMonthIdx, 1).getDay();
                 const sdDaysInMonth = new Date(
                   sdYear,
@@ -13621,19 +13805,24 @@ function ProductRatesScreen({
                     : "1px solid #D5E2DD",
                 }}
               >
-                <p
-                  className="font-bold tracking-wide"
-                  style={{
-                    color: attrRateType ? "#075E4F" : "#80918B",
-                    fontSize: lang === "ur" ? 13 : 9,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur" ? "نرخ کی قسم" : "RATE TYPE"}
-                </p>
+                <div className="flex items-center justify-between">
+                  <p
+                    className="font-bold tracking-wide"
+                    style={{
+                      color: attrRateType ? "#075E4F" : "#80918B",
+                      fontSize: lang === "ur" ? 13 : 9,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {lang === "ur" ? "نرخ کی قسم" : "RATE TYPE"}
+                  </p>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, color: attrRateType ? "#087F63" : "#80918B" }}>
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </div>
                 <p
                   className="font-extrabold mt-0.5"
                   style={{
@@ -13662,19 +13851,24 @@ function ProductRatesScreen({
                     : "1px solid #D5E2DD",
                 }}
               >
-                <p
-                  className="font-bold tracking-wide"
-                  style={{
-                    color: attrVariety ? "#147A3F" : "#80918B",
-                    fontSize: lang === "ur" ? 13 : 9,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur" ? "قسم" : "VARIETY"}
-                </p>
+                <div className="flex items-center justify-between">
+                  <p
+                    className="font-bold tracking-wide"
+                    style={{
+                      color: attrVariety ? "#147A3F" : "#80918B",
+                      fontSize: lang === "ur" ? 13 : 9,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {lang === "ur" ? "قسم" : "VARIETY"}
+                  </p>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, color: attrVariety ? "#16A34A" : "#80918B" }}>
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </div>
                 <p
                   className="font-extrabold mt-0.5"
                   style={{
@@ -13701,19 +13895,24 @@ function ProductRatesScreen({
                     : "1px solid #D5E2DD",
                 }}
               >
-                <p
-                  className="font-bold tracking-wide"
-                  style={{
-                    color: attrNewOld ? "#92400E" : "#80918B",
-                    fontSize: lang === "ur" ? 13 : 9,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur" ? "نیا / پرانا" : "NEW/OLD"}
-                </p>
+                <div className="flex items-center justify-between">
+                  <p
+                    className="font-bold tracking-wide"
+                    style={{
+                      color: attrNewOld ? "#92400E" : "#80918B",
+                      fontSize: lang === "ur" ? 13 : 9,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {lang === "ur" ? "نیا / پرانا" : "NEW/OLD"}
+                  </p>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, color: attrNewOld ? "#9A6817" : "#80918B" }}>
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </div>
                 <p
                   className="font-extrabold mt-0.5"
                   style={{
@@ -13740,19 +13939,24 @@ function ProductRatesScreen({
                     : "1px solid #D5E2DD",
                 }}
               >
-                <p
-                  className="font-bold tracking-wide"
-                  style={{
-                    color: attrColor ? "#075E4F" : "#80918B",
-                    fontSize: lang === "ur" ? 13 : 9,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur" ? "رنگ" : "COLOR"}
-                </p>
+                <div className="flex items-center justify-between">
+                  <p
+                    className="font-bold tracking-wide"
+                    style={{
+                      color: attrColor ? "#075E4F" : "#80918B",
+                      fontSize: lang === "ur" ? 13 : 9,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {lang === "ur" ? "رنگ" : "COLOR"}
+                  </p>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, color: attrColor ? "#0A8F73" : "#80918B" }}>
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </div>
                 <p
                   className="font-extrabold mt-0.5"
                   style={{
@@ -13779,19 +13983,24 @@ function ProductRatesScreen({
                     : "1px solid #D5E2DD",
                 }}
               >
-                <p
-                  className="font-bold tracking-wide"
-                  style={{
-                    color: attrSpec ? "#92400E" : "#80918B",
-                    fontSize: lang === "ur" ? 13 : 9,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur" ? "خصوصیت" : "SPEC"}
-                </p>
+                <div className="flex items-center justify-between">
+                  <p
+                    className="font-bold tracking-wide"
+                    style={{
+                      color: attrSpec ? "#92400E" : "#80918B",
+                      fontSize: lang === "ur" ? 13 : 9,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {lang === "ur" ? "خصوصیت" : "SPEC"}
+                  </p>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, color: attrSpec ? "#A96F18" : "#80918B" }}>
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </div>
                 <p
                   className="font-extrabold mt-0.5"
                   style={{
@@ -13818,19 +14027,24 @@ function ProductRatesScreen({
                     : "1px solid #D5E2DD",
                 }}
               >
-                <p
-                  className="font-bold tracking-wide"
-                  style={{
-                    color: attrCondition ? "#075E4F" : "#80918B",
-                    fontSize: lang === "ur" ? 13 : 9,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur" ? "حالت" : "CONDITION"}
-                </p>
+                <div className="flex items-center justify-between">
+                  <p
+                    className="font-bold tracking-wide"
+                    style={{
+                      color: attrCondition ? "#075E4F" : "#80918B",
+                      fontSize: lang === "ur" ? 13 : 9,
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {lang === "ur" ? "حالت" : "CONDITION"}
+                  </p>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, color: attrCondition ? "#075E4F" : "#80918B" }}>
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </div>
                 <p
                   className="font-extrabold mt-0.5"
                   style={{
@@ -13860,13 +14074,14 @@ function ProductRatesScreen({
                   !tableProvinceFilter || r.province === tableProvinceFilter,
               );
               const BASE_DATE = new Date(2026, 7, 21);
+              const USER_SIGNUP_DATE = new Date(2026, 7, 19); // Sign up reference date
               const tableDateVariation = tableDateFilter
                 ? (() => {
-                    const diffMs =
-                      BASE_DATE.getTime() - tableDateFilter.getTime();
-                    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-                    return Math.max(0.88, 1 - diffDays * 0.012);
-                  })()
+                  const diffMs =
+                    BASE_DATE.getTime() - tableDateFilter.getTime();
+                  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+                  return Math.max(0.88, 1 - diffDays * 0.012);
+                })()
                 : 1;
               const monthNames = [
                 "Jan",
@@ -13910,9 +14125,9 @@ function ProductRatesScreen({
                 lang === "ur"
                   ? `${monthNamesUr[tcMonthIdx]} ${tcYear}`
                   : tableDateCalMonth.toLocaleDateString("en-US", {
-                      month: "long",
-                      year: "numeric",
-                    });
+                    month: "long",
+                    year: "numeric",
+                  });
               const tcFirstDow = new Date(tcYear, tcMonthIdx, 1).getDay();
               const tcDaysInMonth = new Date(
                 tcYear,
@@ -13935,7 +14150,7 @@ function ProductRatesScreen({
                   className="rounded-2xl overflow-hidden"
                   style={{ border: "1px solid #D5E2DD", background: "#F4FAF7" }}
                 >
-                  {/* Table header with title, date button, province chips */}
+                  {/* Table header with title, date button, province chips & Trend Interval selector */}
                   <div
                     className="px-4 pt-3 pb-2"
                     style={{
@@ -14011,38 +14226,71 @@ function ProductRatesScreen({
                         {dateLabel}
                       </button>
                     </div>
-                    {/* Province filter chips */}
-                    <div
-                      className="flex gap-1.5 overflow-x-auto pb-0.5"
-                      style={{ scrollbarWidth: "none" }}
-                    >
-                      {[null, ...PROVINCES].map((p) => (
-                        <button
-                          key={p || "all"}
-                          onClick={() => setTableProvinceFilter(p)}
-                          className="flex-shrink-0 px-2.5 py-1 rounded-full font-bold text-[10px]"
-                          style={{
-                            background:
-                              tableProvinceFilter === p ? "#087F63" : "#fff",
-                            color:
-                              tableProvinceFilter === p ? "#fff" : "#52635F",
-                            border: `1px solid ${
-                              tableProvinceFilter === p ? "#087F63" : "#D5E2DD"
-                            }`,
-                            fontSize: lang === "ur" ? 13 : 10,
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                          }}
-                        >
-                          {p
-                            ? tm(p)
-                            : lang === "ur"
-                              ? "تمام صوبے"
-                              : "All Provinces"}
-                        </button>
-                      ))}
+
+                    {/* Filter row: Province chips + Trend interval toggle */}
+                    <div className="flex items-center justify-between gap-2 flex-wrap pt-1">
+                      {/* Province filter chips */}
+                      <div
+                        className="flex gap-1.5 overflow-x-auto pb-0.5"
+                        style={{ scrollbarWidth: "none" }}
+                      >
+                        {[null, ...PROVINCES].map((p) => (
+                          <button
+                            key={p || "all"}
+                            onClick={() => setTableProvinceFilter(p)}
+                            className="flex-shrink-0 px-2.5 py-1 rounded-full font-bold text-[10px]"
+                            style={{
+                              background:
+                                tableProvinceFilter === p ? "#087F63" : "#fff",
+                              color:
+                                tableProvinceFilter === p ? "#fff" : "#52635F",
+                              border: `1px solid ${tableProvinceFilter === p ? "#087F63" : "#D5E2DD"
+                                }`,
+                              fontSize: lang === "ur" ? 13 : 10,
+                              fontFamily:
+                                lang === "ur"
+                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  : "inherit",
+                            }}
+                          >
+                            {p
+                              ? tm(p)
+                              : lang === "ur"
+                                ? "تمام صوبے"
+                                : "All Provinces"}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Trend Interval Toggle Pill */}
+                      <div
+                        className="flex items-center rounded-lg p-0.5 bg-[#E4F2EC] border border-[#C7E8D8] flex-shrink-0"
+                      >
+                        {(
+                          [
+                            ["24h", lang === "ur" ? "24 گھنٹے" : "24h"],
+                            ["72h", lang === "ur" ? "72 گھنٹے" : "72h"],
+                            ["monthly", lang === "ur" ? "ماہانہ" : "Monthly"],
+                          ] as ["24h" | "72h" | "monthly", string][]
+                        ).map(([tKey, tLbl]) => (
+                          <button
+                            key={tKey}
+                            onClick={() => setTableTrendInterval(tKey)}
+                            className="tap-target px-2 py-0.5 rounded-md font-extrabold text-[10px] transition-colors"
+                            style={{
+                              background:
+                                tableTrendInterval === tKey ? "#087F63" : "transparent",
+                              color: tableTrendInterval === tKey ? "#fff" : "#075E4F",
+                              fontFamily:
+                                lang === "ur"
+                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  : "inherit",
+                            }}
+                          >
+                            {tLbl}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
@@ -14163,6 +14411,27 @@ function ProductRatesScreen({
                             ? tcIsSameDay(d, tableDateFilter)
                             : false;
                           const isRef = tcIsToday(d);
+                          // Dates prior to user signup date are locked/blurred
+                          const isPriorToSignup = d.getTime() < new Date(USER_SIGNUP_DATE.getFullYear(), USER_SIGNUP_DATE.getMonth(), USER_SIGNUP_DATE.getDate()).getTime();
+                          if (isPriorToSignup) {
+                            return (
+                              <button
+                                key={idx}
+                                disabled
+                                className="tap-target flex items-center justify-center rounded-full font-medium text-xs mx-auto opacity-20 cursor-not-allowed select-none"
+                                style={{
+                                  width: 30,
+                                  height: 30,
+                                  filter: "blur(0.8px)",
+                                  color: "#80918B",
+                                }}
+                                title={lang === "ur" ? "سائن اپ سے پہلے کی تاریخ" : "Locked prior to signup"}
+                              >
+                                {day}
+                              </button>
+                            );
+                          }
+
                           return (
                             <button
                               key={idx}
@@ -14170,7 +14439,7 @@ function ProductRatesScreen({
                                 setTableDateFilter(d);
                                 setTableDateCalOpen(false);
                               }}
-                              className="tap-target flex items-center justify-center rounded-full font-semibold text-xs mx-auto"
+                              className="tap-target flex items-center justify-center rounded-full font-semibold text-xs mx-auto shadow-sm"
                               style={{
                                 width: 30,
                                 height: 30,
@@ -14178,16 +14447,18 @@ function ProductRatesScreen({
                                   ? "#087F63"
                                   : isRef
                                     ? "#E4F2EC"
-                                    : "transparent",
+                                    : "#fff",
                                 color: selected
                                   ? "#fff"
                                   : isRef
                                     ? "#075E4F"
-                                    : "#2F4A43",
+                                    : "#183B34",
                                 border:
-                                  isRef && !selected
-                                    ? "1.5px solid #087F63"
-                                    : "none",
+                                  selected
+                                    ? "none"
+                                    : isRef
+                                      ? "1.5px solid #087F63"
+                                      : "1px solid #C7E8D8",
                               }}
                             >
                               {day}
@@ -14195,6 +14466,19 @@ function ProductRatesScreen({
                           );
                         })}
                       </div>
+                      <p
+                        className="text-[9.5px] text-center text-[#52635F] mt-2 opacity-80"
+                        style={{
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        {lang === "ur"
+                          ? "* سائن اپ کی تاریخ سے پہلے کی تاریخیں غیر فعال ہیں"
+                          : "* Dates prior to signup date are locked"}
+                      </p>
                     </div>
                   )}
 
@@ -14265,7 +14549,7 @@ function ProductRatesScreen({
                     <span
                       className="font-extrabold uppercase tracking-wide text-right"
                       style={{
-                        color: "#80918B",
+                        color: "#087F63",
                         fontSize: lang === "ur" ? 13 : 9,
                         fontFamily:
                           lang === "ur"
@@ -14273,7 +14557,9 @@ function ProductRatesScreen({
                             : "inherit",
                       }}
                     >
-                      {lang === "ur" ? "رجحان" : "Trend"}
+                      {lang === "ur"
+                        ? `رجحان (${tableTrendInterval === "24h" ? "24گھنٹے" : tableTrendInterval === "72h" ? "72گھنٹے" : "ماہانہ"})`
+                        : `Trend (${tableTrendInterval})`}
                     </span>
                   </div>
                   {/* Scrollable table body — keeps the deep-view card compact */}
@@ -14326,6 +14612,12 @@ function ProductRatesScreen({
                         rowCanon.condition,
                       );
                       const effMult = rowAttrMult * tableDateVariation;
+                      const intervalPct =
+                        tableTrendInterval === "72h"
+                          ? Math.round(r.trendPct * 2.2 * 10) / 10
+                          : tableTrendInterval === "monthly"
+                            ? Math.round(r.trendPct * 5.4 * 10) / 10
+                            : r.trendPct;
                       return (
                         <button
                           key={`${r.mandiName}-${r.rateType}-${ci}`}
@@ -14431,7 +14723,7 @@ function ProductRatesScreen({
                             }}
                           >
                             <span>{trendArrow}</span>
-                            {r.trendPct > 0 && <span>{r.trendPct}%</span>}
+                            {intervalPct > 0 && <span>{intervalPct}%</span>}
                           </span>
                         </button>
                       );
@@ -14565,11 +14857,11 @@ function ProductRatesScreen({
                             attrSheet === "newold"
                               ? "newold"
                               : (attrSheet as
-                                  | "color"
-                                  | "variety"
-                                  | "spec"
-                                  | "condition"
-                                  | "newold");
+                                | "color"
+                                | "variety"
+                                | "spec"
+                                | "condition"
+                                | "newold");
                           const available =
                             !mandiAttrs ||
                             !mandiAttrs[attrKey] ||
@@ -14730,9 +15022,9 @@ function ProductRatesScreen({
                   lang === "ur"
                     ? `${monthNamesUr[calMonthIdx]} ${calYear}`
                     : calM.toLocaleDateString("en-US", {
-                        month: "long",
-                        year: "numeric",
-                      });
+                      month: "long",
+                      year: "numeric",
+                    });
                 const firstDow = new Date(calYear, calMonthIdx, 1).getDay(); // 0=Sun
                 const daysInMonth = new Date(
                   calYear,
@@ -14767,11 +15059,11 @@ function ProductRatesScreen({
                   lang === "ur"
                     ? `${urDaysFull[selD.getDay()]}، ${selD.getDate()} ${monthNamesUr[selD.getMonth()]} ${selD.getFullYear()}`
                     : selD.toLocaleDateString("en-GB", {
-                        weekday: "long",
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      });
+                      weekday: "long",
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    });
 
                 // Column header dropdown opts
                 const colOpts: Record<string, string[]> = {
@@ -15056,8 +15348,8 @@ function ProductRatesScreen({
                                 const displayVal =
                                   col === "Price Type" && dtPriceType
                                     ? tr(dtPriceType)
-                                        .replace(" ریٹ", "")
-                                        .replace(" Rate", "")
+                                      .replace(" ریٹ", "")
+                                      .replace(" Rate", "")
                                     : activeVal
                                       ? col === "Specification" ||
                                         col === "Condition" ||
@@ -15153,18 +15445,18 @@ function ProductRatesScreen({
                                           style={{
                                             color:
                                               !activeVal &&
-                                              !(
-                                                col === "Price Type" &&
-                                                dtPriceType
-                                              )
+                                                !(
+                                                  col === "Price Type" &&
+                                                  dtPriceType
+                                                )
                                                 ? "#075E4F"
                                                 : "#2F4A43",
                                             background:
                                               !activeVal &&
-                                              !(
-                                                col === "Price Type" &&
-                                                dtPriceType
-                                              )
+                                                !(
+                                                  col === "Price Type" &&
+                                                  dtPriceType
+                                                )
                                                 ? "#E4F2EC"
                                                 : "#fff",
                                             fontSize: lang === "ur" ? 14 : 12,
@@ -15184,8 +15476,8 @@ function ProductRatesScreen({
                                           const optText =
                                             col === "Price Type"
                                               ? tr(opt + " Rate")
-                                                  .replace(" ریٹ", "")
-                                                  .replace(" Rate", "")
+                                                .replace(" ریٹ", "")
+                                                .replace(" Rate", "")
                                               : t(opt);
                                           return (
                                             <button
@@ -15764,8 +16056,7 @@ function ProductRatesScreen({
                         const pts = s.data
                           .map(
                             (v, i) =>
-                              `${
-                                i === 0 ? "M" : "L"
+                              `${i === 0 ? "M" : "L"
                               }${xOf(i, len).toFixed(1)},${yOf(v, pMin, pMax).toFixed(1)}`,
                           )
                           .join(" ");
@@ -15859,90 +16150,95 @@ function ProductRatesScreen({
                       </text>
                     </svg>
                   </div>
-                  <p
-                    className="text-xs font-bold uppercase tracking-wide"
-                    style={{
-                      color: "#52635F",
-                      letterSpacing: "0.05em",
-                      fontSize: lang === "ur" ? 15 : 12,
-                      fontFamily:
-                        lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                          : "inherit",
-                    }}
-                  >
-                    {lang === "ur" ? "نرخ کی اقسام" : "Price Types"}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {/* All / سب Button */}
-                    <button
-                      onClick={() => {
-                        if (activeTypes.length === ALL_RATE_TYPES.length) {
-                          setActiveTypes([initialRateType || "Retail"]);
-                        } else {
-                          setActiveTypes([...ALL_RATE_TYPES]);
-                        }
-                      }}
-                      className="tap-target flex items-center gap-1 rounded-full font-bold"
+                  <div className="flex flex-col items-start text-left w-full">
+                    <p
+                      className="text-xs font-bold uppercase tracking-wide text-left self-start"
                       style={{
-                        fontSize: lang === "ur" ? 14 : 11,
-                        padding: "4px 10px",
-                        background:
-                          activeTypes.length === ALL_RATE_TYPES.length
-                            ? "#087F63"
-                            : "#E8EFEC",
-                        border:
-                          "1.5px solid " +
-                          (activeTypes.length === ALL_RATE_TYPES.length
-                            ? "#087F63"
-                            : "#D5E2DD"),
-                        color:
-                          activeTypes.length === ALL_RATE_TYPES.length
-                            ? "#fff"
-                            : "#52635F",
+                        color: "#52635F",
+                        letterSpacing: "0.05em",
+                        fontSize: lang === "ur" ? 15 : 12,
                         fontFamily:
                           lang === "ur"
-                            ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
                             : "inherit",
+                        textAlign: "left",
                       }}
                     >
-                      {lang === "ur" ? "سب" : "All"}
-                    </button>
+                      {lang === "ur" ? "نرخ کی اقسام" : "Price Types"}
+                    </p>
+                    <div
+                      className="flex flex-wrap gap-2 justify-start items-center w-full mt-1"
+                      style={{ direction: "ltr" }}
+                    >
+                      {/* All / سب Button */}
+                      <button
+                        onClick={() => {
+                          if (activeTypes.length === ALL_RATE_TYPES.length) {
+                            setActiveTypes([initialRateType || "Retail"]);
+                          } else {
+                            setActiveTypes([...ALL_RATE_TYPES]);
+                          }
+                        }}
+                        className="tap-target flex items-center gap-1 rounded-full font-bold"
+                        style={{
+                          fontSize: lang === "ur" ? 14 : 11,
+                          padding: "4px 10px",
+                          background:
+                            activeTypes.length === ALL_RATE_TYPES.length
+                              ? "#087F63"
+                              : "#E8EFEC",
+                          border:
+                            "1.5px solid " +
+                            (activeTypes.length === ALL_RATE_TYPES.length
+                              ? "#087F63"
+                              : "#D5E2DD"),
+                          color:
+                            activeTypes.length === ALL_RATE_TYPES.length
+                              ? "#fff"
+                              : "#52635F",
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                              : "inherit",
+                        }}
+                      >
+                        {lang === "ur" ? "سب" : "All"}
+                      </button>
 
-                    {ALL_RATE_TYPES.map((tRt) => {
-                      const on = activeTypes.includes(tRt);
-                      return (
-                        <button
-                          key={tRt}
-                          onClick={() => toggleType(tRt)}
-                          className="tap-target flex items-center gap-1 rounded-full font-semibold"
-                          style={{
-                            fontSize: lang === "ur" ? 14 : 10,
-                            padding: "4px 8px",
-                            background: on ? "#fff" : "#E8EFEC",
-                            border: `1.5px solid ${
-                              on ? RATE_COLORS[tRt] : "#D5E2DD"
-                            }`,
-                            color: on ? "#183B34" : "#80918B",
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                          }}
-                        >
-                          <span
-                            className="rounded-full flex-shrink-0"
+                      {ALL_RATE_TYPES.map((tRt) => {
+                        const on = activeTypes.includes(tRt);
+                        return (
+                          <button
+                            key={tRt}
+                            onClick={() => toggleType(tRt)}
+                            className="tap-target flex items-center gap-1 rounded-full font-semibold"
                             style={{
-                              width: 7,
-                              height: 7,
-                              background: on ? RATE_COLORS[tRt] : "#C7D6D0",
+                              fontSize: lang === "ur" ? 14 : 10,
+                              padding: "4px 8px",
+                              background: on ? "#fff" : "#E8EFEC",
+                              border: `1.5px solid ${on ? RATE_COLORS[tRt] : "#D5E2DD"
+                                }`,
+                              color: on ? "#183B34" : "#80918B",
+                              fontFamily:
+                                lang === "ur"
+                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  : "inherit",
                             }}
-                          />
-                          {on ? " " : ""}
-                          {tr(tRt).replace(" ریٹ", "").replace(" Rate", "")}
-                        </button>
-                      );
-                    })}
+                          >
+                            <span
+                              className="rounded-full flex-shrink-0"
+                              style={{
+                                width: 7,
+                                height: 7,
+                                background: on ? RATE_COLORS[tRt] : "#C7D6D0",
+                              }}
+                            />
+                            {on ? " " : ""}
+                            {tr(tRt).replace(" ریٹ", "").replace(" Rate", "")}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </>
               ) : (
@@ -16069,8 +16365,7 @@ function ProductRatesScreen({
                       d={[
                         ...arrivalData.map(
                           (v, i) =>
-                            `${
-                              i === 0 ? "M" : "L"
+                            `${i === 0 ? "M" : "L"
                             }${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
                         ),
                         `L${xOf(len - 1, len)},${CH - PB}`,
@@ -16084,8 +16379,7 @@ function ProductRatesScreen({
                       d={arrivalData
                         .map(
                           (v, i) =>
-                            `${
-                              i === 0 ? "M" : "L"
+                            `${i === 0 ? "M" : "L"
                             }${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
                         )
                         .join(" ")}
@@ -16699,16 +16993,16 @@ function MandiListScreen({
                 locSelections.length === 0
                   ? INITIAL_MANDIS
                   : INITIAL_MANDIS.filter((m) =>
-                      locSelections.some((sel) => {
-                        if (sel.kind === "pakistan") return true;
-                        if (sel.kind === "province")
-                          return m.province === sel.label;
-                        if (sel.kind === "district")
-                          return m.city === sel.label;
-                        if (sel.kind === "mandi") return m.name === sel.label;
-                        return false;
-                      }),
-                    );
+                    locSelections.some((sel) => {
+                      if (sel.kind === "pakistan") return true;
+                      if (sel.kind === "province")
+                        return m.province === sel.label;
+                      if (sel.kind === "district")
+                        return m.city === sel.label;
+                      if (sel.kind === "mandi") return m.name === sel.label;
+                      return false;
+                    }),
+                  );
               return browseMandis.map((m) => <MandiCard key={m.id} m={m} />);
             })()}
           </>
@@ -16920,8 +17214,8 @@ function MandiDetailScreen({
                 vertical={
                   selectedproduct
                     ? Object.entries(VERTICALS).find(
-                        ([, vd]) => vd.products[selectedproduct],
-                      )?.[0]
+                      ([, vd]) => vd.products[selectedproduct],
+                    )?.[0]
                     : undefined
                 }
                 size={13}
@@ -17824,9 +18118,8 @@ function AnalyticsScreen() {
                     className="tap-target rounded-2xl px-4 flex items-center gap-3"
                     style={{
                       background: product === c ? "#F1F7F4" : "#F1F7F4",
-                      border: `1.5px solid ${
-                        product === c ? "#087F63" : "#D5E2DD"
-                      }`,
+                      border: `1.5px solid ${product === c ? "#087F63" : "#D5E2DD"
+                        }`,
                       minHeight: 48,
                     }}
                   >
@@ -17873,193 +18166,1030 @@ function AnalyticsScreen() {
   );
 }
 
-// ─── NEWS & VIDEOS ────────────────────────────────────────────────────────────
+// ─── ZARAI REELS & VIDEOS (TIKTOK STYLE) ──────────────────────────────────
 
-const NEWS_ITEMS = [
+interface ReelComment {
+  id: string;
+  author: string;
+  avatar: string;
+  time: string;
+  text: string;
+  likes: number;
+}
+
+interface ZaraiReel {
+  id: string;
+  videoPath: string;
+  imagePath: string;
+  author: string;
+  authorUrdu: string;
+  handle: string;
+  avatar: string;
+  isVerified: boolean;
+  category: string;
+  categoryUrdu: string;
+  location: string;
+  title: string;
+  titleUrdu: string;
+  tags: string[];
+  audioTitle: string;
+  likesCount: number;
+  commentsCount: number;
+  sharesCount: number;
+  badge: string;
+  gradient: string;
+  liveRateBadge?: string;
+  comments: ReelComment[];
+}
+
+const ZARAI_REELS: ZaraiReel[] = [
   {
-    tag: "Government",
-    title: "Wheat Support Price Maintained at Rs. 2,600 for Kharif 2026",
-    date: "3 Aug 2026",
-    icon: "🌾",
-    bg: "#EAF5F1",
-    tc: "#147D72",
+    id: "reel-1",
+    videoPath: video1,
+    imagePath: "",
+    author: "Ahmad Khan (Mandi Rep)",
+    authorUrdu: "احمد خان (منڈی نمائندہ)",
+    handle: "@ahmad_mandi",
+    avatar: "👨‍💼",
+    isVerified: true,
+    category: "Live Mandi Boli",
+    categoryUrdu: "لائیو منڈی بولی",
+    location: "لاہور منڈی",
+    title: "Fresh Wheat & Basmati Rice Live Mandi Boli",
+    titleUrdu: "گندم اور چاول کے تازہ منڈی بولی ریٹس",
+    tags: ["#گندم", "#چاول"],
+    audioTitle: "Original Audio",
+    likesCount: 48200,
+    commentsCount: 1240,
+    sharesCount: 14800,
+    badge: "🔥 Live",
+    gradient: "linear-gradient(180deg, #0A453B 0%, #062822 50%, #031512 100%)",
+    liveRateBadge: "گندم: 3,850 | چاول: 14,200",
+    comments: [
+      {
+        id: "c1",
+        author: "حاجی اصغر علی (پاکپتن)",
+        avatar: "👨‍🌾",
+        time: "10 منٹ پہلے",
+        text: "ماشاءاللہ بہت بروقت اور درست معلومات ہیں۔",
+        likes: 24,
+      },
+      {
+        id: "c2",
+        author: "چوہدری ریاض احمد",
+        avatar: "🚜",
+        time: "25 منٹ پہلے",
+        text: "گندم کا ریٹ مزید اوپر جانے کا امکان ہے؟",
+        likes: 18,
+      },
+    ],
   },
   {
-    tag: "Market",
-    title: "Cotton prices hit 3-month high on strong mill demand",
-    date: "2 Aug 2026",
-    icon: "📈",
-    bg: "#F1F7F4",
-    tc: "#147A3F",
+    id: "reel-2",
+    videoPath: video2,
+    imagePath: "",
+    author: "Malik Naveed (Cotton Rep)",
+    authorUrdu: "ملک نوید (کپاس نمائندہ)",
+    handle: "@malik_cotton",
+    avatar: "👨‍🌾",
+    isVerified: true,
+    category: "Cotton & Phutti",
+    categoryUrdu: "کپاس و پھٹی منڈی",
+    location: "بہاولپور منڈی",
+    title: "Cotton & Phutti Market Report",
+    titleUrdu: "کپاس اور پھٹی کی تازہ منڈی رپورٹ",
+    tags: ["#کپاس"],
+    audioTitle: "Original Audio",
+    likesCount: 32100,
+    commentsCount: 890,
+    sharesCount: 8400,
+    badge: "⚡ Market",
+    gradient: "linear-gradient(180deg, #103B2B 0%, #08261C 50%, #04140F 100%)",
+    liveRateBadge: "پھٹی: 8,600 | روئی: 21,500",
+    comments: [
+      {
+        id: "c3",
+        author: "ملک نوید (لودھراں)",
+        avatar: "🌾",
+        time: "15 منٹ پہلے",
+        text: "لودھراں میں آج مال کی آمد بہت اچھی رہی ہے۔",
+        likes: 12,
+      },
+    ],
   },
   {
-    tag: "Weather",
-    title:
-      "Monsoon Advisory: Heavy rains in Sindh — onion supply disruption expected",
-    date: "2 Aug 2026",
-    icon: "🌧️",
-    bg: "#FFF8E1",
-    tc: "#92400e",
+    id: "reel-3",
+    videoPath: video3,
+    imagePath: "",
+    author: "Dr. Tariq (Agri Expert)",
+    authorUrdu: "ڈاکٹر طارق (زرعی ماہر)",
+    handle: "@dr_tariq_agri",
+    avatar: "👨‍🔬",
+    isVerified: true,
+    category: "Fertilizer & Pesticides",
+    categoryUrdu: "کھاد و ادویات",
+    location: "فیصل آباد",
+    title: "Official DAP & Urea Fertilizer Rates",
+    titleUrdu: "ڈی اے پی اور یوریا کھاد کے سرکاری ریٹس",
+    tags: ["#کھاد"],
+    audioTitle: "Original Audio",
+    likesCount: 19400,
+    commentsCount: 640,
+    sharesCount: 4100,
+    badge: "🌱 Advisory",
+    gradient: "linear-gradient(180deg, #1C3B1A 0%, #0D240F 50%, #051307 100%)",
+    liveRateBadge: "یوریا: 4,650 | DAP: 13,800",
+    comments: [
+      {
+        id: "c4",
+        author: "میاں زاہد اقبال",
+        avatar: "👨‍🌾",
+        time: "30 منٹ پہلے",
+        text: "کھاد کے سرکاری ریٹ پر فراہمی کو یقینی بنایا جائے۔",
+        likes: 9,
+      },
+    ],
   },
   {
-    tag: "Export",
-    title:
-      "Pakistan rice exports up 18% YoY — Basmati demand surges in Middle East",
-    date: "1 Aug 2026",
-    icon: "🚢",
-    bg: "#EAF5F1",
-    tc: "#168A76",
+    id: "reel-4",
+    videoPath: video4,
+    imagePath: "",
+    author: "Bilal Malik (Grain Trader)",
+    authorUrdu: "بلال ملک (اوکاڑہ بیوپاری)",
+    handle: "@bilal_grain",
+    avatar: "🧑‍💼",
+    isVerified: true,
+    category: "Maize & Corn",
+    categoryUrdu: "مکئی منڈی",
+    location: "اوکاڑہ منڈی",
+    title: "Okara Grain Mandi Maize Boli",
+    titleUrdu: "اوکاڑہ غلہ منڈی میں مکئی کی بولیاں",
+    tags: ["#مکئی"],
+    audioTitle: "Original Audio",
+    likesCount: 56200,
+    commentsCount: 2100,
+    sharesCount: 19200,
+    badge: "🔥 Hot Boli",
+    gradient: "linear-gradient(180deg, #3B2E0A 0%, #241B05 50%, #120E02 100%)",
+    liveRateBadge: "مکئی سائیلج: 2,950 | ڈرائی: 3,400",
+    comments: [
+      {
+        id: "c5",
+        author: "سردار تیمور خان",
+        avatar: "🌾",
+        time: "5 منٹ پہلے",
+        text: "اوکاڑہ میں آج مکئی کی زبردست بولی لگی ہے۔",
+        likes: 31,
+      },
+    ],
   },
   {
-    tag: "Alert",
-    title:
-      "Locust threat in south Punjab — spray advisory by Dept. of Agriculture",
-    date: "31 Jul 2026",
-    icon: "⚠️",
-    bg: "#FAE9E6",
-    tc: "#A83B37",
+    id: "reel-5",
+    videoPath: video5,
+    imagePath: "",
+    author: "Jam Bashir (Sindh Rep)",
+    authorUrdu: "جام بشیر (سندھ نمائندہ)",
+    handle: "@jambashir_sindh",
+    avatar: "👳‍♂️",
+    isVerified: true,
+    category: "Sugarcane & Gur",
+    categoryUrdu: "کماد و گڑ منڈی",
+    location: "حیدرآباد منڈی",
+    title: "Sugarcane Crushing & Desi Gur Rates",
+    titleUrdu: "کماد کرشنگ اور دیسی گڑ کے بھاؤ",
+    tags: ["#گڑ"],
+    audioTitle: "Original Audio",
+    likesCount: 27300,
+    commentsCount: 750,
+    sharesCount: 6300,
+    badge: "🎋 Season",
+    gradient: "linear-gradient(180deg, #3B1A0A 0%, #241005 50%, #120702 100%)",
+    liveRateBadge: "دیسی گڑ: 6,200 | شکر: 7,100",
+    comments: [
+      {
+        id: "c6",
+        author: "جام بشیر احمد",
+        avatar: "👨‍🌾",
+        time: "1 گھنٹہ پہلے",
+        text: "ماشاءاللہ بہت اعلٰی کوالٹی کا گڑ تیار ہو رہا ہے۔",
+        likes: 14,
+      },
+    ],
+  },
+  {
+    id: "reel-6",
+    videoPath: video6,
+    imagePath: "",
+    author: "Khan Gul (Fruit Market)",
+    authorUrdu: "خان گل (پشاور منڈی)",
+    handle: "@khangul_fruits",
+    avatar: "🧔",
+    isVerified: false,
+    category: "Fruits & Dry Fruits",
+    categoryUrdu: "پھل و خشک میوہ جات",
+    location: "پشاور پھل منڈی",
+    title: "Fresh Apples & Dry Fruits Auction",
+    titleUrdu: "تازہ سیب اور خشک میوہ جات نیلامی",
+    tags: ["#سیب"],
+    audioTitle: "Original Audio",
+    likesCount: 41800,
+    commentsCount: 1340,
+    sharesCount: 11500,
+    badge: "🍎 Fresh",
+    gradient: "linear-gradient(180deg, #3B0A1A 0%, #240510 50%, #120207 100%)",
+    liveRateBadge: "سیب: 4,500 | اخروٹ: 18,000",
+    comments: [
+      {
+        id: "c7",
+        author: "خان گل مہمند",
+        avatar: "🚚",
+        time: "40 منٹ پہلے",
+        text: "راولپنڈی بھی مال بھیج رہے ہیں؟",
+        likes: 22,
+      },
+    ],
+  },
+  {
+    id: "reel-7",
+    videoPath: video7,
+    imagePath: "",
+    author: "Haji Farooq (Grain Rep)",
+    authorUrdu: "حاجی فاروق (سرگودھا نمائندہ)",
+    handle: "@farooq_grain",
+    avatar: "👴",
+    isVerified: true,
+    category: "Pulses & Dal Market",
+    categoryUrdu: "دالیں و اجناس منڈی",
+    location: "سرگودھا منڈی",
+    title: "Pulses, Chana & Moong Rates",
+    titleUrdu: "دالیں، چنا اور مونگ کے تازہ ریٹس",
+    tags: ["#دالیں"],
+    audioTitle: "Original Audio",
+    likesCount: 38400,
+    commentsCount: 920,
+    sharesCount: 8100,
+    badge: "🥣 Pulses",
+    gradient: "linear-gradient(180deg, #0A353B 0%, #051F24 50%, #020F12 100%)",
+    liveRateBadge: "چنا: 9,400 | مونگ: 11,800",
+    comments: [
+      {
+        id: "c8",
+        author: "حاجی فاروق سرگودھا",
+        avatar: "🌾",
+        time: "2 گھنٹے پہلے",
+        text: "چنا کے ریٹ میں اگلے ہفتے مزید تیزی آئے گی۔",
+        likes: 16,
+      },
+    ],
+  },
+  {
+    id: "reel-8",
+    videoPath: video8,
+    imagePath: "",
+    author: "Engr. Atif (AgriTech)",
+    authorUrdu: "انجینئر عاطف (ایگری ٹیک)",
+    handle: "@atif_agritech",
+    avatar: "👨‍💻",
+    isVerified: true,
+    category: "Agri Machinery & Tech",
+    categoryUrdu: "زرعی مشینری و ڈرون",
+    location: "ملتان ایکسپو",
+    title: "Modern Agri Drone Spray Demo",
+    titleUrdu: "جدید زرعی ڈرون سپرے اور فی ایکڑ لاگت",
+    tags: ["#ڈرون"],
+    audioTitle: "Original Audio",
+    likesCount: 64500,
+    commentsCount: 2800,
+    sharesCount: 22100,
+    badge: "🚀 High Tech",
+    gradient: "linear-gradient(180deg, #102B3B 0%, #081924 50%, #030B12 100%)",
+    liveRateBadge: "ڈرون سپرے: 650/ایکڑ",
+    comments: [
+      {
+        id: "c9",
+        author: "چوہدری عاطف ایڈووکیٹ",
+        avatar: "🚜",
+        time: "15 منٹ پہلے",
+        text: "کیا بہاولنگر میں ڈرون سروس دستیاب ہے؟",
+        likes: 35,
+      },
+    ],
   },
 ];
 
-const VIDEO_ITEMS = [
-  {
-    title: "Zarai Mandi Weekly Market Review — Jul 28–Aug 3",
-    dur: "8:24",
-    views: "12.4K",
-    bg: "#087F63",
-  },
-  {
-    title: "How to Read Mill Rates vs Mandi Rates",
-    dur: "5:12",
-    views: "8.1K",
-    bg: "#147D72",
-  },
-  {
-    title: "Cotton Season 2026 — Price Outlook",
-    dur: "11:40",
-    views: "6.3K",
-    bg: "#168A76",
-  },
-  {
-    title: "Badami Bagh Lahore Mandi — Live Tour",
-    dur: "14:05",
-    views: "19.7K",
-    bg: "#9A6817",
-  },
-];
-
-function NewsVideosScreen() {
+function ZaraiReelsScreen() {
   const { lang } = useLang();
-  const [tab, setTab] = useState<"news" | "videos">("news");
+  const [feedTab, setFeedTab] = useState<"forYou" | "following">("forYou");
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isMuted, setIsMuted] = useState(false); // Default sound OPEN (unmuted)
+  const [likedReelIds, setLikedReelIds] = useState<Set<string>>(
+    new Set(["reel-1", "reel-4"]),
+  );
+  const [savedReelIds, setSavedReelIds] = useState<Set<string>>(new Set(["reel-2"]));
+  const [followedAuthors, setFollowedAuthors] = useState<Set<string>>(
+    new Set(["Ahmad Khan (Mandi Rep)"]),
+  );
+  const [commentsDrawerReel, setCommentsDrawerReel] = useState<ZaraiReel | null>(
+    null,
+  );
+  const [commentsMap, setCommentsMap] = useState<Record<string, ReelComment[]>>(() => {
+    const map: Record<string, ReelComment[]> = {};
+    ZARAI_REELS.forEach((r) => {
+      map[r.id] = r.comments;
+    });
+    return map;
+  });
+  const [newCommentText, setNewCommentText] = useState("");
+  const [flyingHearts, setFlyingHearts] = useState<
+    { id: number; x: number; y: number }[]
+  >([]);
+  const [isPlayingMap, setIsPlayingMap] = useState<Record<string, boolean>>({});
+  const [videoErrors, setVideoErrors] = useState<Record<string, boolean>>({});
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const lastTapRef = useRef<{ time: number; x: number; y: number }>({
+    time: 0,
+    x: 0,
+    y: 0,
+  });
+
+  const displayedReels =
+    feedTab === "following"
+      ? ZARAI_REELS.filter((r) => followedAuthors.has(r.author))
+      : ZARAI_REELS;
+
+  // Handle intersection / scroll snap active index
+  const handleScroll = () => {
+    if (!containerRef.current) return;
+    const { scrollTop, clientHeight } = containerRef.current;
+    const index = Math.round(scrollTop / (clientHeight || 1));
+    if (index !== activeIndex && index >= 0 && index < displayedReels.length) {
+      setActiveIndex(index);
+    }
+  };
+
+  // Play active video with sound, pause others
+  useEffect(() => {
+    videoRefs.current.forEach((v, idx) => {
+      if (!v) return;
+      v.muted = isMuted;
+      v.volume = 1.0;
+      if (idx === activeIndex) {
+        v.currentTime = 0;
+        const playPromise = v.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlayingMap((prev) => ({
+                ...prev,
+                [displayedReels[idx]?.id || ""]: true,
+              }));
+            })
+            .catch(() => {
+              // If browser blocks unmuted autoplay before first tap, fallback to play
+              v.muted = true;
+              v.play().catch(() => { });
+              setIsPlayingMap((prev) => ({
+                ...prev,
+                [displayedReels[idx]?.id || ""]: true,
+              }));
+            });
+        }
+      } else {
+        v.pause();
+        setIsPlayingMap((prev) => ({
+          ...prev,
+          [displayedReels[idx]?.id || ""]: false,
+        }));
+      }
+    });
+  }, [activeIndex, displayedReels, isMuted]);
+
+  const togglePlayPause = (reelId: string, idx: number) => {
+    const v = videoRefs.current[idx];
+    if (!v) return;
+    v.muted = isMuted;
+    v.volume = 1.0;
+    if (v.paused) {
+      v.play()
+        .then(() => setIsPlayingMap((prev) => ({ ...prev, [reelId]: true })))
+        .catch(() => { });
+    } else {
+      v.pause();
+      setIsPlayingMap((prev) => ({ ...prev, [reelId]: false }));
+    }
+  };
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const nextMuted = !isMuted;
+    setIsMuted(nextMuted);
+    videoRefs.current.forEach((v) => {
+      if (v) {
+        v.muted = nextMuted;
+        v.volume = 1.0;
+      }
+    });
+  };
+
+  const triggerHeartAnimation = (clientX: number, clientY: number) => {
+    const newHeart = {
+      id: Date.now() + Math.random(),
+      x: clientX,
+      y: clientY,
+    };
+    setFlyingHearts((prev) => [...prev, newHeart]);
+    setTimeout(() => {
+      setFlyingHearts((prev) => prev.filter((h) => h.id !== newHeart.id));
+    }, 950);
+  };
+
+  const handleReelTouch = (
+    e: React.MouseEvent | React.TouchEvent,
+    reel: ZaraiReel,
+    idx: number,
+  ) => {
+    const v = videoRefs.current[idx];
+    if (v) {
+      v.muted = isMuted;
+      v.volume = 1.0;
+    }
+
+    const now = Date.now();
+    let x = 160;
+    let y = 300;
+
+    if ("clientX" in e) {
+      x = e.clientX;
+      y = e.clientY;
+    } else if (e.touches && e.touches[0]) {
+      x = e.touches[0].clientX;
+      y = e.touches[0].clientY;
+    }
+
+    if (now - lastTapRef.current.time < 300) {
+      // Double tap -> Like & float heart!
+      setLikedReelIds((prev) => {
+        const next = new Set(prev);
+        next.add(reel.id);
+        return next;
+      });
+      triggerHeartAnimation(x, y);
+      lastTapRef.current = { time: 0, x: 0, y: 0 };
+    } else {
+      lastTapRef.current = { time: now, x, y };
+      // Single tap -> toggle play/pause after delay if not double tapped
+      setTimeout(() => {
+        if (Date.now() - lastTapRef.current.time >= 280 && lastTapRef.current.time > 0) {
+          togglePlayPause(reel.id, idx);
+        }
+      }, 290);
+    }
+  };
+
+  const toggleLike = (reelId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setLikedReelIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(reelId)) next.delete(reelId);
+      else {
+        next.add(reelId);
+        triggerHeartAnimation(window.innerWidth / 2, window.innerHeight / 2);
+      }
+      return next;
+    });
+  };
+
+  const toggleSave = (reelId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSavedReelIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(reelId)) next.delete(reelId);
+      else next.add(reelId);
+      return next;
+    });
+  };
+
+  const toggleFollow = (author: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFollowedAuthors((prev) => {
+      const next = new Set(prev);
+      if (next.has(author)) next.delete(author);
+      else next.add(author);
+      return next;
+    });
+  };
+
+  const handleAddComment = (reelId: string) => {
+    if (!newCommentText.trim()) return;
+    const newC: ReelComment = {
+      id: "cm-" + Date.now(),
+      author: lang === "ur" ? "آپ (کسان ساتھی)" : "You (Farmer Partner)",
+      avatar: "🌾",
+      time: lang === "ur" ? "ابھی" : "Just now",
+      text: newCommentText.trim(),
+      likes: 0,
+    };
+    setCommentsMap((prev) => ({
+      ...prev,
+      [reelId]: [newC, ...(prev[reelId] || [])],
+    }));
+    setNewCommentText("");
+  };
+
+  const scrollNext = (direction: "up" | "down") => {
+    if (!containerRef.current) return;
+    const h = containerRef.current.clientHeight;
+    containerRef.current.scrollBy({
+      top: direction === "down" ? h : -h,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div
-      className="flex flex-col h-full screen-enter"
-      style={{ background: "#F1F7F4" }}
+      className="relative w-full h-full overflow-hidden select-none"
+      style={{
+        background: "#000",
+        color: "#fff",
+      }}
     >
+      {/* ── Top Floating Minimal Header (Tabs & Sound Toggle Only) ── */}
       <header
-        className="px-4 pt-10 pb-3 flex-shrink-0"
-        style={{ background: "#F4FAF7", borderBottom: "1px solid #D5E2DD" }}
+        className="absolute top-0 left-0 right-0 z-40 px-4 pt-10 pb-2 flex items-center justify-between pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%)",
+        }}
       >
-        <h1 className="font-extrabold text-xl mb-3">
-          {lang === "ur" ? "خبریں اور ویڈیوز" : "News & Videos"}
-        </h1>
-        <div className="flex gap-2">
-          {(["news", "videos"] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className="tap-target flex-1 rounded-2xl font-bold text-sm"
-              style={{
-                height: 48,
-                background: tab === t ? "#087F63" : "#E8EFEC",
-                color: tab === t ? "#fff" : "#183B34",
-              }}
-            >
-              {t === "news"
-                ? lang === "ur"
-                  ? "خبریں"
-                  : " News"
-                : lang === "ur"
-                  ? "ویڈیوز"
-                  : " Videos"}
-            </button>
-          ))}
+        {/* Left Spacer */}
+        <div className="w-8" />
+
+        {/* Tab Switcher: Following vs For You */}
+        <div className="flex items-center gap-5 text-sm font-extrabold drop-shadow pointer-events-auto">
+          <button
+            onClick={() => setFeedTab("following")}
+            className={`tap-target transition-all ${feedTab === "following"
+                ? "text-white scale-105 border-b-2 border-[#32BA46] pb-0.5"
+                : "text-white/60 hover:text-white"
+              }`}
+          >
+            {lang === "ur" ? "فالونگ" : "Following"}
+          </button>
+          <button
+            onClick={() => setFeedTab("forYou")}
+            className={`tap-target transition-all ${feedTab === "forYou"
+                ? "text-white scale-105 border-b-2 border-[#32BA46] pb-0.5"
+                : "text-white/60 hover:text-white"
+              }`}
+          >
+            {lang === "ur" ? "آپ کے لیے" : "For You"}
+          </button>
         </div>
+
+        {/* Sound Toggle Button (Voice open by default) */}
+        <button
+          onClick={toggleMute}
+          className="tap-target w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/15 text-white pointer-events-auto shadow-md"
+          title={isMuted ? "Unmute Voice" : "Mute Voice"}
+        >
+          {isMuted ? (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27l4.73 4.73H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+            </svg>
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+            </svg>
+          )}
+        </button>
       </header>
-      <div className="flex-1 overflow-y-auto px-4 pt-3 pb-4 flex flex-col gap-3">
-        {tab === "news" &&
-          NEWS_ITEMS.map((n, i) => (
-            <div
-              key={i}
-              className="rounded-2xl p-4"
-              style={{ background: n.bg, border: "1px solid #D5E2DD" }}
+
+      {/* ── Quick Scroll Up/Down Desktop/Nav Helpers ── */}
+      <div className="absolute left-2.5 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-2.5 opacity-50 hover:opacity-100 transition-opacity pointer-events-auto">
+        {activeIndex > 0 && (
+          <button
+            onClick={() => scrollNext("up")}
+            className="w-6 h-6 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white border border-white/20 tap-target text-[10px] font-bold"
+            title="Previous"
+          >
+            ▲
+          </button>
+        )}
+        {activeIndex < displayedReels.length - 1 && (
+          <button
+            onClick={() => scrollNext("down")}
+            className="w-6 h-6 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white border border-white/20 tap-target text-[10px] font-bold"
+            title="Next"
+          >
+            ▼
+          </button>
+        )}
+      </div>
+
+      {/* ── Flying Double-Tap Hearts Container ── */}
+      {flyingHearts.map((h) => (
+        <div
+          key={h.id}
+          className="pointer-events-none fixed z-50 animate-float-heart"
+          style={{
+            left: h.x - 24,
+            top: h.y - 24,
+            fontSize: 44,
+            filter: "drop-shadow(0 4px 12px rgba(255,50,80,0.6))",
+          }}
+        >
+          ❤️
+        </div>
+      ))}
+
+      {/* ── Main Snap Scrolling Reels Feed ── */}
+      <div
+        ref={containerRef}
+        onScroll={handleScroll}
+        className="reels-snap-container w-full h-full"
+        style={{
+          scrollSnapType: "y mandatory",
+        }}
+      >
+        {displayedReels.length === 0 ? (
+          <div className="h-full flex flex-col items-center justify-center p-6 text-center">
+            <span style={{ fontSize: 44 }}>👨‍💼</span>
+            <p className="font-bold text-sm mt-3 text-white">
+              {lang === "ur"
+                ? "آپ نے ابھی کسی نمائندے کو فالو نہیں کیا"
+                : "You haven't followed any representative yet"}
+            </p>
+            <p className="text-white/60 text-xs mt-1 max-w-[240px]">
+              {lang === "ur"
+                ? "ویڈیو کے ساتھ نمائندے کے پروفائل پر (+) دبا کر فالو کریں"
+                : "Tap (+) on representative's profile to see their videos here"}
+            </p>
+            <button
+              onClick={() => setFeedTab("forYou")}
+              className="mt-4 px-4 py-2 rounded-full bg-[#087F63] text-white font-bold text-xs tap-target shadow-lg"
             >
-              <div className="flex gap-3">
-                <span style={{ fontSize: 32, flexShrink: 0 }}>{n.icon}</span>
-                <div>
-                  <div className="flex gap-2 mb-1 flex-wrap">
-                    <span
-                      className="text-xs font-bold px-2.5 py-0.5 rounded-full"
-                      style={{ background: "#F4FAF7", color: n.tc }}
+              {lang === "ur" ? "تمام ویڈیوز دیکھیں" : "Explore For You"}
+            </button>
+          </div>
+        ) : (
+          displayedReels.map((reel, idx) => {
+            const isLiked = likedReelIds.has(reel.id);
+            const isSaved = savedReelIds.has(reel.id);
+            const isFollowing = followedAuthors.has(reel.author);
+            const isPlaying = isPlayingMap[reel.id] ?? false;
+            const hasVideoError = videoErrors[reel.id] ?? false;
+            const commentsList = commentsMap[reel.id] || reel.comments;
+
+            return (
+              <div
+                key={reel.id}
+                className="reel-snap-item relative w-full h-full flex items-center justify-center overflow-hidden"
+                style={{
+                  height: "100%",
+                  scrollSnapAlign: "start",
+                }}
+                onClick={(e) => handleReelTouch(e, reel, idx)}
+              >
+                {/* ── Background Video with Fallback ── */}
+                <div
+                  className="absolute inset-0 w-full h-full"
+                  style={{
+                    background: reel.gradient,
+                  }}
+                >
+                  {/* HTML5 Video Element */}
+                  {!hasVideoError && (
+                    <video
+                      ref={(el) => (videoRefs.current[idx] = el)}
+                      src={reel.videoPath}
+                      poster={reel.imagePath}
+                      playsInline
+                      loop
+                      muted={isMuted}
+                      onError={() => {
+                        setVideoErrors((prev) => ({ ...prev, [reel.id]: true }));
+                      }}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+
+                  {/* Fallback Animated Backdrop (Active only if video file missing) */}
+                  {hasVideoError && (
+                    <div className="relative w-full h-full flex flex-col items-center justify-center p-6 overflow-hidden">
+                      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#32BA46_1px,transparent_1px)] [background-size:16px_16px]" />
+                      <div className="relative z-10 flex flex-col items-center text-center">
+                        <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-xl mb-3 bg-white/10 backdrop-blur-md border border-white/20">
+                          <span style={{ fontSize: 34 }}>{reel.avatar}</span>
+                        </div>
+                        <p
+                          className="text-white text-sm font-extrabold max-w-[240px] drop-shadow-md"
+                          style={{
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                          }}
+                        >
+                          {lang === "ur" ? reel.titleUrdu : reel.title}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Subtle Gradient Overlay */}
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 25%, transparent 70%, rgba(0,0,0,0.7) 100%)",
+                    }}
+                  />
+                </div>
+
+                {/* ── Play / Pause Overlay Icon (Only shows when user paused) ── */}
+                {!isPlaying && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+                    <div
+                      className="w-14 h-14 rounded-full flex items-center justify-center border border-white/25 shadow-2xl"
+                      style={{
+                        background: "rgba(0, 0, 0, 0.45)",
+                        backdropFilter: "blur(6px)",
+                      }}
                     >
-                      {n.tag}
-                    </span>
-                    <span className="text-xs" style={{ color: "#52635F" }}>
-                      {n.date}
+                      <svg
+                        width="26"
+                        height="26"
+                        viewBox="0 0 24 24"
+                        fill="#fff"
+                        className="ml-1"
+                      >
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── Right-Side Floating Action Buttons (Strictly Follow, Like, Comment, Save ONLY) ── */}
+                <div
+                  className="absolute right-3 bottom-20 z-30 flex flex-col items-center gap-4"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* 1. Representative Profile & Follow Button */}
+                  <div className="relative mb-0.5">
+                    <button
+                      onClick={(e) => toggleFollow(reel.author, e)}
+                      className={`tap-target w-11 h-11 rounded-full border-2 flex items-center justify-center text-xl shadow-xl transition-all duration-200 ${isFollowing
+                          ? "border-[#32BA46] bg-[#087F63]/80 ring-2 ring-[#32BA46]/50"
+                          : "border-white bg-[#087F63]"
+                        }`}
+                      title={
+                        isFollowing
+                          ? lang === "ur"
+                            ? "فالو کیا ہوا ہے (ان فالو کرنے کے لیے ٹیپ کریں)"
+                            : "Following (Tap to unfollow)"
+                          : lang === "ur"
+                            ? "نمائندے کو فالو کریں"
+                            : "Follow representative"
+                      }
+                    >
+                      {reel.avatar}
+                    </button>
+
+                    {/* Follow Status Badge (+ or ✓) */}
+                    <button
+                      onClick={(e) => toggleFollow(reel.author, e)}
+                      className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full font-black text-[11px] flex items-center justify-center shadow-lg tap-target border border-white transition-transform duration-150 ${isFollowing
+                          ? "bg-[#32BA46] text-[#07332F] scale-90"
+                          : "bg-[#E4B04D] text-[#07332F] hover:scale-110 active:scale-95"
+                        }`}
+                    >
+                      {isFollowing ? "✓" : "+"}
+                    </button>
+                  </div>
+
+                  {/* 2. Like Heart Button */}
+                  <div className="flex flex-col items-center">
+                    <button
+                      onClick={(e) => toggleLike(reel.id, e)}
+                      className="tap-target w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/15 text-white"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill={isLiked ? "#FF2A55" : "none"}
+                        stroke={isLiked ? "#FF2A55" : "#fff"}
+                        strokeWidth="2"
+                        className="transition-transform duration-150 active:scale-125"
+                      >
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                      </svg>
+                    </button>
+                    <span className="text-[11px] font-bold mt-1 text-white/95 drop-shadow">
+                      {(
+                        (reel.likesCount + (isLiked ? 1 : 0)) /
+                        1000
+                      ).toFixed(1)}
+                      K
                     </span>
                   </div>
-                  <p className="font-bold text-sm leading-snug">{n.title}</p>
+
+                  {/* 3. Comment Button */}
+                  <div className="flex flex-col items-center">
+                    <button
+                      onClick={() => setCommentsDrawerReel(reel)}
+                      className="tap-target w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/15 text-white"
+                    >
+                      <svg
+                        width="23"
+                        height="23"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        strokeWidth="2"
+                      >
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      </svg>
+                    </button>
+                    <span className="text-[11px] font-bold mt-1 text-white/95 drop-shadow">
+                      {commentsList.length}
+                    </span>
+                  </div>
+
+                  {/* 4. Bookmark / Save Button */}
+                  <div className="flex flex-col items-center">
+                    <button
+                      onClick={(e) => toggleSave(reel.id, e)}
+                      className="tap-target w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/15 text-white"
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill={isSaved ? "#E4B04D" : "none"}
+                        stroke={isSaved ? "#E4B04D" : "#fff"}
+                        strokeWidth="2"
+                      >
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                {/* ── Bottom Overlay Information (Representative Name & Minimal Caption) ── */}
+                <div
+                  className="absolute left-0 right-20 bottom-3 z-30 p-4 pb-3 flex flex-col gap-1 pointer-events-auto"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Creator / Representative Info Row */}
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-extrabold text-sm text-white drop-shadow">
+                      {lang === "ur" ? reel.authorUrdu : reel.author}
+                    </span>
+                    {reel.isVerified && (
+                      <span
+                        className="w-4 h-4 rounded-full bg-[#32BA46] text-[#07332F] text-[10px] font-black flex items-center justify-center shadow"
+                        title="Verified Representative"
+                      >
+                        ✓
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Minimal 1-line Caption directly related to video */}
+                  <p
+                    className="text-white/95 text-xs font-semibold drop-shadow line-clamp-1"
+                    style={{
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {lang === "ur" ? reel.titleUrdu : reel.title}
+                  </p>
+                </div>
+
+                {/* ── Bottom Video Progress Scrub Line ── */}
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/20 z-30">
+                  <div
+                    className="h-full bg-[#32BA46] transition-all duration-300"
+                    style={{
+                      width: isPlaying ? "100%" : "35%",
+                      transitionDuration: isPlaying ? "15s" : "0.3s",
+                    }}
+                  />
                 </div>
               </div>
-            </div>
-          ))}
-        {tab === "videos" &&
-          VIDEO_ITEMS.map((v, i) => (
-            <div
-              key={i}
-              className="rounded-2xl overflow-hidden"
-              style={{ background: "#F4FAF7", border: "1px solid #D5E2DD" }}
-            >
-              <div
-                className="relative flex items-center justify-center h-36"
-                style={{ background: v.bg }}
-              >
-                <span style={{ fontSize: 56 }}>🎥</span>
-                <div
-                  className="absolute flex items-center justify-center w-14 h-14 rounded-full"
-                  style={{ background: "rgba(255,255,255,0.9)" }}
-                >
-                  <span
-                    className="text-2xl"
-                    style={{ color: "#087F63", marginLeft: 4 }}
-                  >
-                    ▶
-                  </span>
-                </div>
-                <span className="absolute bottom-2 right-2 text-xs font-bold text-white bg-black bg-opacity-60 px-2 py-0.5 rounded">
-                  {v.dur}
+            );
+          })
+        )}
+      </div>
+
+      {/* ── Interactive Comments Bottom Sheet Drawer ── */}
+      {commentsDrawerReel && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-sm"
+          onClick={() => setCommentsDrawerReel(null)}
+        >
+          <div
+            className="w-full max-w-[480px] mx-auto rounded-t-3xl flex flex-col shadow-2xl border-t border-[#32BA46]/30 animate-in slide-in-from-bottom duration-200"
+            style={{
+              background: "#07332F",
+              maxHeight: "70vh",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-sm text-white">
+                  {lang === "ur" ? "تبصرے اور کسان آراء" : "Comments & Discussion"}
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-[#32BA46]/20 text-[#32BA46] text-xs font-bold">
+                  {(commentsMap[commentsDrawerReel.id] || []).length}
                 </span>
               </div>
-              <div className="p-4">
-                <p className="font-bold text-sm leading-snug mb-2">{v.title}</p>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs" style={{ color: "#52635F" }}>
-                    {v.views} {lang === "ur" ? "ویوز" : "views"}
-                  </span>
-                  <span
-                    className="text-xs font-semibold ml-auto"
-                    style={{ color: "#087F63" }}
-                  >
-                    ZM Official
-                  </span>
-                </div>
-              </div>
+              <button
+                onClick={() => setCommentsDrawerReel(null)}
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white tap-target"
+              >
+                ✕
+              </button>
             </div>
-          ))}
-      </div>
+
+            {/* Comments List */}
+            <div className="flex-1 overflow-y-auto px-5 py-3 flex flex-col gap-4">
+              {(commentsMap[commentsDrawerReel.id] || []).map((c) => (
+                <div key={c.id} className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#0E645C] border border-white/20 flex items-center justify-center text-sm flex-shrink-0">
+                    {c.avatar}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-white/90">
+                        {c.author}
+                      </span>
+                      <span className="text-[10px] text-white/50">{c.time}</span>
+                    </div>
+                    <p
+                      className="text-xs text-white/95 mt-1 leading-relaxed"
+                      style={{
+                        fontFamily:
+                          lang === "ur"
+                            ? "'Noto Nastaliq Urdu', serif"
+                            : "inherit",
+                      }}
+                    >
+                      {c.text}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Add Comment Input Bar */}
+            <div className="p-3 border-t border-white/10 bg-[#041E1C] flex items-center gap-2">
+              <input
+                type="text"
+                value={newCommentText}
+                onChange={(e) => setNewCommentText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleAddComment(commentsDrawerReel.id);
+                  }
+                }}
+                placeholder={
+                  lang === "ur"
+                    ? "اپنی رائے یا سوال لکھیں..."
+                    : "Add your thoughts or question..."
+                }
+                className="flex-1 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-xs text-white placeholder-white/50 outline-none focus:border-[#32BA46]"
+                style={{
+                  fontFamily:
+                    lang === "ur"
+                      ? "'Noto Nastaliq Urdu', serif"
+                      : "inherit",
+                }}
+              />
+              <button
+                onClick={() => handleAddComment(commentsDrawerReel.id)}
+                className="w-9 h-9 rounded-full bg-[#32BA46] text-[#07332F] font-extrabold flex items-center justify-center shadow-lg tap-target flex-shrink-0 text-sm"
+              >
+                ➤
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
+// Alias for seamless routing
+const NewsVideosScreen = ZaraiReelsScreen;
 
 // ─── VOICE ────────────────────────────────────────────────────────────────────
 
@@ -18263,31 +19393,31 @@ function CompleteProfileModal({
   const { months, discount, regularTotal, discountAmt, finalTotal } =
     data.customMode
       ? (() => {
-          const m = data.customMonths || 1;
-          const d = getMonthlyDiscount(m);
-          const reg = monthlyTotal * m;
-          const da = Math.round(reg * d);
-          return {
-            months: m,
-            discount: d,
-            regularTotal: reg,
-            discountAmt: da,
-            finalTotal: reg - da,
-          };
-        })()
+        const m = data.customMonths || 1;
+        const d = getMonthlyDiscount(m);
+        const reg = monthlyTotal * m;
+        const da = Math.round(reg * d);
+        return {
+          months: m,
+          discount: d,
+          regularTotal: reg,
+          discountAmt: da,
+          finalTotal: reg - da,
+        };
+      })()
       : (() => {
-          const m = DURATION_MONTHS_BILLING[data.dur] || 1;
-          const d = getMonthlyDiscount(m);
-          const reg = monthlyTotal * m;
-          const da = Math.round(reg * d);
-          return {
-            months: m,
-            discount: d,
-            regularTotal: reg,
-            discountAmt: da,
-            finalTotal: reg - da,
-          };
-        })();
+        const m = DURATION_MONTHS_BILLING[data.dur] || 1;
+        const d = getMonthlyDiscount(m);
+        const reg = monthlyTotal * m;
+        const da = Math.round(reg * d);
+        return {
+          months: m,
+          discount: d,
+          regularTotal: reg,
+          discountAmt: da,
+          finalTotal: reg - da,
+        };
+      })();
 
   const walletProviders = [
     {
@@ -18513,20 +19643,18 @@ function CompleteProfileModal({
               </p>
               <p className="text-xs font-semibold" style={{ color: "#52635F" }}>
                 {lang === "ur"
-                  ? `مرحلہ ${currentStep} از ${totalSteps}: ${
-                      activeStepKey === "products"
-                        ? "دلچسپی کی مصنوعات"
-                        : activeStepKey === "plan"
-                          ? "سبسکرپشن پلان"
-                          : "ادائیگی کی تفصیلات"
-                    }`
-                  : `Step ${currentStep} of ${totalSteps}: ${
-                      activeStepKey === "products"
-                        ? "Interested Products"
-                        : activeStepKey === "plan"
-                          ? "Subscription Plan"
-                          : "Card & Payment"
-                    }`}
+                  ? `مرحلہ ${currentStep} از ${totalSteps}: ${activeStepKey === "products"
+                    ? "دلچسپی کی مصنوعات"
+                    : activeStepKey === "plan"
+                      ? "سبسکرپشن پلان"
+                      : "ادائیگی کی تفصیلات"
+                  }`
+                  : `Step ${currentStep} of ${totalSteps}: ${activeStepKey === "products"
+                    ? "Interested Products"
+                    : activeStepKey === "plan"
+                      ? "Subscription Plan"
+                      : "Card & Payment"
+                  }`}
               </p>
             </div>
             <button
@@ -20125,8 +21253,16 @@ function HomeScreen({
   );
 
   // ---------------------------------------------------------
-  // PRODUCT HELPERS
+  // PRODUCT HELPERS & SUBSCRIPTION LOCKING
   // ---------------------------------------------------------
+
+  const [userSubscribedList, setUserSubscribedList] = useState<string[]>(() => {
+    const raw = initialUserData?.products;
+    if (raw && raw.length > 0) {
+      return raw.map((p) => PRODUCT_ID_TO_NAME[p.toLowerCase()] || p);
+    }
+    return ["Wheat"];
+  });
 
   const getVerticalForProduct = (productName: string) => {
     return (
@@ -20136,22 +21272,32 @@ function HomeScreen({
     );
   };
 
-  const isAccessible = (name: string) =>
-    SUBSCRIBED_PRODUCTS.has(name) ||
-    TODAY_ONLY_PRODUCTS.has(name) ||
-    todayOnlyUnlocked.includes(name);
+  const isAccessible = (name: string) => {
+    if (profileCompleted) {
+      return userSubscribedList.includes(name);
+    }
+    return (
+      SUBSCRIBED_PRODUCTS.has(name) ||
+      TODAY_ONLY_PRODUCTS.has(name) ||
+      todayOnlyUnlocked.includes(name)
+    );
+  };
 
-  const isTodayOnly = (name: string) =>
-    (TODAY_ONLY_PRODUCTS.has(name) || todayOnlyUnlocked.includes(name)) &&
-    !SUBSCRIBED_PRODUCTS.has(name);
+  const isTodayOnly = (name: string) => {
+    if (profileCompleted) return false;
+    return (
+      (TODAY_ONLY_PRODUCTS.has(name) || todayOnlyUnlocked.includes(name)) &&
+      !SUBSCRIBED_PRODUCTS.has(name)
+    );
+  };
 
   const activeProducts = PRODUCT_DIVISIONS.filter((d) => isAccessible(d.name));
   const lockedProducts = PRODUCT_DIVISIONS.filter(
     (d) => !isAccessible(d.name),
-  ).slice(0, 10);
+  );
 
   const handleLockedProductClick = (divName: string, verticalFor: string) => {
-    if (divName === "Maize") {
+    if (divName === "Maize" && !profileCompleted) {
       TODAY_ONLY_PRODUCTS.add("Maize");
       setTodayOnlyUnlocked((prev) => [...prev, "Maize"]);
       push({
@@ -20172,11 +21318,14 @@ function HomeScreen({
     selected: string[],
     locationData?: { province: string; district: string; city: string },
   ) => {
-    selected.forEach((p) => {
-      const mapped = PRODUCT_ID_TO_NAME[p.toLowerCase()] || p;
-      SUBSCRIBED_PRODUCTS.add(mapped);
-      TODAY_ONLY_PRODUCTS.add(mapped);
+    const mapped = selected.map((p) => PRODUCT_ID_TO_NAME[p.toLowerCase()] || p);
+    const finalSelected = mapped.length > 0 ? mapped : ["Wheat"];
+    SUBSCRIBED_PRODUCTS.clear();
+    TODAY_ONLY_PRODUCTS.clear();
+    finalSelected.forEach((p) => {
+      SUBSCRIBED_PRODUCTS.add(p);
     });
+    setUserSubscribedList(finalSelected);
     if (locationData && initialUserData) {
       initialUserData.province = locationData.province;
       initialUserData.district = locationData.district;
@@ -20211,28 +21360,28 @@ function HomeScreen({
   const picksRowsRaw: RichRow[] =
     pickedByproducts.length > 0
       ? pickedByproducts.map((item) => {
-          const found = allMandiRows.find(
-            (r) => r.product === item.product && r.byproduct === item.byproduct,
-          );
+        const found = allMandiRows.find(
+          (r) => r.product === item.product && r.byproduct === item.byproduct,
+        );
 
-          return (
-            found || {
-              vertical: item.vertical,
-              product: item.product,
-              byproduct: item.byproduct,
-              emoji: "",
-              rateType: "Mill Rate",
-              arrival: "—",
-              min: 0,
-              max: 0,
-              trend: "stable" as const,
-              trendPct: 0,
-              mandiName: "—",
-              mandiCity: "—",
-              province: "—",
-            }
-          );
-        })
+        return (
+          found || {
+            vertical: item.vertical,
+            product: item.product,
+            byproduct: item.byproduct,
+            emoji: "",
+            rateType: "Mill Rate",
+            arrival: "—",
+            min: 0,
+            max: 0,
+            trend: "stable" as const,
+            trendPct: 0,
+            mandiName: "—",
+            mandiCity: "—",
+            province: "—",
+          }
+        );
+      })
       : allMandiRows.slice(0, 8);
 
   const seenPickKeys = new Set<string>();
@@ -20321,27 +21470,55 @@ function HomeScreen({
             </div>
 
             {/* Top Right: Free Trial Chip + Profile */}
+            {/* Top Right: Notification Bell Button + Profile */}
             <div className="flex items-center gap-2">
-              {!profileCompleted && (
-                <button
-                  type="button"
-                  onClick={() => setCompleteProfileOpen(true)}
-                  className="tap-target flex items-center gap-1.5 px-3 py-1 rounded-full font-extrabold text-xs"
-                  style={{
-                    background: "linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)",
-                    border: "1.3px solid #F59E0B",
-                    color: "#92400E",
-                    boxShadow: "0 2px 8px rgba(245, 158, 11, 0.35)",
-                    cursor: "pointer",
-                    backdropFilter: "blur(8px)",
-                  }}
-                  title="Tap to Complete Profile & Unlock Full App"
+              {/* Notification Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSwitchToast(
+                    lang === "ur"
+                      ? "تمام منڈی الرٹس اور نوٹیفکیشنز فعال ہیں"
+                      : "Market alerts & notifications active",
+                  );
+                  setTimeout(() => setShowSwitchToast(null), 2500);
+                }}
+                className="tap-target relative flex items-center justify-center rounded-full"
+                style={{
+                  width: 38,
+                  height: 38,
+                  background: "rgba(255,255,255,0.22)",
+                  border: "1.2px solid rgba(255,255,255,0.4)",
+                  backdropFilter: "blur(8px)",
+                }}
+                title={lang === "ur" ? "نوٹیفکیشنز" : "Notifications"}
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  <span style={{ fontSize: 11, fontWeight: 800 }}>
-                    {lang === "ur" ? "مفت ٹرائل: ۲ دن باقی" : "Free Trial: 2 Days Left"}
-                  </span>
-                </button>
-              )}
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+                <span
+                  style={{
+                    position: "absolute",
+                    top: 7,
+                    right: 8,
+                    width: 7,
+                    height: 7,
+                    borderRadius: "50%",
+                    background: "#E4B04D",
+                    border: "1.5px solid #07332F",
+                  }}
+                />
+              </button>
 
               {/* Profile Avatar Button with Double-Tap Switching */}
               <button
@@ -20450,17 +21627,32 @@ function HomeScreen({
             >
               {profileName || (lang === "ur" ? "محمد عارف" : "Muhammad Arif")}
             </h1>
-            <p
-              style={{
-                color: "#B4E6D2",
-                fontSize: 12,
-                fontWeight: 600,
-                marginTop: 2,
-                textShadow: "0 1px 3px rgba(0,0,0,0.4)",
-              }}
-            >
-              📍 {profileCity} {profileProvince ? `(${profileProvince})` : ""}
-            </p>
+            <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+              <p
+                style={{
+                  color: "#B4E6D2",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  textShadow: "0 1px 3px rgba(0,0,0,0.4)",
+                }}
+              >
+                {profileCity} {profileProvince ? `(${profileProvince})` : ""}
+              </p>
+              {!profileCompleted && (
+                <span
+                  className="px-2 py-0.5 font-black text-[10px] tracking-wide inline-flex items-center gap-1 shadow-sm"
+                  style={{
+                    background: "#FEF3C7",
+                    border: "1.2px solid #F59E0B",
+                    color: "#92400E",
+                    borderRadius: "6px",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {lang === "ur" ? "مفت ٹرائل" : "Free Trial"}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -20471,9 +21663,8 @@ function HomeScreen({
               push({ id: "search" }),
             )
           }
-          className={`tap-target flex items-center gap-2.5 ${
-            lang === "ur" ? "text-right" : "text-left"
-          }`}
+          className={`tap-target flex items-center gap-2.5 ${lang === "ur" ? "text-right" : "text-left"
+            }`}
           style={{
             position: "absolute",
             left: 16,
@@ -20535,9 +21726,8 @@ function HomeScreen({
         <AgriAmbientCanvas />
 
         <div
-          className={`relative z-10 flex-1 flex flex-col ${
-            profileCompleted ? "justify-around" : "justify-between"
-          }`}
+          className={`relative z-10 flex-1 flex flex-col ${profileCompleted ? "justify-around" : "justify-between"
+            }`}
           style={{
             paddingBottom: profileCompleted
               ? "clamp(8px, 1.6vh, 16px)"
@@ -21243,9 +22433,8 @@ function HomeScreen({
                       style={{
                         background: picksVertical === v ? "#087F63" : "#F1F7F4",
                         color: picksVertical === v ? "#fff" : "#52635F",
-                        border: `1px solid ${
-                          picksVertical === v ? "#087F63" : "#D5E2DD"
-                        }`,
+                        border: `1px solid ${picksVertical === v ? "#087F63" : "#D5E2DD"
+                          }`,
                       }}
                     >
                       <SpriteIcon
@@ -21296,9 +22485,8 @@ function HomeScreen({
                           style={{
                             height: 64,
                             background: selected ? "#E4F2EC" : "#fff",
-                            border: `1.5px solid ${
-                              selected ? "#087F63" : "#D5E2DD"
-                            }`,
+                            border: `1.5px solid ${selected ? "#087F63" : "#D5E2DD"
+                              }`,
                           }}
                         >
                           <div
@@ -21373,9 +22561,8 @@ function HomeScreen({
                   }}
                 >
                   {pickedByproducts.length > 0
-                    ? `Show ${pickedByproducts.length} Pick${
-                        pickedByproducts.length > 1 ? "s" : ""
-                      }`
+                    ? `Show ${pickedByproducts.length} Pick${pickedByproducts.length > 1 ? "s" : ""
+                    }`
                     : "Done · Show All"}
                 </button>
               </div>
@@ -21509,75 +22696,69 @@ function HomeScreen({
                 )}
               </div>
 
-              {/* Profile Completion Bar in Drawer */}
-              <div
-                style={{
-                  margin: "14px 18px 8px",
-                  padding: "14px 16px",
-                  background: profileCompleted ? "#E8F8F0" : "#FFF8EB",
-                  border: profileCompleted
-                    ? "1.5px solid #2FAE68"
-                    : "1.5px solid #F59E0B",
-                  borderRadius: 16,
-                }}
-              >
+              {/* Profile Completion Bar in Drawer (only shown while incomplete) */}
+              {!profileCompleted && (
                 <div
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 6,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 800,
-                      color: profileCompleted ? "#064D40" : "#92400E",
-                    }}
-                  >
-                    {profileCompleted
-                      ? lang === "ur"
-                        ? "پروفائل 100% مکمل ہے ✓"
-                        : "Profile 100% Complete ✓"
-                      : lang === "ur"
-                        ? `پروفائل مکمل کریں`
-                        : `Complete Profile`}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: profileCompleted ? "#087F63" : "#D97706",
-                    }}
-                  >
-                    {profileCompleted ? "100%" : `${progressPct}%`}
-                  </span>
-                </div>
-                <div
-                  style={{
-                    width: "100%",
-                    height: 8,
-                    background: "#E5E7EB",
-                    borderRadius: 999,
-                    overflow: "hidden",
-                    marginBottom: 8,
+                    margin: "14px 18px 8px",
+                    padding: "14px 16px",
+                    background: "#FFF8EB",
+                    border: "1.5px solid #F59E0B",
+                    borderRadius: 16,
                   }}
                 >
                   <div
                     style={{
-                      width: profileCompleted ? "100%" : `${progressPct}%`,
-                      height: "100%",
-                      background: profileCompleted ? "#2FAE68" : "#F59E0B",
-                      borderRadius: 999,
-                      transition: "width 0.4s ease",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: 6,
                     }}
-                  />
-                </div>
-                {!profileCompleted && (
+                  >
+                    <span
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 800,
+                        color: "#92400E",
+                      }}
+                    >
+                      {lang === "ur"
+                        ? `پروفائل مکمل کریں`
+                        : `Complete Profile`}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#D97706",
+                      }}
+                    >
+                      {`${progressPct}%`}
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      width: "100%",
+                      height: 8,
+                      background: "#E5E7EB",
+                      borderRadius: 999,
+                      overflow: "hidden",
+                      marginBottom: 8,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${progressPct}%`,
+                        height: "100%",
+                        background: "#F59E0B",
+                        borderRadius: 999,
+                        transition: "width 0.4s ease",
+                      }}
+                    />
+                  </div>
                   <button
                     onClick={() => {
-                    setProfileOpen(false);
+                      setProfileOpen(false);
                       setCompleteProfileOpen(true);
                     }}
                     style={{
@@ -21597,8 +22778,8 @@ function HomeScreen({
                       ? `سیٹ اپ جاری رکھیں (مرحلہ ${currentStepNum}) →`
                       : `Continue Setup (Step ${currentStepNum} of ${totalSteps}) →`}
                   </button>
-                )}
-              </div>
+                </div>
+              )}
 
               {/* Menu items */}
               {[
@@ -22149,13 +23330,13 @@ function HomeScreen({
                       {lang === "ur" ? "آپ کی فعال سبسکرائب شدہ اجناس" : "Your Subscribed Commodities"}
                     </h5>
                     <div className="space-y-2">
-                      {Array.from(SUBSCRIBED_PRODUCTS).slice(0, 3).map((p) => (
+                      {userSubscribedList.map((p) => (
                         <div
                           key={p}
                           className="flex items-center justify-between p-3.5 rounded-xl bg-white border border-[#D5E2DD] shadow-sm"
                         >
                           <div className="flex items-center gap-3">
-                            <ProductIcon name={p} vertical="Grains" size={32} />
+                            <ProductIcon name={p} vertical={getVerticalForProduct(p)} size={32} />
                             <div>
                               <p className="text-xs font-extrabold text-[#183B34]">
                                 {tc(p)}
@@ -22177,29 +23358,24 @@ function HomeScreen({
                     </div>
                   </div>
 
-                  {/* Unlock Other Commodities (Primary Single Unlock + Secondary Multi Unlock) */}
+                  {/* Unlock Other Commodities (Shows all other commodities) */}
                   <div className="pt-1">
                     <h5 className="text-xs font-extrabold text-[#183B34] uppercase tracking-wider mb-2.5">
                       {lang === "ur" ? "دیگر اجناس ان لاک کریں" : "Unlock Other Commodities"}
                     </h5>
                     <div className="space-y-2">
-                      {[
-                        { name: "Cotton", category: "Cash Crops", price: "PKR 3,000 / mo" },
-                        { name: "Rice", category: "Grains & Paddy", price: "PKR 3,000 / mo" },
-                        { name: "Maize", category: "Grains & Feeds", price: "PKR 3,000 / mo" },
-                        { name: "Sugar", category: "Sugar & Sweeteners", price: "PKR 3,000 / mo" },
-                        { name: "Pulses", category: "Lentils & Pulses", price: "PKR 3,000 / mo" },
-                        { name: "Mustard", category: "Oilseeds & Mustard", price: "PKR 3,000 / mo" },
-                      ].map((item) => (
+                      {PRODUCT_DIVISIONS.filter(
+                        (div) => !userSubscribedList.includes(div.name),
+                      ).map((item) => (
                         <div
                           key={item.name}
                           className="flex items-center justify-between p-3 rounded-xl bg-white border border-[#D5E2DD] shadow-sm"
                         >
                           <div className="flex items-center gap-2.5">
-                            <ProductIcon name={item.name} vertical="Grains" size={28} />
+                            <ProductIcon name={item.name} vertical={getVerticalForProduct(item.name)} size={28} />
                             <div>
                               <p className="text-xs font-bold text-[#183B34]">{tc(item.name)}</p>
-                              <p className="text-[10.5px] text-[#52635F]">{item.price}</p>
+                              <p className="text-[10.5px] text-[#52635F]">PKR 3,000 / mo</p>
                             </div>
                           </div>
                           <button
@@ -22208,7 +23384,7 @@ function HomeScreen({
                               push({
                                 id: "billing",
                                 product: item.name,
-                                vertical: "Grains",
+                                vertical: getVerticalForProduct(item.name),
                               });
                             }}
                             className="px-3.5 py-1.5 rounded-xl bg-[#087F63] text-white font-extrabold text-xs shadow-sm hover:bg-[#064D40] transition"
@@ -22408,11 +23584,11 @@ function HomeScreen({
                 <h4 className="text-base font-black text-[#183B34]">
                   {lang === "ur" ? "منڈی پارٹنر اور نمائندہ اکاؤنٹ" : "Mandi Representative Account"}
                 </h4>
-                <p className="text-xs text-[#52635F] leading-relaxed max-w-sm mx-auto">
+                {/* <p className="text-xs text-[#52635F] leading-relaxed max-w-sm mx-auto">
                   {lang === "ur"
                     ? "اپنے علاقے کی منڈی کے لیے نمائندہ اکاؤنٹ رجسٹر کریں۔ رجسٹریشن کے بعد آپ ایک ہی اکاؤنٹ سے کسٹمر اور نمائندہ ڈیش بورڈ کے درمیان کسی بھی وقت سوئچ کر سکتے ہیں۔"
                     : "Register as an authorized representative for your local mandi. Once set up under this phone/email, you can seamlessly switch between Customer and Representative dashboards anytime."}
-                </p>
+                </p> */}
               </div>
 
               {/* <div className="p-3.5 rounded-xl bg-white border border-[#D5E2DD] text-xs text-[#183B34] font-semibold text-left space-y-1.5">
@@ -22776,7 +23952,7 @@ function HomeScreen({
           >
             <h3 className="text-base font-extrabold text-[#183B34] mb-1.5">
               {lang === "ur" ? "کیا آپ واقعی لاگ آؤٹ کرنا چاہتے ہیں؟" : "Are you sure you want to log out?"}
-            </h3> 
+            </h3>
             <div className="flex gap-2.5">
               <button
                 onClick={() => setLogoutModalOpen(false)}
@@ -23727,31 +24903,22 @@ function BottomNav({
       >
         <rect
           x="3"
-          y="4"
+          y="3"
           width="18"
-          height="16"
-          rx="2"
+          height="18"
+          rx="5"
           stroke={on ? "#087F63" : "#52635F"}
           strokeWidth="2"
-          fill="none"
         />
-        <line
-          x1="7"
-          y1="9"
-          x2="17"
-          y2="9"
+        <path
+          d="M7 3L10.5 8M13.5 3L17 8M3 8H21"
           stroke={on ? "#087F63" : "#52635F"}
-          strokeWidth="2"
+          strokeWidth="1.5"
           strokeLinecap="round"
         />
-        <line
-          x1="7"
-          y1="13"
-          x2="14"
-          y2="13"
-          stroke={on ? "#087F63" : "#52635F"}
-          strokeWidth="2"
-          strokeLinecap="round"
+        <polygon
+          points="10,11 16,14.5 10,18"
+          fill={on ? "#087F63" : "#52635F"}
         />
       </svg>
     ),
@@ -24296,9 +25463,9 @@ function LiveMarketScreen({ onBack }: { onBack: () => void }) {
     n === 0
       ? "—"
       : n.toLocaleString("en-US", {
-          minimumFractionDigits: decimals,
-          maximumFractionDigits: decimals,
-        });
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      });
 
   const fmtChange = (n: number) => {
     const s = n > 0 ? `+${n}` : `${n}`;
@@ -24745,31 +25912,31 @@ function BillingScreen({
 
   const { months, discount, regularTotal, discountAmt, finalTotal } = customMode
     ? (() => {
-        const m = customMonths || 1;
-        const d = getMonthlyDiscount(m);
-        const reg = basePrice * m;
-        const da = Math.round(reg * d);
-        return {
-          months: m,
-          discount: d,
-          regularTotal: reg,
-          discountAmt: da,
-          finalTotal: reg - da,
-        };
-      })()
+      const m = customMonths || 1;
+      const d = getMonthlyDiscount(m);
+      const reg = basePrice * m;
+      const da = Math.round(reg * d);
+      return {
+        months: m,
+        discount: d,
+        regularTotal: reg,
+        discountAmt: da,
+        finalTotal: reg - da,
+      };
+    })()
     : (() => {
-        const m = DURATION_MONTHS_BILLING[dur] || 1;
-        const d = getMonthlyDiscount(m);
-        const reg = basePrice * m;
-        const da = Math.round(reg * d);
-        return {
-          months: m,
-          discount: d,
-          regularTotal: reg,
-          discountAmt: da,
-          finalTotal: reg - da,
-        };
-      })();
+      const m = DURATION_MONTHS_BILLING[dur] || 1;
+      const d = getMonthlyDiscount(m);
+      const reg = basePrice * m;
+      const da = Math.round(reg * d);
+      return {
+        months: m,
+        discount: d,
+        regularTotal: reg,
+        discountAmt: da,
+        finalTotal: reg - da,
+      };
+    })();
 
   const walletProviders = [
     {
@@ -25255,9 +26422,9 @@ function BillingScreen({
                     {lang === "ur"
                       ? "کل رقم (" + months + " ماہ)"
                       : "Total/mo × " +
-                        months +
-                        " month" +
-                        (months > 1 ? "s" : "")}
+                      months +
+                      " month" +
+                      (months > 1 ? "s" : "")}
                   </span>
                   <span style={{ fontWeight: 600 }}>
                     PKR {regularTotal.toLocaleString()}
@@ -26078,11 +27245,11 @@ function BillingScreen({
             <p style={{ fontSize: 12.5, color: "#52635F", marginBottom: 20 }}>
               {lang === "ur"
                 ? "آپ کے پاس اب " +
-                  tc(product) +
-                  " کے تمام منڈی ریٹس اور تجزیات تک مکمل رسائی ہے۔"
+                tc(product) +
+                " کے تمام منڈی ریٹس اور تجزیات تک مکمل رسائی ہے۔"
                 : "You now have full active access to " +
-                  product +
-                  " live rates, analytics & market alerts."}
+                product +
+                " live rates, analytics & market alerts."}
             </p>
             <button
               onClick={() => {
@@ -26106,7 +27273,7 @@ function BillingScreen({
   );
 }
 
-{/* ─── REPRESENTATIVE DASHBOARD SCREEN ─────────────────────────────────── */}
+{/* ─── REPRESENTATIVE DASHBOARD SCREEN ─────────────────────────────────── */ }
 function RepDashboardScreen({
   push,
   initialUserData,
@@ -26547,8 +27714,8 @@ function AppInner({
       );
       return exists
         ? prev.filter(
-            (p) => `${p.vertical}|${p.product}|${p.byproduct}` !== key,
-          )
+          (p) => `${p.vertical}|${p.product}|${p.byproduct}` !== key,
+        )
         : [...prev, item];
     });
   const isPickedBP = (item: RateItem) =>
@@ -26614,7 +27781,7 @@ function AppInner({
 
   const navActive: NavTab =
     (["analytics", "news"] as NavTab[]).includes(activeNav) &&
-    stack.length === 1
+      stack.length === 1
       ? activeNav
       : "home";
 

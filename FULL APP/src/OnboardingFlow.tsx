@@ -431,15 +431,17 @@ function LangScreen({ onNext }: { onNext: () => void }) {
 
 // ─── Screen 2 – Who Are You? (simplified — no descriptions, no sub-options) ──
 function RoleScreen({
+  initialRole,
   onNext,
   onBack,
   onSignIn,
 }: {
+  initialRole?: Role
   onNext: (role: Role) => void
   onBack: () => void
   onSignIn?: () => void
 }) {
-  const [role, setRole] = useState<Role | "">("")
+  const [role, setRole] = useState<Role | "">(initialRole || "")
 
   const roles: { id: Role; label: string }[] = [
     { id: "customer", label: "Customer" },
@@ -3161,7 +3163,7 @@ export default function OnboardingFlow({
   const [authMode, setAuthMode] = useState<"register" | "signin">(initialMode)
   const [screen, setScreen] = useState<Screen>(
     initialRole === "representative"
-      ? "account"
+      ? "role"
       : initialMode === "signin"
         ? "account"
         : "lang"
@@ -3181,7 +3183,7 @@ export default function OnboardingFlow({
     setAuthMode(initialMode)
     setRole(initialRole)
     if (initialRole === "representative") {
-      setScreen("account")
+      setScreen("role")
     } else if (initialMode === "signin") {
       setScreen("account")
     }
@@ -3213,6 +3215,7 @@ export default function OnboardingFlow({
 
         {screen === "role" && (
           <RoleScreen
+            initialRole={role || initialRole}
             onNext={(r) => {
               setRole(r)
               setAuthMode("register")
