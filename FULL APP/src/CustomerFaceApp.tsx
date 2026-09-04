@@ -23369,11 +23369,11 @@ function HomeScreen({
                     <h4 className="text-lg font-black">
                       {lang === "ur" ? "فعال زرعی منڈی پرو پلان" : "Active Pro Subscription"}
                     </h4>
-                    <p className="text-xs text-[#E4F2EC]">
+                    {/* <p className="text-xs text-[#E4F2EC]">
                       {lang === "ur"
                         ? "تمام فعال اجناس کے لائیو اور تاریخی ریٹس تک رسائی"
                         : "Live mandi rates, full historical archives & daily SMS alerts"}
-                    </p>
+                    </p> */}
                   </div>
 
                   {/* Subscribed Commodities with Reg and Expiry Date */}
