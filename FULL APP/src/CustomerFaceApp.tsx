@@ -9346,21 +9346,6 @@ function ByProductCombinedScreen({
       .flatMap((p) => productByproducts(p.vertical, p.product))
       .filter((b, i, a) => a.indexOf(b) === i);
 
-  // One-time historical data explanation modal
-  const [showHistoricalModal, setShowHistoricalModal] = useState(() => {
-    try {
-      return !localStorage.getItem("zm_seen_historical_popup");
-    } catch {
-      return true;
-    }
-  });
-
-  const dismissHistoricalModal = () => {
-    setShowHistoricalModal(false);
-    try {
-      localStorage.setItem("zm_seen_historical_popup", "true");
-    } catch { }
-  };
 
   // Date scroll system - restricted to 2 days (Today & Yesterday) for non-subscribers
   const [visibleDateLabel, setVisibleDateLabel] = useState<{
@@ -10467,94 +10452,6 @@ function ByProductCombinedScreen({
         />
       )}
 
-      {/* ── One-Time Historical Data Notice Popup ── */}
-      {showHistoricalModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
-          onClick={dismissHistoricalModal}
-        >
-          <div
-            className="w-full max-w-[380px] rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center relative border border-[#32BA46]/30"
-            style={{
-              background: "linear-gradient(165deg, #07332F 0%, #041E1C 100%)",
-              color: "#fff",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Icon Header */}
-            <div className="w-14 h-14 rounded-2xl bg-[#087F63]/30 border border-[#32BA46]/40 flex items-center justify-center text-2xl mb-4 shadow-inner">
-              📅
-            </div>
-
-            {/* Title */}
-            <h3
-              className="text-lg font-black text-white mb-2 leading-snug"
-              style={{
-                fontFamily:
-                  lang === "ur"
-                    ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                    : "inherit",
-              }}
-            >
-              {lang === "ur"
-                ? "آج کے لائیو ریٹس اور تاریخی ڈیٹا"
-                : "Today's Live Rates & Historical Data"}
-            </h3>
-
-            {/* Explanatory Body */}
-            <p
-              className="text-xs text-white/80 leading-relaxed mb-5"
-              style={{
-                fontFamily:
-                  lang === "ur"
-                    ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                    : "inherit",
-              }}
-            >
-              {lang === "ur"
-                ? "یہ پرائس کارڈز آج کے تازہ ترین مارکیٹ ریٹس دکھا رہے ہیں۔ اگر آپ کو اپنے سائن اپ سے پہلے کی تاریخوں کا پرانا تاریخی ڈیٹا درکار ہے، تو زرعی منڈی سپورٹ سے رابطہ کریں۔"
-                : "The price cards shown here reflect today's active market rates. If you require historical price data prior to your signup date, please reach out to our team."}
-            </p>
-
-            {/* Contact Options Row */}
-            <div className="w-full flex flex-col gap-2.5 mb-4">
-              {/* WhatsApp Option */}
-              <a
-                href="https://wa.me/923001234567?text=Assalam%20o%20Alaikum,%20I%20need%20historical%20market%20data%20from%20Zarai%20Mandi."
-                target="_blank"
-                rel="noreferrer"
-                className="tap-target w-full py-2.5 px-4 rounded-xl font-extrabold text-xs flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-md"
-                style={{
-                  background: "#25D366",
-                  color: "#07332F",
-                }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.79 14.07c-.24.67-1.39 1.29-1.92 1.37-.5.08-1.15.11-3.69-.94-3.25-1.34-5.34-4.63-5.5-4.85-.16-.22-1.31-1.74-1.31-3.32s.82-2.36 1.11-2.68c.29-.32.64-.4.85-.4.21 0 .42.01.61.02.2.01.47-.08.73.55.27.64.91 2.22.99 2.38.08.16.13.35.03.56-.11.21-.16.35-.32.53-.16.19-.34.42-.48.56-.16.16-.33.33-.14.65.19.32.84 1.39 1.8 2.25 1.24 1.1 2.28 1.44 2.61 1.6.32.16.51.13.7-.08.19-.21.82-.95 1.04-1.28.21-.32.43-.27.72-.16.29.11 1.85.87 2.17 1.03.32.16.53.24.61.37.08.13.08.77-.16 1.44z" />
-                </svg>
-                <span>{lang === "ur" ? "واٹس ایپ سپورٹ پر رابطہ کریں" : "WhatsApp Support"}</span>
-              </a>
-
-              {/* Email Option */}
-              <a
-                href="mailto:support@zaraimandi.com?subject=Historical%20Data%20Request%20-%20Zarai%20Mandi"
-                className="tap-target w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 border border-white/20 bg-white/10 text-white hover:bg-white/15 transition-transform active:scale-95"
-              >
-                <span>✉️</span>
-                <span>support@zaraimandi.com</span>
-              </a>
-            </div>
-
-            {/* Got It Dismiss Button */}
-            <button
-              onClick={dismissHistoricalModal}
-              className="tap-target w-full py-2.5 rounded-xl font-extrabold text-xs text-white/70 hover:text-white transition-colors"
-            >
-              {lang === "ur" ? "سمجھ آ گئی • جاری رکھیں" : "Got It • Continue"}
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

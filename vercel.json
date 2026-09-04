@@ -1,7 +1,7 @@
 {
-  "buildCommand": "cd \"FULL APP\" && npm run build",
+  "buildCommand": "npm --prefix \"FULL APP\" run build",
+  "installCommand": "npm --prefix \"FULL APP\" install",
   "outputDirectory": "FULL APP/dist",
-  "framework": "vite",
   "rewrites": [
     {
       "source": "/(.*)",
