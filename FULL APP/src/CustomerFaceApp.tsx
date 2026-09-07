@@ -14,6 +14,7 @@ import {
 
 import farmHeroBg from "./assets/farm_hero_bg.jpg";
 import agriForegroundImg from "./assets/agri_foreground.png";
+import pakistanFlagImg from "./assets/pakistan_flag.png";
 import { div } from "motion/react-client";
 
 import video1 from "./videos/video1.mp4";
@@ -26,6 +27,27 @@ import video7 from "./videos/video7.mp4";
 import video8 from "./videos/video8.mp4";
 
 const ZM_THEME_CSS = `
+  /* 4-Sided Clockwise Racetrack Frame Animations */
+  @keyframes marqueeClockwiseL2R {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0%); }
+  }
+  @keyframes marqueeClockwiseR2L {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+  }
+  .racetrack-track-l2r {
+    display: flex;
+    white-space: nowrap;
+    width: max-content;
+    animation: marqueeClockwiseL2R 15s linear infinite;
+  }
+  .racetrack-track-r2l {
+    display: flex;
+    white-space: nowrap;
+    width: max-content;
+    animation: marqueeClockwiseR2L 15s linear infinite;
+  }
   @font-face {
     font-family: 'Jameel Noori Nastaleeq';
     src: url('/fonts/JameelNooriNastaleeq.ttf') format('truetype');
@@ -121,6 +143,7 @@ const AUTO_URDU_DICT: Record<string, string> = {
   "Search product or byproduct...": "اجناس یا ضمنی مصنوع تلاش کریں…",
   "Search product or byproduct…": "اجناس یا ضمنی مصنوع تلاش کریں…",
   "Search product or byproduct…": "اجناس یا ضمنی مصنوع تلاش کریں…",
+
   "Search Mandis, Cities...": "منڈیاں یا شہر تلاش کریں…",
   "Search byproducts...": "ضمنی مصنوعات تلاش کریں…",
   "Search products...": "مصنوعات تلاش کریں…",
@@ -7637,21 +7660,28 @@ function LocationSheet({
           style={{ maxHeight: "calc(80vh - 64px)" }}
         >
           {!province &&
-            Object.keys(LOCATIONS).map((p) => (
-              <button
-                key={p}
-                onClick={() => setProvince(p)}
-                className="tap-target rounded-2xl px-4 flex items-center justify-between"
-                style={{
-                  background: "#F1F7F4",
-                  border: "1px solid #D5E2DD",
-                  minHeight: 52,
-                }}
-              >
-                <span className="font-bold text-base">{p}</span>
-                <span style={{ color: "#52635F" }}>›</span>
-              </button>
-            ))}
+            Object.keys(LOCATIONS).map((p) => {
+              const pPattern: "phulkari" | "ajrak" | "khyber" | "baloch" =
+                p === "Sindh" ? "ajrak" : p === "KPK" ? "khyber" : p === "Balochistan" ? "baloch" : "phulkari";
+              return (
+                <button
+                  key={p}
+                  onClick={() => setProvince(p)}
+                  className="tap-target relative overflow-hidden rounded-2xl px-4 flex items-center justify-between"
+                  style={{
+                    background: "#F1F7F4",
+                    border: "1px solid #D5E2DD",
+                    minHeight: 52,
+                  }}
+                >
+                  <div className="absolute inset-0 pointer-events-none opacity-25">
+                    <ProvincePatternSvg pattern={pPattern} opacity={0.3} />
+                  </div>
+                  <span className="relative z-10 font-bold text-base">{p}</span>
+                  <span className="relative z-10" style={{ color: "#52635F" }}>›</span>
+                </button>
+              );
+            })}
           {province &&
             !district &&
             Object.keys(LOCATIONS[province]).map((d) => (
@@ -9314,8 +9344,8 @@ function ByProductCombinedScreen({
   push,
   replace,
   onBack,
-  isPickedBP,
-  togglePickBP,
+  isPickedBP = () => false,
+  togglePickBP = () => {},
   locationScope,
   onOpenLocation,
   profileCompleted = false,
@@ -9326,16 +9356,20 @@ function ByProductCombinedScreen({
   push: (s: Screen) => void;
   replace: (s: Screen) => void;
   onBack: () => void;
-  isPickedBP: (item: RateItem) => boolean;
-  togglePickBP: (item: RateItem) => void;
+  isPickedBP?: (item: RateItem) => boolean;
+  togglePickBP?: (item: RateItem) => void;
   locationScope?: LocationScope;
   onOpenLocation?: () => void;
   profileCompleted?: boolean;
   onOpenSubscribe?: () => void;
 }) {
-  const [showAllProducts, setShowAllProducts] = useState(true);
   const idx = Math.min(active, products.length - 1);
-  const activeProduct = showAllProducts ? null : (products[idx] ?? products[0]);
+  const [showAllProducts, setShowAllProducts] = useState(false);
+  const activeProduct = products[idx] ?? products[0];
+  const activeproducts = showAllProducts
+    ? products.map((p) => p.product)
+    : [activeProduct?.product || products[0]?.product || ""];
+
   const setActive = (i: number) => {
     setShowAllProducts(false);
     replace({ id: "byproduct-combined", products, active: i });
@@ -9348,6 +9382,8 @@ function ByProductCombinedScreen({
 
 
   // Date scroll system - restricted to 2 days (Today & Yesterday) for non-subscribers
+  const { voiceEnabled, lang, t: tL, tc: tcL, tm: tmL, tr: trL } = useLang();
+
   const [visibleDateLabel, setVisibleDateLabel] = useState<{
     d: number;
     month: string;
@@ -9363,6 +9399,10 @@ function ByProductCombinedScreen({
     d.setDate(d.getDate() - offset);
     return d;
   };
+
+  const islamicDate = useMemo(() => {
+    return getIslamicDate(dateForOffset(0), lang);
+  }, [lang]);
   const dateLabel = (d: Date) => {
     const months = [
       "JAN",
@@ -9468,8 +9508,6 @@ function ByProductCombinedScreen({
       prevIdx.current = idx;
     }
   }, [idx]);
-
-  const { voiceEnabled, lang, t: tL, tc: tcL, tm: tmL, tr: trL } = useLang();
 
   const handleCardTap = (r: RichRow, bp: string, navigateFn: () => void) => {
     if (voiceEnabled) {
@@ -9590,10 +9628,6 @@ function ByProductCombinedScreen({
     return { row: noData, hasData: false };
   };
 
-  const activeproducts = showAllProducts
-    ? products.map((p) => p.product)
-    : [activeProduct?.product || ""];
-
   const buildAllRows = (bp: string): RichRow[] => {
     const rows: RichRow[] = [];
     const seen = new Set<string>(); // deduplicate by mandi+rateType
@@ -9683,7 +9717,7 @@ function ByProductCombinedScreen({
         className="flex-shrink-0"
         style={{ background: "#F4FAF7", borderBottom: "1px solid #D5E2DD" }}
       >
-        {/* Title row with location top-right and Free Trial chip */}
+        {/* Title row with English & Lunar date pills + location top-right */}
         <div className="px-4 pt-10 pb-2 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0">
             <button
@@ -9713,10 +9747,9 @@ function ByProductCombinedScreen({
             </div>
           </div>
 
-          {/* Top Right: Date flip indicator + Location selector */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-
-            {/* Flip calendar date indicator */}
+          {/* Top Right: English / Gregorian Date Pill & Lunar Date Pill + Location selector */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            {/* English / Gregorian Date Pill */}
             <div
               role="button"
               tabIndex={0}
@@ -9724,60 +9757,122 @@ function ByProductCombinedScreen({
                 if (voiceEnabled) {
                   speakText(
                     lang === "ur"
-                      ? "گزشتہ تاریخوں کی قیمتیں دکھائی جا رہی ہیں۔"
-                      : "Showing historical dates and prices.",
+                      ? `آج کی تاریخ: ${visibleDateLabel.d} ${visibleDateLabel.month.toUpperCase() === "AUG" ? "اگست" : visibleDateLabel.month}`
+                      : `Date: ${visibleDateLabel.month} ${visibleDateLabel.d}`,
                   );
                 }
               }}
+              className="flex items-center rounded-xl overflow-hidden shadow-sm flex-shrink-0 cursor-pointer active:scale-95 transition"
               style={{
-                display: "flex",
-                borderRadius: 10,
-                overflow: "hidden",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
-                flexShrink: 0,
-                border: "1px solid #C7E8D8",
-                cursor: "pointer",
+                border: "1.5px solid #087F63",
+                background: "#FFFFFF",
+                height: 32,
               }}
+              title={lang === "ur" ? "شمسی تاریخ" : "Gregorian Date"}
             >
               <div
+                className="px-2 flex items-center justify-center font-black"
                 style={{
                   background: "#087F63",
-                  padding: "4px 7px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  color: "#FFFFFF",
+                  fontSize: lang === "ur" ? 12 : 10.5,
+                  letterSpacing: "0.05em",
+                  height: "100%",
+                  fontFamily:
+                    lang === "ur"
+                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      : "inherit",
                 }}
               >
-                <span
-                  style={{
-                    color: "#fff",
-                    fontSize: 8.5,
-                    fontWeight: 800,
-                    letterSpacing: 0.5,
-                  }}
-                >
-                  {visibleDateLabel.month}
-                </span>
+                {lang === "ur"
+                  ? visibleDateLabel.month.toUpperCase() === "AUG"
+                    ? "اگست"
+                    : visibleDateLabel.month
+                  : visibleDateLabel.month}
               </div>
               <div
+                className="px-2.5 flex items-center justify-center font-black"
                 style={{
                   background: "#F4FAF7",
-                  padding: "4px 7px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  height: "100%",
                   borderLeft: "1px solid #D5E2DD",
                 }}
               >
                 <span
                   style={{
                     color: "#183B34",
-                    fontSize: 15,
+                    fontSize: 14,
                     fontWeight: 900,
                     lineHeight: 1,
                   }}
                 >
-                  {visibleDateLabel.d}
+                  {lang === "ur"
+                    ? toUrduDigits(visibleDateLabel.d)
+                    : visibleDateLabel.d}
+                </span>
+              </div>
+            </div>
+
+            {/* Lunar Calendar Date Pill (Exact Symmetrical Matching Format) */}
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => {
+                if (voiceEnabled) {
+                  speakText(
+                    lang === "ur"
+                      ? `قمری تاریخ: ${islamicDate.fullText}`
+                      : `Lunar Date: ${islamicDate.fullText}`,
+                  );
+                }
+              }}
+              className="flex items-center rounded-xl overflow-hidden shadow-sm flex-shrink-0 cursor-pointer active:scale-95 transition"
+              style={{
+                border: "1.5px solid #0D6E57",
+                background: "#FFFFFF",
+                height: 32,
+              }}
+              title={lang === "ur" ? "قمری تاریخ" : "Lunar Calendar Date"}
+            >
+              <div
+                className="px-2 flex items-center justify-center font-black"
+                style={{
+                  background: "#0D6E57",
+                  color: "#FFFFFF",
+                  fontSize: lang === "ur" ? 12 : 10,
+                  letterSpacing: "0.05em",
+                  height: "100%",
+                  fontFamily:
+                    lang === "ur"
+                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      : "inherit",
+                }}
+              >
+                {lang === "ur"
+                  ? islamicDate.monthName || "ربیع الاول"
+                  : islamicDate.monthName
+                    ? islamicDate.monthName.split(" ")[0].toUpperCase()
+                    : "RABI I"}
+              </div>
+              <div
+                className="px-2.5 flex items-center justify-center font-black"
+                style={{
+                  background: "#F4FAF7",
+                  height: "100%",
+                  borderLeft: "1px solid #D5E2DD",
+                }}
+              >
+                <span
+                  style={{
+                    color: "#183B34",
+                    fontSize: 14,
+                    fontWeight: 900,
+                    lineHeight: 1,
+                  }}
+                >
+                  {lang === "ur"
+                    ? toUrduDigits(islamicDate.day)
+                    : String(islamicDate.day).padStart(2, "0")}
                 </span>
               </div>
             </div>
@@ -9801,7 +9896,9 @@ function ByProductCombinedScreen({
                 maxWidth: 110,
               }}
             >
-              <span className="truncate" style={{ fontSize: 11 }}>{locLabel}</span>
+              <span className="truncate" style={{ fontSize: 11 }}>
+                {locLabel}
+              </span>
               <svg
                 width="10"
                 height="10"
@@ -9819,290 +9916,92 @@ function ByProductCombinedScreen({
           </div>
         </div>
 
-        {/* Row 1: Product chips */}
-        <ScrollRow bg="#fff" style={{ borderTop: "1px solid #E8EFEC" }}>
-          <span
-            className="flex-shrink-0 font-extrabold mr-1"
-            style={{
-              color: "#80918B",
-              minWidth: lang === "ur" ? 48 : 32,
-              fontSize: lang === "ur" ? 15 : 10,
-              fontFamily:
-                lang === "ur"
-                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                  : "inherit",
-            }}
-          >
-            {lang === "ur" ? "مصنوعات" : "Prod"}
-          </span>
-          <button
-            onClick={() => {
-              setShowAllProducts(true);
-              if (voiceEnabled)
-                speakText(
-                  lang === "ur"
-                    ? "تمام مصنوعات منتخب ہیں۔ تمام قیمتیں دکھائی جا رہی ہیں۔"
-                    : "All products selected. All prices are shown.",
-                );
-            }}
-            className="tap-target flex-shrink-0 rounded-full font-bold flex items-center justify-center"
-            style={{
-              background: showAllProducts ? "#087F63" : "#E8EFEC",
-              color: showAllProducts ? "#fff" : "#52635F",
-              border: showAllProducts ? "none" : "1px solid #D5E2DD",
-              fontSize: lang === "ur" ? 17 : 12,
-              minHeight: lang === "ur" ? 42 : 32,
-              padding: lang === "ur" ? "6px 16px" : "4px 12px",
-              fontFamily:
-                lang === "ur"
-                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                  : "inherit",
-            }}
-          >
-            {lang === "ur" ? "سب" : "All"}
-          </button>
-          {products.map((p, i) => {
-            const on = !showAllProducts && i === idx;
-            return (
-              <button
-                key={`${p.vertical}|${p.product}`}
-                onClick={() => {
-                  setActive(i);
-                  if (voiceEnabled)
-                    speakText(
-                      lang === "ur"
-                        ? `${tcL(p.product)} کی تمام ضمنی مصنوعات کے ریٹس دکھائے جا رہے ہیں۔`
-                        : `All ${p.product} byproduct prices are shown.`,
-                    );
-                }}
-                className="tap-target flex-shrink-0 flex items-center gap-1.5 rounded-full font-bold"
-                style={{
-                  background: on ? "#087F63" : "#E8EFEC",
-                  color: on ? "#fff" : "#52635F",
-                  border: on ? "none" : "1px solid #D5E2DD",
-                  fontSize: lang === "ur" ? 17 : 12,
-                  minHeight: lang === "ur" ? 42 : 32,
-                  padding: lang === "ur" ? "6px 14px" : "4px 12px",
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                      : "inherit",
-                }}
-              >
-                <ProductIcon
-                  name={p.product}
-                  vertical={p.vertical}
-                  size={lang === "ur" ? 18 : 14}
-                  style={{
-                    filter: on ? "brightness(0) invert(1)" : "none",
-                    flexShrink: 0,
-                  }}
-                />
-                {tcL(p.product)}
-              </button>
-            );
-          })}
-        </ScrollRow>
-
-        {/* Row 2: By Product chips */}
-        <ScrollRow bg="#fff" style={{ borderTop: "1px solid #E8EFEC" }}>
-          <span
-            className="flex-shrink-0 font-extrabold mr-1"
-            style={{
-              color: "#80918B",
-              minWidth: lang === "ur" ? 48 : 32,
-              fontSize: lang === "ur" ? 15 : 10,
-              fontFamily:
-                lang === "ur"
-                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                  : "inherit",
-            }}
-          >
-            {lang === "ur" ? "ضمنی" : "ByP"}
-          </span>
-          <button
-            onClick={() => {
-              setSelectedBP(null);
-              const prodName =
-                activeProduct?.product ||
-                (lang === "ur" ? "تمام مصنوعات" : "all products");
-              if (voiceEnabled)
-                speakText(
-                  lang === "ur"
-                    ? `${tcL(prodName)} کی تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔`
-                    : `All byproducts of ${prodName} shown.`,
-                );
-            }}
-            className="tap-target flex-shrink-0 rounded-full font-bold flex items-center justify-center"
-            style={{
-              background: !selectedBP ? "#087F63" : "#E8EFEC",
-              color: !selectedBP ? "#fff" : "#52635F",
-              border: !selectedBP ? "none" : "1px solid #D5E2DD",
-              fontSize: lang === "ur" ? 17 : 12,
-              minHeight: lang === "ur" ? 42 : 32,
-              padding: lang === "ur" ? "6px 16px" : "4px 12px",
-              fontFamily:
-                lang === "ur"
-                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                  : "inherit",
-            }}
-          >
-            {lang === "ur" ? "سب" : "All"}
-          </button>
-          {byproducts.map((bp) => {
-            const on = selectedBP === bp;
-            return (
-              <button
-                key={bp}
-                onClick={() => {
-                  setSelectedBP(on ? null : bp);
-                  if (voiceEnabled)
-                    speakText(
-                      on
-                        ? lang === "ur"
-                          ? "تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔"
-                          : "All byproducts shown."
-                        : lang === "ur"
-                          ? `${tcL(bp)} کی قیمتیں دکھائی جا رہی ہیں۔`
-                          : `Prices of ${bp} are shown.`,
-                    );
-                }}
-                className="tap-target flex-shrink-0 flex items-center gap-1.5 rounded-full font-bold"
-                style={{
-                  background: on ? "#087F63" : "#E8EFEC",
-                  color: on ? "#fff" : "#52635F",
-                  border: on ? "none" : "1px solid #D5E2DD",
-                  fontSize: lang === "ur" ? 17 : 12,
-                  minHeight: lang === "ur" ? 42 : 32,
-                  padding: lang === "ur" ? "6px 14px" : "4px 12px",
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                      : "inherit",
-                }}
-              >
-                <ProductIcon
-                  name={bp}
-                  vertical={activeProduct?.vertical}
-                  size={lang === "ur" ? 17 : 13}
-                  style={{
-                    filter: on ? "brightness(0) invert(1)" : "none",
-                    flexShrink: 0,
-                  }}
-                />
-                {tcL(bp)}
-              </button>
-            );
-          })}
-        </ScrollRow>
-
-        {/* Row 3: Price Type chips */}
-        <ScrollRow bg="#fff" style={{ borderTop: "1px solid #E8EFEC" }}>
-          <span
-            className="flex-shrink-0 font-extrabold mr-1"
-            style={{
-              color: "#80918B",
-              minWidth: lang === "ur" ? 48 : 32,
-              fontSize: lang === "ur" ? 15 : 10,
-              fontFamily:
-                lang === "ur"
-                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                  : "inherit",
-            }}
-          >
-            {lang === "ur" ? "ریٹ" : "Price"}
-          </span>
-          <button
-            onClick={() => {
-              setSelectedRateTypes([]);
-              if (voiceEnabled)
-                speakText(
-                  lang === "ur"
-                    ? "تمام ریٹس دکھائے جا رہے ہیں۔"
-                    : "All price types are shown.",
-                );
-            }}
-            className="tap-target flex-shrink-0 rounded-full font-bold flex items-center justify-center"
-            style={{
-              background:
-                selectedRateTypes.length === 0 ? "#087F63" : "#E8EFEC",
-              color: selectedRateTypes.length === 0 ? "#fff" : "#52635F",
-              border:
-                selectedRateTypes.length === 0 ? "none" : "1px solid #D5E2DD",
-              fontSize: lang === "ur" ? 17 : 12,
-              minHeight: lang === "ur" ? 42 : 32,
-              padding: lang === "ur" ? "6px 16px" : "4px 12px",
-              fontFamily:
-                lang === "ur"
-                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                  : "inherit",
-            }}
-          >
-            {lang === "ur" ? "سب" : "All"}
-          </button>
-          {ALL_RATE_TYPES.map((rt) => {
-            const on = selectedRateTypes.includes(rt);
-            return (
-              <button
-                key={rt}
-                onClick={() => handlePriceChipTap(rt)}
-                className="tap-target flex-shrink-0 rounded-full font-bold"
-                style={{
-                  background: on ? "#087F63" : "#E8EFEC",
-                  color: on ? "#fff" : "#183B34",
-                  border: on ? "none" : "1px solid #D5E2DD",
-                  fontSize: lang === "ur" ? 17 : 12,
-                  minHeight: lang === "ur" ? 42 : 32,
-                  padding: lang === "ur" ? "6px 14px" : "4px 12px",
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                      : "inherit",
-                }}
-              >
-                {trL(rt).replace(" ریٹ", "").replace(" Rate", "")}
-              </button>
-            );
-          })}
-        </ScrollRow>
-
-        {/* Reset bar */}
-        {selectedRateTypes.length > 0 && (
+        {/* Streamlined Minimal By-Products Filter Bar (Full Width, Rates Filter Removed) */}
+        <div
+          className="px-3 py-2 flex items-center gap-2 flex-shrink-0 relative"
+          style={{
+            background: "#FFFFFF",
+            borderTop: "1px solid #E8EFEC",
+          }}
+        >
+          {/* By-Products horizontal scroll pill selector */}
           <div
-            className="px-4 py-2 flex items-center gap-2 flex-shrink-0"
-            style={{ borderTop: "1px solid #E8EFEC" }}
+            className="flex items-center gap-1.5 overflow-x-auto w-full py-0.5"
+            style={{ scrollbarWidth: "none" }}
           >
             <button
               onClick={() => {
-                setSelectedRateTypes([]);
-                if (voiceEnabled) {
+                setSelectedBP(null);
+                if (voiceEnabled)
                   speakText(
                     lang === "ur"
-                      ? "قیمت کا فلٹر ہٹا دیا گیا۔ تمام ریٹس دکھائے جا رہے ہیں۔"
-                      : "Price filter reset. All price types are shown.",
+                      ? "تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔"
+                      : "All byproducts shown.",
                   );
-                }
               }}
-              className="tap-target flex items-center gap-1.5 rounded-full font-bold"
+              className="tap-target flex-shrink-0 rounded-full font-bold flex items-center justify-center transition active:scale-95"
               style={{
-                background: "#F9E1DE",
-                color: "#A83B37",
-                border: "1.5px solid #E7AAA4",
-                fontSize: lang === "ur" ? 16 : 12,
-                minHeight: lang === "ur" ? 40 : 32,
-                padding: lang === "ur" ? "6px 16px" : "4px 12px",
+                background: !selectedBP ? "#087F63" : "#F1F7F4",
+                color: !selectedBP ? "#fff" : "#52635F",
+                border: !selectedBP ? "none" : "1px solid #D5E2DD",
+                fontSize: lang === "ur" ? 15 : 11.5,
+                padding: lang === "ur" ? "4px 14px" : "3px 10px",
+                minHeight: 32,
                 fontFamily:
                   lang === "ur"
                     ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
                     : "inherit",
               }}
             >
-              {lang === "ur"
-                ? "↺ قیمت کا فلٹر ری سیٹ کریں"
-                : "↺ Reset Price Filter"}
+              {lang === "ur" ? "تمام ضمنی" : "All ByP"}
             </button>
+            {byproducts.map((bp) => {
+              const on = selectedBP === bp;
+              return (
+                <button
+                  key={bp}
+                  onClick={() => {
+                    setSelectedBP(on ? null : bp);
+                    if (voiceEnabled)
+                      speakText(
+                        on
+                          ? lang === "ur"
+                            ? "تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔"
+                            : "All byproducts shown."
+                          : lang === "ur"
+                            ? `${tcL(bp)} کی قیمتیں دکھائی جا رہی ہیں۔`
+                            : `Prices of ${bp} are shown.`,
+                      );
+                  }}
+                  className="tap-target flex-shrink-0 flex items-center gap-1.5 rounded-full font-bold transition active:scale-95"
+                  style={{
+                    background: on ? "#087F63" : "#F1F7F4",
+                    color: on ? "#fff" : "#52635F",
+                    border: on ? "none" : "1px solid #D5E2DD",
+                    fontSize: lang === "ur" ? 15 : 11.5,
+                    padding: lang === "ur" ? "4px 12px" : "3px 10px",
+                    minHeight: 32,
+                    fontFamily:
+                      lang === "ur"
+                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                        : "inherit",
+                  }}
+                >
+                  <ProductIcon
+                    name={bp}
+                    vertical={activeProduct?.vertical}
+                    size={lang === "ur" ? 16 : 12}
+                    style={{
+                      filter: on ? "brightness(0) invert(1)" : "none",
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span>{tcL(bp)}</span>
+                </button>
+              );
+            })}
           </div>
-        )}
+        </div>
       </header>
 
       {/*  By-Product Rate Cards — date grouped  */}
@@ -10281,7 +10180,7 @@ function ByProductCombinedScreen({
                   </div>
                 )}
 
-                <div className="flex flex-col gap-3 px-4 pb-2">
+                <div className="grid grid-cols-2 gap-3 px-3 pb-2">
                   {allDateItems.map(({ bp, r, hasData: hd }, cardIdx) => {
                     // Determine if card is blurred
                     const isCardBlurred =
@@ -10331,10 +10230,27 @@ function ByProductCombinedScreen({
                             transition: "filter 0.3s, opacity 0.3s",
                           }}
                         >
-                          <RateCard
-                            r={{ ...r, byproduct: bp }}
-                            dateText={isToday ? "TODAY" : dDisplay}
-                            isToday={isToday}
+                          {(() => {
+                            const cardVertical =
+                              r.vertical ||
+                              activeProduct?.vertical ||
+                              "Grains";
+                            const cardProduct =
+                              r.product || activeProduct?.product || bp;
+                            const cardBaseItem = {
+                              vertical: cardVertical,
+                              product: cardProduct,
+                              byproduct: bp,
+                            };
+                            return (
+                              <RateCard
+                                r={{ ...r, byproduct: bp }}
+                                dateText={isToday ? "TODAY" : dDisplay}
+                                isToday={isToday}
+                                isFavorite={isPickedBP(cardBaseItem)}
+                                onToggleFavorite={() =>
+                                  togglePickBP(cardBaseItem)
+                                }
                             onClick={() =>
                               handleCardTap(r, bp, () => {
                                 const rowVertical =
@@ -10372,6 +10288,8 @@ function ByProductCombinedScreen({
                             onPriceChipTap={hd ? handlePriceChipTap : undefined}
                             onMandiChipTap={hd ? handleMandiChipTap : undefined}
                           />
+                            );
+                          })()}
                         </div>
 
                         {/* Blurred Locked Card Overlay */}
@@ -10507,14 +10425,9 @@ function MultiLocSheet({
       (x) => x.kind === "province" && x.label === p,
     );
     if (isAlready) {
-      setDraft((prev) =>
-        prev.filter((x) => !(x.kind === "province" && x.label === p)),
-      );
+      setDraft([{ kind: "pakistan", label: "All Pakistan" }]);
     } else {
-      setDraft((prev) => [
-        ...prev.filter((x) => x.kind !== "pakistan"),
-        { kind: "province", label: p },
-      ]);
+      setDraft([{ kind: "province", label: p }]);
     }
     setSelectedProvince(p);
   };
@@ -10677,38 +10590,47 @@ function MultiLocSheet({
             </div>
           </div>
 
-          {/* Quick Select: Whole Country (All Pakistan) Card */}
+                    {/* Quick Select: Whole Country (All Pakistan) Card with Cultural Flag */}
           <div style={{ marginBottom: 12 }}>
             <button
               type="button"
               onClick={toggleWholeCountry}
-              className="tap-target w-full"
+              className="tap-target relative overflow-hidden w-full text-left"
               style={{
-                padding: "12px 14px",
+                padding: "13px 15px",
                 borderRadius: 14,
                 border: isWholeCountrySelected
                   ? "2px solid #087F63"
                   : "1.5px solid #D5E2DD",
-                background: isWholeCountrySelected
-                  ? "linear-gradient(135deg, #E4F2EC, #D1ECE2)"
-                  : "#FFFFFF",
+                backgroundImage: `linear-gradient(${isWholeCountrySelected ? "rgba(6,77,64,0.85), rgba(8,127,99,0.9)" : "rgba(255,255,255,0.88), rgba(240,249,245,0.92)"}), url(${pakistanFlagImg})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 cursor: "pointer",
                 boxShadow: isWholeCountrySelected
-                  ? "0 3px 12px rgba(8,127,99,0.14)"
-                  : "none",
+                  ? "0 4px 14px rgba(8,127,99,0.25)"
+                  : "0 2px 6px rgba(0,0,0,0.04)",
                 transition: "all 0.15s",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div className="relative z-10 flex items-center gap-3">
+                <img
+                  src={pakistanFlagImg}
+                  alt="Pakistan Flag"
+                  className="w-7 h-5 rounded object-cover shadow-sm border border-white/40"
+                />
                 <div style={{ textAlign: "left" }}>
                   <div
                     style={{
-                      fontSize: 13.5,
-                      fontWeight: 800,
-                      color: isWholeCountrySelected ? "#087F63" : "#183B34",
+                      fontSize: 14,
+                      fontWeight: 900,
+                      color: isWholeCountrySelected ? "#FFFFFF" : "#183B34",
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
                     }}
                   >
                     {lang === "ur"
@@ -10719,19 +10641,20 @@ function MultiLocSheet({
               </div>
 
               <div
+                className="relative z-10"
                 style={{
-                  width: 20,
-                  height: 20,
+                  width: 22,
+                  height: 22,
                   borderRadius: "50%",
                   border: isWholeCountrySelected
-                    ? "2px solid #087F63"
+                    ? "2px solid #FFFFFF"
                     : "1.5px solid #C7D6D0",
-                  background: isWholeCountrySelected ? "#087F63" : "#FFFFFF",
+                  background: isWholeCountrySelected ? "#FFFFFF" : "#FFFFFF",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "#FFFFFF",
-                  fontSize: 11,
+                  color: "#087F63",
+                  fontSize: 12,
                   fontWeight: 900,
                 }}
               >
@@ -10754,58 +10677,139 @@ function MultiLocSheet({
               marginBottom: 12,
             }}
           >
-            {/* Province Tabs Header inside Box */}
+            {/* Province Cultural Selector Cards in 2x2 Grid (Rich Backgrounds by default, single checkmark) */}
             <div>
               <div
                 style={{
-                  fontSize: 10.5,
+                  fontSize: 11,
                   fontWeight: 800,
                   color: "#52635F",
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
-                  marginBottom: 6,
+                  marginBottom: 8,
                 }}
               >
-                {lang === "ur" ? "صوبہ منتخب کریں" : "Select Province"}
+                {lang === "ur" ? "صوبہ اور روایت منتخب کریں" : "Select Province (Tradition & Region)"}
               </div>
               <div
                 style={{
-                  display: "flex",
-                  gap: 6,
-                  overflowX: "auto",
-                  paddingBottom: 2,
-                  scrollbarWidth: "none",
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 8,
+                  marginBottom: 4,
                 }}
               >
                 {provinces.map((p) => {
-                  const isCurrentTab = selectedProvince === p;
                   const isSelectedInDraft = isProvSelected(p);
+                  const pConfig: Record<string, {
+                    pattern: "phulkari" | "ajrak" | "khyber" | "baloch";
+                    traditionUr: string;
+                    traditionEn: string;
+                    bg: string;
+                    borderColor: string;
+                  }> = {
+                    Punjab: {
+                      pattern: "phulkari",
+                      traditionUr: "روایت: پھلکاری",
+                      traditionEn: "Tradition: Phulkari",
+                      bg: "linear-gradient(135deg, #033D31 0%, #087F63 100%)",
+                      borderColor: "#087F63",
+                    },
+                    Sindh: {
+                      pattern: "ajrak",
+                      traditionUr: "روایت: اجرک",
+                      traditionEn: "Tradition: Ajrak",
+                      bg: "linear-gradient(135deg, #072F3E 0%, #0E7490 100%)",
+                      borderColor: "#0E7490",
+                    },
+                    KPK: {
+                      pattern: "khyber",
+                      traditionUr: "روایت: خیبر",
+                      traditionEn: "Tradition: Khyber",
+                      bg: "linear-gradient(135deg, #103326 0%, #1F694F 100%)",
+                      borderColor: "#1F694F",
+                    },
+                    Balochistan: {
+                      pattern: "baloch",
+                      traditionUr: "روایت: بلوچی کڑھائی",
+                      traditionEn: "Tradition: Balochi",
+                      bg: "linear-gradient(135deg, #381A03 0%, #78350F 100%)",
+                      borderColor: "#78350F",
+                    },
+                  };
+
+                  const cfg = pConfig[p] || pConfig.Punjab;
+
                   return (
                     <button
                       key={p}
                       type="button"
                       onClick={() => toggleProvince(p)}
-                      className="tap-target px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap"
+                      className="tap-target relative overflow-hidden rounded-2xl p-3 flex flex-col justify-between text-left transition active:scale-[0.98] shadow-md"
                       style={{
-                        background:
-                          isSelectedInDraft || isCurrentTab
-                            ? "#087F63"
-                            : "#F4FAF7",
-                        color:
-                          isSelectedInDraft || isCurrentTab
-                            ? "#fff"
-                            : "#183B34",
-                        border:
-                          isSelectedInDraft || isCurrentTab
-                            ? "1.5px solid #087F63"
-                            : "1.5px solid #D5E2DD",
-                        boxShadow:
-                          isSelectedInDraft || isCurrentTab
-                            ? "0 2px 8px rgba(8,127,99,0.2)"
-                            : "none",
+                        background: cfg.bg,
+                        border: `1.5px solid ${cfg.borderColor}`,
+                        minHeight: 68,
+                        cursor: "pointer",
                       }}
                     >
-                      {tmL(p)} {isSelectedInDraft ? "✓" : ""}
+                      {/* Rich Traditional Cultural SVG Pattern with Full Default Visibility */}
+                      <div className="absolute inset-0 pointer-events-none z-0">
+                        <ProvincePatternSvg pattern={cfg.pattern} opacity={0.4} />
+                      </div>
+
+                      {/* Header with Province Title and White Circle Checkmark */}
+                      <div className="relative z-10 flex items-center justify-between w-full">
+                        <span
+                          style={{
+                            fontSize: 14.5,
+                            fontWeight: 900,
+                            color: "#FFFFFF",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                                : "inherit",
+                          }}
+                        >
+                          {tmL(p)}
+                        </span>
+
+                        {/* White Circular Checkbox: Ticked only if selected */}
+                        <div
+                          style={{
+                            width: 20,
+                            height: 20,
+                            borderRadius: "50%",
+                            background: "#FFFFFF",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
+                            color: "#087F63",
+                            fontSize: 11,
+                            fontWeight: 900,
+                          }}
+                        >
+                          {isSelectedInDraft ? "✓" : ""}
+                        </div>
+                      </div>
+
+                      {/* Tradition Subtitle in Clean Light Text */}
+                      <div className="relative z-10 mt-1">
+                        <div
+                          style={{
+                            fontSize: 10,
+                            fontWeight: 700,
+                            color: "rgba(255,255,255,0.92)",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                          }}
+                        >
+                          {lang === "ur" ? cfg.traditionUr : cfg.traditionEn}
+                        </div>
+                      </div>
                     </button>
                   );
                 })}
@@ -11411,6 +11415,116 @@ type RichRow = {
   newOld?: string;
 };
 
+// ─── Urdu digit converter helper ──────────────────────────────
+function toUrduDigits(n: number | string): string {
+  const urduDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  return String(n).replace(/[0-9]/g, (w) => urduDigits[+w]);
+}
+
+// ─── Islamic / Lunar Calendar Helper ──────────────────────────
+function getIslamicDate(
+  gregorianDate: Date,
+  lang: string,
+): { day: number; monthName: string; fullText: string } {
+  const islamicMonthsEn = [
+    "Muharram", "Safar", "Rabi al-Awwal", "Rabi al-Thani",
+    "Jumada al-Awwal", "Jumada al-Thani", "Rajab", "Sha'ban",
+    "Ramadan", "Shawwal", "Dhul Qada", "Dhul Hijja",
+  ];
+  const islamicMonthsUr = [
+    "محرم", "صفر", "ربیع الاول", "ربیع الثانی",
+    "جمادی الاول", "جمادی الثانی", "رجب", "شعبان",
+    "رمضان", "شوال", "ذیقعد", "ذی الحجہ",
+  ];
+
+  // Tabular Islamic calendar approximation
+  const jd = Math.floor(
+    (gregorianDate.getTime() / 86400000) + 2440587.5,
+  );
+  const epoch = 1948440;
+  const z = jd - epoch;
+  const cycle = Math.floor(z / 10631);
+  const rem = z % 10631;
+  const year = cycle * 30 + Math.floor((rem * 30 + 29) / 10631) + 1;
+  const dayOfYear = jd - Math.floor(epoch + ((year - 1) * 354.3670)) + 1;
+  const monthApprox = Math.min(
+    Math.floor((jd - (epoch + Math.floor((year - 1) * 354.3670))) / 29.53),
+    11,
+  );
+  const month = Math.max(0, Math.min(11, monthApprox));
+  const monthStart = epoch + Math.floor((year - 1) * 354.3670) + Math.floor(month * 29.53);
+  const day = Math.max(1, Math.min(30, jd - Math.floor(monthStart) + 1));
+
+  const monthName = lang === "ur" ? islamicMonthsUr[month] : islamicMonthsEn[month];
+  const dayStr = lang === "ur" ? toUrduDigits(day) : String(day);
+  const fullText = lang === "ur" ? `${dayStr} ${monthName}` : `${dayStr} ${monthName}`;
+
+  return { day, monthName, fullText };
+}
+
+// ─── Province cultural pattern SVG overlay ──────────────────────
+function ProvincePatternSvg({
+  pattern,
+  opacity = 0.3,
+}: {
+  pattern: "phulkari" | "ajrak" | "khyber" | "baloch" | "pakistan";
+  opacity?: number;
+}) {
+  const patternMap: Record<string, React.ReactNode> = {
+    phulkari: (
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: 0, opacity }}>
+        <defs><pattern id="phulkari" width="40" height="40" patternUnits="userSpaceOnUse">
+          <polygon points="20,2 38,20 20,38 2,20" fill="none" stroke="#fff" strokeWidth="1.5"/>
+          <circle cx="20" cy="20" r="4" fill="#fff"/>
+          <circle cx="2" cy="2" r="2" fill="#fff"/><circle cx="38" cy="2" r="2" fill="#fff"/>
+          <circle cx="2" cy="38" r="2" fill="#fff"/><circle cx="38" cy="38" r="2" fill="#fff"/>
+        </pattern></defs>
+        <rect width="100%" height="100%" fill="url(#phulkari)"/>
+      </svg>
+    ),
+    ajrak: (
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: 0, opacity }}>
+        <defs><pattern id="ajrak" width="36" height="36" patternUnits="userSpaceOnUse">
+          <circle cx="18" cy="18" r="10" fill="none" stroke="#fff" strokeWidth="1.5"/>
+          <circle cx="18" cy="18" r="4" fill="#fff"/>
+          <circle cx="18" cy="4" r="2" fill="#fff"/><circle cx="18" cy="32" r="2" fill="#fff"/>
+          <circle cx="4" cy="18" r="2" fill="#fff"/><circle cx="32" cy="18" r="2" fill="#fff"/>
+        </pattern></defs>
+        <rect width="100%" height="100%" fill="url(#ajrak)"/>
+      </svg>
+    ),
+    khyber: (
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: 0, opacity }}>
+        <defs><pattern id="khyber" width="32" height="32" patternUnits="userSpaceOnUse">
+          <polyline points="0,24 16,8 32,24" fill="none" stroke="#fff" strokeWidth="1.8"/>
+          <polyline points="0,28 16,12 32,28" fill="none" stroke="#fff" strokeWidth="1"/>
+          <circle cx="16" cy="6" r="2" fill="#fff"/>
+        </pattern></defs>
+        <rect width="100%" height="100%" fill="url(#khyber)"/>
+      </svg>
+    ),
+    baloch: (
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: 0, opacity }}>
+        <defs><pattern id="baloch" width="28" height="28" patternUnits="userSpaceOnUse">
+          <polygon points="14,2 26,14 14,26 2,14" fill="none" stroke="#fff" strokeWidth="1.5"/>
+          <polygon points="14,7 21,14 14,21 7,14" fill="#fff" opacity="0.6"/>
+        </pattern></defs>
+        <rect width="100%" height="100%" fill="url(#baloch)"/>
+      </svg>
+    ),
+    pakistan: (
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: 0, opacity }}>
+        <defs><pattern id="pakistan" width="48" height="48" patternUnits="userSpaceOnUse">
+          <path d="M 28 16 A 10 10 0 1 1 20 32 A 8 8 0 1 0 28 16 Z" fill="#fff"/>
+          <polygon points="32,18 33.5,22 37.5,22 34.5,24.5 35.5,28.5 32,26 28.5,28.5 29.5,24.5 26.5,22 30.5,22" fill="#fff"/>
+        </pattern></defs>
+        <rect width="100%" height="100%" fill="url(#pakistan)"/>
+      </svg>
+    ),
+  };
+  return <>{patternMap[pattern] || patternMap.phulkari}</>;
+}
+
 function RateCard({
   r,
   onClick,
@@ -11418,6 +11532,8 @@ function RateCard({
   onMandiChipTap,
   dateText,
   isToday = true,
+  isFavorite = false,
+  onToggleFavorite,
 }: {
   r: RichRow;
   onClick: () => void;
@@ -11425,6 +11541,8 @@ function RateCard({
   onMandiChipTap?: (mandiName: string) => void;
   dateText?: string;
   isToday?: boolean;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 }) {
   const { lang, tc: tcL, tm: tmL, tr: trL } = useLang();
   const vKey =
@@ -11433,276 +11551,222 @@ function RateCard({
     "Grains";
   const bg = VERTICAL_BG[vKey] || "#087F63";
 
+  // Audio speech prompt on card
+  const handleSpeakRate = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const bp = tcL(r.byproduct || r.product);
+    const m = tmL(r.mandiName);
+    const speech =
+      lang === "ur"
+        ? `${bp}، ${m}۔ قیمت کم سے کم ${r.min.toLocaleString()}، زیادہ سے زیادہ ${r.max.toLocaleString()} روپے۔`
+        : `${r.byproduct || r.product}, ${r.mandiName}. Min rate ${r.min.toLocaleString()}, Max rate ${r.max.toLocaleString()} rupees.`;
+    speakText(speech);
+  };
+
+  // Strip 'Mandi' / 'منڈی' from city name for clean single line
+  const rawMandi = tmL(r.mandiName);
+  const cleanCity = rawMandi
+    .replace(/\s*mandi\s*/gi, "")
+    .replace(/\s*منڈی\s*/g, "")
+    .trim() || rawMandi;
+  const cleanBP = tcL(r.byproduct || r.product);
+  const singleLineTitle = `${cleanBP} - ${cleanCity}`;
+
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onClick}
-      className={`tap-target w-full h-full rounded-2xl overflow-hidden ${lang === "ur" ? "text-right" : "text-left"}`}
+      onKeyDown={(e) => e.key === "Enter" && onClick()}
+      className="card-mobile-interactive tap-target w-full rounded-2xl overflow-hidden cursor-pointer flex flex-col justify-between"
       style={{
-        background: "#F4FAF7",
-        border: "1.5px solid #D5E2DD",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
+        background: "#FFFFFF",
+        border: "1.5px solid #E5EBE8",
+        boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
+        padding: "11px 10px",
+        minHeight: 228,
       }}
     >
-      <div className="flex h-full">
-        {/* Left icon column */}
-        <div
-          className="flex flex-col items-center justify-center flex-shrink-0"
-          style={{
-            width: lang === "ur" ? 76 : 64,
-            background: "#F4FAF7",
-            minHeight: 120,
-            borderRight: lang === "ur" ? undefined : "1px solid #D5E2DD",
-            borderLeft: lang === "ur" ? "1px solid #D5E2DD" : undefined,
+      {/* Top Row: Trend Pill on Left, Favorite Heart Button on Right */}
+      <div className="flex items-center justify-between w-full">
+        <TrendBadge trend={r.trend} pct={r.trendPct} compact />
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite?.();
           }}
+          className="tap-target w-8 h-8 rounded-full flex items-center justify-center transition active:scale-90"
+          style={{
+            background: isFavorite ? "#FFEBEB" : "#F4FAF7",
+            color: isFavorite ? "#E11D48" : "#80918B",
+            border: isFavorite ? "1.5px solid #FDA4AF" : "1.5px solid #D5E2DD",
+            boxShadow: isFavorite ? "0 2px 6px rgba(225,29,72,0.18)" : "0 1px 3px rgba(0,0,0,0.04)",
+          }}
+          title={
+            isFavorite
+              ? lang === "ur"
+                ? "پسندیدہ سے ہٹائیں"
+                : "Remove from favorites"
+              : lang === "ur"
+                ? "پسندیدہ میں شامل کریں"
+                : "Add to favorites"
+          }
         >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill={isFavorite ? "#E11D48" : "none"}
+            stroke={isFavorite ? "#E11D48" : "currentColor"}
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Center: Bigger Icon Floating Cleanly Without Colored Box Background */}
+      <div className="flex flex-col items-center justify-center my-1.5">
+        <div className="flex items-center justify-center py-1">
           <ProductIcon
             name={r.byproduct || vKey}
             vertical={vKey}
-            size={lang === "ur" ? 54 : 48}
+            size={60}
           />
         </div>
-        {/* Main content */}
-        <div className="flex-1 p-3 flex flex-col gap-2">
-          {/* Row 1: by-product name + trend percentage + today/date badge all in 1 line */}
-          <div className="flex items-center justify-between gap-2">
-            <p
-              className="font-black leading-tight truncate flex-1 min-w-0"
-              style={{
-                color: "#183B34",
-                fontSize: lang === "ur" ? 22 : 18,
-                fontWeight: 900,
-                letterSpacing: "-0.01em",
-                fontFamily:
-                  lang === "ur"
-                    ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                    : "'Poppins', sans-serif",
-              }}
-            >
-              {tcL(r.byproduct || r.product)}
-            </p>
-            <div className="flex items-center gap-1.5 flex-shrink-0">
-              <TrendBadge trend={r.trend} pct={r.trendPct} />
-              {dateText && (
-                <span
-                  style={{
-                    background: isToday ? "#087F63" : "#52635F",
-                    color: "#fff",
-                    fontSize: 9,
-                    fontWeight: 700,
-                    borderRadius: 6,
-                    padding: "2.5px 7px",
-                    letterSpacing: 0.3,
-                    whiteSpace: "nowrap",
-                    display: "inline-block",
-                  }}
-                >
-                  {dateText}
-                </span>
-              )}
-            </div>
-          </div>
-          {/* Row 2: arrival */}
-          <p
+
+        {/* Title: Mandi name with By-product name in SINGLE LINE */}
+        <p
+          className="font-black text-center mt-1 px-0.5 truncate w-full"
+          style={{
+            color: "#183B34",
+            fontSize: lang === "ur" ? 16.5 : 14,
+            lineHeight: 1.25,
+            fontFamily:
+              lang === "ur"
+                ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                : "'Poppins', sans-serif",
+          }}
+          title={singleLineTitle}
+        >
+          {singleLineTitle}
+        </p>
+      </div>
+
+      {/* Prices: Clean Side-by-Side with Price on Top and Min/Max Label Below */}
+      <div
+        className="flex items-center justify-between px-2 py-1.5 rounded-xl my-1"
+        style={{ background: "#F4FAF7", border: "1px solid #E5EBE8" }}
+      >
+        {/* Min */}
+        <div className="flex flex-col items-center flex-1">
+          <span
+            className="font-black leading-tight tracking-tight text-center"
             style={{
-              color: "#52635F",
-              fontSize: lang === "ur" ? 16 : 12,
+              color: "#183B34",
+              fontSize: lang === "ur" ? 17 : 14.5,
+              fontFamily:
+                lang === "ur"
+                  ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                  : "'Poppins', sans-serif",
+            }}
+          >
+            {fmt(r.min)}
+          </span>
+          <span
+            className="text-[9px] font-semibold tracking-tight text-[#80918B] mt-0.5"
+            style={{
               fontFamily:
                 lang === "ur"
                   ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
                   : "inherit",
             }}
           >
-            <span className="font-bold">
-              {lang === "ur" ? "آمد:" : "Arrival:"}
-            </span>{" "}
-            {r.arrival}
-          </p>
-          {/* Row 3: Min left, Max pushed to right end */}
-          <div className="flex items-end justify-between">
-            <div>
-              {lang === "ur" ? (
-                <>
-                  <p
-                    className="font-bold leading-tight"
-                    style={{
-                      color: "#2F4A43",
-                      fontSize: 18,
-                      fontFamily:
-                        "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif",
-                    }}
-                  >
-                    کم سے کم
-                  </p>
-                  <p
-                    className="font-semibold"
-                    style={{
-                      color: "#52635F",
-                      fontSize: 14,
-                      fontFamily:
-                        "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif",
-                      lineHeight: 1.1,
-                      marginTop: -2,
-                    }}
-                  >
-                    فی ۴۰ کلو
-                  </p>
-                </>
-              ) : (
-                <p
-                  className="font-bold uppercase tracking-wide"
-                  style={{
-                    color: "#52635F",
-                    fontSize: 9,
-                  }}
-                >
-                  Min / 40 kg
-                </p>
-              )}
-              <p
-                className="font-extrabold mt-0.5"
-                style={{
-                  color: "#183B34",
-                  fontSize: lang === "ur" ? 28 : 18,
-                  lineHeight: 1.2,
-                }}
-              >
-                {fmt(r.min)}
-              </p>
-            </div>
-            <div className={lang === "ur" ? "text-left" : "text-right"}>
-              {lang === "ur" ? (
-                <>
-                  <p
-                    className="font-bold leading-tight"
-                    style={{
-                      color: bg,
-                      fontSize: 18,
-                      fontFamily:
-                        "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif",
-                    }}
-                  >
-                    زیادہ سے زیادہ
-                  </p>
-                  <p
-                    className="font-semibold"
-                    style={{
-                      color: "#52635F",
-                      fontSize: 14,
-                      fontFamily:
-                        "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif",
-                      lineHeight: 1.1,
-                      marginTop: -2,
-                    }}
-                  >
-                    فی ۴۰ کلو
-                  </p>
-                </>
-              ) : (
-                <p
-                  className="font-bold uppercase tracking-wide"
-                  style={{
-                    color: "#52635F",
-                    fontSize: 9,
-                  }}
-                >
-                  Max / 40 kg
-                </p>
-              )}
-              <p
-                className="font-extrabold mt-0.5"
-                style={{
-                  color: bg,
-                  fontSize: lang === "ur" ? 28 : 18,
-                  lineHeight: 1.2,
-                }}
-              >
-                {fmt(r.max)}
-              </p>
-            </div>
-          </div>
-          {/* Row 4: Rate type + Mandi chip on one line */}
-          <div className="flex items-center gap-2 flex-nowrap overflow-hidden pt-1">
-            <div
-              role="button"
-              tabIndex={0}
-              onClick={
-                onPriceChipTap
-                  ? (e) => {
-                    e.stopPropagation();
-                    onPriceChipTap(r.rateType);
-                  }
-                  : undefined
-              }
-              onKeyDown={
-                onPriceChipTap
-                  ? (e) => e.key === "Enter" && onPriceChipTap(r.rateType)
-                  : undefined
-              }
-              className={
-                onPriceChipTap
-                  ? "tap-target font-bold rounded-full flex-shrink-0"
-                  : "font-bold rounded-full flex-shrink-0"
-              }
-              style={{
-                background: bg + "22",
-                color: bg,
-                fontSize: lang === "ur" ? 15 : 11,
-                padding: lang === "ur" ? "5px 12px" : "4px 10px",
-                cursor: onPriceChipTap ? "pointer" : "default",
-                whiteSpace: "nowrap",
-                fontFamily:
-                  lang === "ur"
-                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                    : "inherit",
-              }}
-            >
-              {trL(r.rateType)}
-            </div>
-            <div
-              role="button"
-              tabIndex={0}
-              onClick={
-                onMandiChipTap
-                  ? (e) => {
-                    e.stopPropagation();
-                    onMandiChipTap(r.mandiName);
-                  }
-                  : undefined
-              }
-              onKeyDown={
-                onMandiChipTap
-                  ? (e) => e.key === "Enter" && onMandiChipTap(r.mandiName)
-                  : undefined
-              }
-              className={
-                onMandiChipTap
-                  ? "tap-target flex items-center gap-1 font-semibold rounded-full"
-                  : "flex items-center gap-1 font-semibold rounded-full"
-              }
-              style={{
-                background: "#EAF5F1",
-                color: "#147D72",
-                fontSize: lang === "ur" ? 15 : 11,
-                padding: lang === "ur" ? "5px 12px" : "4px 10px",
-                border: "1px solid #C8E5DD",
-                cursor: onMandiChipTap ? "pointer" : "default",
-                maxWidth: 160,
-                fontFamily:
-                  lang === "ur"
-                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                    : "inherit",
-              }}
-            >
-              <span className="truncate">{tmL(r.mandiName)}</span>
-            </div>
-          </div>
+            {lang === "ur" ? "کم سے کم (۴۰ کلو)" : "Min (40 KG)"}
+          </span>
+        </div>
+
+        <div className="w-[1px] h-6 bg-[#D5E2DD]" />
+
+        {/* Max */}
+        <div className="flex flex-col items-center flex-1">
+          <span
+            className="font-black leading-tight tracking-tight text-center"
+            style={{
+              color: "#183B34",
+              fontSize: lang === "ur" ? 17 : 14.5,
+              fontFamily:
+                lang === "ur"
+                  ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                  : "'Poppins', sans-serif",
+            }}
+          >
+            {fmt(r.max)}
+          </span>
+          <span
+            className="text-[9px] font-semibold tracking-tight text-[#80918B] mt-0.5"
+            style={{
+              fontFamily:
+                lang === "ur"
+                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                  : "inherit",
+            }}
+          >
+            {lang === "ur" ? "زیادہ سے زیادہ (۴۰ کلو)" : "Max (40 KG)"}
+          </span>
         </div>
       </div>
-    </button>
+
+      {/* Bottom Row: Compact Rate Type Badge + Speaker Audio Button */}
+      <div className="flex items-center gap-1.5 w-full pt-0.5">
+        {/* Rate Type Badge (Display only, not clickable) */}
+        <div
+          className="flex-1 flex items-center justify-center gap-1 rounded-lg py-1 px-1.5 min-w-0 select-none"
+          style={{
+            background: "#E4F2EC",
+            color: "#075E4F",
+            border: "1px solid #2FAE68",
+            fontSize: lang === "ur" ? 11 : 9.5,
+            fontWeight: 800,
+            cursor: "default",
+            boxShadow: "0 1px 2px rgba(8,127,99,0.05)",
+            fontFamily:
+              lang === "ur"
+                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                : "inherit",
+          }}
+        >
+          <span className="truncate">
+            {trL(r.rateType).replace(" ریٹ", "").replace(" Rate", "") + (lang === "ur" ? " ریٹ" : " Rate")}
+          </span>
+        </div>
+
+        {/* Speaker Audio Button */}
+        <button
+          type="button"
+          onClick={handleSpeakRate}
+          className="tap-target flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition active:scale-90"
+          style={{
+            background: "#F4FAF7",
+            color: "#087F63",
+            border: "1px solid #D5E2DD",
+            boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+          }}
+          title={lang === "ur" ? "ریٹ سنیں (آواز)" : "Listen to rate"}
+        >
+          <span style={{ fontSize: 12 }}>🔊</span>
+        </button>
+      </div>
+    </div>
   );
 }
 
 //  RATES RESULT
+
 
 function RatesResultScreen({
   items,
@@ -12404,26 +12468,39 @@ function DeepViewLocationSheet({
                   onSelect({ kind: "pakistan", label: "All Pakistan" });
                   onClose();
                 }}
-                className="tap-target w-full rounded-2xl flex items-center justify-center gap-2"
+                className="tap-target relative overflow-hidden w-full rounded-2xl flex items-center justify-between px-4 text-left"
                 style={{
-                  height: 44,
-                  background:
-                    current.kind === "pakistan" ? "#E4F2EC" : "#F1F7F4",
-                  border:
-                    current.kind === "pakistan"
-                      ? "2px solid #087F63"
-                      : "1px solid #D5E2DD",
+                  height: 48,
+                  backgroundImage: `linear-gradient(${current.kind === "pakistan" ? "rgba(6,77,64,0.85), rgba(8,127,99,0.9)" : "rgba(255,255,255,0.9), rgba(240,249,245,0.92)"}), url(${pakistanFlagImg})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  border: current.kind === "pakistan" ? "2px solid #087F63" : "1px solid #D5E2DD",
+                  boxShadow: current.kind === "pakistan" ? "0 4px 14px rgba(8,127,99,0.25)" : "none",
                 }}
               >
-                <span style={{ fontSize: 18 }}></span>
-                <span
-                  className="font-bold text-sm"
-                  style={{ color: "#075E4F" }}
-                >
-                  All Pakistan
-                </span>
+                <div className="relative z-10 flex items-center gap-3">
+                  <img
+                    src={pakistanFlagImg}
+                    alt="Pakistan Flag"
+                    className="w-7 h-5 rounded object-cover shadow-sm border border-white/40"
+                  />
+                  <span
+                    className="font-black text-sm"
+                    style={{
+                      color: current.kind === "pakistan" ? "#FFFFFF" : "#075E4F",
+                      fontFamily:
+                        lang === "ur"
+                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          : "inherit",
+                    }}
+                  >
+                    {lang === "ur" ? "پورا پاکستان" : "All Pakistan"}
+                  </span>
+                </div>
                 {current.kind === "pakistan" && (
-                  <span style={{ color: "#087F63" }}></span>
+                  <div className="relative z-10 w-5 h-5 rounded-full bg-white flex items-center justify-center text-[#087F63] font-bold text-xs">
+                    ✓
+                  </div>
                 )}
               </button>
             </div>
@@ -12498,41 +12575,136 @@ function DeepViewLocationSheet({
               ))
             )
           ) : level === "province" ? (
-            <>
-              <div className="px-5 pt-3 pb-1">
+            <div className="px-4 pb-4 pt-2">
+              <div className="px-1 pb-2">
                 <p
-                  className="text-[10px] font-extrabold uppercase tracking-wider"
-                  style={{ color: "#80918B" }}
+                  className="text-[10.5px] font-extrabold uppercase tracking-wider"
+                  style={{ color: "#52635F" }}
                 >
-                  All Provinces
+                  {lang === "ur" ? "صوبہ اور روایت منتخب کریں" : "Select Province (Tradition & Region)"}
                 </p>
               </div>
-              {provinces.map((p) => {
-                const on = current.kind === "province" && current.label === p;
-                return (
-                  <button
-                    key={p}
-                    onClick={() => {
-                      setProvince(p);
-                      setLevel("district");
-                    }}
-                    className="tap-target w-full flex items-center gap-3 px-5 py-4 text-left"
-                    style={{
-                      borderBottom: "1px solid #E8EFEC",
-                      background: on ? "#E4F2EC" : "transparent",
-                    }}
-                  >
-                    <span
-                      className="flex-1 font-semibold text-base"
-                      style={{ color: on ? "#075E4F" : "#183B34" }}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 8,
+                }}
+              >
+                {provinces.map((p) => {
+                  const isSelected = current.kind === "province" && current.label === p;
+                  const pConfig: Record<string, {
+                    pattern: "phulkari" | "ajrak" | "khyber" | "baloch";
+                    traditionUr: string;
+                    traditionEn: string;
+                    bg: string;
+                    borderColor: string;
+                  }> = {
+                    Punjab: {
+                      pattern: "phulkari",
+                      traditionUr: "روایت: پھلکاری",
+                      traditionEn: "Tradition: Phulkari",
+                      bg: "linear-gradient(135deg, #033D31 0%, #087F63 100%)",
+                      borderColor: "#087F63",
+                    },
+                    Sindh: {
+                      pattern: "ajrak",
+                      traditionUr: "روایت: اجرک",
+                      traditionEn: "Tradition: Ajrak",
+                      bg: "linear-gradient(135deg, #072F3E 0%, #0E7490 100%)",
+                      borderColor: "#0E7490",
+                    },
+                    KPK: {
+                      pattern: "khyber",
+                      traditionUr: "روایت: خیبر",
+                      traditionEn: "Tradition: Khyber",
+                      bg: "linear-gradient(135deg, #103326 0%, #1F694F 100%)",
+                      borderColor: "#1F694F",
+                    },
+                    Balochistan: {
+                      pattern: "baloch",
+                      traditionUr: "روایت: بلوچی کڑھائی",
+                      traditionEn: "Tradition: Balochi",
+                      bg: "linear-gradient(135deg, #381A03 0%, #78350F 100%)",
+                      borderColor: "#78350F",
+                    },
+                  };
+                  const cfg = pConfig[p] || pConfig.Punjab;
+
+                  return (
+                    <button
+                      key={p}
+                      onClick={() => {
+                        onSelect({ kind: "province", label: p });
+                        onClose();
+                      }}
+                      className="tap-target relative overflow-hidden rounded-2xl p-3 flex flex-col justify-between text-left transition active:scale-[0.98] shadow-md"
+                      style={{
+                        background: cfg.bg,
+                        border: `1.5px solid ${cfg.borderColor}`,
+                        minHeight: 68,
+                        cursor: "pointer",
+                      }}
                     >
-                      {p}
-                    </span>
-                    <span style={{ color: "#80918B", fontSize: 18 }}>›</span>
-                  </button>
-                );
-              })}
-            </>
+                      {/* Traditional Cultural Background Pattern */}
+                      <div className="absolute inset-0 pointer-events-none z-0">
+                        <ProvincePatternSvg pattern={cfg.pattern} opacity={0.4} />
+                      </div>
+
+                      <div className="relative z-10 flex items-center justify-between w-full">
+                        <span
+                          style={{
+                            fontSize: 14.5,
+                            fontWeight: 900,
+                            color: "#FFFFFF",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                                : "inherit",
+                          }}
+                        >
+                          {tm(p)}
+                        </span>
+
+                        <div
+                          style={{
+                            width: 20,
+                            height: 20,
+                            borderRadius: "50%",
+                            background: "#FFFFFF",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
+                            color: "#087F63",
+                            fontSize: 11,
+                            fontWeight: 900,
+                          }}
+                        >
+                          {isSelected ? "✓" : ""}
+                        </div>
+                      </div>
+
+                      <div className="relative z-10 mt-1">
+                        <div
+                          style={{
+                            fontSize: 10,
+                            fontWeight: 700,
+                            color: "rgba(255,255,255,0.92)",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                          }}
+                        >
+                          {lang === "ur" ? cfg.traditionUr : cfg.traditionEn}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           ) : level === "district" ? (
             <>
               {province && (
@@ -12678,8 +12850,8 @@ function ProductRatesScreen({
   byproduct,
   onBack,
   push,
-  isPickedBP,
-  togglePickBP,
+  isPickedBP = () => false,
+  togglePickBP = () => {},
   locationScope: initialScope,
   onOpenLocation,
   initialRateType,
@@ -12696,10 +12868,10 @@ function ProductRatesScreen({
   byproduct: string;
   onBack: () => void;
   push?: (s: Screen) => void;
-  isPickedBP: (item: RateItem) => boolean;
-  togglePickBP: (item: RateItem) => void;
-  locationScope: LocationScope;
-  onOpenLocation: () => void;
+  isPickedBP?: (item: RateItem) => boolean;
+  togglePickBP?: (item: RateItem) => void;
+  locationScope?: LocationScope;
+  onOpenLocation?: () => void;
   initialRateType?: string;
   initialMandi?: string;
   initialVariety?: string;
@@ -12769,6 +12941,7 @@ function ProductRatesScreen({
   );
   const [tableDateFilter, setTableDateFilter] = useState<Date | null>(null);
   const [tableDateCalOpen, setTableDateCalOpen] = useState(false);
+  const [isTableExpanded, setIsTableExpanded] = useState(false);
   const [tableDateCalMonth, setTableDateCalMonth] = useState<Date>(
     new Date(2026, 7, 21),
   );
@@ -13084,14 +13257,29 @@ function ProductRatesScreen({
           </div>
           <button
             onClick={() => togglePickBP(pickItem)}
-            className="tap-target w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
+            aria-label={picked ? "Remove from favorites" : "Add to favorites"}
+            className="tap-target w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 transition active:scale-90"
             style={{
-              fontSize: 20,
-              background: picked ? "#087F63" : "#E8EFEC",
-              color: picked ? "#fff" : "#B9822E",
+              background: picked ? "#FFEBEB" : "#F4FAF7",
+              color: picked ? "#E11D48" : "#80918B",
+              border: picked ? "1.5px solid #FDA4AF" : "1.5px solid #D5E2DD",
+              boxShadow: picked
+                ? "0 2px 6px rgba(225,29,72,0.18)"
+                : "0 1px 3px rgba(0,0,0,0.04)",
             }}
           >
-            {picked ? "★" : "☆"}
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill={picked ? "#E11D48" : "none"}
+              stroke={picked ? "#E11D48" : "currentColor"}
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
           </button>
         </div>
         <div className="px-4 pb-2 flex gap-1.5">
@@ -13579,388 +13767,759 @@ function ProductRatesScreen({
               />
             )}
 
-            {/*  9 stat tiles (compact 3-col) + inline rates table  */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr",
-                gap: 8,
-              }}
-            >
-              {/* MAX */}
-              <div
-                className="rounded-xl p-3"
-                style={{
-                  background: "#E4F2EC",
-                  border: "1px solid rgba(0,0,0,0.04)",
-                }}
-              >
-                <p
-                  className="font-bold tracking-wide"
+            {/* 9 stat tiles with Hand-Drawn Style 4-Sided Continuous Racetrack Border */}
+            {(() => {
+              const activeMandiLabel =
+                locScope.kind === "mandi"
+                  ? locScope.label
+                  : initialMandi || "Pakpattan Mandi";
+              const activeMandiObj = INITIAL_MANDIS.find(
+                (m) =>
+                  m.name.toLowerCase() === activeMandiLabel.toLowerCase() ||
+                  m.city.toLowerCase() === activeMandiLabel.toLowerCase() ||
+                  activeMandiLabel.toLowerCase().includes(m.name.toLowerCase()) ||
+                  activeMandiLabel.toLowerCase().includes(m.city.toLowerCase()),
+              );
+              const englishMandi = activeMandiObj
+                ? activeMandiObj.name
+                : activeMandiLabel.replace(" منڈی", " Mandi");
+              const cleanMandiName =
+                lang === "ur"
+                  ? (tm(englishMandi).includes("منڈی") ? tm(englishMandi) : tm(englishMandi) + " منڈی")
+                  : (englishMandi.includes("Mandi") ? englishMandi : englishMandi + " Mandi");
+
+              const mandiProvince =
+                locScope.kind === "province"
+                  ? locScope.label
+                  : activeMandiObj?.province || "Punjab";
+
+              // Province-specific cultural styling and traditional gradient themes
+              const PROVINCE_THEMES: Record<string, {
+                gradientH: string;
+                gradientV: string;
+                borderColor: string;
+                bulletColor: string;
+                pattern: "phulkari" | "ajrak" | "khyber" | "baloch" | "pakistan";
+              }> = {
+                Punjab: {
+                  gradientH: "linear-gradient(90deg, #033D31 0%, #087F63 50%, #033D31 100%)",
+                  gradientV: "linear-gradient(180deg, #033D31 0%, #087F63 50%, #033D31 100%)",
+                  borderColor: "#087F63",
+                  bulletColor: "#FDE047",
+                  pattern: "phulkari",
+                },
+                Sindh: {
+                  gradientH: "linear-gradient(90deg, #072F3E 0%, #0E7490 50%, #072F3E 100%)",
+                  gradientV: "linear-gradient(180deg, #072F3E 0%, #0E7490 50%, #072F3E 100%)",
+                  borderColor: "#0E7490",
+                  bulletColor: "#FDA4AF",
+                  pattern: "ajrak",
+                },
+                KPK: {
+                  gradientH: "linear-gradient(90deg, #103326 0%, #1F694F 50%, #103326 100%)",
+                  gradientV: "linear-gradient(180deg, #103326 0%, #1F694F 50%, #103326 100%)",
+                  borderColor: "#1F694F",
+                  bulletColor: "#FCD34D",
+                  pattern: "khyber",
+                },
+                Balochistan: {
+                  gradientH: "linear-gradient(90deg, #381A03 0%, #78350F 50%, #381A03 100%)",
+                  gradientV: "linear-gradient(180deg, #381A03 0%, #78350F 50%, #381A03 100%)",
+                  borderColor: "#78350F",
+                  bulletColor: "#FDBA74",
+                  pattern: "baloch",
+                },
+                Pakistan: {
+                  gradientH: "linear-gradient(90deg, #022c22 0%, #064e3b 50%, #022c22 100%)",
+                  gradientV: "linear-gradient(180deg, #022c22 0%, #064e3b 50%, #022c22 100%)",
+                  borderColor: "#059669",
+                  bulletColor: "#34D399",
+                  pattern: "pakistan",
+                },
+              };
+
+              const pTheme =
+                locScope.kind === "pakistan"
+                  ? PROVINCE_THEMES.Pakistan
+                  : PROVINCE_THEMES[mandiProvince] || PROVINCE_THEMES.Punjab;
+
+              // Build the list of mandis for smooth seamless marquee without clipping
+              let mandiNamesList: string[] = [];
+              if (locScope.kind === "province" && LOCATIONS[locScope.label]) {
+                const dists = LOCATIONS[locScope.label];
+                const allMandis = Object.values(dists).flat();
+                mandiNamesList = allMandis.map((m) => {
+                  const clean = m.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "");
+                  return lang === "ur" ? `${tm(clean)} منڈی` : `${clean} Mandi`;
+                });
+              } else if (locScope.kind === "pakistan") {
+                const allMandis = Object.values(LOCATIONS).flatMap((dists) => Object.values(dists).flat());
+                mandiNamesList = allMandis.slice(0, 10).map((m) => {
+                  const clean = m.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "");
+                  return lang === "ur" ? `${tm(clean)} منڈی` : `${clean} Mandi`;
+                });
+              } else {
+                mandiNamesList = [cleanMandiName];
+              }
+
+              // Ensure at least 8 items per loop cycle
+              let baseItems = mandiNamesList;
+              while (baseItems.length < 8) {
+                baseItems = [...baseItems, ...mandiNamesList];
+              }
+
+              return (
+                <div
+                  className="w-full rounded-3xl overflow-hidden mb-6 relative shadow-xl flex-shrink-0"
                   style={{
-                    color: "#075E4F",
-                    opacity: 0.85,
-                    fontSize: lang === "ur" ? 14 : 9,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
+                    background: pTheme.gradientH,
+                    border: `2px solid ${pTheme.borderColor}`,
+                    boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
+                    padding: "24px 22px",
                   }}
                 >
-                  {lang === "ur" ? "زیادہ سے زیادہ" : "MAX"}
-                </p>
-                <p
-                  className="font-extrabold mt-0.5"
-                  style={{
-                    fontSize: lang === "ur" ? 22 : 16,
-                    color: "#075E4F",
-                    lineHeight: 1.2,
-                  }}
-                >
-                  {fmt(statMax)}
-                </p>
-              </div>
-              {/* MIN */}
-              <div
-                className="rounded-xl p-3"
-                style={{
-                  background: "#FFF0C7",
-                  border: "1px solid rgba(0,0,0,0.04)",
-                }}
-              >
-                <p
-                  className="font-bold tracking-wide"
-                  style={{
-                    color: "#9A6817",
-                    opacity: 0.85,
-                    fontSize: lang === "ur" ? 14 : 9,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur" ? "کم سے کم" : "MIN"}
-                </p>
-                <p
-                  className="font-extrabold mt-0.5"
-                  style={{
-                    fontSize: lang === "ur" ? 22 : 16,
-                    color: "#9A6817",
-                    lineHeight: 1.2,
-                  }}
-                >
-                  {fmt(statMin)}
-                </p>
-              </div>
-              {/* ARRIVAL */}
-              <div
-                className="rounded-xl p-3"
-                style={{
-                  background: "#EAF5F1",
-                  border: "1px solid rgba(0,0,0,0.04)",
-                }}
-              >
-                <p
-                  className="font-bold tracking-wide"
-                  style={{
-                    color: "#147D72",
-                    opacity: 0.85,
-                    fontSize: lang === "ur" ? 14 : 9,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur" ? "آمد" : "ARRIVAL"}
-                </p>
-                <p
-                  className="font-extrabold mt-0.5"
-                  style={{
-                    fontSize: lang === "ur" ? 17 : 13,
-                    color: "#147D72",
-                    lineHeight: 1.2,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {statArrival > 0
-                    ? lang === "ur"
-                      ? `${statArrival.toLocaleString()} بوری`
-                      : statArrival.toLocaleString()
-                    : "—"}
-                </p>
-              </div>
-              {/* RATE TYPE */}
-              <button
-                onClick={() => setAttrSheet("ratetype")}
-                className="tap-target rounded-xl p-3 text-left"
-                style={{
-                  background: attrRateType ? "#E4F2EC" : "#F1F7F4",
-                  border: attrRateType
-                    ? "1.5px solid #087F63"
-                    : "1px solid #D5E2DD",
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <p
-                    className="font-bold tracking-wide"
+                  {/* Traditional Cultural Background Pattern Overlay */}
+                  <div className="absolute inset-0 pointer-events-none z-0">
+                    <ProvincePatternSvg pattern={pTheme.pattern} opacity={0.32} />
+                  </div>
+
+                  {/* 1. TOP BORDER: Moving Left-to-Right (Clockwise) */}
+                  <div
+                    className="absolute top-0 left-0 right-0 overflow-hidden flex items-center z-10"
                     style={{
-                      color: attrRateType ? "#075E4F" : "#80918B",
-                      fontSize: lang === "ur" ? 13 : 9,
-                      fontFamily:
-                        lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                          : "inherit",
+                      height: 24,
+                      background: pTheme.gradientH,
+                      color: "#FFFFFF",
+                      borderBottom: "1px solid rgba(255,255,255,0.25)",
                     }}
                   >
-                    {lang === "ur" ? "نرخ کی قسم" : "RATE TYPE"}
-                  </p>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, color: attrRateType ? "#087F63" : "#80918B" }}>
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </div>
-                <p
-                  className="font-extrabold mt-0.5"
-                  style={{
-                    fontSize: lang === "ur" ? 15 : 11,
-                    color: attrRateType ? "#087F63" : "#C7D6D0",
-                    lineHeight: 1.2,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {attrRateType
-                    ? tr(attrRateType).replace(" ریٹ", "").replace(" Rate", "")
-                    : "—"}
-                </p>
-              </button>
-              {/* VARIETY */}
-              <button
-                onClick={() => setAttrSheet("variety")}
-                className="tap-target rounded-xl p-3 text-left"
-                style={{
-                  background: attrVariety ? "#EFF8F3" : "#F1F7F4",
-                  border: attrVariety
-                    ? "1.5px solid #16A34A"
-                    : "1px solid #D5E2DD",
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <p
-                    className="font-bold tracking-wide"
+                    <div
+                      className="racetrack-track-l2r flex items-center font-black text-[11px] tracking-wide"
+                      style={{
+                        fontFamily:
+                          lang === "ur"
+                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            : "inherit",
+                      }}
+                    >
+                      <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                        {baseItems.map((name, i) => (
+                          <span key={i} className="flex items-center gap-2 whitespace-nowrap">
+                            <span>{name}</span>
+                            <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                          </span>
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                        {baseItems.map((name, i) => (
+                          <span key={`dup-${i}`} className="flex items-center gap-2 whitespace-nowrap">
+                            <span>{name}</span>
+                            <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2. RIGHT BORDER: Moving Top-to-Bottom (Clockwise) */}
+                  <div
+                    className="absolute top-0 right-0 bottom-0 overflow-hidden z-10"
                     style={{
-                      color: attrVariety ? "#147A3F" : "#80918B",
-                      fontSize: lang === "ur" ? 13 : 9,
-                      fontFamily:
-                        lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                          : "inherit",
+                      width: 22,
+                      background: pTheme.gradientV,
+                      color: "#FFFFFF",
+                      borderLeft: "1px solid rgba(255,255,255,0.25)",
                     }}
                   >
-                    {lang === "ur" ? "قسم" : "VARIETY"}
-                  </p>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, color: attrVariety ? "#16A34A" : "#80918B" }}>
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </div>
-                <p
-                  className="font-extrabold mt-0.5"
-                  style={{
-                    fontSize: lang === "ur" ? 15 : 11,
-                    color: attrVariety ? "#16A34A" : "#C7D6D0",
-                    lineHeight: 1.2,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {attrVariety ? tc(attrVariety) : "—"}
-                </p>
-              </button>
-              {/* NEW / OLD */}
-              <button
-                onClick={() => setAttrSheet("newold")}
-                className="tap-target rounded-xl p-3 text-left"
-                style={{
-                  background: attrNewOld ? "#FFF8E8" : "#F1F7F4",
-                  border: attrNewOld
-                    ? "1.5px solid #9A6817"
-                    : "1px solid #D5E2DD",
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <p
-                    className="font-bold tracking-wide"
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: 800,
+                        height: 22,
+                        transformOrigin: "top left",
+                        transform: "rotate(90deg) translateY(-22px)",
+                        overflow: "hidden",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div
+                        className="racetrack-track-l2r flex items-center font-black text-[10.5px] tracking-wide"
+                        style={{
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                          {baseItems.map((name, i) => (
+                            <span key={i} className="flex items-center gap-2 whitespace-nowrap">
+                              <span>{name}</span>
+                              <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                            </span>
+                          ))}
+                        </div>
+                        <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                          {baseItems.map((name, i) => (
+                            <span key={`dup-${i}`} className="flex items-center gap-2 whitespace-nowrap">
+                              <span>{name}</span>
+                              <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 3. BOTTOM BORDER: Moving Right-to-Left (Clockwise) */}
+                  <div
+                    className="absolute bottom-0 left-0 right-0 overflow-hidden flex items-center z-10"
                     style={{
-                      color: attrNewOld ? "#92400E" : "#80918B",
-                      fontSize: lang === "ur" ? 13 : 9,
-                      fontFamily:
-                        lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                          : "inherit",
+                      height: 24,
+                      background: pTheme.gradientH,
+                      color: "#FFFFFF",
+                      borderTop: "1px solid rgba(255,255,255,0.25)",
                     }}
                   >
-                    {lang === "ur" ? "نیا / پرانا" : "NEW/OLD"}
-                  </p>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, color: attrNewOld ? "#9A6817" : "#80918B" }}>
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </div>
-                <p
-                  className="font-extrabold mt-0.5"
-                  style={{
-                    fontSize: lang === "ur" ? 15 : 12,
-                    color: attrNewOld ? "#9A6817" : "#C7D6D0",
-                    lineHeight: 1.2,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {attrNewOld ? t(attrNewOld) : "—"}
-                </p>
-              </button>
-              {/* COLOR */}
-              <button
-                onClick={() => setAttrSheet("color")}
-                className="tap-target rounded-xl p-3 text-left"
-                style={{
-                  background: attrColor ? "#E8F5EF" : "#F1F7F4",
-                  border: attrColor
-                    ? "1.5px solid #0A8F73"
-                    : "1px solid #D5E2DD",
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <p
-                    className="font-bold tracking-wide"
+                    <div
+                      className="racetrack-track-r2l flex items-center font-black text-[11px] tracking-wide"
+                      style={{
+                        fontFamily:
+                          lang === "ur"
+                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            : "inherit",
+                      }}
+                    >
+                      <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                        {baseItems.map((name, i) => (
+                          <span key={i} className="flex items-center gap-2 whitespace-nowrap">
+                            <span>{name}</span>
+                            <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                          </span>
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                        {baseItems.map((name, i) => (
+                          <span key={`dup-${i}`} className="flex items-center gap-2 whitespace-nowrap">
+                            <span>{name}</span>
+                            <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 4. LEFT BORDER: Moving Bottom-to-Top (Clockwise) */}
+                  <div
+                    className="absolute top-0 left-0 bottom-0 overflow-hidden z-10"
                     style={{
-                      color: attrColor ? "#075E4F" : "#80918B",
-                      fontSize: lang === "ur" ? 13 : 9,
-                      fontFamily:
-                        lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                          : "inherit",
+                      width: 22,
+                      background: pTheme.gradientV,
+                      color: "#FFFFFF",
+                      borderRight: "1px solid rgba(255,255,255,0.25)",
                     }}
                   >
-                    {lang === "ur" ? "رنگ" : "COLOR"}
-                  </p>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, color: attrColor ? "#0A8F73" : "#80918B" }}>
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </div>
-                <p
-                  className="font-extrabold mt-0.5"
-                  style={{
-                    fontSize: lang === "ur" ? 15 : 12,
-                    color: attrColor ? "#0A8F73" : "#C7D6D0",
-                    lineHeight: 1.2,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {attrColor ? t(attrColor) : "—"}
-                </p>
-              </button>
-              {/* SPEC */}
-              <button
-                onClick={() => setAttrSheet("spec")}
-                className="tap-target rounded-xl p-3 text-left"
-                style={{
-                  background: attrSpec ? "#FFF0C7" : "#F1F7F4",
-                  border: attrSpec
-                    ? "1.5px solid #A96F18"
-                    : "1px solid #D5E2DD",
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <p
-                    className="font-bold tracking-wide"
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: 800,
+                        height: 22,
+                        transformOrigin: "top left",
+                        transform: "rotate(90deg) translateY(-22px)",
+                        overflow: "hidden",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div
+                        className="racetrack-track-r2l flex items-center font-black text-[10.5px] tracking-wide"
+                        style={{
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                          {baseItems.map((name, i) => (
+                            <span key={i} className="flex items-center gap-2 whitespace-nowrap">
+                              <span>{name}</span>
+                              <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                            </span>
+                          ))}
+                        </div>
+                        <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                          {baseItems.map((name, i) => (
+                            <span key={`dup-${i}`} className="flex items-center gap-2 whitespace-nowrap">
+                              <span>{name}</span>
+                              <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CENTER CONTENT: The 9 Rectangular Stat Cards Grid inside */}{/* CENTER CONTENT: The 9 Rectangular Stat Cards Grid inside */}
+                  <div
+                    className="relative z-10 rounded-2xl p-2.5 shadow-inner"
                     style={{
-                      color: attrSpec ? "#92400E" : "#80918B",
-                      fontSize: lang === "ur" ? 13 : 9,
-                      fontFamily:
-                        lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                          : "inherit",
+                      background: "#FFFFFF",
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr 1fr",
+                      gap: 7,
                     }}
                   >
-                    {lang === "ur" ? "خصوصیت" : "SPEC"}
-                  </p>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, color: attrSpec ? "#A96F18" : "#80918B" }}>
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
+                    {/* CARD 1: MAX */}
+                    <div
+                      className="rounded-xl p-2.5 flex flex-col justify-between shadow-sm transition hover:shadow-md"
+                      style={{
+                        background: "linear-gradient(145deg, #E6F6F0 0%, #D4EFE4 100%)",
+                        border: "1.5px solid #A7E0CB",
+                        minHeight: 66,
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span
+                          className="font-bold tracking-wider uppercase text-[8.5px]"
+                          style={{
+                            color: "#075E4F",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                            fontSize: lang === "ur" ? 12 : 8.5,
+                          }}
+                        >
+                          {lang === "ur" ? "زیادہ سے زیادہ" : "MAX"}
+                        </span>
+                      </div>
+                      <p
+                        className="font-black leading-tight mt-0.5"
+                        style={{
+                          fontSize: lang === "ur" ? 19 : 15,
+                          color: "#075E4F",
+                        }}
+                      >
+                        {fmt(statMax)}
+                      </p>
+                      <span className="text-[7.5px] font-semibold text-[#075E4F] opacity-75">
+                        {lang === "ur" ? "فی ۴۰ کلو" : "40 KG"}
+                      </span>
+                    </div>
+
+                    {/* CARD 2: MIN */}
+                    <div
+                      className="rounded-xl p-2.5 flex flex-col justify-between shadow-sm transition hover:shadow-md"
+                      style={{
+                        background: "linear-gradient(145deg, #FFF9EB 0%, #FEF0CE 100%)",
+                        border: "1.5px solid #FDE096",
+                        minHeight: 66,
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span
+                          className="font-bold tracking-wider uppercase text-[8.5px]"
+                          style={{
+                            color: "#92400E",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                            fontSize: lang === "ur" ? 12 : 8.5,
+                          }}
+                        >
+                          {lang === "ur" ? "کم سے کم" : "MIN"}
+                        </span>
+                      </div>
+                      <p
+                        className="font-black leading-tight mt-0.5"
+                        style={{
+                          fontSize: lang === "ur" ? 19 : 15,
+                          color: "#92400E",
+                        }}
+                      >
+                        {fmt(statMin)}
+                      </p>
+                      <span className="text-[7.5px] font-semibold text-[#92400E] opacity-75">
+                        {lang === "ur" ? "فی ۴۰ کلو" : "40 KG"}
+                      </span>
+                    </div>
+
+                    {/* CARD 3: ARRIVAL */}
+                    <div
+                      className="rounded-xl p-2.5 flex flex-col justify-between shadow-sm transition hover:shadow-md"
+                      style={{
+                        background: "linear-gradient(145deg, #ECF8F6 0%, #DAF0EC 100%)",
+                        border: "1.5px solid #B0E3DA",
+                        minHeight: 66,
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span
+                          className="font-bold tracking-wider uppercase text-[8.5px]"
+                          style={{
+                            color: "#0E7465",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                            fontSize: lang === "ur" ? 12 : 8.5,
+                          }}
+                        >
+                          {lang === "ur" ? "آمد" : "ARRIVAL"}
+                        </span>
+                      </div>
+                      <p
+                        className="font-black leading-tight mt-0.5"
+                        style={{
+                          fontSize: lang === "ur" ? 16 : 13,
+                          color: "#0E7465",
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        {statArrival > 0
+                          ? lang === "ur"
+                            ? `${statArrival.toLocaleString()} بوری`
+                            : statArrival.toLocaleString()
+                          : "—"}
+                      </p>
+                      <span className="text-[7.5px] font-semibold text-[#0E7465] opacity-75">
+                        {lang === "ur" ? "کل بوری" : "Total Bags"}
+                      </span>
+                    </div>
+
+                    {/* CARD 4: RATE TYPE */}
+                    <button
+                      onClick={() => setAttrSheet("ratetype")}
+                      className="tap-target rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.97] shadow-sm"
+                      style={{
+                        background: attrRateType ? "#E6F6F0" : "#FFFFFF",
+                        border: attrRateType ? "1.5px solid #087F63" : "1.5px solid #E2EBE7",
+                        minHeight: 62,
+                      }}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span
+                          className="font-bold tracking-wider uppercase text-[8px]"
+                          style={{
+                            color: attrRateType ? "#075E4F" : "#52635F",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                            fontSize: lang === "ur" ? 11.5 : 8,
+                          }}
+                        >
+                          {lang === "ur" ? "نرخ کی قسم" : "RATE TYPE"}
+                        </span>
+                        <svg
+                          width="9"
+                          height="9"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          style={{ color: attrRateType ? "#087F63" : "#80918B" }}
+                        >
+                          <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                      </div>
+                      <p
+                        className="font-extrabold truncate w-full mt-0.5"
+                        style={{
+                          fontSize: lang === "ur" ? 14 : 11.5,
+                          color: attrRateType ? "#087F63" : "#183B34",
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        {attrRateType
+                          ? tr(attrRateType).replace(" ریٹ", "").replace(" Rate", "")
+                          : "—"}
+                      </p>
+                    </button>
+
+                    {/* CARD 5: VARIETY */}
+                    <button
+                      onClick={() => setAttrSheet("variety")}
+                      className="tap-target rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.97] shadow-sm"
+                      style={{
+                        background: attrVariety ? "#F0FDF4" : "#FFFFFF",
+                        border: attrVariety ? "1.5px solid #16A34A" : "1.5px solid #E2EBE7",
+                        minHeight: 62,
+                      }}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span
+                          className="font-bold tracking-wider uppercase text-[8px]"
+                          style={{
+                            color: attrVariety ? "#15803D" : "#52635F",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                            fontSize: lang === "ur" ? 11.5 : 8,
+                          }}
+                        >
+                          {lang === "ur" ? "قسم" : "VARIETY"}
+                        </span>
+                        <svg
+                          width="9"
+                          height="9"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          style={{ color: attrVariety ? "#16A34A" : "#80918B" }}
+                        >
+                          <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                      </div>
+                      <p
+                        className="font-extrabold truncate w-full mt-0.5"
+                        style={{
+                          fontSize: lang === "ur" ? 14 : 11.5,
+                          color: attrVariety ? "#15803D" : "#183B34",
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        {attrVariety ? tc(attrVariety) : "—"}
+                      </p>
+                    </button>
+
+                    {/* CARD 6: NEW / OLD */}
+                    <button
+                      onClick={() => setAttrSheet("newold")}
+                      className="tap-target rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.97] shadow-sm"
+                      style={{
+                        background: attrNewOld ? "#FFFBEB" : "#FFFFFF",
+                        border: attrNewOld ? "1.5px solid #D97706" : "1.5px solid #E2EBE7",
+                        minHeight: 62,
+                      }}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span
+                          className="font-bold tracking-wider uppercase text-[8px]"
+                          style={{
+                            color: attrNewOld ? "#B45309" : "#52635F",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                            fontSize: lang === "ur" ? 11.5 : 8,
+                          }}
+                        >
+                          {lang === "ur" ? "نیا / پرانا" : "NEW/OLD"}
+                        </span>
+                        <svg
+                          width="9"
+                          height="9"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          style={{ color: attrNewOld ? "#D97706" : "#80918B" }}
+                        >
+                          <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                      </div>
+                      <p
+                        className="font-extrabold truncate w-full mt-0.5"
+                        style={{
+                          fontSize: lang === "ur" ? 14 : 11.5,
+                          color: attrNewOld ? "#B45309" : "#183B34",
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        {attrNewOld ? t(attrNewOld) : "—"}
+                      </p>
+                    </button>
+
+                    {/* CARD 7: COLOR */}
+                    <button
+                      onClick={() => setAttrSheet("color")}
+                      className="tap-target rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.97] shadow-sm"
+                      style={{
+                        background: attrColor ? "#ECFDF5" : "#FFFFFF",
+                        border: attrColor ? "1.5px solid #059669" : "1.5px solid #E2EBE7",
+                        minHeight: 62,
+                      }}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span
+                          className="font-bold tracking-wider uppercase text-[8px]"
+                          style={{
+                            color: attrColor ? "#047857" : "#52635F",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                            fontSize: lang === "ur" ? 11.5 : 8,
+                          }}
+                        >
+                          {lang === "ur" ? "رنگ" : "COLOR"}
+                        </span>
+                        <svg
+                          width="9"
+                          height="9"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          style={{ color: attrColor ? "#059669" : "#80918B" }}
+                        >
+                          <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                      </div>
+                      <p
+                        className="font-extrabold truncate w-full mt-0.5"
+                        style={{
+                          fontSize: lang === "ur" ? 14 : 11.5,
+                          color: attrColor ? "#047857" : "#183B34",
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        {attrColor ? t(attrColor) : "—"}
+                      </p>
+                    </button>
+
+                    {/* CARD 8: SPEC */}
+                    <button
+                      onClick={() => setAttrSheet("spec")}
+                      className="tap-target rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.97] shadow-sm"
+                      style={{
+                        background: attrSpec ? "#FFFBEB" : "#FFFFFF",
+                        border: attrSpec ? "1.5px solid #D97706" : "1.5px solid #E2EBE7",
+                        minHeight: 62,
+                      }}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span
+                          className="font-bold tracking-wider uppercase text-[8px]"
+                          style={{
+                            color: attrSpec ? "#B45309" : "#52635F",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                            fontSize: lang === "ur" ? 11.5 : 8,
+                          }}
+                        >
+                          {lang === "ur" ? "خصوصیت" : "SPEC"}
+                        </span>
+                        <svg
+                          width="9"
+                          height="9"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          style={{ color: attrSpec ? "#D97706" : "#80918B" }}
+                        >
+                          <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                      </div>
+                      <p
+                        className="font-extrabold truncate w-full mt-0.5"
+                        style={{
+                          fontSize: lang === "ur" ? 14 : 11.5,
+                          color: attrSpec ? "#B45309" : "#183B34",
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        {attrSpec ? t(attrSpec) : "—"}
+                      </p>
+                    </button>
+
+                    {/* CARD 9: CONDITION */}
+                    <button
+                      onClick={() => setAttrSheet("condition")}
+                      className="tap-target rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.97] shadow-sm"
+                      style={{
+                        background: attrCondition ? "#F0FDF4" : "#FFFFFF",
+                        border: attrCondition ? "1.5px solid #059669" : "1.5px solid #E2EBE7",
+                        minHeight: 62,
+                      }}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span
+                          className="font-bold tracking-wider uppercase text-[8px]"
+                          style={{
+                            color: attrCondition ? "#047857" : "#52635F",
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                            fontSize: lang === "ur" ? 11.5 : 8,
+                          }}
+                        >
+                          {lang === "ur" ? "حالت" : "CONDITION"}
+                        </span>
+                        <svg
+                          width="9"
+                          height="9"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          style={{ color: attrCondition ? "#059669" : "#80918B" }}
+                        >
+                          <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                      </div>
+                      <p
+                        className="font-extrabold truncate w-full mt-0.5"
+                        style={{
+                          fontSize: lang === "ur" ? 14 : 11.5,
+                          color: attrCondition ? "#047857" : "#183B34",
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        {attrCondition ? t(attrCondition) : "—"}
+                      </p>
+                    </button>
+                  </div>
                 </div>
-                <p
-                  className="font-extrabold mt-0.5"
-                  style={{
-                    fontSize: lang === "ur" ? 14 : 11,
-                    color: attrSpec ? "#A96F18" : "#C7D6D0",
-                    lineHeight: 1.2,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {attrSpec ? t(attrSpec) : "—"}
-                </p>
-              </button>
-              {/* CONDITION */}
-              <button
-                onClick={() => setAttrSheet("condition")}
-                className="tap-target rounded-xl p-3 text-left"
-                style={{
-                  background: attrCondition ? "#DDF3E7" : "#F1F7F4",
-                  border: attrCondition
-                    ? "1.5px solid #075E4F"
-                    : "1px solid #D5E2DD",
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <p
-                    className="font-bold tracking-wide"
-                    style={{
-                      color: attrCondition ? "#075E4F" : "#80918B",
-                      fontSize: lang === "ur" ? 13 : 9,
-                      fontFamily:
-                        lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                          : "inherit",
-                    }}
-                  >
-                    {lang === "ur" ? "حالت" : "CONDITION"}
-                  </p>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, color: attrCondition ? "#075E4F" : "#80918B" }}>
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </div>
-                <p
-                  className="font-extrabold mt-0.5"
-                  style={{
-                    fontSize: lang === "ur" ? 15 : 12,
-                    color: attrCondition ? "#075E4F" : "#C7D6D0",
-                    lineHeight: 1.2,
-                    fontFamily:
-                      lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                        : "inherit",
-                  }}
-                >
-                  {attrCondition ? t(attrCondition) : "—"}
-                </p>
-              </button>
-            </div>
+              );
+            })()}
 
             {/* Inline Mandi Rates Table — all Pakistan mandis for this byproduct */}
             {(() => {
@@ -13973,6 +14532,7 @@ function ProductRatesScreen({
                 (r) =>
                   !tableProvinceFilter || r.province === tableProvinceFilter,
               );
+              const visibleTableRows = isTableExpanded ? tableRows : tableRows.slice(0, 3);
               const BASE_DATE = new Date(2026, 7, 21);
               const USER_SIGNUP_DATE = new Date(2026, 7, 19); // Sign up reference date
               const tableDateVariation = tableDateFilter
@@ -14046,10 +14606,30 @@ function ProductRatesScreen({
               const tcIsToday = (d: Date) =>
                 tcIsSameDay(d, new Date(2026, 7, 21));
               return (
-                <div
-                  className="rounded-2xl overflow-hidden"
-                  style={{ border: "1px solid #D5E2DD", background: "#F4FAF7" }}
-                >
+                <>
+                  {/* Backdrop overlay when expanded to 75% from bottom */}
+                  {isTableExpanded && (
+                    <div
+                      className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[1px] transition-opacity"
+                      onClick={() => setIsTableExpanded(false)}
+                    />
+                  )}
+
+                  <div
+                    className={
+                      isTableExpanded
+                        ? "fixed bottom-0 left-0 right-0 z-50 h-[75vh] flex flex-col rounded-t-[28px] bg-[#F4FAF7] shadow-2xl border-t border-[#D5E2DD] overflow-hidden transition-all duration-300"
+                        : "rounded-2xl overflow-hidden transition-all duration-300 flex flex-col shadow-sm"
+                    }
+                    style={{
+                      border: isTableExpanded ? "none" : "1.5px solid #D5E2DD",
+                      background: "#F4FAF7",
+                    }}
+                  >
+                    {/* Top Drag Handle on 75% Bottom Sheet */}
+                    {isTableExpanded && (
+                      <div className="w-10 h-1 rounded-full mx-auto mt-2.5 mb-0.5 bg-[#C7D6D0] flex-shrink-0" />
+                    )}
                   {/* Table header with title, date button, province chips & Trend Interval selector */}
                   <div
                     className="px-4 pt-3 pb-2"
@@ -14091,9 +14671,83 @@ function ProductRatesScreen({
                             : `${tableRows.length} mandi${tableRows.length !== 1 ? "s" : ""} · tap row to view details`}
                         </p>
                       </div>
-                      {/* Date picker button */}
-                      <button
-                        onClick={() => setTableDateCalOpen((o) => !o)}
+                      {/* Top Action Buttons: Date picker & Double Arrow Expand Button */}
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
+                        {/* Double Arrow Expand Table Button */}
+                        <button
+                          type="button"
+                          onClick={() => setIsTableExpanded((prev) => !prev)}
+                          className="tap-target flex items-center gap-1 px-2.5 py-1.5 rounded-xl font-bold text-xs"
+                          style={{
+                            background: isTableExpanded ? "#087F63" : "#E4F2EC",
+                            color: isTableExpanded ? "#FFFFFF" : "#075E4F",
+                            border: isTableExpanded ? "1.5px solid #087F63" : "1px solid #C7E8D8",
+                            boxShadow: isTableExpanded ? "0 2px 8px rgba(8,127,99,0.25)" : "none",
+                            fontSize: lang === "ur" ? 14 : 12,
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                : "inherit",
+                          }}
+                          title={
+                            isTableExpanded
+                              ? lang === "ur"
+                                ? "ٹیبل چھوٹا کریں"
+                                : "Collapse table"
+                              : lang === "ur"
+                                ? "ٹیبل بڑا کریں"
+                                : "Expand table"
+                          }
+                        >
+                          {isTableExpanded ? (
+                            /* Collapse icon */
+                            <svg
+                              width="12"
+                              height="12"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <polyline points="4 14 10 14 10 20" />
+                              <polyline points="20 10 14 10 14 4" />
+                              <line x1="14" y1="10" x2="21" y2="3" />
+                              <line x1="3" y1="21" x2="10" y2="14" />
+                            </svg>
+                          ) : (
+                            /* Double arrow expand icon */
+                            <svg
+                              width="12"
+                              height="12"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <polyline points="15 3 21 3 21 9" />
+                              <polyline points="9 21 3 21 3 15" />
+                              <line x1="21" y1="3" x2="14" y2="10" />
+                              <line x1="3" y1="21" x2="10" y2="14" />
+                            </svg>
+                          )}
+                          <span>
+                            {isTableExpanded
+                              ? lang === "ur"
+                                ? "چھوٹا کریں"
+                                : "Collapse"
+                              : lang === "ur"
+                                ? "پورا ٹیبل"
+                                : "Expand"}
+                          </span>
+                        </button>
+
+                        {/* Date picker button */}
+                        <button
+                          onClick={() => setTableDateCalOpen((o) => !o)}
                         className="tap-target flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl font-bold text-xs flex-shrink-0"
                         style={{
                           background: tableDateFilter ? "#087F63" : "#E4F2EC",
@@ -14125,6 +14779,7 @@ function ProductRatesScreen({
                         </svg>
                         {dateLabel}
                       </button>
+                      </div>
                     </div>
 
                     {/* Filter row: Province chips */}
@@ -14500,7 +15155,8 @@ function ProductRatesScreen({
                   <div
                     className="flex flex-col overflow-y-auto"
                     style={{
-                      maxHeight: 300,
+                      maxHeight: isTableExpanded ? "calc(75vh - 160px)" : 200,
+                      flex: isTableExpanded ? "1 1 auto" : "none",
                       scrollbarWidth: "thin",
                       scrollbarColor: "#A9CFC2 transparent",
                     }}
@@ -14523,7 +15179,7 @@ function ProductRatesScreen({
                         </p>
                       </div>
                     )}
-                    {tableRows.map((r, ci) => {
+                    {visibleTableRows.map((r, ci) => {
                       const trendArrow =
                         r.trend === "up" ? "▲" : r.trend === "down" ? "▼" : "—";
                       const trendColor =
@@ -14666,8 +15322,9 @@ function ProductRatesScreen({
                     })}
                   </div>
                 </div>
-              );
-            })()}
+              </>
+            );
+          })()}
 
             {/*  Attribute picker sheet  */}
             {attrSheet &&
@@ -22177,7 +22834,7 @@ function HomeScreen({
                       scrollSnapAlign: "start",
                     }}
                   >
-                    {/* Star indicator */}
+                    {/* Favorite Heart indicator */}
                     <div
                       style={{
                         position: "absolute",
@@ -22187,12 +22844,14 @@ function HomeScreen({
                       }}
                     >
                       <svg
-                        width="14"
-                        height="14"
+                        width="15"
+                        height="15"
                         viewBox="0 0 24 24"
-                        fill="#087F63"
+                        fill="#E11D48"
+                        stroke="#E11D48"
+                        strokeWidth="1"
                       >
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                       </svg>
                     </div>
 
@@ -27863,8 +28522,6 @@ function AppInner({
                   else setFeedOpen(false);
                 }}
                 pickedByproducts={pickedByproducts}
-                togglePickBP={togglePickBP}
-                isPickedBP={isPickedBP}
                 setPickedByproducts={setPickedByproducts}
                 voiceGuideActive={voicePhase === "orientation"}
                 onVoiceGuideClose={() => setVoicePhase("idle")}
