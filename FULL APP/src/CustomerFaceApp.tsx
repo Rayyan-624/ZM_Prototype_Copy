@@ -769,7 +769,13 @@ function LangProvider({ children }: { children: React.ReactNode }) {
 
 //  TYPES
 
-type RateItem = { vertical: string; product: string; byproduct: string };
+type RateItem = {
+  vertical: string;
+  product: string;
+  byproduct: string;
+  mandiName?: string;
+  rateType?: string;
+};
 type Screen =
   | { id: "home" }
   | { id: "search" }
@@ -9348,7 +9354,7 @@ function ByProductCombinedScreen({
   replace,
   onBack,
   isPickedBP = () => false,
-  togglePickBP = () => {},
+  togglePickBP = () => { },
   locationScope,
   onOpenLocation,
   profileCompleted = false,
@@ -9755,7 +9761,7 @@ function ByProductCombinedScreen({
 
           {/* Right: Combined Date Capsule (Gregorian + Lunar in 1 pill) + Location selector */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
-            {/* Combined Date Pill */}
+            {/* Combined Date Capsule (Text Only with Hyphen, No Icons) */}
             <div
               role="button"
               tabIndex={0}
@@ -9768,41 +9774,41 @@ function ByProductCombinedScreen({
                   );
                 }
               }}
-              className="flex items-center gap-1.5 pl-2 pr-1 py-0.5 rounded-full bg-[#EAF5F0] border border-[#C7E8D8] text-[#075E4F] flex-shrink-0 cursor-pointer active:scale-95 transition shadow-xs"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EAF5F0] border border-[#C7E8D8] text-[#075E4F] flex-shrink-0 cursor-pointer active:scale-95 transition shadow-xs"
               title={lang === "ur" ? "شمسی و قمری تاریخ" : "Gregorian & Lunar Date"}
             >
-              {/* Gregorian sub-part */}
-              <div className="flex items-center gap-1">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="text-[#087F63]">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                <div className="flex flex-col items-center leading-none">
-                  <span className="text-[7.5px] font-bold uppercase text-[#087F63] leading-none">
-                    {visibleDateLabel.month === "AUG" ? "Aug" : visibleDateLabel.month}
-                  </span>
-                  <span className="text-[11px] font-black text-[#075E4F] leading-none mt-0.5">
-                    {visibleDateLabel.d}
-                  </span>
-                </div>
-              </div>
+              {/* Gregorian Date */}
+              <span
+                className="text-[11px] font-black text-[#075E4F] whitespace-nowrap leading-none"
+                style={{
+                  fontFamily:
+                    lang === "ur"
+                      ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                      : "inherit",
+                }}
+              >
+                {lang === "ur"
+                  ? `${visibleDateLabel.d} ${visibleDateLabel.month.toUpperCase() === "AUG" ? "اگست" : visibleDateLabel.month}`
+                  : `${visibleDateLabel.d} ${visibleDateLabel.month === "AUG" ? "Aug" : visibleDateLabel.month}`}
+              </span>
 
-              {/* Lunar sub-pill (White capsule with border) */}
-              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white border border-[#087F63]/40 shadow-xs">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="#087F63" className="text-[#087F63] flex-shrink-0">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                </svg>
-                <div className="flex flex-col items-center justify-center leading-tight">
-                  <span className="text-[7.5px] font-extrabold text-[#075E4F] whitespace-nowrap leading-none">
-                    {String(islamicDate.day).padStart(2, "0")} {islamicDate.monthName ? (lang === "ur" ? islamicDate.monthName : "Rabi ul Awwal") : "06 Rabi ul Awwal"}
-                  </span>
-                  <span className="text-[8.5px] font-black text-[#087F63] whitespace-nowrap leading-none mt-0.5">
-                    1448 AH
-                  </span>
-                </div>
-              </div>
+              {/* Hyphen */}
+              <span className="text-[#087F63] font-black text-xs leading-none">-</span>
+
+              {/* Islamic Date & Hijri Year */}
+              <span
+                className="text-[11px] font-extrabold text-[#087F63] whitespace-nowrap leading-none"
+                style={{
+                  fontFamily:
+                    lang === "ur"
+                      ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                      : "inherit",
+                }}
+              >
+                {lang === "ur"
+                  ? `${String(islamicDate.day).padStart(2, "0")} ${islamicDate.monthName ? islamicDate.monthName : "ربیع الاول"} 1448ھ`
+                  : `${String(islamicDate.day).padStart(2, "0")} ${islamicDate.monthName && islamicDate.monthName !== "ربیع الاول" ? islamicDate.monthName : "Rabi ul Awwal"} 1448 AH`}
+              </span>
             </div>
 
             {/* Location selector button */}
@@ -10168,10 +10174,12 @@ function ByProductCombinedScreen({
                               "Grains";
                             const cardProduct =
                               r.product || activeProduct?.product || bp;
-                            const cardBaseItem = {
+                            const cardBaseItem: RateItem = {
                               vertical: cardVertical,
                               product: cardProduct,
                               byproduct: bp,
+                              mandiName: r.mandiName,
+                              rateType: r.rateType,
                             };
                             return (
                               <RateCard
@@ -10182,43 +10190,43 @@ function ByProductCombinedScreen({
                                 onToggleFavorite={() =>
                                   togglePickBP(cardBaseItem)
                                 }
-                            onClick={() =>
-                              handleCardTap(r, bp, () => {
-                                const rowVertical =
-                                  r.vertical ||
-                                  activeProduct?.vertical ||
-                                  "Grains";
-                                const rowproduct =
-                                  r.product || activeProduct?.product || bp;
-                                const baseItem = {
-                                  vertical: rowVertical,
-                                  product: rowproduct,
-                                  byproduct: bp,
-                                };
-                                if (!hd) {
-                                  push({ id: "product-rates", ...baseItem });
-                                  return;
+                                onClick={() =>
+                                  handleCardTap(r, bp, () => {
+                                    const rowVertical =
+                                      r.vertical ||
+                                      activeProduct?.vertical ||
+                                      "Grains";
+                                    const rowproduct =
+                                      r.product || activeProduct?.product || bp;
+                                    const baseItem = {
+                                      vertical: rowVertical,
+                                      product: rowproduct,
+                                      byproduct: bp,
+                                    };
+                                    if (!hd) {
+                                      push({ id: "product-rates", ...baseItem });
+                                      return;
+                                    }
+                                    push({
+                                      id: "product-rates",
+                                      ...baseItem,
+                                      initialRateType: r.rateType,
+                                      initialMandi: r.mandiName,
+                                      initialVariety: r.variety || undefined,
+                                      initialNewOld: r.newOld || undefined,
+                                      initialColor: r.color || undefined,
+                                      initialSpec: r.spec || undefined,
+                                      initialCondition: r.condition || undefined,
+                                      initialStatDate:
+                                        offset > 0
+                                          ? dateObj.toISOString()
+                                          : undefined,
+                                    });
+                                  })
                                 }
-                                push({
-                                  id: "product-rates",
-                                  ...baseItem,
-                                  initialRateType: r.rateType,
-                                  initialMandi: r.mandiName,
-                                  initialVariety: r.variety || undefined,
-                                  initialNewOld: r.newOld || undefined,
-                                  initialColor: r.color || undefined,
-                                  initialSpec: r.spec || undefined,
-                                  initialCondition: r.condition || undefined,
-                                  initialStatDate:
-                                    offset > 0
-                                      ? dateObj.toISOString()
-                                      : undefined,
-                                });
-                              })
-                            }
-                            onPriceChipTap={hd ? handlePriceChipTap : undefined}
-                            onMandiChipTap={hd ? handleMandiChipTap : undefined}
-                          />
+                                onPriceChipTap={hd ? handlePriceChipTap : undefined}
+                                onMandiChipTap={hd ? handleMandiChipTap : undefined}
+                              />
                             );
                           })()}
                         </div>
@@ -10521,7 +10529,7 @@ function MultiLocSheet({
             </div>
           </div>
 
-                    {/* Quick Select: Whole Country (All Pakistan) Card with Cultural Flag */}
+          {/* Quick Select: Whole Country (All Pakistan) Card with Cultural Flag */}
           <div style={{ marginBottom: 12 }}>
             <button
               type="button"
@@ -11405,51 +11413,51 @@ function ProvincePatternSvg({
     phulkari: (
       <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: 0, opacity }}>
         <defs><pattern id="phulkari" width="40" height="40" patternUnits="userSpaceOnUse">
-          <polygon points="20,2 38,20 20,38 2,20" fill="none" stroke="#fff" strokeWidth="1.5"/>
-          <circle cx="20" cy="20" r="4" fill="#fff"/>
-          <circle cx="2" cy="2" r="2" fill="#fff"/><circle cx="38" cy="2" r="2" fill="#fff"/>
-          <circle cx="2" cy="38" r="2" fill="#fff"/><circle cx="38" cy="38" r="2" fill="#fff"/>
+          <polygon points="20,2 38,20 20,38 2,20" fill="none" stroke="#fff" strokeWidth="1.5" />
+          <circle cx="20" cy="20" r="4" fill="#fff" />
+          <circle cx="2" cy="2" r="2" fill="#fff" /><circle cx="38" cy="2" r="2" fill="#fff" />
+          <circle cx="2" cy="38" r="2" fill="#fff" /><circle cx="38" cy="38" r="2" fill="#fff" />
         </pattern></defs>
-        <rect width="100%" height="100%" fill="url(#phulkari)"/>
+        <rect width="100%" height="100%" fill="url(#phulkari)" />
       </svg>
     ),
     ajrak: (
       <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: 0, opacity }}>
         <defs><pattern id="ajrak" width="36" height="36" patternUnits="userSpaceOnUse">
-          <circle cx="18" cy="18" r="10" fill="none" stroke="#fff" strokeWidth="1.5"/>
-          <circle cx="18" cy="18" r="4" fill="#fff"/>
-          <circle cx="18" cy="4" r="2" fill="#fff"/><circle cx="18" cy="32" r="2" fill="#fff"/>
-          <circle cx="4" cy="18" r="2" fill="#fff"/><circle cx="32" cy="18" r="2" fill="#fff"/>
+          <circle cx="18" cy="18" r="10" fill="none" stroke="#fff" strokeWidth="1.5" />
+          <circle cx="18" cy="18" r="4" fill="#fff" />
+          <circle cx="18" cy="4" r="2" fill="#fff" /><circle cx="18" cy="32" r="2" fill="#fff" />
+          <circle cx="4" cy="18" r="2" fill="#fff" /><circle cx="32" cy="18" r="2" fill="#fff" />
         </pattern></defs>
-        <rect width="100%" height="100%" fill="url(#ajrak)"/>
+        <rect width="100%" height="100%" fill="url(#ajrak)" />
       </svg>
     ),
     khyber: (
       <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: 0, opacity }}>
         <defs><pattern id="khyber" width="32" height="32" patternUnits="userSpaceOnUse">
-          <polyline points="0,24 16,8 32,24" fill="none" stroke="#fff" strokeWidth="1.8"/>
-          <polyline points="0,28 16,12 32,28" fill="none" stroke="#fff" strokeWidth="1"/>
-          <circle cx="16" cy="6" r="2" fill="#fff"/>
+          <polyline points="0,24 16,8 32,24" fill="none" stroke="#fff" strokeWidth="1.8" />
+          <polyline points="0,28 16,12 32,28" fill="none" stroke="#fff" strokeWidth="1" />
+          <circle cx="16" cy="6" r="2" fill="#fff" />
         </pattern></defs>
-        <rect width="100%" height="100%" fill="url(#khyber)"/>
+        <rect width="100%" height="100%" fill="url(#khyber)" />
       </svg>
     ),
     baloch: (
       <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: 0, opacity }}>
         <defs><pattern id="baloch" width="28" height="28" patternUnits="userSpaceOnUse">
-          <polygon points="14,2 26,14 14,26 2,14" fill="none" stroke="#fff" strokeWidth="1.5"/>
-          <polygon points="14,7 21,14 14,21 7,14" fill="#fff" opacity="0.6"/>
+          <polygon points="14,2 26,14 14,26 2,14" fill="none" stroke="#fff" strokeWidth="1.5" />
+          <polygon points="14,7 21,14 14,21 7,14" fill="#fff" opacity="0.6" />
         </pattern></defs>
-        <rect width="100%" height="100%" fill="url(#baloch)"/>
+        <rect width="100%" height="100%" fill="url(#baloch)" />
       </svg>
     ),
     pakistan: (
       <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: 0, opacity }}>
         <defs><pattern id="pakistan" width="48" height="48" patternUnits="userSpaceOnUse">
-          <path d="M 28 16 A 10 10 0 1 1 20 32 A 8 8 0 1 0 28 16 Z" fill="#fff"/>
-          <polygon points="32,18 33.5,22 37.5,22 34.5,24.5 35.5,28.5 32,26 28.5,28.5 29.5,24.5 26.5,22 30.5,22" fill="#fff"/>
+          <path d="M 28 16 A 10 10 0 1 1 20 32 A 8 8 0 1 0 28 16 Z" fill="#fff" />
+          <polygon points="32,18 33.5,22 37.5,22 34.5,24.5 35.5,28.5 32,26 28.5,28.5 29.5,24.5 26.5,22 30.5,22" fill="#fff" />
         </pattern></defs>
-        <rect width="100%" height="100%" fill="url(#pakistan)"/>
+        <rect width="100%" height="100%" fill="url(#pakistan)" />
       </svg>
     ),
   };
@@ -11566,19 +11574,8 @@ function RateCard({
         minHeight: 254,
       }}
     >
-      {/* Top Row: Trend Pill on Left, Favorite Heart Button on Right */}
-      <div className="flex items-center justify-between w-full">
-        {r.trend === "down" ? (
-          <span className="text-[11px] font-black px-2 py-0.5 rounded-md inline-flex items-center gap-1 bg-[#FEE2E2] text-[#DC2626]">
-            <span className="text-[9px]">▼</span>
-            <span>-{displayPct}%</span>
-          </span>
-        ) : (
-          <span className="text-[11px] font-black px-2 py-0.5 rounded-md inline-flex items-center gap-1 bg-[#E8F8F0] text-[#0F8A5F]">
-            <span className="text-[9px]">▲</span>
-            <span>+{displayPct}%</span>
-          </span>
-        )}
+      {/* Top Row: Favorite Heart Button on Right */}
+      <div className="flex items-center justify-end w-full">
 
         <button
           type="button"
@@ -12917,7 +12914,7 @@ function ProductRatesScreen({
   onBack,
   push,
   isPickedBP = () => false,
-  togglePickBP = () => {},
+  togglePickBP = () => { },
   locationScope: initialScope,
   onOpenLocation,
   initialRateType,
@@ -13038,10 +13035,16 @@ function ProductRatesScreen({
   const [dtOpenCol, setDtOpenCol] = useState<string | null>(null);
 
   const title = byproduct || product;
+  const currentMandiName =
+    locScope.kind === "mandi"
+      ? locScope.label
+      : initialMandi || "Pakpattan Mandi";
   const pickItem: RateItem = {
     vertical,
     product,
     byproduct: byproduct || product,
+    mandiName: currentMandiName,
+    rateType: attrRateType || initialRateType || "Mill",
   };
   const picked = isPickedBP(pickItem);
 
@@ -14678,177 +14681,35 @@ function ProductRatesScreen({
                     {isTableExpanded && (
                       <div className="w-10 h-1 rounded-full mx-auto mt-2.5 mb-0.5 bg-[#C7D6D0] flex-shrink-0" />
                     )}
-                  {/* Table header with title, date button, province chips & Trend Interval selector */}
-                  <div
-                    className="px-4 pt-3 pb-2"
-                    style={{
-                      borderBottom: "1px solid #E8EFEC",
-                      background: "#F1F7F4",
-                    }}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <p
-                          className="font-extrabold text-sm"
-                          style={{
-                            color: "#183B34",
-                            fontSize: lang === "ur" ? 17 : 14,
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                          }}
-                        >
-                          {lang === "ur"
-                            ? `${tm(tableProvinceFilter || "پاکستان")} میں ${tc(title)}`
-                            : `${title} in ${tableProvinceFilter || "Pakistan"}`}
-                        </p>
-                        <p
-                          className="text-[10px] mt-0.5"
-                          style={{
-                            color: "#52635F",
-                            fontSize: lang === "ur" ? 13 : 10,
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                          }}
-                        >
-                          {lang === "ur"
-                            ? `${tableRows.length} منڈیاں · تفصیل کے لیے منتخب کریں`
-                            : `${tableRows.length} mandi${tableRows.length !== 1 ? "s" : ""} · tap row to view details`}
-                        </p>
-                      </div>
-                      {/* Top Action Buttons: Date picker & Double Arrow Expand Button */}
-                      <div className="flex items-center gap-1.5 flex-shrink-0">
-                        {/* Double Arrow Expand Table Button */}
-                        <button
-                          type="button"
-                          onClick={() => setIsTableExpanded((prev) => !prev)}
-                          className="tap-target flex items-center gap-1 px-2.5 py-1.5 rounded-xl font-bold text-xs"
-                          style={{
-                            background: isTableExpanded ? "#087F63" : "#E4F2EC",
-                            color: isTableExpanded ? "#FFFFFF" : "#075E4F",
-                            border: isTableExpanded ? "1.5px solid #087F63" : "1px solid #C7E8D8",
-                            boxShadow: isTableExpanded ? "0 2px 8px rgba(8,127,99,0.25)" : "none",
-                            fontSize: lang === "ur" ? 14 : 12,
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                          }}
-                          title={
-                            isTableExpanded
-                              ? lang === "ur"
-                                ? "ٹیبل چھوٹا کریں"
-                                : "Collapse table"
-                              : lang === "ur"
-                                ? "ٹیبل بڑا کریں"
-                                : "Expand table"
-                          }
-                        >
-                          {isTableExpanded ? (
-                            /* Collapse icon */
-                            <svg
-                              width="12"
-                              height="12"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <polyline points="4 14 10 14 10 20" />
-                              <polyline points="20 10 14 10 14 4" />
-                              <line x1="14" y1="10" x2="21" y2="3" />
-                              <line x1="3" y1="21" x2="10" y2="14" />
-                            </svg>
-                          ) : (
-                            /* Double arrow expand icon */
-                            <svg
-                              width="12"
-                              height="12"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <polyline points="15 3 21 3 21 9" />
-                              <polyline points="9 21 3 21 3 15" />
-                              <line x1="21" y1="3" x2="14" y2="10" />
-                              <line x1="3" y1="21" x2="10" y2="14" />
-                            </svg>
-                          )}
-                          <span>
-                            {isTableExpanded
-                              ? lang === "ur"
-                                ? "چھوٹا کریں"
-                                : "Collapse"
-                              : lang === "ur"
-                                ? "پورا ٹیبل"
-                                : "Expand"}
-                          </span>
-                        </button>
-
-                        {/* Date picker button */}
-                        <button
-                          onClick={() => setTableDateCalOpen((o) => !o)}
-                        className="tap-target flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl font-bold text-xs flex-shrink-0"
-                        style={{
-                          background: tableDateFilter ? "#087F63" : "#E4F2EC",
-                          color: tableDateFilter ? "#fff" : "#075E4F",
-                          border: tableDateFilter
-                            ? "none"
-                            : "1px solid #C7E8D8",
-                          fontSize: lang === "ur" ? 14 : 12,
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <rect x="3" y="4" width="18" height="18" rx="2" />
-                          <line x1="16" y1="2" x2="16" y2="6" />
-                          <line x1="8" y1="2" x2="8" y2="6" />
-                          <line x1="3" y1="10" x2="21" y2="10" />
-                        </svg>
-                        {dateLabel}
-                      </button>
-                      </div>
-                    </div>
-
-                    {/* Filter row: Province chips */}
-                    <div className="flex items-center justify-between gap-2 flex-wrap pt-1">
-                      {/* Province filter chips */}
-                      <div
-                        className="flex gap-1.5 overflow-x-auto pb-0.5"
-                        style={{ scrollbarWidth: "none" }}
-                      >
-                        {[null, ...PROVINCES].map((p) => (
-                          <button
-                            key={p || "all"}
-                            onClick={() => setTableProvinceFilter(p)}
-                            className="flex-shrink-0 px-2.5 py-1 rounded-full font-bold text-[10px]"
+                    {/* Table header with title, date button, province chips & Trend Interval selector */}
+                    <div
+                      className="px-4 pt-3 pb-2"
+                      style={{
+                        borderBottom: "1px solid #E8EFEC",
+                        background: "#F1F7F4",
+                      }}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <p
+                            className="font-extrabold text-sm"
                             style={{
-                              background:
-                                tableProvinceFilter === p ? "#087F63" : "#fff",
-                              color:
-                                tableProvinceFilter === p ? "#fff" : "#52635F",
-                              border: `1px solid ${tableProvinceFilter === p ? "#087F63" : "#D5E2DD"
-                                }`,
+                              color: "#183B34",
+                              fontSize: lang === "ur" ? 17 : 14,
+                              fontFamily:
+                                lang === "ur"
+                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  : "inherit",
+                            }}
+                          >
+                            {lang === "ur"
+                              ? `${tm(tableProvinceFilter || "پاکستان")} میں ${tc(title)}`
+                              : `${title} in ${tableProvinceFilter || "Pakistan"}`}
+                          </p>
+                          <p
+                            className="text-[10px] mt-0.5"
+                            style={{
+                              color: "#52635F",
                               fontSize: lang === "ur" ? 13 : 10,
                               fontFamily:
                                 lang === "ur"
@@ -14856,529 +14717,671 @@ function ProductRatesScreen({
                                   : "inherit",
                             }}
                           >
-                            {p
-                              ? tm(p)
-                              : lang === "ur"
-                                ? "تمام صوبے"
-                                : "All Provinces"}
+                            {lang === "ur"
+                              ? `${tableRows.length} منڈیاں · تفصیل کے لیے منتخب کریں`
+                              : `${tableRows.length} mandi${tableRows.length !== 1 ? "s" : ""} · tap row to view details`}
+                          </p>
+                        </div>
+                        {/* Top Action Buttons: Date picker & Double Arrow Expand Button */}
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          {/* Double Arrow Expand Table Button */}
+                          <button
+                            type="button"
+                            onClick={() => setIsTableExpanded((prev) => !prev)}
+                            className="tap-target flex items-center gap-1 px-2.5 py-1.5 rounded-xl font-bold text-xs"
+                            style={{
+                              background: isTableExpanded ? "#087F63" : "#E4F2EC",
+                              color: isTableExpanded ? "#FFFFFF" : "#075E4F",
+                              border: isTableExpanded ? "1.5px solid #087F63" : "1px solid #C7E8D8",
+                              boxShadow: isTableExpanded ? "0 2px 8px rgba(8,127,99,0.25)" : "none",
+                              fontSize: lang === "ur" ? 14 : 12,
+                              fontFamily:
+                                lang === "ur"
+                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  : "inherit",
+                            }}
+                            title={
+                              isTableExpanded
+                                ? lang === "ur"
+                                  ? "ٹیبل چھوٹا کریں"
+                                  : "Collapse table"
+                                : lang === "ur"
+                                  ? "ٹیبل بڑا کریں"
+                                  : "Expand table"
+                            }
+                          >
+                            {isTableExpanded ? (
+                              /* Collapse icon */
+                              <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <polyline points="4 14 10 14 10 20" />
+                                <polyline points="20 10 14 10 14 4" />
+                                <line x1="14" y1="10" x2="21" y2="3" />
+                                <line x1="3" y1="21" x2="10" y2="14" />
+                              </svg>
+                            ) : (
+                              /* Double arrow expand icon */
+                              <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <polyline points="15 3 21 3 21 9" />
+                                <polyline points="9 21 3 21 3 15" />
+                                <line x1="21" y1="3" x2="14" y2="10" />
+                                <line x1="3" y1="21" x2="10" y2="14" />
+                              </svg>
+                            )}
+                            <span>
+                              {isTableExpanded
+                                ? lang === "ur"
+                                  ? "چھوٹا کریں"
+                                  : "Collapse"
+                                : lang === "ur"
+                                  ? "پورا ٹیبل"
+                                  : "Expand"}
+                            </span>
                           </button>
-                        ))}
+
+                          {/* Date picker button */}
+                          <button
+                            onClick={() => setTableDateCalOpen((o) => !o)}
+                            className="tap-target flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl font-bold text-xs flex-shrink-0"
+                            style={{
+                              background: tableDateFilter ? "#087F63" : "#E4F2EC",
+                              color: tableDateFilter ? "#fff" : "#075E4F",
+                              border: tableDateFilter
+                                ? "none"
+                                : "1px solid #C7E8D8",
+                              fontSize: lang === "ur" ? 14 : 12,
+                              fontFamily:
+                                lang === "ur"
+                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  : "inherit",
+                            }}
+                          >
+                            <svg
+                              width="12"
+                              height="12"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <rect x="3" y="4" width="18" height="18" rx="2" />
+                              <line x1="16" y1="2" x2="16" y2="6" />
+                              <line x1="8" y1="2" x2="8" y2="6" />
+                              <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                            {dateLabel}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Filter row: Province chips */}
+                      <div className="flex items-center justify-between gap-2 flex-wrap pt-1">
+                        {/* Province filter chips */}
+                        <div
+                          className="flex gap-1.5 overflow-x-auto pb-0.5"
+                          style={{ scrollbarWidth: "none" }}
+                        >
+                          {[null, ...PROVINCES].map((p) => (
+                            <button
+                              key={p || "all"}
+                              onClick={() => setTableProvinceFilter(p)}
+                              className="flex-shrink-0 px-2.5 py-1 rounded-full font-bold text-[10px]"
+                              style={{
+                                background:
+                                  tableProvinceFilter === p ? "#087F63" : "#fff",
+                                color:
+                                  tableProvinceFilter === p ? "#fff" : "#52635F",
+                                border: `1px solid ${tableProvinceFilter === p ? "#087F63" : "#D5E2DD"
+                                  }`,
+                                fontSize: lang === "ur" ? 13 : 10,
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {p
+                                ? tm(p)
+                                : lang === "ur"
+                                  ? "تمام صوبے"
+                                  : "All Provinces"}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Inline calendar for table date picker */}
-                  {tableDateCalOpen && (
-                    <div
-                      className="px-4 pt-3 pb-2"
-                      style={{
-                        borderBottom: "1px solid #D5E2DD",
-                        background: "#F4FAF7",
-                      }}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <button
-                          onClick={() =>
-                            setTableDateCalMonth(
-                              new Date(tcYear, tcMonthIdx - 1, 1),
-                            )
-                          }
-                          className="tap-target w-8 h-8 rounded-full flex items-center justify-center font-bold"
+                    {/* Inline calendar for table date picker */}
+                    {tableDateCalOpen && (
+                      <div
+                        className="px-4 pt-3 pb-2"
+                        style={{
+                          borderBottom: "1px solid #D5E2DD",
+                          background: "#F4FAF7",
+                        }}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <button
+                            onClick={() =>
+                              setTableDateCalMonth(
+                                new Date(tcYear, tcMonthIdx - 1, 1),
+                              )
+                            }
+                            className="tap-target w-8 h-8 rounded-full flex items-center justify-center font-bold"
+                            style={{
+                              background: "#E8EFEC",
+                              color: "#2F4A43",
+                              fontSize: 16,
+                            }}
+                          >
+                            ‹
+                          </button>
+                          <p
+                            className="font-bold text-sm"
+                            style={{
+                              color: "#183B34",
+                              fontSize: lang === "ur" ? 16 : 14,
+                              fontFamily:
+                                lang === "ur"
+                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  : "inherit",
+                            }}
+                          >
+                            {tcMonthName}
+                          </p>
+                          <button
+                            onClick={() =>
+                              setTableDateCalMonth(
+                                new Date(tcYear, tcMonthIdx + 1, 1),
+                              )
+                            }
+                            className="tap-target w-8 h-8 rounded-full flex items-center justify-center font-bold"
+                            style={{
+                              background: "#E8EFEC",
+                              color: "#2F4A43",
+                              fontSize: 16,
+                            }}
+                          >
+                            ›
+                          </button>
+                        </div>
+                        {tableDateFilter && (
+                          <div className="flex justify-end mb-1">
+                            <button
+                              onClick={() => {
+                                setTableDateFilter(null);
+                                setTableDateCalOpen(false);
+                              }}
+                              className="font-bold px-2 py-0.5 rounded-full"
+                              style={{
+                                background: "#F9E1DE",
+                                color: "#A83B37",
+                                fontSize: lang === "ur" ? 12 : 10,
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {lang === "ur" ? "تاریخ ہٹائیں" : "Clear date"}
+                            </button>
+                          </div>
+                        )}
+                        <div
                           style={{
-                            background: "#E8EFEC",
-                            color: "#2F4A43",
-                            fontSize: 16,
+                            display: "grid",
+                            gridTemplateColumns: "repeat(7,1fr)",
+                            marginBottom: 4,
                           }}
                         >
-                          ‹
-                        </button>
-                        <p
-                          className="font-bold text-sm"
+                          {(lang === "ur"
+                            ? ["ات", "پی", "من", "بد", "جم", "جم", "ہف"]
+                            : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+                          ).map((d) => (
+                            <div
+                              key={d}
+                              className="text-center font-bold text-[10px]"
+                              style={{
+                                color: "#80918B",
+                                paddingBottom: 2,
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {d}
+                            </div>
+                          ))}
+                        </div>
+                        <div
                           style={{
-                            color: "#183B34",
-                            fontSize: lang === "ur" ? 16 : 14,
+                            display: "grid",
+                            gridTemplateColumns: "repeat(7,1fr)",
+                            gap: 2,
+                          }}
+                        >
+                          {tcCalDays.map((day, idx) => {
+                            if (!day) return <div key={idx} />;
+                            const d = new Date(tcYear, tcMonthIdx, day);
+                            const selected = tableDateFilter
+                              ? tcIsSameDay(d, tableDateFilter)
+                              : false;
+                            const isRef = tcIsToday(d);
+                            // Dates prior to user signup date are locked/blurred
+                            const isPriorToSignup = d.getTime() < new Date(USER_SIGNUP_DATE.getFullYear(), USER_SIGNUP_DATE.getMonth(), USER_SIGNUP_DATE.getDate()).getTime();
+                            if (isPriorToSignup) {
+                              return (
+                                <button
+                                  key={idx}
+                                  disabled
+                                  className="tap-target flex items-center justify-center rounded-full font-medium text-xs mx-auto opacity-20 cursor-not-allowed select-none"
+                                  style={{
+                                    width: 30,
+                                    height: 30,
+                                    filter: "blur(0.8px)",
+                                    color: "#80918B",
+                                  }}
+                                  title={lang === "ur" ? "سائن اپ سے پہلے کی تاریخ" : "Locked prior to signup"}
+                                >
+                                  {day}
+                                </button>
+                              );
+                            }
+
+                            return (
+                              <button
+                                key={idx}
+                                onClick={() => {
+                                  setTableDateFilter(d);
+                                  setTableDateCalOpen(false);
+                                }}
+                                className="tap-target flex items-center justify-center rounded-full font-semibold text-xs mx-auto shadow-sm"
+                                style={{
+                                  width: 30,
+                                  height: 30,
+                                  background: selected
+                                    ? "#087F63"
+                                    : isRef
+                                      ? "#E4F2EC"
+                                      : "#fff",
+                                  color: selected
+                                    ? "#fff"
+                                    : isRef
+                                      ? "#075E4F"
+                                      : "#183B34",
+                                  border:
+                                    selected
+                                      ? "none"
+                                      : isRef
+                                        ? "1.5px solid #087F63"
+                                        : "1px solid #C7E8D8",
+                                }}
+                              >
+                                {day}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <p
+                          className="text-[9.5px] text-center text-[#52635F] mt-2 opacity-80"
+                          style={{
                             fontFamily:
                               lang === "ur"
                                 ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
                                 : "inherit",
                           }}
                         >
-                          {tcMonthName}
+                          {lang === "ur"
+                            ? "* سائن اپ کی تاریخ سے پہلے کی تاریخیں غیر فعال ہیں"
+                            : "* Dates prior to signup date are locked"}
                         </p>
-                        <button
-                          onClick={() =>
-                            setTableDateCalMonth(
-                              new Date(tcYear, tcMonthIdx + 1, 1),
-                            )
-                          }
-                          className="tap-target w-8 h-8 rounded-full flex items-center justify-center font-bold"
-                          style={{
-                            background: "#E8EFEC",
-                            color: "#2F4A43",
-                            fontSize: 16,
-                          }}
-                        >
-                          ›
-                        </button>
                       </div>
-                      {tableDateFilter && (
-                        <div className="flex justify-end mb-1">
-                          <button
-                            onClick={() => {
-                              setTableDateFilter(null);
-                              setTableDateCalOpen(false);
-                            }}
-                            className="font-bold px-2 py-0.5 rounded-full"
-                            style={{
-                              background: "#F9E1DE",
-                              color: "#A83B37",
-                              fontSize: lang === "ur" ? 12 : 10,
-                              fontFamily:
-                                lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                  : "inherit",
-                            }}
-                          >
-                            {lang === "ur" ? "تاریخ ہٹائیں" : "Clear date"}
-                          </button>
-                        </div>
-                      )}
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(7,1fr)",
-                          marginBottom: 4,
-                        }}
-                      >
-                        {(lang === "ur"
-                          ? ["ات", "پی", "من", "بد", "جم", "جم", "ہف"]
-                          : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
-                        ).map((d) => (
-                          <div
-                            key={d}
-                            className="text-center font-bold text-[10px]"
-                            style={{
-                              color: "#80918B",
-                              paddingBottom: 2,
-                              fontFamily:
-                                lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                  : "inherit",
-                            }}
-                          >
-                            {d}
-                          </div>
-                        ))}
-                      </div>
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(7,1fr)",
-                          gap: 2,
-                        }}
-                      >
-                        {tcCalDays.map((day, idx) => {
-                          if (!day) return <div key={idx} />;
-                          const d = new Date(tcYear, tcMonthIdx, day);
-                          const selected = tableDateFilter
-                            ? tcIsSameDay(d, tableDateFilter)
-                            : false;
-                          const isRef = tcIsToday(d);
-                          // Dates prior to user signup date are locked/blurred
-                          const isPriorToSignup = d.getTime() < new Date(USER_SIGNUP_DATE.getFullYear(), USER_SIGNUP_DATE.getMonth(), USER_SIGNUP_DATE.getDate()).getTime();
-                          if (isPriorToSignup) {
-                            return (
-                              <button
-                                key={idx}
-                                disabled
-                                className="tap-target flex items-center justify-center rounded-full font-medium text-xs mx-auto opacity-20 cursor-not-allowed select-none"
-                                style={{
-                                  width: 30,
-                                  height: 30,
-                                  filter: "blur(0.8px)",
-                                  color: "#80918B",
-                                }}
-                                title={lang === "ur" ? "سائن اپ سے پہلے کی تاریخ" : "Locked prior to signup"}
-                              >
-                                {day}
-                              </button>
-                            );
-                          }
+                    )}
 
-                          return (
-                            <button
-                              key={idx}
-                              onClick={() => {
-                                setTableDateFilter(d);
-                                setTableDateCalOpen(false);
-                              }}
-                              className="tap-target flex items-center justify-center rounded-full font-semibold text-xs mx-auto shadow-sm"
-                              style={{
-                                width: 30,
-                                height: 30,
-                                background: selected
-                                  ? "#087F63"
-                                  : isRef
-                                    ? "#E4F2EC"
-                                    : "#fff",
-                                color: selected
-                                  ? "#fff"
-                                  : isRef
-                                    ? "#075E4F"
-                                    : "#183B34",
-                                border:
-                                  selected
-                                    ? "none"
-                                    : isRef
-                                      ? "1.5px solid #087F63"
-                                      : "1px solid #C7E8D8",
-                              }}
-                            >
-                              {day}
-                            </button>
-                          );
-                        })}
-                      </div>
-                      <p
-                        className="text-[9.5px] text-center text-[#52635F] mt-2 opacity-80"
+                    {/* Column header row */}
+                    <div
+                      className="px-3 py-2"
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "1.35fr 1.15fr 1.15fr 0.75fr 0.95fr",
+                        columnGap: 8,
+                        borderBottom: "1px solid #E8EFEC",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span
+                        className="font-extrabold uppercase tracking-wide"
                         style={{
+                          color: "#80918B",
+                          fontSize: lang === "ur" ? 13 : 9,
                           fontFamily:
                             lang === "ur"
                               ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
                               : "inherit",
+                          textAlign: lang === "ur" ? "right" : "left",
                         }}
                       >
-                        {lang === "ur"
-                          ? "* سائن اپ کی تاریخ سے پہلے کی تاریخیں غیر فعال ہیں"
-                          : "* Dates prior to signup date are locked"}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Column header row */}
-                  <div
-                    className="px-3 py-2"
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1.35fr 1.15fr 1.15fr 0.75fr 0.95fr",
-                      columnGap: 8,
-                      borderBottom: "1px solid #E8EFEC",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span
-                      className="font-extrabold uppercase tracking-wide"
-                      style={{
-                        color: "#80918B",
-                        fontSize: lang === "ur" ? 13 : 9,
-                        fontFamily:
-                          lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                            : "inherit",
-                        textAlign: lang === "ur" ? "right" : "left",
-                      }}
-                    >
-                      {lang === "ur" ? "منڈی" : "Mandi"}
-                    </span>
-                    <span
-                      className="font-extrabold uppercase tracking-wide text-right"
-                      style={{
-                        color: "#80918B",
-                        fontSize: lang === "ur" ? 13 : 9,
-                        fontFamily:
-                          lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                            : "inherit",
-                      }}
-                    >
-                      {lang === "ur" ? "کم سے کم" : "Min"}
-                    </span>
-                    <span
-                      className="font-extrabold uppercase tracking-wide text-right"
-                      style={{
-                        color: "#80918B",
-                        fontSize: lang === "ur" ? 13 : 9,
-                        fontFamily:
-                          lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                            : "inherit",
-                      }}
-                    >
-                      {lang === "ur" ? "زیادہ سے زیادہ" : "Max"}
-                    </span>
-                    <span
-                      className="font-extrabold uppercase tracking-wide text-center"
-                      style={{
-                        color: "#80918B",
-                        fontSize: lang === "ur" ? 13 : 9,
-                        fontFamily:
-                          lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                            : "inherit",
-                      }}
-                    >
-                      {lang === "ur" ? "قسم" : "Type"}
-                    </span>
-                    <div className="relative text-right flex justify-end items-center">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setTrendDropdownOpen(!trendDropdownOpen);
-                        }}
-                        className="tap-target inline-flex items-center gap-1 font-extrabold uppercase tracking-wide px-1.5 py-0.5 rounded-md hover:bg-[#E4F2EC] transition"
+                        {lang === "ur" ? "منڈی" : "Mandi"}
+                      </span>
+                      <span
+                        className="font-extrabold uppercase tracking-wide text-right"
                         style={{
-                          color: "#087F63",
+                          color: "#80918B",
                           fontSize: lang === "ur" ? 13 : 9,
                           fontFamily:
                             lang === "ur"
                               ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
                               : "inherit",
                         }}
-                        title={lang === "ur" ? "رجحان کا دورانیہ منتخب کریں" : "Select trend duration"}
                       >
-                        <span>
-                          {lang === "ur"
-                            ? `رجحان (${tableTrendInterval === "24h" ? "24گھنٹے" : tableTrendInterval === "72h" ? "72گھنٹے" : tableTrendInterval === "weekly" ? "ہفتہ وار" : "ماہانہ"})`
-                            : `Trend (${tableTrendInterval === "24h" ? "24H" : tableTrendInterval === "72h" ? "72H" : tableTrendInterval === "weekly" ? "7D" : "30D"})`}
-                        </span>
-                        <span className="text-[10px] text-[#087F63]">▾</span>
-                      </button>
-
-                      {/* Elevated Dropdown Menu for Trend Interval */}
-                      {trendDropdownOpen && (
-                        <>
-                          <div
-                            className="fixed inset-0 z-40"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setTrendDropdownOpen(false);
-                            }}
-                          />
-                          <div
-                            className="absolute right-0 top-full mt-1 z-50 bg-white rounded-xl shadow-2xl border border-[#C7E8D8] py-1 min-w-[140px] text-left"
-                            style={{
-                              direction: lang === "ur" ? "rtl" : "ltr",
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <div className="px-3 py-1 text-[10px] font-bold text-[#80918B] border-b border-[#E8EFEC] uppercase tracking-wider">
-                              {lang === "ur" ? "دورانیہ منتخب کریں" : "Select Interval"}
-                            </div>
-                            {[
-                              { id: "24h", labelUr: "24 گھنٹے (24h)", labelEn: "24 Hours (24h)" },
-                              { id: "72h", labelUr: "72 گھنٹے (72h)", labelEn: "72 Hours (72h)" },
-                              { id: "weekly", labelUr: "ہفتہ وار (7 دن)", labelEn: "Weekly (7 Days)" },
-                              { id: "monthly", labelUr: "ماہانہ (30 دن)", labelEn: "Monthly (30 Days)" },
-                            ].map((opt) => (
-                              <button
-                                key={opt.id}
-                                type="button"
-                                onClick={() => {
-                                  setTableTrendInterval(opt.id as any);
-                                  setTrendDropdownOpen(false);
-                                }}
-                                className="w-full px-3 py-2 text-xs font-bold flex items-center justify-between hover:bg-[#E8F5EF] transition text-left"
-                                style={{
-                                  color: tableTrendInterval === opt.id ? "#087F63" : "#183B34",
-                                  background: tableTrendInterval === opt.id ? "#F0F9F5" : "transparent",
-                                  fontFamily:
-                                    lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                      : "inherit",
-                                }}
-                              >
-                                <span>{lang === "ur" ? opt.labelUr : opt.labelEn}</span>
-                                {tableTrendInterval === opt.id && (
-                                  <span className="text-[#087F63] font-black text-xs">✓</span>
-                                )}
-                              </button>
-                            ))}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  {/* Scrollable table body — keeps the deep-view card compact & scrollable through all mandis */}
-                  <div
-                    className="flex flex-col overflow-y-auto"
-                    style={{
-                      maxHeight: isTableExpanded ? "calc(75vh - 160px)" : 220,
-                      flex: isTableExpanded ? "1 1 auto" : "none",
-                      overscrollBehavior: "contain",
-                      WebkitOverflowScrolling: "touch",
-                      scrollbarWidth: "thin",
-                      scrollbarColor: "#A9CFC2 transparent",
-                    }}
-                  >
-                    {tableRows.length === 0 && (
-                      <div className="flex items-center justify-center py-8 opacity-50">
-                        <p
-                          className="font-semibold"
+                        {lang === "ur" ? "کم سے کم" : "Min"}
+                      </span>
+                      <span
+                        className="font-extrabold uppercase tracking-wide text-right"
+                        style={{
+                          color: "#80918B",
+                          fontSize: lang === "ur" ? 13 : 9,
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        {lang === "ur" ? "زیادہ سے زیادہ" : "Max"}
+                      </span>
+                      <span
+                        className="font-extrabold uppercase tracking-wide text-center"
+                        style={{
+                          color: "#80918B",
+                          fontSize: lang === "ur" ? 13 : 9,
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                        }}
+                      >
+                        {lang === "ur" ? "قسم" : "Type"}
+                      </span>
+                      <div className="relative text-right flex justify-end items-center">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setTrendDropdownOpen(!trendDropdownOpen);
+                          }}
+                          className="tap-target inline-flex items-center gap-1 font-extrabold uppercase tracking-wide px-1.5 py-0.5 rounded-md hover:bg-[#E4F2EC] transition"
                           style={{
-                            fontSize: lang === "ur" ? 16 : 14,
+                            color: "#087F63",
+                            fontSize: lang === "ur" ? 13 : 9,
                             fontFamily:
                               lang === "ur"
                                 ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
                                 : "inherit",
                           }}
+                          title={lang === "ur" ? "رجحان کا دورانیہ منتخب کریں" : "Select trend duration"}
                         >
-                          {lang === "ur"
-                            ? `کوئی منڈی ڈیٹا دستیاب نہیں${tableProvinceFilter ? ` (${tm(tableProvinceFilter)})` : ""}`
-                            : `No mandi data${tableProvinceFilter ? ` in ${tableProvinceFilter}` : ""}`}
-                        </p>
-                      </div>
-                    )}
-                    {tableRows.map((r, ci) => {
-                      const trendArrow =
-                        r.trend === "up" ? "▲" : r.trend === "down" ? "▼" : "—";
-                      const trendColor =
-                        r.trend === "up"
-                          ? "#16A34A"
-                          : r.trend === "down"
-                            ? "#C94A43"
-                            : "#52635F";
-                      const rtColor = RATE_COLORS[r.rateType] || "#52635F";
-                      const isRowModalActive =
-                        selectedMandiGraphRow?.mandiName === r.mandiName &&
-                        selectedMandiGraphRow?.rateType === r.rateType;
-                      const isSelected =
-                        (locScope.kind === "mandi" &&
-                          locScope.label === r.mandiName) ||
-                        isRowModalActive;
-                      // Each row uses ITS OWN canonical attrs so prices match the byproduct list cards
-                      const rowCanon = getMandiCanonicalAttrs(r.mandiName);
-                      const rowAttrMult = computeAttrMult(
-                        rowCanon.variety,
-                        rowCanon.color,
-                        rowCanon.newOld,
-                        rowCanon.spec,
-                        rowCanon.condition,
-                      );
-                      const effMult = rowAttrMult * tableDateVariation;
-                      const intervalPct =
-                        tableTrendInterval === "72h"
-                          ? Math.round(r.trendPct * 2.2 * 10) / 10
-                          : tableTrendInterval === "weekly"
-                            ? Math.round(r.trendPct * 3.1 * 10) / 10
-                            : tableTrendInterval === "monthly"
-                              ? Math.round(r.trendPct * 5.4 * 10) / 10
-                              : r.trendPct;
-                      return (
-                        <button
-                          key={`${r.mandiName}-${r.rateType}-${ci}`}
-                          onClick={() => {
-                            setSelectedMandiGraphRow({
-                              mandiName: r.mandiName,
-                              rateType: r.rateType,
-                              min: Math.round(r.min * effMult),
-                              max: Math.round(r.max * effMult),
-                              trend: r.trend as any,
-                              trendPct: intervalPct,
-                            });
-                          }}
-                          style={{
-                            display: "grid",
-                            gridTemplateColumns:
-                              "1.35fr 1.15fr 1.15fr 0.75fr 0.95fr",
-                            columnGap: 8,
-                            padding: "10px 12px",
-                            borderBottom:
-                              ci < tableRows.length - 1
-                                ? "1px solid #F2F7F5"
-                                : "none",
-                            background: isRowModalActive
-                              ? "#E4F2EC"
-                              : isSelected
-                                ? "#E4F2EC"
-                                : "transparent",
-                            boxShadow: isRowModalActive
-                              ? "inset 0 0 0 1.5px #087F63"
-                              : "none",
-                            borderRadius: isRowModalActive ? 10 : 0,
-                            alignItems: "center",
-                            textAlign: lang === "ur" ? "right" : "left",
-                            width: "100%",
-                            cursor: "pointer",
-                          }}
-                        >
-                          <span
-                            className="font-semibold truncate"
-                            style={{
-                              color: "#183B34",
-                              fontSize: lang === "ur" ? 15 : 12,
-                              fontFamily:
-                                lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                  : "inherit",
-                            }}
-                          >
-                            {tm(r.mandiName.replace(" Mandi", ""))}
+                          <span>
+                            {lang === "ur"
+                              ? `رجحان (${tableTrendInterval === "24h" ? "24گھنٹے" : tableTrendInterval === "72h" ? "72گھنٹے" : tableTrendInterval === "weekly" ? "ہفتہ وار" : "ماہانہ"})`
+                              : `Trend (${tableTrendInterval === "24h" ? "24H" : tableTrendInterval === "72h" ? "72H" : tableTrendInterval === "weekly" ? "7D" : "30D"})`}
                           </span>
-                          <span
-                            className="text-xs font-bold"
-                            style={{
-                              color: "#52635F",
-                              textAlign: "right",
-                              fontSize: lang === "ur" ? 13 : 11.5,
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {fmt(Math.round(r.min * effMult))}
-                          </span>
-                          <span
-                            className="text-xs font-extrabold"
-                            style={{
-                              color: "#087F63",
-                              textAlign: "right",
-                              fontSize: lang === "ur" ? 13 : 11.5,
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {fmt(Math.round(r.max * effMult))}
-                          </span>
-                          <span
-                            className="font-bold px-1.5 py-0.5 rounded-full"
-                            style={{
-                              background: rtColor + "22",
-                              color: rtColor,
-                              whiteSpace: "nowrap",
-                              textAlign: "center",
-                              justifySelf: "center",
-                              fontSize: lang === "ur" ? 12 : 9,
-                              fontFamily:
-                                lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                  : "inherit",
-                            }}
-                          >
-                            {tr(r.rateType)
-                              .replace(" ریٹ", "")
-                              .replace(" Rate", "")}
-                          </span>
-                          <span
-                            className="text-xs font-bold"
-                            style={{
-                              color: trendColor,
-                              textAlign: "right",
-                              whiteSpace: "nowrap",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              justifyContent: "flex-end",
-                              gap: 2,
-                            }}
-                          >
-                            <span>{trendArrow}</span>
-                            {intervalPct > 0 && <span>{intervalPct}%</span>}
-                          </span>
+                          <span className="text-[10px] text-[#087F63]">▾</span>
                         </button>
-                      );
-                    })}
+
+                        {/* Elevated Dropdown Menu for Trend Interval */}
+                        {trendDropdownOpen && (
+                          <>
+                            <div
+                              className="fixed inset-0 z-40"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setTrendDropdownOpen(false);
+                              }}
+                            />
+                            <div
+                              className="absolute right-0 top-full mt-1 z-50 bg-white rounded-xl shadow-2xl border border-[#C7E8D8] py-1 min-w-[140px] text-left"
+                              style={{
+                                direction: lang === "ur" ? "rtl" : "ltr",
+                              }}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div className="px-3 py-1 text-[10px] font-bold text-[#80918B] border-b border-[#E8EFEC] uppercase tracking-wider">
+                                {lang === "ur" ? "دورانیہ منتخب کریں" : "Select Interval"}
+                              </div>
+                              {[
+                                { id: "24h", labelUr: "24 گھنٹے (24h)", labelEn: "24 Hours (24h)" },
+                                { id: "72h", labelUr: "72 گھنٹے (72h)", labelEn: "72 Hours (72h)" },
+                                { id: "weekly", labelUr: "ہفتہ وار (7 دن)", labelEn: "Weekly (7 Days)" },
+                                { id: "monthly", labelUr: "ماہانہ (30 دن)", labelEn: "Monthly (30 Days)" },
+                              ].map((opt) => (
+                                <button
+                                  key={opt.id}
+                                  type="button"
+                                  onClick={() => {
+                                    setTableTrendInterval(opt.id as any);
+                                    setTrendDropdownOpen(false);
+                                  }}
+                                  className="w-full px-3 py-2 text-xs font-bold flex items-center justify-between hover:bg-[#E8F5EF] transition text-left"
+                                  style={{
+                                    color: tableTrendInterval === opt.id ? "#087F63" : "#183B34",
+                                    background: tableTrendInterval === opt.id ? "#F0F9F5" : "transparent",
+                                    fontFamily:
+                                      lang === "ur"
+                                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                        : "inherit",
+                                  }}
+                                >
+                                  <span>{lang === "ur" ? opt.labelUr : opt.labelEn}</span>
+                                  {tableTrendInterval === opt.id && (
+                                    <span className="text-[#087F63] font-black text-xs">✓</span>
+                                  )}
+                                </button>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    {/* Scrollable table body — keeps the deep-view card compact & scrollable through all mandis */}
+                    <div
+                      className="flex flex-col overflow-y-auto"
+                      style={{
+                        maxHeight: isTableExpanded ? "calc(75vh - 160px)" : 220,
+                        flex: isTableExpanded ? "1 1 auto" : "none",
+                        overscrollBehavior: "contain",
+                        WebkitOverflowScrolling: "touch",
+                        scrollbarWidth: "thin",
+                        scrollbarColor: "#A9CFC2 transparent",
+                      }}
+                    >
+                      {tableRows.length === 0 && (
+                        <div className="flex items-center justify-center py-8 opacity-50">
+                          <p
+                            className="font-semibold"
+                            style={{
+                              fontSize: lang === "ur" ? 16 : 14,
+                              fontFamily:
+                                lang === "ur"
+                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  : "inherit",
+                            }}
+                          >
+                            {lang === "ur"
+                              ? `کوئی منڈی ڈیٹا دستیاب نہیں${tableProvinceFilter ? ` (${tm(tableProvinceFilter)})` : ""}`
+                              : `No mandi data${tableProvinceFilter ? ` in ${tableProvinceFilter}` : ""}`}
+                          </p>
+                        </div>
+                      )}
+                      {tableRows.map((r, ci) => {
+                        const trendArrow =
+                          r.trend === "up" ? "▲" : r.trend === "down" ? "▼" : "—";
+                        const trendColor =
+                          r.trend === "up"
+                            ? "#16A34A"
+                            : r.trend === "down"
+                              ? "#C94A43"
+                              : "#52635F";
+                        const rtColor = RATE_COLORS[r.rateType] || "#52635F";
+                        const isRowModalActive =
+                          selectedMandiGraphRow?.mandiName === r.mandiName &&
+                          selectedMandiGraphRow?.rateType === r.rateType;
+                        const isSelected =
+                          (locScope.kind === "mandi" &&
+                            locScope.label === r.mandiName) ||
+                          isRowModalActive;
+                        // Each row uses ITS OWN canonical attrs so prices match the byproduct list cards
+                        const rowCanon = getMandiCanonicalAttrs(r.mandiName);
+                        const rowAttrMult = computeAttrMult(
+                          rowCanon.variety,
+                          rowCanon.color,
+                          rowCanon.newOld,
+                          rowCanon.spec,
+                          rowCanon.condition,
+                        );
+                        const effMult = rowAttrMult * tableDateVariation;
+                        const intervalPct =
+                          tableTrendInterval === "72h"
+                            ? Math.round(r.trendPct * 2.2 * 10) / 10
+                            : tableTrendInterval === "weekly"
+                              ? Math.round(r.trendPct * 3.1 * 10) / 10
+                              : tableTrendInterval === "monthly"
+                                ? Math.round(r.trendPct * 5.4 * 10) / 10
+                                : r.trendPct;
+                        return (
+                          <button
+                            key={`${r.mandiName}-${r.rateType}-${ci}`}
+                            onClick={() => {
+                              setSelectedMandiGraphRow({
+                                mandiName: r.mandiName,
+                                rateType: r.rateType,
+                                min: Math.round(r.min * effMult),
+                                max: Math.round(r.max * effMult),
+                                trend: r.trend as any,
+                                trendPct: intervalPct,
+                              });
+                            }}
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns:
+                                "1.35fr 1.15fr 1.15fr 0.75fr 0.95fr",
+                              columnGap: 8,
+                              padding: "10px 12px",
+                              borderBottom:
+                                ci < tableRows.length - 1
+                                  ? "1px solid #F2F7F5"
+                                  : "none",
+                              background: isRowModalActive
+                                ? "#E4F2EC"
+                                : isSelected
+                                  ? "#E4F2EC"
+                                  : "transparent",
+                              boxShadow: isRowModalActive
+                                ? "inset 0 0 0 1.5px #087F63"
+                                : "none",
+                              borderRadius: isRowModalActive ? 10 : 0,
+                              alignItems: "center",
+                              textAlign: lang === "ur" ? "right" : "left",
+                              width: "100%",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <span
+                              className="font-semibold truncate"
+                              style={{
+                                color: "#183B34",
+                                fontSize: lang === "ur" ? 15 : 12,
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {tm(r.mandiName.replace(" Mandi", ""))}
+                            </span>
+                            <span
+                              className="text-xs font-bold"
+                              style={{
+                                color: "#52635F",
+                                textAlign: "right",
+                                fontSize: lang === "ur" ? 13 : 11.5,
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {fmt(Math.round(r.min * effMult))}
+                            </span>
+                            <span
+                              className="text-xs font-extrabold"
+                              style={{
+                                color: "#087F63",
+                                textAlign: "right",
+                                fontSize: lang === "ur" ? 13 : 11.5,
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {fmt(Math.round(r.max * effMult))}
+                            </span>
+                            <span
+                              className="font-bold px-1.5 py-0.5 rounded-full"
+                              style={{
+                                background: rtColor + "22",
+                                color: rtColor,
+                                whiteSpace: "nowrap",
+                                textAlign: "center",
+                                justifySelf: "center",
+                                fontSize: lang === "ur" ? 12 : 9,
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {tr(r.rateType)
+                                .replace(" ریٹ", "")
+                                .replace(" Rate", "")}
+                            </span>
+                            <span
+                              className="text-xs font-bold"
+                              style={{
+                                color: trendColor,
+                                textAlign: "right",
+                                whiteSpace: "nowrap",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                justifyContent: "flex-end",
+                                gap: 2,
+                              }}
+                            >
+                              <span>{trendArrow}</span>
+                              {intervalPct > 0 && <span>{intervalPct}%</span>}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              </>
-            );
-          })()}
+                </>
+              );
+            })()}
 
             {/*  Attribute picker sheet  */}
             {attrSheet &&
@@ -17430,7 +17433,7 @@ function ProductRatesScreen({
               yBottom -
               ((p - graphData.yMinBound) /
                 (graphData.yMaxBound - graphData.yMinBound)) *
-                (yBottom - yTop);
+              (yBottom - yTop);
             return { x, y, val: p };
           });
 
@@ -17483,8 +17486,8 @@ function ProductRatesScreen({
                     >
                       {lang === "ur"
                         ? tr(row.rateType)
-                            .replace(" ریٹ", "")
-                            .replace(" Rate", "")
+                          .replace(" ریٹ", "")
+                          .replace(" Rate", "")
                         : row.rateType.replace(" Rate", "")}
                     </span>
                   </div>
@@ -20015,11 +20018,10 @@ function ZaraiReelsScreen({
                     containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
                   }
                 }}
-                className={`py-1.5 px-2 rounded-xl text-xs font-bold tap-target transition-all flex items-center justify-center gap-1 ${
-                  isSelected
+                className={`py-1.5 px-2 rounded-xl text-xs font-bold tap-target transition-all flex items-center justify-center gap-1 ${isSelected
                     ? "bg-[#32BA46] text-[#07332F] font-black shadow-md scale-[1.02]"
                     : "text-white/80 hover:text-white hover:bg-white/10"
-                }`}
+                  }`}
               >
                 <span className="text-xs">{cat.icon}</span>
                 <span className="truncate">{lang === "ur" ? cat.labelUrdu : cat.label}</span>
@@ -20046,11 +20048,10 @@ function ZaraiReelsScreen({
                       containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
                     }
                   }}
-                  className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap tap-target transition-all flex items-center gap-1 flex-shrink-0 ${
-                    isSelected
+                  className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap tap-target transition-all flex items-center gap-1 flex-shrink-0 ${isSelected
                       ? "bg-white text-[#07332F] font-black shadow-md scale-105"
                       : "bg-black/55 text-white/80 backdrop-blur-md border border-white/15 hover:bg-black/75 hover:text-white"
-                  }`}
+                    }`}
                 >
                   <span>{lang === "ur" ? prod.labelUrdu : prod.label}</span>
                 </button>
@@ -20494,7 +20495,7 @@ function FloatingMiniPlayer({
     if (!videoRef.current) return;
     videoRef.current.muted = video.isMuted;
     if (video.isPlaying) {
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch(() => { });
     } else {
       videoRef.current.pause();
     }
@@ -22395,8 +22396,8 @@ function HomeScreen({
   push,
   setFeedOpen,
   pickedByproducts,
-  togglePickBP,
-  isPickedBP,
+  togglePickBP = () => {},
+  isPickedBP = () => false,
   setPickedByproducts,
   voiceGuideActive = false,
   onVoiceGuideClose,
@@ -23598,114 +23599,148 @@ function HomeScreen({
                 scrollSnapType: "x mandatory",
               }}
             >
-              {FAVE_BPS.map((bp) => {
-                const imgSrc = getFavoriteImage(bp);
+              {(() => {
+                const defaultMandiName =
+                  profileCity || initialUserData?.city || "Pakpattan Mandi";
+                const favoriteCardsList =
+                  pickedByproducts && pickedByproducts.length > 0
+                    ? pickedByproducts.map((p) => ({
+                      vertical: p.vertical || "Grains",
+                      product: p.product || "Wheat",
+                      byproduct: p.byproduct,
+                      mandiName: p.mandiName || defaultMandiName,
+                      rateType: p.rateType || "Mill",
+                    }))
+                    : FAVE_BPS.map((bp) => ({
+                      vertical: "Grains",
+                      product: "Wheat",
+                      byproduct: bp,
+                      mandiName: defaultMandiName,
+                      rateType: "Mill",
+                    }));
 
-                return (
-                  <button
-                    key={bp}
-                    onClick={() => {
-                      push({
-                        id: "product-rates",
-                        vertical: "Grains",
-                        product: "Wheat",
-                        byproduct: bp,
-                      });
-                    }}
-                    className="flex-shrink-0 flex flex-col items-center relative tap-target"
-                    style={{
-                      width: "clamp(136px, 34vw, 160px)",
-                      minWidth: "clamp(130px, 33vw, 154px)",
-                      height: "clamp(185px, 24vh, 215px)",
-                      padding: "clamp(10px, 1.5vh, 14px) 10px clamp(12px, 1.7vh, 16px)",
-                      borderRadius: 20,
-                      background: "#FFFFFF",
-                      border: "1.5px solid #D5E5DE",
-                      boxShadow: "0 4px 14px rgba(18,65,48,0.07)",
-                      scrollSnapAlign: "start",
-                    }}
-                  >
-                    {/* Favorite Heart indicator */}
-                    <div
+                return favoriteCardsList.map((item, idx) => {
+                  const imgSrc = getFavoriteImage(item.byproduct);
+                  const cleanMandi = item.mandiName
+                    .replace(/\s*Mandi\s*/i, "")
+                    .replace(/\s*منڈی\s*/g, "")
+                    .trim();
+
+                  return (
+                    <button
+                      key={`${item.byproduct}-${item.mandiName}-${idx}`}
+                      onClick={() => {
+                        push({
+                          id: "product-rates",
+                          vertical: item.vertical,
+                          product: item.product,
+                          byproduct: item.byproduct,
+                          initialMandi: item.mandiName,
+                          initialRateType: item.rateType,
+                        });
+                      }}
+                      className="flex-shrink-0 flex flex-col items-center relative tap-target"
                       style={{
-                        position: "absolute",
-                        top: 8,
-                        right: 8,
-                        zIndex: 3,
+                        width: "clamp(136px, 34vw, 160px)",
+                        minWidth: "clamp(130px, 33vw, 154px)",
+                        height: "clamp(185px, 24vh, 215px)",
+                        padding:
+                          "clamp(10px, 1.5vh, 14px) 8px clamp(12px, 1.7vh, 16px)",
+                        borderRadius: 20,
+                        background: "#FFFFFF",
+                        border: "1.5px solid #D5E5DE",
+                        boxShadow: "0 4px 14px rgba(18,65,48,0.07)",
+                        scrollSnapAlign: "start",
                       }}
                     >
-                      <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 24 24"
-                        fill="#E11D48"
-                        stroke="#E11D48"
-                        strokeWidth="1"
+                      {/* Favorite Heart indicator */}
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: 8,
+                          right: 8,
+                          zIndex: 3,
+                        }}
                       >
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                      </svg>
-                    </div>
+                        <svg
+                          width="15"
+                          height="15"
+                          viewBox="0 0 24 24"
+                          fill="#E11D48"
+                          stroke="#E11D48"
+                          strokeWidth="1"
+                        >
+                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                      </div>
 
-                    {/* Image */}
-                    <div
-                      style={{
-                        width: "clamp(74px, 9.5vh, 88px)",
-                        height: "clamp(74px, 9.5vh, 88px)",
-                        marginTop: 4,
-                        marginBottom: 4,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        position: "relative",
-                      }}
-                    >
-                      {imgSrc ? (
-                        <img
-                          src={imgSrc}
-                          alt={bp}
-                          loading="lazy"
-                          style={{
-                            width: "90%",
-                            height: "90%",
-                            objectFit: "contain",
-                            display: "block",
-                            filter: "none",
-                            opacity: 1,
-                          }}
-                        />
-                      ) : (
-                        <ProductIcon
-                          name={bp}
-                          vertical="Grains"
-                          size={56}
-                          style={{
-                            filter: "none",
-                            opacity: 1,
-                          }}
-                        />
-                      )}
-                    </div>
+                      {/* Image */}
+                      <div
+                        style={{
+                          width: "clamp(74px, 9.5vh, 88px)",
+                          height: "clamp(74px, 9.5vh, 88px)",
+                          marginTop: 4,
+                          marginBottom: 4,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          position: "relative",
+                        }}
+                      >
+                        {imgSrc ? (
+                          <img
+                            src={imgSrc}
+                            alt={item.byproduct}
+                            loading="lazy"
+                            style={{
+                              width: "90%",
+                              height: "90%",
+                              objectFit: "contain",
+                              display: "block",
+                              filter: "none",
+                              opacity: 1,
+                            }}
+                          />
+                        ) : (
+                          <ProductIcon
+                            name={item.byproduct}
+                            vertical={item.vertical || "Grains"}
+                            size={56}
+                            style={{
+                              filter: "none",
+                              opacity: 1,
+                            }}
+                          />
+                        )}
+                      </div>
 
-                    {/* Name */}
-                    <span
-                      style={{
-                        marginTop: "auto",
-                        fontSize: "clamp(14px, 1.9vh, 16px)",
-                        fontWeight: 800,
-                        color: "#183B34",
-                        textAlign: "center",
-                        lineHeight: 1.15,
-                        fontFamily:
-                          lang === "ur"
-                            ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                            : "inherit",
-                      }}
-                    >
-                      {tc(bp)}
-                    </span>
-                  </button>
-                );
-              })}
+                      {/* Name: By-product along with Mandi Name */}
+                      <div className="mt-auto w-full px-1 flex flex-col items-center justify-center">
+                        <span
+                          className="text-center font-extrabold truncate w-full text-[#183B34]"
+                          style={{
+                            fontSize: "clamp(12px, 1.6vh, 14.5px)",
+                            lineHeight: 1.2,
+                            fontFamily:
+                              lang === "ur"
+                                ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                                : "'Poppins', sans-serif",
+                          }}
+                          title={
+                            lang === "ur"
+                              ? `${tc(item.byproduct)} - ${tm(cleanMandi)}`
+                              : `${item.byproduct} - ${cleanMandi}`
+                          }
+                        >
+                          {lang === "ur"
+                            ? `${tc(item.byproduct)} - ${tm(cleanMandi)}`
+                            : `${item.byproduct} - ${cleanMandi}`}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                });
+              })()}
             </div>
           </section>
         </div>
@@ -29341,6 +29376,8 @@ function AppInner({
                   else setFeedOpen(false);
                 }}
                 pickedByproducts={pickedByproducts}
+                togglePickBP={togglePickBP}
+                isPickedBP={isPickedBP}
                 setPickedByproducts={setPickedByproducts}
                 voiceGuideActive={voicePhase === "orientation"}
                 onVoiceGuideClose={() => setVoicePhase("idle")}
