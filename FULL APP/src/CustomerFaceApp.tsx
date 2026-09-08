@@ -25,6 +25,9 @@ import video5 from "./videos/video5.mp4";
 import video6 from "./videos/video6.mp4";
 import video7 from "./videos/video7.mp4";
 import video8 from "./videos/video8.mp4";
+import video9 from "./videos/video9.mp4";
+import video10 from "./videos/video10.mp4";
+import video11 from "./videos/video11.mp4";
 
 const ZM_THEME_CSS = `
   /* 4-Sided Clockwise Racetrack Frame Animations */
@@ -9717,39 +9720,42 @@ function ByProductCombinedScreen({
         className="flex-shrink-0"
         style={{ background: "#F4FAF7", borderBottom: "1px solid #D5E2DD" }}
       >
-        {/* Title row with English & Lunar date pills + location top-right */}
-        <div className="px-4 pt-10 pb-2 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2.5 min-w-0">
+        {/* Title row with Wheat emoji, Full product name, Date capsule, and Location */}
+        <div className="px-2.5 pt-9 pb-2 flex items-center justify-between gap-1 w-full overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+          {/* Left: Back button + Wheat product emoji + Completely visible Product Name */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
             <button
               onClick={onBack}
-              className="tap-target w-10 h-10 rounded-2xl flex items-center justify-center text-xl flex-shrink-0"
-              style={{ background: "#E8EFEC" }}
+              className="tap-target w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 text-[#183B34] bg-[#EAF5F0] border border-[#C7E8D8] hover:bg-[#D5E2DD] transition active:scale-95 shadow-xs"
             >
               {lang === "ur" ? "→" : "←"}
             </button>
-            <div className="min-w-0">
-              <h1
-                className="font-extrabold text-lg truncate"
-                style={{
-                  color: "#183B34",
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                      : "'Poppins', sans-serif",
-                }}
-              >
-                {activeProduct
-                  ? tcL(activeProduct.product)
-                  : lang === "ur"
-                    ? "مصنوعات"
-                    : "Products"}
-              </h1>
-            </div>
+            <ProductIcon
+              name={activeProduct?.product || "Wheat"}
+              vertical={activeProduct?.vertical || "Grains"}
+              size={26}
+              className="flex-shrink-0"
+            />
+            <h1
+              className="font-extrabold text-[15px] text-[#111827] whitespace-nowrap flex-shrink-0"
+              style={{
+                fontFamily:
+                  lang === "ur"
+                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                    : "'Poppins', sans-serif",
+              }}
+            >
+              {activeProduct
+                ? tcL(activeProduct.product)
+                : lang === "ur"
+                  ? "گندم"
+                  : "Wheat"}
+            </h1>
           </div>
 
-          {/* Top Right: English / Gregorian Date Pill & Lunar Date Pill + Location selector */}
+          {/* Right: Combined Date Capsule (Gregorian + Lunar in 1 pill) + Location selector */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
-            {/* English / Gregorian Date Pill */}
+            {/* Combined Date Pill */}
             <div
               role="button"
               tabIndex={0}
@@ -9757,123 +9763,45 @@ function ByProductCombinedScreen({
                 if (voiceEnabled) {
                   speakText(
                     lang === "ur"
-                      ? `آج کی تاریخ: ${visibleDateLabel.d} ${visibleDateLabel.month.toUpperCase() === "AUG" ? "اگست" : visibleDateLabel.month}`
-                      : `Date: ${visibleDateLabel.month} ${visibleDateLabel.d}`,
+                      ? `تاریخ: ${visibleDateLabel.d} ${visibleDateLabel.month.toUpperCase() === "AUG" ? "اگست" : visibleDateLabel.month}، قمری تاریخ: ${islamicDate.fullText}`
+                      : `Date: ${visibleDateLabel.month} ${visibleDateLabel.d}, Lunar Date: ${islamicDate.fullText}`,
                   );
                 }
               }}
-              className="flex items-center rounded-xl overflow-hidden shadow-sm flex-shrink-0 cursor-pointer active:scale-95 transition"
-              style={{
-                border: "1.5px solid #087F63",
-                background: "#FFFFFF",
-                height: 32,
-              }}
-              title={lang === "ur" ? "شمسی تاریخ" : "Gregorian Date"}
+              className="flex items-center gap-1.5 pl-2 pr-1 py-0.5 rounded-full bg-[#EAF5F0] border border-[#C7E8D8] text-[#075E4F] flex-shrink-0 cursor-pointer active:scale-95 transition shadow-xs"
+              title={lang === "ur" ? "شمسی و قمری تاریخ" : "Gregorian & Lunar Date"}
             >
-              <div
-                className="px-2 flex items-center justify-center font-black"
-                style={{
-                  background: "#087F63",
-                  color: "#FFFFFF",
-                  fontSize: lang === "ur" ? 12 : 10.5,
-                  letterSpacing: "0.05em",
-                  height: "100%",
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                      : "inherit",
-                }}
-              >
-                {lang === "ur"
-                  ? visibleDateLabel.month.toUpperCase() === "AUG"
-                    ? "اگست"
-                    : visibleDateLabel.month
-                  : visibleDateLabel.month}
+              {/* Gregorian sub-part */}
+              <div className="flex items-center gap-1">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="text-[#087F63]">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <div className="flex flex-col items-center leading-none">
+                  <span className="text-[7.5px] font-bold uppercase text-[#087F63] leading-none">
+                    {visibleDateLabel.month === "AUG" ? "Aug" : visibleDateLabel.month}
+                  </span>
+                  <span className="text-[11px] font-black text-[#075E4F] leading-none mt-0.5">
+                    {visibleDateLabel.d}
+                  </span>
+                </div>
               </div>
-              <div
-                className="px-2.5 flex items-center justify-center font-black"
-                style={{
-                  background: "#F4FAF7",
-                  height: "100%",
-                  borderLeft: "1px solid #D5E2DD",
-                }}
-              >
-                <span
-                  style={{
-                    color: "#183B34",
-                    fontSize: 14,
-                    fontWeight: 900,
-                    lineHeight: 1,
-                  }}
-                >
-                  {lang === "ur"
-                    ? toUrduDigits(visibleDateLabel.d)
-                    : visibleDateLabel.d}
-                </span>
-              </div>
-            </div>
 
-            {/* Lunar Calendar Date Pill (Exact Symmetrical Matching Format) */}
-            <div
-              role="button"
-              tabIndex={0}
-              onClick={() => {
-                if (voiceEnabled) {
-                  speakText(
-                    lang === "ur"
-                      ? `قمری تاریخ: ${islamicDate.fullText}`
-                      : `Lunar Date: ${islamicDate.fullText}`,
-                  );
-                }
-              }}
-              className="flex items-center rounded-xl overflow-hidden shadow-sm flex-shrink-0 cursor-pointer active:scale-95 transition"
-              style={{
-                border: "1.5px solid #0D6E57",
-                background: "#FFFFFF",
-                height: 32,
-              }}
-              title={lang === "ur" ? "قمری تاریخ" : "Lunar Calendar Date"}
-            >
-              <div
-                className="px-2 flex items-center justify-center font-black"
-                style={{
-                  background: "#0D6E57",
-                  color: "#FFFFFF",
-                  fontSize: lang === "ur" ? 12 : 10,
-                  letterSpacing: "0.05em",
-                  height: "100%",
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                      : "inherit",
-                }}
-              >
-                {lang === "ur"
-                  ? islamicDate.monthName || "ربیع الاول"
-                  : islamicDate.monthName
-                    ? islamicDate.monthName.split(" ")[0].toUpperCase()
-                    : "RABI I"}
-              </div>
-              <div
-                className="px-2.5 flex items-center justify-center font-black"
-                style={{
-                  background: "#F4FAF7",
-                  height: "100%",
-                  borderLeft: "1px solid #D5E2DD",
-                }}
-              >
-                <span
-                  style={{
-                    color: "#183B34",
-                    fontSize: 14,
-                    fontWeight: 900,
-                    lineHeight: 1,
-                  }}
-                >
-                  {lang === "ur"
-                    ? toUrduDigits(islamicDate.day)
-                    : String(islamicDate.day).padStart(2, "0")}
-                </span>
+              {/* Lunar sub-pill (White capsule with border) */}
+              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white border border-[#087F63]/40 shadow-xs">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#087F63" className="text-[#087F63] flex-shrink-0">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+                <div className="flex flex-col items-center justify-center leading-tight">
+                  <span className="text-[7.5px] font-extrabold text-[#075E4F] whitespace-nowrap leading-none">
+                    {String(islamicDate.day).padStart(2, "0")} {islamicDate.monthName ? (lang === "ur" ? islamicDate.monthName : "Rabi ul Awwal") : "06 Rabi ul Awwal"}
+                  </span>
+                  <span className="text-[8.5px] font-black text-[#087F63] whitespace-nowrap leading-none mt-0.5">
+                    1448 AH
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -9887,30 +9815,27 @@ function ByProductCombinedScreen({
                   );
                 }
               }}
-              className="tap-target flex-shrink-0 flex items-center gap-1 rounded-2xl font-bold text-xs px-2.5"
-              style={{
-                height: 34,
-                background: "#E4F2EC",
-                color: "#075E4F",
-                border: "1px solid #C7E8D8",
-                maxWidth: 110,
-              }}
+              className="tap-target flex-shrink-0 flex items-center gap-1 rounded-full font-bold text-xs px-2.5 py-1 bg-[#EAF5F0] border border-[#C7E8D8] text-[#075E4F] shadow-xs cursor-pointer active:scale-95 transition"
             >
-              <span className="truncate" style={{ fontSize: 11 }}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="#075E4F" className="text-[#075E4F] flex-shrink-0">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                <circle cx="12" cy="9" r="2.5" fill="#EAF5F0" />
+              </svg>
+              <span className="text-[10.5px] whitespace-nowrap font-bold text-[#075E4F]">
                 {locLabel}
               </span>
               <svg
-                width="10"
-                height="10"
+                width="8"
+                height="8"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                style={{ opacity: 0.85, flexShrink: 0 }}
+                className="opacity-75 flex-shrink-0 text-[#075E4F]"
               >
-                <polyline points="6 9 12 15 18 9"></polyline>
+                <polyline points="6 9 12 15 18 9" />
               </svg>
             </button>
           </div>
@@ -10119,15 +10044,21 @@ function ByProductCombinedScreen({
                     style={{ background: "#D5E2DD" }}
                   />
                   <span
-                    className="font-extrabold text-xs px-3 py-1 rounded-full flex-shrink-0"
+                    className="font-extrabold text-xs px-4 py-1.5 rounded-full flex-shrink-0 flex items-center gap-1.5 text-white shadow-sm"
                     style={{
-                      background: isToday ? "#087F63" : "#fff",
-                      color: isToday ? "#fff" : "#52635F",
-                      border: isToday ? "none" : "1px solid #D5E2DD",
+                      background: isToday ? "#084E41" : "#087F63",
                     }}
                   >
-                    {isToday ? "Today · " : ""}
-                    {dDisplay}
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span>
+                      {isToday ? (lang === "ur" ? "جمعرات، " : "Thu, ") : ""}
+                      {dDisplay}
+                    </span>
                   </span>
                   <div
                     className="flex-1 h-px"
@@ -11525,6 +11456,51 @@ function ProvincePatternSvg({
   return <>{patternMap[pattern] || patternMap.phulkari}</>;
 }
 
+function getRateTypeIcon(rateType: string) {
+  const norm = (rateType || "").toLowerCase();
+  if (norm.includes("mill") || norm.includes("مل")) {
+    return (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+        <rect x="3" y="12" width="4" height="9" rx="1" />
+        <rect x="10" y="6" width="4" height="15" rx="1" />
+        <rect x="17" y="3" width="4" height="18" rx="1" />
+      </svg>
+    );
+  }
+  if (norm.includes("broker") || norm.includes("بیوپار") || norm.includes("بروکر")) {
+    return (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+      </svg>
+    );
+  }
+  if (norm.includes("stock") || norm.includes("اسٹاک") || norm.includes("ذخیرہ")) {
+    return (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2" />
+        <polyline points="2 17 12 22 22 17" />
+        <polyline points="2 12 12 17 22 12" />
+      </svg>
+    );
+  }
+  if (norm.includes("wholesale") || norm.includes("ہول سیل") || norm.includes("تھوک")) {
+    return (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="9" cy="21" r="1" />
+        <circle cx="20" cy="21" r="1" />
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+      </svg>
+    );
+  }
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+      <line x1="7" y1="7" x2="7.01" y2="7" />
+    </svg>
+  );
+}
+
 function RateCard({
   r,
   onClick,
@@ -11549,7 +11525,6 @@ function RateCard({
     r.vertical ||
     Object.entries(VERTICALS).find(([, vd]) => vd.products[r.product])?.[0] ||
     "Grains";
-  const bg = VERTICAL_BG[vKey] || "#087F63";
 
   // Audio speech prompt on card
   const handleSpeakRate = (e: React.MouseEvent) => {
@@ -11572,24 +11547,38 @@ function RateCard({
   const cleanBP = tcL(r.byproduct || r.product);
   const singleLineTitle = `${cleanBP} - ${cleanCity}`;
 
+  const rateTypeFormatted = trL(r.rateType).replace(" ریٹ", "").replace(" Rate", "") + (lang === "ur" ? " ریٹ" : " Rate");
+
+  const displayPct = Math.abs(r.trendPct || 1.8).toFixed(1);
+
   return (
     <div
       role="button"
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(e) => e.key === "Enter" && onClick()}
-      className="card-mobile-interactive tap-target w-full rounded-2xl overflow-hidden cursor-pointer flex flex-col justify-between"
+      className="card-mobile-interactive tap-target w-full rounded-2xl cursor-pointer flex flex-col justify-between transition-transform duration-150 active:scale-[0.98]"
       style={{
         background: "#FFFFFF",
-        border: "1.5px solid #E5EBE8",
-        boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
-        padding: "11px 10px",
-        minHeight: 228,
+        border: "1px solid #E5EBE8",
+        boxShadow: "0 4px 18px rgba(0,0,0,0.05)",
+        padding: "12px 10px 10px",
+        minHeight: 254,
       }}
     >
       {/* Top Row: Trend Pill on Left, Favorite Heart Button on Right */}
       <div className="flex items-center justify-between w-full">
-        <TrendBadge trend={r.trend} pct={r.trendPct} compact />
+        {r.trend === "down" ? (
+          <span className="text-[11px] font-black px-2 py-0.5 rounded-md inline-flex items-center gap-1 bg-[#FEE2E2] text-[#DC2626]">
+            <span className="text-[9px]">▼</span>
+            <span>-{displayPct}%</span>
+          </span>
+        ) : (
+          <span className="text-[11px] font-black px-2 py-0.5 rounded-md inline-flex items-center gap-1 bg-[#E8F8F0] text-[#0F8A5F]">
+            <span className="text-[9px]">▲</span>
+            <span>+{displayPct}%</span>
+          </span>
+        )}
 
         <button
           type="button"
@@ -11597,13 +11586,7 @@ function RateCard({
             e.stopPropagation();
             onToggleFavorite?.();
           }}
-          className="tap-target w-8 h-8 rounded-full flex items-center justify-center transition active:scale-90"
-          style={{
-            background: isFavorite ? "#FFEBEB" : "#F4FAF7",
-            color: isFavorite ? "#E11D48" : "#80918B",
-            border: isFavorite ? "1.5px solid #FDA4AF" : "1.5px solid #D5E2DD",
-            boxShadow: isFavorite ? "0 2px 6px rgba(225,29,72,0.18)" : "0 1px 3px rgba(0,0,0,0.04)",
-          }}
+          className="tap-target w-7 h-7 flex items-center justify-center transition active:scale-90 text-[#183B34]"
           title={
             isFavorite
               ? lang === "ur"
@@ -11615,12 +11598,12 @@ function RateCard({
           }
         >
           <svg
-            width="16"
-            height="16"
+            width="19"
+            height="19"
             viewBox="0 0 24 24"
             fill={isFavorite ? "#E11D48" : "none"}
-            stroke={isFavorite ? "#E11D48" : "currentColor"}
-            strokeWidth="2.2"
+            stroke={isFavorite ? "#E11D48" : "#183B34"}
+            strokeWidth="1.8"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
@@ -11629,23 +11612,20 @@ function RateCard({
         </button>
       </div>
 
-      {/* Center: Bigger Icon Floating Cleanly Without Colored Box Background */}
-      <div className="flex flex-col items-center justify-center my-1.5">
-        <div className="flex items-center justify-center py-1">
+      {/* Center: 3D Product Icon & Titles */}
+      <div className="flex flex-col items-center justify-center my-1">
+        <div className="flex items-center justify-center py-0.5">
           <ProductIcon
             name={r.byproduct || vKey}
             vertical={vKey}
-            size={60}
+            size={74}
           />
         </div>
 
-        {/* Title: Mandi name with By-product name in SINGLE LINE */}
+        {/* Title: Mandi name with By-product name in bold */}
         <p
-          className="font-black text-center mt-1 px-0.5 truncate w-full"
+          className="font-extrabold text-center mt-1 px-0.5 truncate w-full text-sm text-[#183B34]"
           style={{
-            color: "#183B34",
-            fontSize: lang === "ur" ? 16.5 : 14,
-            lineHeight: 1.25,
             fontFamily:
               lang === "ur"
                 ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
@@ -11657,28 +11637,25 @@ function RateCard({
         </p>
       </div>
 
-      {/* Prices: Clean Side-by-Side with Price on Top and Min/Max Label Below */}
+      {/* Prices: Clean Side-by-Side with Price on Top (in 1 line) and Min/Max Label Below */}
       <div
-        className="flex items-center justify-between px-2 py-1.5 rounded-xl my-1"
-        style={{ background: "#F4FAF7", border: "1px solid #E5EBE8" }}
+        className="flex items-center justify-between px-2 py-1.5 rounded-xl my-1 w-full bg-white"
       >
         {/* Min */}
-        <div className="flex flex-col items-center flex-1">
+        <div className="flex flex-col items-start flex-1 min-w-0">
           <span
-            className="font-black leading-tight tracking-tight text-center"
+            className="font-extrabold text-[13.5px] text-[#183B34] tracking-tight leading-none whitespace-nowrap truncate w-full"
             style={{
-              color: "#183B34",
-              fontSize: lang === "ur" ? 17 : 14.5,
               fontFamily:
                 lang === "ur"
                   ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
                   : "'Poppins', sans-serif",
             }}
           >
-            {fmt(r.min)}
+            {lang === "ur" ? `روپے ${r.min.toLocaleString("en-PK")}` : `Rs. ${r.min.toLocaleString("en-PK")}`}
           </span>
           <span
-            className="text-[9px] font-semibold tracking-tight text-[#80918B] mt-0.5"
+            className="text-[9.5px] font-semibold tracking-tight text-[#80918B] mt-0.5 whitespace-nowrap"
             style={{
               fontFamily:
                 lang === "ur"
@@ -11690,25 +11667,23 @@ function RateCard({
           </span>
         </div>
 
-        <div className="w-[1px] h-6 bg-[#D5E2DD]" />
+        <div className="w-[1px] h-6 bg-[#E5EBE8] mx-1.5 flex-shrink-0" />
 
         {/* Max */}
-        <div className="flex flex-col items-center flex-1">
+        <div className="flex flex-col items-start flex-1 pl-1 min-w-0">
           <span
-            className="font-black leading-tight tracking-tight text-center"
+            className="font-extrabold text-[13.5px] text-[#183B34] tracking-tight leading-none whitespace-nowrap truncate w-full"
             style={{
-              color: "#183B34",
-              fontSize: lang === "ur" ? 17 : 14.5,
               fontFamily:
                 lang === "ur"
                   ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
                   : "'Poppins', sans-serif",
             }}
           >
-            {fmt(r.max)}
+            {lang === "ur" ? `روپے ${r.max.toLocaleString("en-PK")}` : `Rs. ${r.max.toLocaleString("en-PK")}`}
           </span>
           <span
-            className="text-[9px] font-semibold tracking-tight text-[#80918B] mt-0.5"
+            className="text-[9.5px] font-semibold tracking-tight text-[#80918B] mt-0.5 whitespace-nowrap"
             style={{
               fontFamily:
                 lang === "ur"
@@ -11721,44 +11696,55 @@ function RateCard({
         </div>
       </div>
 
-      {/* Bottom Row: Compact Rate Type Badge + Speaker Audio Button */}
-      <div className="flex items-center gap-1.5 w-full pt-0.5">
-        {/* Rate Type Badge (Display only, not clickable) */}
+      {/* Bottom Action Row: Vector Icon Pill on Left + Speaker Button on Right */}
+      <div className="flex items-center gap-1.5 w-full pt-1">
+        {/* Rate Type Action Pill */}
         <div
-          className="flex-1 flex items-center justify-center gap-1 rounded-lg py-1 px-1.5 min-w-0 select-none"
-          style={{
-            background: "#E4F2EC",
-            color: "#075E4F",
-            border: "1px solid #2FAE68",
-            fontSize: lang === "ur" ? 11 : 9.5,
-            fontWeight: 800,
-            cursor: "default",
-            boxShadow: "0 1px 2px rgba(8,127,99,0.05)",
-            fontFamily:
-              lang === "ur"
-                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                : "inherit",
-          }}
+          className="flex-1 flex items-center justify-between rounded-xl py-1.5 px-2.5 min-w-0 bg-[#EAF8F2] border border-[#C7E8D8] text-[#0F8A5F] shadow-sm"
         >
-          <span className="truncate">
-            {trL(r.rateType).replace(" ریٹ", "").replace(" Rate", "") + (lang === "ur" ? " ریٹ" : " Rate")}
-          </span>
+          <div className="flex items-center gap-1.5 truncate">
+            <span className="flex-shrink-0 text-[#0F8A5F]">
+              {getRateTypeIcon(r.rateType)}
+            </span>
+            <span className="text-xs font-bold truncate">
+              {rateTypeFormatted}
+            </span>
+          </div>
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="flex-shrink-0 opacity-70 ml-1"
+          >
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
         </div>
 
         {/* Speaker Audio Button */}
         <button
           type="button"
           onClick={handleSpeakRate}
-          className="tap-target flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition active:scale-90"
-          style={{
-            background: "#F4FAF7",
-            color: "#087F63",
-            border: "1px solid #D5E2DD",
-            boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-          }}
+          className="tap-target flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition active:scale-90 bg-[#EAF8F2] border border-[#C7E8D8] text-[#0F8A5F] shadow-sm hover:scale-105"
           title={lang === "ur" ? "ریٹ سنیں (آواز)" : "Listen to rate"}
         >
-          <span style={{ fontSize: 12 }}>🔊</span>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+          </svg>
         </button>
       </div>
     </div>
@@ -12844,6 +12830,86 @@ type CompRow = {
   trendPct: number;
 };
 
+// Helper to generate realistic curve and axis data for Mandi Graph Popup modal
+function getMandiModalGraphData(
+  minVal: number,
+  maxVal: number,
+  trend: "up" | "down" | "flat" | "stable",
+  timeframe: "24h" | "72h" | "7d" | "30d",
+  lang: string,
+) {
+  const diff = Math.max(maxVal - minVal, 50);
+  let pattern: number[];
+  if (trend === "up") {
+    // Upward curve matching the user screenshot:
+    // Starts low around min, dips slightly or stabilizes, then climbs steadily to near max
+    pattern = [0.08, 0.35, 0.28, 0.45, 0.72, 0.74, 0.95];
+  } else if (trend === "down") {
+    // Downward curve
+    pattern = [0.92, 0.78, 0.70, 0.55, 0.32, 0.30, 0.08];
+  } else {
+    // Flat / stable
+    pattern = [0.45, 0.55, 0.42, 0.58, 0.48, 0.52, 0.50];
+  }
+
+  const tfShift =
+    timeframe === "24h"
+      ? [0, 0, 0, 0, 0, 0, 0]
+      : timeframe === "72h"
+        ? [-0.02, 0.03, -0.01, 0.04, -0.01, 0.02, 0]
+        : timeframe === "7d"
+          ? [0.03, -0.02, 0.04, -0.02, 0.03, -0.01, 0]
+          : [-0.04, 0.02, -0.03, 0.05, -0.02, 0.03, 0];
+
+  const points = pattern.map((p, i) => {
+    const val = minVal + diff * Math.max(0.02, Math.min(0.98, p + tfShift[i]));
+    return Math.round(val);
+  });
+
+  if (trend === "up") {
+    points[0] = Math.round(minVal + diff * 0.08);
+    points[6] = Math.round(maxVal - diff * 0.04);
+  } else if (trend === "down") {
+    points[0] = Math.round(maxVal - diff * 0.06);
+    points[6] = Math.round(minVal + diff * 0.08);
+  }
+
+  let xLabels: string[] = [];
+  if (timeframe === "24h") {
+    xLabels = ["06:00", "09:00", "12:00", "15:00", "18:00", "21:00", "Now"];
+  } else if (timeframe === "72h") {
+    xLabels =
+      lang === "ur"
+        ? ["دن 1", "12:00", "دن 2", "12:00", "دن 3", "12:00", "اب"]
+        : ["Day 1", "12:00", "Day 2", "12:00", "Day 3", "12:00", "Now"];
+  } else if (timeframe === "7d") {
+    xLabels =
+      lang === "ur"
+        ? ["پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ", "اتوار"]
+        : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  } else {
+    xLabels =
+      lang === "ur"
+        ? ["یکم", "5ویں", "10ویں", "15ویں", "20ویں", "25ویں", "آج"]
+        : ["1st", "5th", "10th", "15th", "20th", "25th", "Today"];
+  }
+
+  const yMinBound = minVal - diff * 0.12;
+  const yMaxBound = maxVal + diff * 0.12;
+  const yMidVal = (minVal + maxVal) / 2;
+
+  const fmtK = (v: number) =>
+    v >= 1000 ? (v / 1000).toFixed(1) + "k" : String(Math.round(v));
+
+  const yLabels = [
+    { label: fmtK(yMaxBound), val: yMaxBound },
+    { label: fmtK(yMidVal), val: yMidVal },
+    { label: fmtK(yMinBound), val: yMinBound },
+  ];
+
+  return { points, xLabels, yLabels, yMinBound, yMaxBound };
+}
+
 function ProductRatesScreen({
   vertical,
   product,
@@ -12949,6 +13015,17 @@ function ProductRatesScreen({
     "24h" | "72h" | "weekly" | "monthly"
   >("24h");
   const [trendDropdownOpen, setTrendDropdownOpen] = useState(false);
+  const [selectedMandiGraphRow, setSelectedMandiGraphRow] = useState<{
+    mandiName: string;
+    rateType: string;
+    min: number;
+    max: number;
+    trend: "up" | "down" | "flat" | "stable";
+    trendPct: number;
+  } | null>(null);
+  const [graphTimeframe, setGraphTimeframe] = useState<
+    "24h" | "72h" | "7d" | "30d"
+  >("24h");
   // Date table + its filters
   const [dateTableOpen, setDateTableOpen] = useState(false);
   const [dtSelDate, setDtSelDate] = useState<Date>(new Date());
@@ -13253,6 +13330,20 @@ function ProductRatesScreen({
               >
                 {tc(title)}
               </h1>
+              <p
+                className="text-[11px] truncate font-medium mt-0.5"
+                style={{
+                  color: "#80918B",
+                  fontFamily:
+                    lang === "ur"
+                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      : "inherit",
+                }}
+              >
+                {lang === "ur"
+                  ? "پورے پاکستان میں مارکیٹ ریٹس"
+                  : "Market rates across Pakistan"}
+              </p>
             </div>
           </div>
           <button
@@ -13310,7 +13401,7 @@ function ProductRatesScreen({
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-6 flex flex-col gap-4">
+      <div className="flex-1 overflow-y-auto px-3.5 pt-2 pb-6 flex flex-col gap-2">
         {rows.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 opacity-50">
             {/* <span style={{ fontSize: 48 }}></span> */}
@@ -13336,25 +13427,25 @@ function ProductRatesScreen({
               background: "linear-gradient(135deg, #E6F7F0, #D1EFE4)",
               border: "1.5px solid #2FAE68",
               borderRadius: 16,
-              padding: "12px 14px",
+              padding: "10px 12px",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              gap: 10,
+              gap: 8,
               boxShadow: "0 2px 10px rgba(8,127,99,0.08)",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 20 }}>⭐</span>
+              <span style={{ fontSize: 18 }}>⭐</span>
               <div>
                 <div
-                  style={{ fontSize: 13, fontWeight: 800, color: "#064D40" }}
+                  style={{ fontSize: 12.5, fontWeight: 800, color: "#064D40" }}
                 >
                   {lang === "ur"
                     ? "صرف آج کا ڈیٹا فعال ہے"
                     : "Today's Free Data Preview"}
                 </div>
-                <div style={{ fontSize: 11.5, color: "#2E5C4E" }}>
+                <div style={{ fontSize: 11, color: "#2E5C4E" }}>
                   {lang === "ur"
                     ? "ماضی کا مکمل ڈیٹا دیکھنے کے لیے سبسکرائب کریں۔"
                     : "Data before today is locked. Subscribe to unlock history."}
@@ -13368,8 +13459,8 @@ function ProductRatesScreen({
                 color: "#fff",
                 border: "none",
                 borderRadius: 10,
-                padding: "6px 12px",
-                fontSize: 11.5,
+                padding: "5px 10px",
+                fontSize: 11,
                 fontWeight: 800,
                 cursor: "pointer",
                 whiteSpace: "nowrap",
@@ -13383,14 +13474,14 @@ function ProductRatesScreen({
 
         {tab === "overview" && rows.length > 0 && (
           <>
-            {/*  Overview header row: label + date flipper + location filter  */}
-            <div className="flex items-center gap-2">
+            {/* Overview header row: label + date flipper */}
+            <div className="flex items-center gap-2 mb-0.5">
               <p
                 className="text-xs font-bold uppercase tracking-wide flex-1"
                 style={{
                   color: "#52635F",
                   letterSpacing: "0.05em",
-                  fontSize: lang === "ur" ? 17 : 12,
+                  fontSize: lang === "ur" ? 16 : 11.5,
                   fontFamily:
                     lang === "ur"
                       ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
@@ -13498,8 +13589,8 @@ function ProductRatesScreen({
                       className="tap-target flex-shrink-0 overflow-hidden"
                       style={{
                         display: "flex",
-                        borderRadius: 8,
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.16)",
+                        borderRadius: 7,
+                        boxShadow: "0 1px 6px rgba(0,0,0,0.12)",
                         border: "1px solid #C7E8D8",
                         padding: 0,
                       }}
@@ -13507,7 +13598,7 @@ function ProductRatesScreen({
                       <div
                         style={{
                           background: "#087F63",
-                          padding: "5px 8px",
+                          padding: "4px 7px",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -13516,9 +13607,9 @@ function ProductRatesScreen({
                         <span
                           style={{
                             color: "#fff",
-                            fontSize: lang === "ur" ? 11 : 9,
+                            fontSize: lang === "ur" ? 10.5 : 8.5,
                             fontWeight: 800,
-                            letterSpacing: 1,
+                            letterSpacing: 0.5,
                             fontFamily:
                               lang === "ur"
                                 ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
@@ -13537,7 +13628,7 @@ function ProductRatesScreen({
                       <div
                         style={{
                           background: "#F4FAF7",
-                          padding: "5px 8px",
+                          padding: "4px 7px",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -13547,7 +13638,7 @@ function ProductRatesScreen({
                         <span
                           style={{
                             color: "#183B34",
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: 900,
                             lineHeight: 1,
                           }}
@@ -13561,7 +13652,7 @@ function ProductRatesScreen({
                       <div
                         className="absolute right-0 z-[100] rounded-2xl overflow-hidden"
                         style={{
-                          top: 48,
+                          top: 42,
                           width: 260,
                           background: "#F4FAF7",
                           boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
@@ -13718,45 +13809,6 @@ function ProductRatesScreen({
                   </div>
                 );
               })()}
-              {/* Location filter */}
-              <button
-                onClick={() => setLocSheet(true)}
-                className="tap-target flex items-center gap-1.5 rounded-xl font-semibold text-xs px-2.5 py-1.5"
-                style={{
-                  background: locScope.kind === "mandi" ? "#087F63" : "#E4F2EC",
-                  color: locScope.kind === "mandi" ? "#fff" : "#075E4F",
-                  border:
-                    locScope.kind === "mandi" ? "none" : "1px solid #C7E8D8",
-                  fontSize: lang === "ur" ? 14 : 12,
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                      : "inherit",
-                }}
-              >
-                <span>
-                  {locScope.kind === "mandi"
-                    ? tm(locScope.label.replace(" Mandi", ""))
-                    : locScope.kind === "province"
-                      ? tm(locScope.label)
-                      : lang === "ur"
-                        ? "پورا پاکستان"
-                        : "Overview"}
-                </span>
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ opacity: 0.85, flexShrink: 0 }}
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
             </div>
 
             {/* Dismiss stat date calendar on outside click */}
@@ -13767,7 +13819,7 @@ function ProductRatesScreen({
               />
             )}
 
-            {/* 9 stat tiles with Hand-Drawn Style 4-Sided Continuous Racetrack Border */}
+            {/* 4-Sided Continuous Racetrack Border Card (Rounded Corners & Compact) */}
             {(() => {
               const activeMandiLabel =
                 locScope.kind === "mandi"
@@ -13870,12 +13922,12 @@ function ProductRatesScreen({
 
               return (
                 <div
-                  className="w-full rounded-3xl overflow-hidden mb-6 relative shadow-xl flex-shrink-0"
+                  className="w-full rounded-[28px] overflow-hidden mb-2 relative shadow-md flex-shrink-0"
                   style={{
                     background: pTheme.gradientH,
                     border: `2px solid ${pTheme.borderColor}`,
-                    boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-                    padding: "24px 22px",
+                    boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+                    padding: "15px 13px",
                   }}
                 >
                   {/* Traditional Cultural Background Pattern Overlay */}
@@ -13883,18 +13935,18 @@ function ProductRatesScreen({
                     <ProvincePatternSvg pattern={pTheme.pattern} opacity={0.32} />
                   </div>
 
-                  {/* 1. TOP BORDER: Moving Left-to-Right (Clockwise) */}
+                  {/* 1. TOP BORDER: Moving Left-to-Right */}
                   <div
-                    className="absolute top-0 left-0 right-0 overflow-hidden flex items-center z-10"
+                    className="absolute top-0 left-0 right-0 overflow-hidden flex items-center z-10 pointer-events-none"
                     style={{
-                      height: 24,
+                      height: 16,
                       background: pTheme.gradientH,
                       color: "#FFFFFF",
-                      borderBottom: "1px solid rgba(255,255,255,0.25)",
+                      borderBottom: "1px solid rgba(255,255,255,0.2)",
                     }}
                   >
                     <div
-                      className="racetrack-track-l2r flex items-center font-black text-[11px] tracking-wide"
+                      className="racetrack-track-l2r flex items-center font-bold text-[9px] tracking-wide"
                       style={{
                         fontFamily:
                           lang === "ur"
@@ -13902,33 +13954,33 @@ function ProductRatesScreen({
                             : "inherit",
                       }}
                     >
-                      <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                      <div className="flex items-center gap-3.5 flex-shrink-0 pr-3.5">
                         {baseItems.map((name, i) => (
-                          <span key={i} className="flex items-center gap-2 whitespace-nowrap">
+                          <span key={i} className="flex items-center gap-1.5 whitespace-nowrap">
                             <span>{name}</span>
-                            <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                            <span style={{ color: pTheme.bulletColor, fontSize: 7 }}>•</span>
                           </span>
                         ))}
                       </div>
-                      <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                      <div className="flex items-center gap-3.5 flex-shrink-0 pr-3.5">
                         {baseItems.map((name, i) => (
-                          <span key={`dup-${i}`} className="flex items-center gap-2 whitespace-nowrap">
+                          <span key={`dup-${i}`} className="flex items-center gap-1.5 whitespace-nowrap">
                             <span>{name}</span>
-                            <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                            <span style={{ color: pTheme.bulletColor, fontSize: 7 }}>•</span>
                           </span>
                         ))}
                       </div>
                     </div>
                   </div>
 
-                  {/* 2. RIGHT BORDER: Moving Top-to-Bottom (Clockwise) */}
+                  {/* 2. RIGHT BORDER: Moving Top-to-Bottom */}
                   <div
-                    className="absolute top-0 right-0 bottom-0 overflow-hidden z-10"
+                    className="absolute top-0 right-0 bottom-0 overflow-hidden z-10 pointer-events-none"
                     style={{
-                      width: 22,
+                      width: 16,
                       background: pTheme.gradientV,
                       color: "#FFFFFF",
-                      borderLeft: "1px solid rgba(255,255,255,0.25)",
+                      borderLeft: "1px solid rgba(255,255,255,0.2)",
                     }}
                   >
                     <div
@@ -13936,17 +13988,16 @@ function ProductRatesScreen({
                         position: "absolute",
                         top: 0,
                         left: 0,
-                        width: 800,
-                        height: 22,
-                        transformOrigin: "top left",
-                        transform: "rotate(90deg) translateY(-22px)",
-                        overflow: "hidden",
+                        width: 1000,
+                        height: 16,
+                        transformOrigin: "0 0",
+                        transform: "rotate(90deg) translateY(-100%)",
                         display: "flex",
                         alignItems: "center",
                       }}
                     >
                       <div
-                        className="racetrack-track-l2r flex items-center font-black text-[10.5px] tracking-wide"
+                        className="racetrack-track-l2r flex items-center font-bold text-[9px] tracking-wide"
                         style={{
                           fontFamily:
                             lang === "ur"
@@ -13954,19 +14005,19 @@ function ProductRatesScreen({
                               : "inherit",
                         }}
                       >
-                        <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                        <div className="flex items-center gap-3.5 flex-shrink-0 pr-3.5">
                           {baseItems.map((name, i) => (
-                            <span key={i} className="flex items-center gap-2 whitespace-nowrap">
+                            <span key={i} className="flex items-center gap-1.5 whitespace-nowrap">
                               <span>{name}</span>
-                              <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                              <span style={{ color: pTheme.bulletColor, fontSize: 7 }}>•</span>
                             </span>
                           ))}
                         </div>
-                        <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                        <div className="flex items-center gap-3.5 flex-shrink-0 pr-3.5">
                           {baseItems.map((name, i) => (
-                            <span key={`dup-${i}`} className="flex items-center gap-2 whitespace-nowrap">
+                            <span key={`dup-${i}`} className="flex items-center gap-1.5 whitespace-nowrap">
                               <span>{name}</span>
-                              <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                              <span style={{ color: pTheme.bulletColor, fontSize: 7 }}>•</span>
                             </span>
                           ))}
                         </div>
@@ -13974,18 +14025,18 @@ function ProductRatesScreen({
                     </div>
                   </div>
 
-                  {/* 3. BOTTOM BORDER: Moving Right-to-Left (Clockwise) */}
+                  {/* 3. BOTTOM BORDER: Moving Right-to-Left */}
                   <div
-                    className="absolute bottom-0 left-0 right-0 overflow-hidden flex items-center z-10"
+                    className="absolute bottom-0 left-0 right-0 overflow-hidden flex items-center z-10 pointer-events-none"
                     style={{
-                      height: 24,
+                      height: 16,
                       background: pTheme.gradientH,
                       color: "#FFFFFF",
-                      borderTop: "1px solid rgba(255,255,255,0.25)",
+                      borderTop: "1px solid rgba(255,255,255,0.2)",
                     }}
                   >
                     <div
-                      className="racetrack-track-r2l flex items-center font-black text-[11px] tracking-wide"
+                      className="racetrack-track-r2l flex items-center font-bold text-[9px] tracking-wide"
                       style={{
                         fontFamily:
                           lang === "ur"
@@ -13993,33 +14044,33 @@ function ProductRatesScreen({
                             : "inherit",
                       }}
                     >
-                      <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                      <div className="flex items-center gap-3.5 flex-shrink-0 pr-3.5">
                         {baseItems.map((name, i) => (
-                          <span key={i} className="flex items-center gap-2 whitespace-nowrap">
+                          <span key={i} className="flex items-center gap-1.5 whitespace-nowrap">
                             <span>{name}</span>
-                            <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                            <span style={{ color: pTheme.bulletColor, fontSize: 7 }}>•</span>
                           </span>
                         ))}
                       </div>
-                      <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                      <div className="flex items-center gap-3.5 flex-shrink-0 pr-3.5">
                         {baseItems.map((name, i) => (
-                          <span key={`dup-${i}`} className="flex items-center gap-2 whitespace-nowrap">
+                          <span key={`dup-${i}`} className="flex items-center gap-1.5 whitespace-nowrap">
                             <span>{name}</span>
-                            <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                            <span style={{ color: pTheme.bulletColor, fontSize: 7 }}>•</span>
                           </span>
                         ))}
                       </div>
                     </div>
                   </div>
 
-                  {/* 4. LEFT BORDER: Moving Bottom-to-Top (Clockwise) */}
+                  {/* 4. LEFT BORDER: Moving Bottom-to-Top */}
                   <div
-                    className="absolute top-0 left-0 bottom-0 overflow-hidden z-10"
+                    className="absolute top-0 left-0 bottom-0 overflow-hidden z-10 pointer-events-none"
                     style={{
-                      width: 22,
+                      width: 16,
                       background: pTheme.gradientV,
                       color: "#FFFFFF",
-                      borderRight: "1px solid rgba(255,255,255,0.25)",
+                      borderRight: "1px solid rgba(255,255,255,0.2)",
                     }}
                   >
                     <div
@@ -14027,17 +14078,16 @@ function ProductRatesScreen({
                         position: "absolute",
                         top: 0,
                         left: 0,
-                        width: 800,
-                        height: 22,
-                        transformOrigin: "top left",
-                        transform: "rotate(90deg) translateY(-22px)",
-                        overflow: "hidden",
+                        width: 1000,
+                        height: 16,
+                        transformOrigin: "0 0",
+                        transform: "rotate(90deg) translateY(-100%)",
                         display: "flex",
                         alignItems: "center",
                       }}
                     >
                       <div
-                        className="racetrack-track-r2l flex items-center font-black text-[10.5px] tracking-wide"
+                        className="racetrack-track-r2l flex items-center font-bold text-[9px] tracking-wide"
                         style={{
                           fontFamily:
                             lang === "ur"
@@ -14045,19 +14095,19 @@ function ProductRatesScreen({
                               : "inherit",
                         }}
                       >
-                        <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                        <div className="flex items-center gap-3.5 flex-shrink-0 pr-3.5">
                           {baseItems.map((name, i) => (
-                            <span key={i} className="flex items-center gap-2 whitespace-nowrap">
+                            <span key={i} className="flex items-center gap-1.5 whitespace-nowrap">
                               <span>{name}</span>
-                              <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                              <span style={{ color: pTheme.bulletColor, fontSize: 7 }}>•</span>
                             </span>
                           ))}
                         </div>
-                        <div className="flex items-center gap-5 flex-shrink-0 pr-5">
+                        <div className="flex items-center gap-3.5 flex-shrink-0 pr-3.5">
                           {baseItems.map((name, i) => (
-                            <span key={`dup-${i}`} className="flex items-center gap-2 whitespace-nowrap">
+                            <span key={`dup-${i}`} className="flex items-center gap-1.5 whitespace-nowrap">
                               <span>{name}</span>
-                              <span style={{ color: pTheme.bulletColor, fontSize: 9 }}>•</span>
+                              <span style={{ color: pTheme.bulletColor, fontSize: 7 }}>•</span>
                             </span>
                           ))}
                         </div>
@@ -14065,457 +14115,456 @@ function ProductRatesScreen({
                     </div>
                   </div>
 
-                  {/* CENTER CONTENT: The 9 Rectangular Stat Cards Grid inside */}{/* CENTER CONTENT: The 9 Rectangular Stat Cards Grid inside */}
+                  {/* CENTER CONTENT: Inner White Card */}
                   <div
-                    className="relative z-10 rounded-2xl p-2.5 shadow-inner"
+                    className="relative z-10 rounded-[18px] p-2.5 shadow-sm flex flex-col"
                     style={{
                       background: "#FFFFFF",
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr 1fr",
-                      gap: 7,
                     }}
                   >
-                    {/* CARD 1: MAX */}
-                    <div
-                      className="rounded-xl p-2.5 flex flex-col justify-between shadow-sm transition hover:shadow-md"
-                      style={{
-                        background: "linear-gradient(145deg, #E6F6F0 0%, #D4EFE4 100%)",
-                        border: "1.5px solid #A7E0CB",
-                        minHeight: 66,
-                      }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span
-                          className="font-bold tracking-wider uppercase text-[8.5px]"
-                          style={{
-                            color: "#075E4F",
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                            fontSize: lang === "ur" ? 12 : 8.5,
-                          }}
-                        >
-                          {lang === "ur" ? "زیادہ سے زیادہ" : "MAX"}
-                        </span>
-                      </div>
-                      <p
-                        className="font-black leading-tight mt-0.5"
+                    {/* TOP SECTION: Left Spotlight & Right Details */}
+                    <div className="flex items-center gap-2.5">
+                      {/* LEFT: Product image in circular spotlight */}
+                      <div
+                        className="relative flex items-center justify-center flex-shrink-0"
                         style={{
-                          fontSize: lang === "ur" ? 19 : 15,
-                          color: "#075E4F",
+                          width: 72,
+                          height: 72,
+                          borderRadius: "50%",
+                          background: "radial-gradient(circle, #E8F5EE 0%, #D6EFE3 100%)",
                         }}
                       >
-                        {fmt(statMax)}
-                      </p>
-                      <span className="text-[7.5px] font-semibold text-[#075E4F] opacity-75">
-                        {lang === "ur" ? "فی ۴۰ کلو" : "40 KG"}
-                      </span>
+                        <img
+                          src={getproductIconSrc(byproduct || product, vertical)}
+                          alt={byproduct || product}
+                          style={{
+                            width: 52,
+                            height: 52,
+                            objectFit: "contain",
+                            filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.1))",
+                          }}
+                        />
+                      </div>
+
+                      {/* RIGHT: Location Dropdown + 3 Metrics (Max, Min, Arrival) */}
+                      <div className="flex-1 min-w-0 flex flex-col justify-between py-0">
+                        {/* Location dropdown header (Clean: Mandi Name only, no province subtitle) */}
+                        <button
+                          onClick={() => setLocSheet(true)}
+                          className="tap-target flex items-center gap-1.5 text-left mb-1 group w-full"
+                          style={{ background: "none", border: "none", padding: 0 }}
+                        >
+                          <div
+                            className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
+                            style={{ background: "#E8F5EE", color: "#087F63" }}
+                          >
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M3 21h18" />
+                              <path d="M5 21V7l7-4 7 4v14" />
+                              <path d="M9 10a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v11H9V10z" />
+                            </svg>
+                          </div>
+                          <div className="flex items-center gap-1 min-w-0 flex-1">
+                            <span
+                              className="font-extrabold truncate text-[13.5px] leading-tight text-[#183B34] group-hover:text-[#087F63] transition-colors"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {cleanMandiName}
+                            </span>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                              <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                          </div>
+                        </button>
+
+                        {/* 3 Price & Arrival Metrics */}
+                        <div
+                          className="grid grid-cols-3 gap-1 pt-1 mt-0.5"
+                          style={{ borderTop: "1px solid #EEF3F0" }}
+                        >
+                          {/* Max */}
+                          <div className="flex flex-col">
+                            <span
+                              className="font-semibold text-[8px] text-[#64748B] uppercase tracking-wide leading-tight"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {lang === "ur" ? "زیادہ" : "Max Price"}
+                            </span>
+                            <span
+                              className="font-extrabold text-[12.5px] leading-tight text-[#087F63] mt-0.5"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {fmt(statMax)}
+                            </span>
+                            <span className="text-[7.5px] text-[#80918B] leading-none mt-0.5">
+                              {lang === "ur" ? "فی ۴۰ کلو" : "(40 KG)"}
+                            </span>
+                          </div>
+
+                          {/* Min */}
+                          <div
+                            className="flex flex-col pl-1"
+                            style={{ borderLeft: "1px solid #EEF3F0" }}
+                          >
+                            <span
+                              className="font-semibold text-[8px] text-[#64748B] uppercase tracking-wide leading-tight"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {lang === "ur" ? "کم" : "Min Price"}
+                            </span>
+                            <span
+                              className="font-extrabold text-[12.5px] leading-tight text-[#B45309] mt-0.5"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {fmt(statMin)}
+                            </span>
+                            <span className="text-[7.5px] text-[#80918B] leading-none mt-0.5">
+                              {lang === "ur" ? "فی ۴۰ کلو" : "(40 KG)"}
+                            </span>
+                          </div>
+
+                          {/* Arrival */}
+                          <div
+                            className="flex flex-col pl-1"
+                            style={{ borderLeft: "1px solid #EEF3F0" }}
+                          >
+                            <span
+                              className="font-semibold text-[8px] text-[#64748B] uppercase tracking-wide leading-tight"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {lang === "ur" ? "آمد" : "Arrival"}
+                            </span>
+                            <span
+                              className="font-extrabold text-[12.5px] leading-tight text-[#0E7465] mt-0.5"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {statArrival > 0
+                                ? lang === "ur"
+                                  ? `${statArrival.toLocaleString()}`
+                                  : statArrival.toLocaleString()
+                                : "—"}
+                            </span>
+                            <span className="text-[7.5px] text-[#80918B] leading-none mt-0.5">
+                              {lang === "ur" ? "کل بوری" : "Total Bags"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* CARD 2: MIN */}
-                    <div
-                      className="rounded-xl p-2.5 flex flex-col justify-between shadow-sm transition hover:shadow-md"
-                      style={{
-                        background: "linear-gradient(145deg, #FFF9EB 0%, #FEF0CE 100%)",
-                        border: "1.5px solid #FDE096",
-                        minHeight: 66,
-                      }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span
-                          className="font-bold tracking-wider uppercase text-[8.5px]"
-                          style={{
-                            color: "#92400E",
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                            fontSize: lang === "ur" ? 12 : 8.5,
-                          }}
+                    {/* HORIZONTAL DIVIDER */}
+                    <div className="w-full my-2" style={{ height: 1, background: "#EEF3F0" }} />
+
+                    {/* BOTTOM SECTION: 6 Attributes (2 Columns x 3 Rows, Symmetrical & Divided) */}
+                    <div className="grid grid-cols-2 divide-x divide-[#EEF3F0]">
+                      {/* LEFT COLUMN: Rate Type, Color, Spec */}
+                      <div className="flex flex-col gap-y-1.5 pr-2.5">
+                        {/* 1. RATE TYPE */}
+                        <button
+                          onClick={() => setAttrSheet("ratetype")}
+                          className="tap-target flex items-center gap-1.5 text-left transition active:scale-[0.98] group w-full py-0.5"
                         >
-                          {lang === "ur" ? "کم سے کم" : "MIN"}
-                        </span>
+                          <div
+                            className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ background: "#E8F5EE", color: "#087F63" }}
+                          >
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M4 19h4V9H4v10zm6 0h4V4h-4v15zm6 0h4v-7h-4v7z" />
+                            </svg>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <span
+                              className="text-[8.5px] text-[#6B7280] font-medium block leading-none"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {lang === "ur" ? "نرخ کی قسم" : "Rate Type"}
+                            </span>
+                            <div className="flex items-center justify-between gap-1 mt-0.5">
+                              <span
+                                className="font-bold text-[11.5px] leading-tight truncate text-[#075E4F]"
+                                style={{
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {attrRateType
+                                  ? tr(attrRateType).replace(" ریٹ", "").replace(" Rate", "")
+                                  : "Mill"}
+                              </span>
+                              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                                <polyline points="6 9 12 15 18 9" />
+                              </svg>
+                            </div>
+                          </div>
+                        </button>
+
+                        {/* 2. COLOR */}
+                        <button
+                          onClick={() => setAttrSheet("color")}
+                          className="tap-target flex items-center gap-1.5 text-left transition active:scale-[0.98] group w-full py-0.5"
+                        >
+                          <div
+                            className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ background: "#E6F8F3", color: "#059669" }}
+                          >
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M12 3a9 9 0 0 0 0 18c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+                            </svg>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <span
+                              className="text-[8.5px] text-[#6B7280] font-medium block leading-none"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {lang === "ur" ? "رنگ" : "Color"}
+                            </span>
+                            <div className="flex items-center justify-between gap-1 mt-0.5">
+                              <span
+                                className="font-bold text-[11.5px] leading-tight truncate text-[#059669]"
+                                style={{
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {attrColor ? t(attrColor) : "Golden"}
+                              </span>
+                              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                                <polyline points="6 9 12 15 18 9" />
+                              </svg>
+                            </div>
+                          </div>
+                        </button>
+
+                        {/* 3. SPEC */}
+                        <button
+                          onClick={() => setAttrSheet("spec")}
+                          className="tap-target flex items-center gap-1.5 text-left transition active:scale-[0.98] group w-full py-0.5"
+                        >
+                          <div
+                            className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ background: "#FEF3C7", color: "#D97706" }}
+                          >
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+                            </svg>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <span
+                              className="text-[8.5px] text-[#6B7280] font-medium block leading-none"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {lang === "ur" ? "خصوصیت" : "Spec"}
+                            </span>
+                            <div className="flex items-center justify-between gap-1 mt-0.5">
+                              <span
+                                className="font-bold text-[11.5px] leading-tight truncate text-[#92400E]"
+                                style={{
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {attrSpec ? t(attrSpec) : "Seed Quality"}
+                              </span>
+                              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                                <polyline points="6 9 12 15 18 9" />
+                              </svg>
+                            </div>
+                          </div>
+                        </button>
                       </div>
-                      <p
-                        className="font-black leading-tight mt-0.5"
-                        style={{
-                          fontSize: lang === "ur" ? 19 : 15,
-                          color: "#92400E",
-                        }}
-                      >
-                        {fmt(statMin)}
-                      </p>
-                      <span className="text-[7.5px] font-semibold text-[#92400E] opacity-75">
-                        {lang === "ur" ? "فی ۴۰ کلو" : "40 KG"}
-                      </span>
+
+                      {/* RIGHT COLUMN: Variety, New/Old, Condition */}
+                      <div className="flex flex-col gap-y-1.5 pl-3">
+                        {/* 4. VARIETY */}
+                        <button
+                          onClick={() => setAttrSheet("variety")}
+                          className="tap-target flex items-center gap-1.5 text-left transition active:scale-[0.98] group w-full py-0.5"
+                        >
+                          <div
+                            className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ background: "#F3E8FF", color: "#7C3AED" }}
+                          >
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3 8 0 12-7 12-12zm-3.5 6.5C11 15 9 17 8 19c2.5-3 5-4.5 5.5-4.5z" />
+                            </svg>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <span
+                              className="text-[8.5px] text-[#6B7280] font-medium block leading-none"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {lang === "ur" ? "قسم" : "Variety"}
+                            </span>
+                            <div className="flex items-center justify-between gap-1 mt-0.5">
+                              <span
+                                className="font-bold text-[11.5px] leading-tight truncate text-[#6D28D9]"
+                                style={{
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {attrVariety ? tc(attrVariety) : "Sona Moti"}
+                              </span>
+                              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                                <polyline points="6 9 12 15 18 9" />
+                              </svg>
+                            </div>
+                          </div>
+                        </button>
+
+                        {/* 5. NEW/OLD */}
+                        <button
+                          onClick={() => setAttrSheet("newold")}
+                          className="tap-target flex items-center gap-1.5 text-left transition active:scale-[0.98] group w-full py-0.5"
+                        >
+                          <div
+                            className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ background: "#FFEDD5", color: "#EA580C" }}
+                          >
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M12 2l2.4 2.8 3.7-.4 1.4 3.4 3.4 1.5-.5 3.7 2.6 2.6-2.6 2.6.5 3.7-3.4 1.5-1.4 3.4-3.7-.4L12 22l-2.4-2.8-3.7.4-1.4-3.4-3.4-1.5.5-3.7L-1 8.4l2.6-2.6-.5-3.7 3.4-1.5 1.4-3.4 3.7.4L12 2z" transform="scale(0.85) translate(2, 2)" />
+                              <path d="M9.5 10.5h1.2l1.3 2.5V10.5h1v4h-1.1l-1.4-2.7v2.7h-1v-4z" fill="#fff" />
+                            </svg>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <span
+                              className="text-[8.5px] text-[#6B7280] font-medium block leading-none"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {lang === "ur" ? "نیا / پرانا" : "New/Old"}
+                            </span>
+                            <div className="flex items-center justify-between gap-1 mt-0.5">
+                              <span
+                                className="font-bold text-[11.5px] leading-tight truncate text-[#C2410C]"
+                                style={{
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {attrNewOld ? t(attrNewOld) : "New"}
+                              </span>
+                              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#EA580C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                                <polyline points="6 9 12 15 18 9" />
+                              </svg>
+                            </div>
+                          </div>
+                        </button>
+
+                        {/* 6. CONDITION */}
+                        <button
+                          onClick={() => setAttrSheet("condition")}
+                          className="tap-target flex items-center gap-1.5 text-left transition active:scale-[0.98] group w-full py-0.5"
+                        >
+                          <div
+                            className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ background: "#CCFBF1", color: "#0D9488" }}
+                          >
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                            </svg>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <span
+                              className="text-[8.5px] text-[#6B7280] font-medium block leading-none"
+                              style={{
+                                fontFamily:
+                                  lang === "ur"
+                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    : "inherit",
+                              }}
+                            >
+                              {lang === "ur" ? "حالت" : "Condition"}
+                            </span>
+                            <div className="flex items-center justify-between gap-1 mt-0.5">
+                              <span
+                                className="font-bold text-[11.5px] leading-tight truncate text-[#065F46]"
+                                style={{
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {attrCondition ? t(attrCondition) : "Dry"}
+                              </span>
+                              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#0D9488" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                                <polyline points="6 9 12 15 18 9" />
+                              </svg>
+                            </div>
+                          </div>
+                        </button>
+                      </div>
                     </div>
-
-                    {/* CARD 3: ARRIVAL */}
-                    <div
-                      className="rounded-xl p-2.5 flex flex-col justify-between shadow-sm transition hover:shadow-md"
-                      style={{
-                        background: "linear-gradient(145deg, #ECF8F6 0%, #DAF0EC 100%)",
-                        border: "1.5px solid #B0E3DA",
-                        minHeight: 66,
-                      }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span
-                          className="font-bold tracking-wider uppercase text-[8.5px]"
-                          style={{
-                            color: "#0E7465",
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                            fontSize: lang === "ur" ? 12 : 8.5,
-                          }}
-                        >
-                          {lang === "ur" ? "آمد" : "ARRIVAL"}
-                        </span>
-                      </div>
-                      <p
-                        className="font-black leading-tight mt-0.5"
-                        style={{
-                          fontSize: lang === "ur" ? 16 : 13,
-                          color: "#0E7465",
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {statArrival > 0
-                          ? lang === "ur"
-                            ? `${statArrival.toLocaleString()} بوری`
-                            : statArrival.toLocaleString()
-                          : "—"}
-                      </p>
-                      <span className="text-[7.5px] font-semibold text-[#0E7465] opacity-75">
-                        {lang === "ur" ? "کل بوری" : "Total Bags"}
-                      </span>
-                    </div>
-
-                    {/* CARD 4: RATE TYPE */}
-                    <button
-                      onClick={() => setAttrSheet("ratetype")}
-                      className="tap-target rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.97] shadow-sm"
-                      style={{
-                        background: attrRateType ? "#E6F6F0" : "#FFFFFF",
-                        border: attrRateType ? "1.5px solid #087F63" : "1.5px solid #E2EBE7",
-                        minHeight: 62,
-                      }}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span
-                          className="font-bold tracking-wider uppercase text-[8px]"
-                          style={{
-                            color: attrRateType ? "#075E4F" : "#52635F",
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                            fontSize: lang === "ur" ? 11.5 : 8,
-                          }}
-                        >
-                          {lang === "ur" ? "نرخ کی قسم" : "RATE TYPE"}
-                        </span>
-                        <svg
-                          width="9"
-                          height="9"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          style={{ color: attrRateType ? "#087F63" : "#80918B" }}
-                        >
-                          <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                      </div>
-                      <p
-                        className="font-extrabold truncate w-full mt-0.5"
-                        style={{
-                          fontSize: lang === "ur" ? 14 : 11.5,
-                          color: attrRateType ? "#087F63" : "#183B34",
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {attrRateType
-                          ? tr(attrRateType).replace(" ریٹ", "").replace(" Rate", "")
-                          : "—"}
-                      </p>
-                    </button>
-
-                    {/* CARD 5: VARIETY */}
-                    <button
-                      onClick={() => setAttrSheet("variety")}
-                      className="tap-target rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.97] shadow-sm"
-                      style={{
-                        background: attrVariety ? "#F0FDF4" : "#FFFFFF",
-                        border: attrVariety ? "1.5px solid #16A34A" : "1.5px solid #E2EBE7",
-                        minHeight: 62,
-                      }}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span
-                          className="font-bold tracking-wider uppercase text-[8px]"
-                          style={{
-                            color: attrVariety ? "#15803D" : "#52635F",
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                            fontSize: lang === "ur" ? 11.5 : 8,
-                          }}
-                        >
-                          {lang === "ur" ? "قسم" : "VARIETY"}
-                        </span>
-                        <svg
-                          width="9"
-                          height="9"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          style={{ color: attrVariety ? "#16A34A" : "#80918B" }}
-                        >
-                          <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                      </div>
-                      <p
-                        className="font-extrabold truncate w-full mt-0.5"
-                        style={{
-                          fontSize: lang === "ur" ? 14 : 11.5,
-                          color: attrVariety ? "#15803D" : "#183B34",
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {attrVariety ? tc(attrVariety) : "—"}
-                      </p>
-                    </button>
-
-                    {/* CARD 6: NEW / OLD */}
-                    <button
-                      onClick={() => setAttrSheet("newold")}
-                      className="tap-target rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.97] shadow-sm"
-                      style={{
-                        background: attrNewOld ? "#FFFBEB" : "#FFFFFF",
-                        border: attrNewOld ? "1.5px solid #D97706" : "1.5px solid #E2EBE7",
-                        minHeight: 62,
-                      }}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span
-                          className="font-bold tracking-wider uppercase text-[8px]"
-                          style={{
-                            color: attrNewOld ? "#B45309" : "#52635F",
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                            fontSize: lang === "ur" ? 11.5 : 8,
-                          }}
-                        >
-                          {lang === "ur" ? "نیا / پرانا" : "NEW/OLD"}
-                        </span>
-                        <svg
-                          width="9"
-                          height="9"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          style={{ color: attrNewOld ? "#D97706" : "#80918B" }}
-                        >
-                          <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                      </div>
-                      <p
-                        className="font-extrabold truncate w-full mt-0.5"
-                        style={{
-                          fontSize: lang === "ur" ? 14 : 11.5,
-                          color: attrNewOld ? "#B45309" : "#183B34",
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {attrNewOld ? t(attrNewOld) : "—"}
-                      </p>
-                    </button>
-
-                    {/* CARD 7: COLOR */}
-                    <button
-                      onClick={() => setAttrSheet("color")}
-                      className="tap-target rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.97] shadow-sm"
-                      style={{
-                        background: attrColor ? "#ECFDF5" : "#FFFFFF",
-                        border: attrColor ? "1.5px solid #059669" : "1.5px solid #E2EBE7",
-                        minHeight: 62,
-                      }}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span
-                          className="font-bold tracking-wider uppercase text-[8px]"
-                          style={{
-                            color: attrColor ? "#047857" : "#52635F",
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                            fontSize: lang === "ur" ? 11.5 : 8,
-                          }}
-                        >
-                          {lang === "ur" ? "رنگ" : "COLOR"}
-                        </span>
-                        <svg
-                          width="9"
-                          height="9"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          style={{ color: attrColor ? "#059669" : "#80918B" }}
-                        >
-                          <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                      </div>
-                      <p
-                        className="font-extrabold truncate w-full mt-0.5"
-                        style={{
-                          fontSize: lang === "ur" ? 14 : 11.5,
-                          color: attrColor ? "#047857" : "#183B34",
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {attrColor ? t(attrColor) : "—"}
-                      </p>
-                    </button>
-
-                    {/* CARD 8: SPEC */}
-                    <button
-                      onClick={() => setAttrSheet("spec")}
-                      className="tap-target rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.97] shadow-sm"
-                      style={{
-                        background: attrSpec ? "#FFFBEB" : "#FFFFFF",
-                        border: attrSpec ? "1.5px solid #D97706" : "1.5px solid #E2EBE7",
-                        minHeight: 62,
-                      }}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span
-                          className="font-bold tracking-wider uppercase text-[8px]"
-                          style={{
-                            color: attrSpec ? "#B45309" : "#52635F",
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                            fontSize: lang === "ur" ? 11.5 : 8,
-                          }}
-                        >
-                          {lang === "ur" ? "خصوصیت" : "SPEC"}
-                        </span>
-                        <svg
-                          width="9"
-                          height="9"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          style={{ color: attrSpec ? "#D97706" : "#80918B" }}
-                        >
-                          <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                      </div>
-                      <p
-                        className="font-extrabold truncate w-full mt-0.5"
-                        style={{
-                          fontSize: lang === "ur" ? 14 : 11.5,
-                          color: attrSpec ? "#B45309" : "#183B34",
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {attrSpec ? t(attrSpec) : "—"}
-                      </p>
-                    </button>
-
-                    {/* CARD 9: CONDITION */}
-                    <button
-                      onClick={() => setAttrSheet("condition")}
-                      className="tap-target rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.97] shadow-sm"
-                      style={{
-                        background: attrCondition ? "#F0FDF4" : "#FFFFFF",
-                        border: attrCondition ? "1.5px solid #059669" : "1.5px solid #E2EBE7",
-                        minHeight: 62,
-                      }}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span
-                          className="font-bold tracking-wider uppercase text-[8px]"
-                          style={{
-                            color: attrCondition ? "#047857" : "#52635F",
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                            fontSize: lang === "ur" ? 11.5 : 8,
-                          }}
-                        >
-                          {lang === "ur" ? "حالت" : "CONDITION"}
-                        </span>
-                        <svg
-                          width="9"
-                          height="9"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          style={{ color: attrCondition ? "#059669" : "#80918B" }}
-                        >
-                          <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                      </div>
-                      <p
-                        className="font-extrabold truncate w-full mt-0.5"
-                        style={{
-                          fontSize: lang === "ur" ? 14 : 11.5,
-                          color: attrCondition ? "#047857" : "#183B34",
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {attrCondition ? t(attrCondition) : "—"}
-                      </p>
-                    </button>
                   </div>
                 </div>
               );
@@ -14532,7 +14581,6 @@ function ProductRatesScreen({
                 (r) =>
                   !tableProvinceFilter || r.province === tableProvinceFilter,
               );
-              const visibleTableRows = isTableExpanded ? tableRows : tableRows.slice(0, 3);
               const BASE_DATE = new Date(2026, 7, 21);
               const USER_SIGNUP_DATE = new Date(2026, 7, 19); // Sign up reference date
               const tableDateVariation = tableDateFilter
@@ -15151,12 +15199,14 @@ function ProductRatesScreen({
                       )}
                     </div>
                   </div>
-                  {/* Scrollable table body — keeps the deep-view card compact */}
+                  {/* Scrollable table body — keeps the deep-view card compact & scrollable through all mandis */}
                   <div
                     className="flex flex-col overflow-y-auto"
                     style={{
-                      maxHeight: isTableExpanded ? "calc(75vh - 160px)" : 200,
+                      maxHeight: isTableExpanded ? "calc(75vh - 160px)" : 220,
                       flex: isTableExpanded ? "1 1 auto" : "none",
+                      overscrollBehavior: "contain",
+                      WebkitOverflowScrolling: "touch",
                       scrollbarWidth: "thin",
                       scrollbarColor: "#A9CFC2 transparent",
                     }}
@@ -15179,7 +15229,7 @@ function ProductRatesScreen({
                         </p>
                       </div>
                     )}
-                    {visibleTableRows.map((r, ci) => {
+                    {tableRows.map((r, ci) => {
                       const trendArrow =
                         r.trend === "up" ? "▲" : r.trend === "down" ? "▼" : "—";
                       const trendColor =
@@ -15189,9 +15239,13 @@ function ProductRatesScreen({
                             ? "#C94A43"
                             : "#52635F";
                       const rtColor = RATE_COLORS[r.rateType] || "#52635F";
+                      const isRowModalActive =
+                        selectedMandiGraphRow?.mandiName === r.mandiName &&
+                        selectedMandiGraphRow?.rateType === r.rateType;
                       const isSelected =
-                        locScope.kind === "mandi" &&
-                        locScope.label === r.mandiName;
+                        (locScope.kind === "mandi" &&
+                          locScope.label === r.mandiName) ||
+                        isRowModalActive;
                       // Each row uses ITS OWN canonical attrs so prices match the byproduct list cards
                       const rowCanon = getMandiCanonicalAttrs(r.mandiName);
                       const rowAttrMult = computeAttrMult(
@@ -15214,21 +15268,13 @@ function ProductRatesScreen({
                         <button
                           key={`${r.mandiName}-${r.rateType}-${ci}`}
                           onClick={() => {
-                            if (!push) return;
-                            push({
-                              id: "product-rates",
-                              vertical,
-                              product,
-                              byproduct,
-                              initialMandi: r.mandiName,
-                              initialRateType: r.rateType,
-                              initialVariety: rowCanon.variety,
-                              initialNewOld: rowCanon.newOld,
-                              initialColor: rowCanon.color,
-                              initialSpec: rowCanon.spec,
-                              initialCondition: rowCanon.condition,
-                              initialStatDate:
-                                tableDateFilter?.toISOString() || undefined,
+                            setSelectedMandiGraphRow({
+                              mandiName: r.mandiName,
+                              rateType: r.rateType,
+                              min: Math.round(r.min * effMult),
+                              max: Math.round(r.max * effMult),
+                              trend: r.trend as any,
+                              trendPct: intervalPct,
                             });
                           }}
                           style={{
@@ -15241,7 +15287,15 @@ function ProductRatesScreen({
                               ci < tableRows.length - 1
                                 ? "1px solid #F2F7F5"
                                 : "none",
-                            background: isSelected ? "#E4F2EC" : "transparent",
+                            background: isRowModalActive
+                              ? "#E4F2EC"
+                              : isSelected
+                                ? "#E4F2EC"
+                                : "transparent",
+                            boxShadow: isRowModalActive
+                              ? "inset 0 0 0 1.5px #087F63"
+                              : "none",
+                            borderRadius: isRowModalActive ? 10 : 0,
                             alignItems: "center",
                             textAlign: lang === "ur" ? "right" : "left",
                             width: "100%",
@@ -15391,15 +15445,19 @@ function ProductRatesScreen({
                         maxHeight: "60vh",
                         display: "flex",
                         flexDirection: "column",
+                        background: "#F8FCFA",
+                        borderTopLeftRadius: 24,
+                        borderTopRightRadius: 24,
                       }}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className="px-5 pt-4 pb-3 border-b border-[#DCE8E3] flex-shrink-0">
-                        <div className="zm-drag-handle" />
+                      <div className="px-5 pt-3 pb-2.5 border-b border-[#DCE8E3] flex-shrink-0">
+                        <div className="w-10 h-1 rounded-full mx-auto mb-2 bg-[#C7D6D0]" />
                         <p
-                          className="font-bold text-lg"
+                          className="font-extrabold text-center"
                           style={{
-                            fontSize: lang === "ur" ? 20 : 18,
+                            color: "#183B34",
+                            fontSize: lang === "ur" ? 19 : 16,
                             fontFamily:
                               lang === "ur"
                                 ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
@@ -15410,24 +15468,23 @@ function ProductRatesScreen({
                         </p>
                       </div>
                       <div
-                        className="p-4 flex flex-col gap-2 overflow-y-auto flex-1"
+                        className="p-3.5 flex flex-col gap-2 overflow-y-auto flex-1"
                         style={{ minHeight: 0 }}
                       >
                         {currVal && (
                           <button
                             onClick={() => setter(null)}
-                            className="tap-target rounded-2xl px-4 flex items-center gap-3"
+                            className="tap-target rounded-xl px-4 flex items-center justify-center transition active:scale-[0.98]"
                             style={{
-                              background: "#FFF0C7",
-                              border: "1.5px solid #F2D58A",
-                              minHeight: 48,
+                              background: "#FFF1F2",
+                              border: "1.5px solid #FDA4AF",
+                              minHeight: 44,
                             }}
                           >
                             <span
-                              className="font-semibold text-sm"
+                              className="font-bold text-sm text-[#BE123C]"
                               style={{
-                                color: "#9A6817",
-                                fontSize: lang === "ur" ? 16 : 14,
+                                fontSize: lang === "ur" ? 15 : 13.5,
                                 fontFamily:
                                   lang === "ur"
                                     ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
@@ -15465,37 +15522,41 @@ function ProductRatesScreen({
                               : attrSheet === "ratetype"
                                 ? tr(opt)
                                 : t(opt);
+                          const isSelected = currVal === opt;
                           return (
                             <button
                               key={opt}
                               onClick={() =>
                                 available ? setter(opt) : undefined
                               }
-                              className="tap-target rounded-2xl px-4 flex items-center gap-3"
+                              className="tap-target rounded-xl px-4 flex items-center justify-between transition active:scale-[0.98]"
                               style={{
                                 background: !available
-                                  ? "#F2F7F5"
-                                  : currVal === opt
-                                    ? "#E4F2EC"
-                                    : "#F1F7F4",
+                                  ? "#F4FAF7"
+                                  : isSelected
+                                    ? "#E8F5EE"
+                                    : "#FFFFFF",
                                 border: !available
-                                  ? "1px dashed #C7D6D0"
-                                  : currVal === opt
-                                    ? "2px solid #087F63"
-                                    : "1px solid #D5E2DD",
-                                minHeight: 48,
+                                  ? "1px dashed #D5E2DD"
+                                  : isSelected
+                                    ? "1.5px solid #087F63"
+                                    : "1px solid #E2EBE7",
+                                minHeight: 44,
                                 opacity: available ? 1 : 0.45,
+                                boxShadow: isSelected
+                                  ? "0 2px 8px rgba(8,127,99,0.12)"
+                                  : "0 1px 3px rgba(0,0,0,0.02)",
                               }}
                             >
                               <span
-                                className={`flex-1 ${lang === "ur" ? "text-right" : "text-left"} font-semibold text-sm`}
+                                className={`${lang === "ur" ? "text-right" : "text-left"} font-bold text-sm`}
                                 style={{
                                   color: !available
                                     ? "#80918B"
-                                    : currVal === opt
-                                      ? "#075E4F"
+                                    : isSelected
+                                      ? "#064D40"
                                       : "#183B34",
-                                  fontSize: lang === "ur" ? 17 : 14,
+                                  fontSize: lang === "ur" ? 16 : 13.5,
                                   fontFamily:
                                     lang === "ur"
                                       ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
@@ -15507,7 +15568,7 @@ function ProductRatesScreen({
                               {!available && (
                                 <span
                                   style={{
-                                    fontSize: lang === "ur" ? 13 : 10,
+                                    fontSize: lang === "ur" ? 12 : 10,
                                     color: "#80918B",
                                     fontFamily:
                                       lang === "ur"
@@ -15520,9 +15581,9 @@ function ProductRatesScreen({
                                     : "Not in mandi"}
                                 </span>
                               )}
-                              {available && currVal === opt && (
+                              {available && isSelected && (
                                 <span
-                                  style={{ color: "#087F63", fontWeight: 800 }}
+                                  style={{ color: "#087F63", fontWeight: 900, fontSize: 15 }}
                                 >
                                   ✓
                                 </span>
@@ -17343,6 +17404,376 @@ function ProductRatesScreen({
           </div>
         </div>
       )}
+
+      {/* Mandi Graph Modal Popup */}
+      {selectedMandiGraphRow &&
+        (() => {
+          const row = selectedMandiGraphRow;
+          const graphData = getMandiModalGraphData(
+            row.min,
+            row.max,
+            row.trend,
+            graphTimeframe,
+            lang,
+          );
+          const W = 320;
+          const H = 145;
+          const xLeft = 38;
+          const xRight = 302;
+          const yTop = 18;
+          const yBottom = 105;
+
+          const coords = graphData.points.map((p, i) => {
+            const x =
+              xLeft + (i / (graphData.points.length - 1)) * (xRight - xLeft);
+            const y =
+              yBottom -
+              ((p - graphData.yMinBound) /
+                (graphData.yMaxBound - graphData.yMinBound)) *
+                (yBottom - yTop);
+            return { x, y, val: p };
+          });
+
+          const linePath = coords
+            .map((c, i) => (i === 0 ? `M ${c.x} ${c.y}` : `L ${c.x} ${c.y}`))
+            .join(" ");
+          const areaPath = `${linePath} L ${coords[coords.length - 1].x} ${yBottom + 8} L ${coords[0].x} ${yBottom + 8} Z`;
+
+          const yMidY = (yTop + yBottom) / 2;
+
+          return (
+            <div
+              className="fixed inset-0 z-50 bg-black/45 backdrop-blur-[2px] flex items-center justify-center p-4 animate-in fade-in duration-200"
+              onClick={() => setSelectedMandiGraphRow(null)}
+            >
+              <div
+                className="bg-white rounded-[24px] w-full max-w-[370px] shadow-2xl border border-[#E5E7EB] p-4 flex flex-col gap-3 relative"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* 1. Header: Dot + Mandi Title + Mill/RateType Badge + Close 'X' */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] flex-shrink-0" />
+                    <h3
+                      className="font-black text-[15.5px] text-[#111827] truncate"
+                      style={{
+                        fontFamily:
+                          lang === "ur"
+                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            : "inherit",
+                        fontSize: lang === "ur" ? 18 : 15.5,
+                      }}
+                    >
+                      {lang === "ur"
+                        ? tm(row.mandiName)
+                        : row.mandiName.includes("Mandi")
+                          ? row.mandiName
+                          : `${row.mandiName} Mandi`}
+                    </h3>
+                    <span
+                      className="px-2 py-0.5 rounded-md text-[11px] font-extrabold flex-shrink-0"
+                      style={{
+                        background: "#E8F8F0",
+                        color: "#059669",
+                        fontFamily:
+                          lang === "ur"
+                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            : "inherit",
+                      }}
+                    >
+                      {lang === "ur"
+                        ? tr(row.rateType)
+                            .replace(" ریٹ", "")
+                            .replace(" Rate", "")
+                        : row.rateType.replace(" Rate", "")}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedMandiGraphRow(null)}
+                    className="tap-target w-7 h-7 rounded-full bg-[#F3F4F6] hover:bg-[#E5E7EB] active:scale-95 flex items-center justify-center text-[#6B7280] transition flex-shrink-0 ml-1.5"
+                    title={lang === "ur" ? "بند کریں" : "Close"}
+                  >
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* 2. Timeframe Filter Pills */}
+                <div className="flex items-center gap-1.5 w-full justify-between">
+                  {[
+                    { id: "24h", labelEn: "24H", labelUr: "24 گھنٹے" },
+                    { id: "72h", labelEn: "72H", labelUr: "72 گھنٹے" },
+                    { id: "7d", labelEn: "7D (Week)", labelUr: "7 دن (ہفتہ)" },
+                    {
+                      id: "30d",
+                      labelEn: "30D (Month)",
+                      labelUr: "30 دن (مہینہ)",
+                    },
+                  ].map((tf) => {
+                    const isActive = graphTimeframe === tf.id;
+                    return (
+                      <button
+                        key={tf.id}
+                        type="button"
+                        onClick={() => setGraphTimeframe(tf.id as any)}
+                        className="flex-1 py-1 px-1 rounded-full font-extrabold text-[11px] transition text-center active:scale-[0.97]"
+                        style={{
+                          background: isActive ? "#087F63" : "#FFFFFF",
+                          color: isActive ? "#FFFFFF" : "#374151",
+                          border: isActive
+                            ? "1px solid #087F63"
+                            : "1px solid #E5E7EB",
+                          boxShadow: isActive
+                            ? "0 2px 6px rgba(8,127,99,0.22)"
+                            : "none",
+                          fontFamily:
+                            lang === "ur"
+                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              : "inherit",
+                          fontSize: lang === "ur" ? 12 : 11,
+                        }}
+                      >
+                        {lang === "ur" ? tf.labelUr : tf.labelEn}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* 3. Rates Summary Box: Min Rate | Max Rate | Trend Pct */}
+                <div className="rounded-xl p-2.5 bg-[#F9FAFB] border border-[#F3F4F6] flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div>
+                      <span className="text-[9.5px] font-bold text-[#6B7280] uppercase tracking-wider block leading-none">
+                        {lang === "ur" ? "کم سے کم ریٹ" : "Min Rate"}
+                      </span>
+                      <span className="text-sm font-black text-[#1F2937] block mt-1 leading-tight">
+                        Rs.{row.min.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="w-[1px] h-7 bg-[#E5E7EB]" />
+                    <div>
+                      <span className="text-[9.5px] font-bold text-[#6B7280] uppercase tracking-wider block leading-none">
+                        {lang === "ur" ? "زیادہ سے زیادہ ریٹ" : "Max Rate"}
+                      </span>
+                      <span className="text-sm font-black text-[#087F63] block mt-1 leading-tight">
+                        Rs.{row.max.toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    className="px-2 py-1 rounded-lg text-xs font-black flex items-center gap-1"
+                    style={{
+                      background:
+                        row.trend === "down" ? "#FEE2E2" : "#E8F8F0",
+                      color:
+                        row.trend === "down" ? "#DC2626" : "#059669",
+                    }}
+                  >
+                    <span>
+                      {row.trend === "up"
+                        ? "▲"
+                        : row.trend === "down"
+                          ? "▼"
+                          : "—"}
+                    </span>
+                    <span>
+                      {row.trendPct > 0 ? `${row.trendPct}%` : "1.8%"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 4. Graph Visual with SVG Line, Area Gradient, Markers, Dashed Grid, Y/X Labels */}
+                <div className="rounded-2xl border border-[#EEF2F0] p-2.5 bg-white flex flex-col justify-center">
+                  <svg
+                    viewBox={`0 0 ${W} ${H}`}
+                    className="w-full h-auto"
+                    style={{ overflow: "visible" }}
+                  >
+                    <defs>
+                      <linearGradient
+                        id="mandiModalGraphGrad"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor="#10B981"
+                          stopOpacity="0.25"
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor="#10B981"
+                          stopOpacity="0.0"
+                        />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Y-axis Dashed Gridlines & Labels */}
+                    {/* Top Grid */}
+                    <line
+                      x1={xLeft}
+                      y1={yTop}
+                      x2={xRight}
+                      y2={yTop}
+                      stroke="#E5E7EB"
+                      strokeDasharray="3 3"
+                      strokeWidth="1"
+                    />
+                    <text
+                      x={xLeft - 6}
+                      y={yTop + 3}
+                      textAnchor="end"
+                      fill="#9CA3AF"
+                      fontSize="9"
+                      fontWeight="600"
+                    >
+                      {graphData.yLabels[0].label}
+                    </text>
+
+                    {/* Mid Grid */}
+                    <line
+                      x1={xLeft}
+                      y1={yMidY}
+                      x2={xRight}
+                      y2={yMidY}
+                      stroke="#E5E7EB"
+                      strokeDasharray="3 3"
+                      strokeWidth="1"
+                    />
+                    <text
+                      x={xLeft - 6}
+                      y={yMidY + 3}
+                      textAnchor="end"
+                      fill="#9CA3AF"
+                      fontSize="9"
+                      fontWeight="600"
+                    >
+                      {graphData.yLabels[1].label}
+                    </text>
+
+                    {/* Bot Grid */}
+                    <line
+                      x1={xLeft}
+                      y1={yBottom}
+                      x2={xRight}
+                      y2={yBottom}
+                      stroke="#E5E7EB"
+                      strokeDasharray="3 3"
+                      strokeWidth="1"
+                    />
+                    <text
+                      x={xLeft - 6}
+                      y={yBottom + 3}
+                      textAnchor="end"
+                      fill="#9CA3AF"
+                      fontSize="9"
+                      fontWeight="600"
+                    >
+                      {graphData.yLabels[2].label}
+                    </text>
+
+                    {/* Area under curve */}
+                    <path
+                      d={areaPath}
+                      fill="url(#mandiModalGraphGrad)"
+                    />
+
+                    {/* Line curve */}
+                    <path
+                      d={linePath}
+                      fill="none"
+                      stroke="#10B981"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+
+                    {/* Node points */}
+                    {coords.map((c, i) => (
+                      <circle
+                        key={i}
+                        cx={c.x}
+                        cy={c.y}
+                        r="3.5"
+                        fill="#FFFFFF"
+                        stroke="#10B981"
+                        strokeWidth="2.2"
+                      />
+                    ))}
+
+                    {/* X-axis Labels */}
+                    {graphData.xLabels.map((lbl, i) => (
+                      <text
+                        key={i}
+                        x={coords[i].x}
+                        y={H - 8}
+                        textAnchor="middle"
+                        fill="#9CA3AF"
+                        fontSize="8.5"
+                        fontWeight="600"
+                        fontFamily={
+                          lang === "ur"
+                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            : "inherit"
+                        }
+                      >
+                        {lbl}
+                      </text>
+                    ))}
+                  </svg>
+                </div>
+
+                {/* 5. Bottom Return to Mandi Table Button */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedMandiGraphRow(null)}
+                  className="w-full py-2.5 px-4 rounded-xl font-black text-xs text-white flex items-center justify-center gap-2 active:scale-[0.98] transition shadow-md"
+                  style={{
+                    background: "#087F63",
+                    fontFamily:
+                      lang === "ur"
+                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                        : "inherit",
+                    fontSize: lang === "ur" ? 15 : 13,
+                  }}
+                >
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                  <span>
+                    {lang === "ur"
+                      ? "منڈی ٹیبل پر واپس جائیں"
+                      : "Return to Mandi Table"}
+                  </span>
+                </button>
+              </div>
+            </div>
+          );
+        })()}
     </div>
   );
 }
@@ -18712,6 +19143,8 @@ interface ZaraiReel {
   id: string;
   videoPath: string;
   imagePath: string;
+  product: string;
+  productUrdu: string;
   author: string;
   authorUrdu: string;
   handle: string;
@@ -18733,29 +19166,63 @@ interface ZaraiReel {
   comments: ReelComment[];
 }
 
+const VIDEO_MAIN_CATEGORIES = [
+  { id: "products", label: "Products", labelUrdu: "مصنوعات", icon: "🌾" },
+  { id: "general", label: "General Info", labelUrdu: "عمومی معلومات", icon: "ℹ️" },
+  { id: "harvesting", label: "Harvesting", labelUrdu: "ہارویسٹنگ", icon: "🚜" },
+] as const;
+
+type VideoMainCategory = (typeof VIDEO_MAIN_CATEGORIES)[number]["id"];
+
+const VIDEO_PRODUCT_OPTIONS = [
+  { id: "all", label: "All Products", labelUrdu: "تمام مصنوعات" },
+  { id: "wheat", label: "Wheat", labelUrdu: "گندم" },
+  { id: "maize", label: "Maize", labelUrdu: "مکئی" },
+  { id: "sesame", label: "Sesame", labelUrdu: "تل" },
+  { id: "millet", label: "Millet", labelUrdu: "باجرہ" },
+  { id: "cotton", label: "Cotton", labelUrdu: "کپاس" },
+  { id: "paddy", label: "Paddy", labelUrdu: "دھان" },
+  { id: "rice", label: "Rice", labelUrdu: "چاول" },
+  { id: "edible oil", label: "Edible Oil", labelUrdu: "خوردنی تیل" },
+  { id: "fertilizer", label: "Fertilizer", labelUrdu: "کھاد" },
+  { id: "livestock", label: "Livestock", labelUrdu: "مویشی" },
+  { id: "dates", label: "Dates", labelUrdu: "کھجور" },
+  { id: "mustard", label: "Mustard", labelUrdu: "سرسوں" },
+  { id: "spices", label: "Spices", labelUrdu: "مصالحہ جات" },
+  { id: "pulses", label: "Pulses", labelUrdu: "دالیں" },
+  { id: "kiryana", label: "Kiryana", labelUrdu: "کریانہ" },
+  { id: "sugar", label: "Sugar", labelUrdu: "چینی" },
+  { id: "fruits", label: "Fruits", labelUrdu: "پھل" },
+  { id: "vegetables", label: "Vegetables", labelUrdu: "سبزیاں" },
+  { id: "dry fruit", label: "Dry Fruit", labelUrdu: "خشک میوہ" },
+  { id: "herbs", label: "Herbs", labelUrdu: "جڑی بوٹیاں" },
+];
+
 const ZARAI_REELS: ZaraiReel[] = [
   {
     id: "reel-1",
     videoPath: video1,
     imagePath: "",
-    author: "Ahmad Khan (Mandi Rep)",
-    authorUrdu: "احمد خان (منڈی نمائندہ)",
-    handle: "@ahmad_mandi",
-    avatar: "AK",
+    product: "Vegetables",
+    productUrdu: "سبزیاں",
+    author: "Malik Sabzi Mandi",
+    authorUrdu: "ملک سبزی منڈی نمائندہ",
+    handle: "@sabzi_mandi",
+    avatar: "SM",
     isVerified: true,
-    category: "Live Mandi Boli",
-    categoryUrdu: "لائیو منڈی بولی",
-    location: "لاہور منڈی",
-    title: "Fresh Wheat & Basmati Rice Live Mandi Boli",
-    titleUrdu: "گندم اور چاول کے تازہ منڈی بولی ریٹس",
-    tags: ["#گندم", "#چاول"],
+    category: "Vegetables Market",
+    categoryUrdu: "سبزی منڈی",
+    location: "لاہور سبزی منڈی",
+    title: "Fresh Vegetables Daily Mandi Arrivals & Boli",
+    titleUrdu: "تازہ سبزی منڈی آمد اور ریٹس",
+    tags: ["#سبزیاں"],
     audioTitle: "Original Audio",
     likesCount: 48200,
     commentsCount: 1240,
     sharesCount: 14800,
-    badge: "Live",
+    badge: "Vegetables",
     gradient: "linear-gradient(180deg, #0A453B 0%, #062822 50%, #031512 100%)",
-    liveRateBadge: "گندم: 3,850 | چاول: 14,200",
+    liveRateBadge: "آلو: 65 | پیاز: 120 | ٹماٹر: 90",
     comments: [
       {
         id: "c1",
@@ -18764,31 +19231,9 @@ const ZARAI_REELS: ZaraiReel[] = [
         avatar: "HA",
         time: "10m ago",
         timeUrdu: "10 منٹ پہلے",
-        text: "Zabardast report!",
-        textUrdu: "زبردست رپورٹ 👍",
+        text: "Daily sabzi mandi rates",
+        textUrdu: "روزانہ سبزی ریٹس",
         likes: 24,
-      },
-      {
-        id: "c2",
-        author: "Chaudhry Riaz Ahmed",
-        authorUrdu: "چوہدری ریاض احمد",
-        avatar: "CR",
-        time: "25m ago",
-        timeUrdu: "25 منٹ پہلے",
-        text: "Behtreen rates",
-        textUrdu: "بہترین ریٹس ✨",
-        likes: 18,
-      },
-      {
-        id: "c2b",
-        author: "Malik Aslam Trader",
-        authorUrdu: "ملک اسلم بیوپاری",
-        avatar: "MA",
-        time: "1h ago",
-        timeUrdu: "1 گھنٹہ پہلے",
-        text: "Good rate",
-        textUrdu: "بہت اچھے ریٹ 🌾",
-        likes: 11,
       },
     ],
   },
@@ -18796,45 +19241,36 @@ const ZARAI_REELS: ZaraiReel[] = [
     id: "reel-2",
     videoPath: video2,
     imagePath: "",
-    author: "Malik Naveed (Cotton Rep)",
-    authorUrdu: "ملک نوید (کپاس نمائندہ)",
-    handle: "@malik_cotton",
-    avatar: "MN",
+    product: "Sugar",
+    productUrdu: "چینی",
+    author: "Jam Bashir (Sugar Rep)",
+    authorUrdu: "جام بشیر (چینی و کماد نمائندہ)",
+    handle: "@jambashir_sugar",
+    avatar: "JB",
     isVerified: true,
-    category: "Cotton & Phutti",
-    categoryUrdu: "کپاس و پھٹی منڈی",
-    location: "بہاولپور منڈی",
-    title: "Cotton & Phutti Market Report",
-    titleUrdu: "کپاس اور پھٹی کی تازہ منڈی رپورٹ",
-    tags: ["#کپاس"],
+    category: "Sugar & Cane",
+    categoryUrdu: "چینی و کماد",
+    location: "حیدرآباد منڈی",
+    title: "Sugar & Sugarcane Live Mandi Rates",
+    titleUrdu: "چینی اور کماد کی تازہ منڈی رپورٹ",
+    tags: ["#چینی"],
     audioTitle: "Original Audio",
     likesCount: 32100,
     commentsCount: 890,
     sharesCount: 8400,
-    badge: "Market",
-    gradient: "linear-gradient(180deg, #103B2B 0%, #08261C 50%, #04140F 100%)",
-    liveRateBadge: "پھٹی: 8,600 | روئی: 21,500",
+    badge: "Sugar",
+    gradient: "linear-gradient(180deg, #3B1A0A 0%, #241005 50%, #120702 100%)",
+    liveRateBadge: "چینی: 138/کلو | کماد: 425/من",
     comments: [
       {
-        id: "c3",
-        author: "Malik Naveed",
-        authorUrdu: "ملک نوید (لودھراں)",
-        avatar: "MN",
-        time: "15m ago",
-        timeUrdu: "15 منٹ پہلے",
-        text: "Behtreen bhav 👌",
-        textUrdu: "بہترین بھاؤ 👌",
-        likes: 12,
-      },
-      {
-        id: "c3b",
+        id: "c2",
         author: "Rana Tanveer",
         authorUrdu: "رانا تنویر",
         avatar: "RT",
         time: "45m ago",
         timeUrdu: "45 منٹ پہلے",
-        text: "Zabardast update",
-        textUrdu: "زبردست",
+        text: "Sugar rate update",
+        textUrdu: "چینی کا ریٹ",
         likes: 8,
       },
     ],
@@ -18843,35 +19279,37 @@ const ZARAI_REELS: ZaraiReel[] = [
     id: "reel-3",
     videoPath: video3,
     imagePath: "",
-    author: "Dr. Tariq (Agri Expert)",
-    authorUrdu: "ڈاکٹر طارق (زرعی ماہر)",
-    handle: "@dr_tariq_agri",
-    avatar: "DT",
+    product: "Sesame",
+    productUrdu: "تل",
+    author: "Hafiz Zubair (Sesame Rep)",
+    authorUrdu: "حافظ زبیر (تل نمائندہ)",
+    handle: "@zubair_til",
+    avatar: "HZ",
     isVerified: true,
-    category: "Fertilizer & Pesticides",
-    categoryUrdu: "کھاد و ادویات",
-    location: "فیصل آباد",
-    title: "Official DAP & Urea Fertilizer Rates",
-    titleUrdu: "ڈی اے پی اور یوریا کھاد کے سرکاری ریٹس",
-    tags: ["#کھاد"],
+    category: "Sesame Market",
+    categoryUrdu: "تل منڈی",
+    location: "راجن پور منڈی",
+    title: "Sesame (Til) Quality & Boli Update",
+    titleUrdu: "تل کی کوالٹی اور منڈی بولی",
+    tags: ["#تل"],
     audioTitle: "Original Audio",
-    likesCount: 19400,
-    commentsCount: 640,
-    sharesCount: 4100,
-    badge: "Advisory",
-    gradient: "linear-gradient(180deg, #1C3B1A 0%, #0D240F 50%, #051307 100%)",
-    liveRateBadge: "یوریا: 4,650 | DAP: 13,800",
+    likesCount: 33700,
+    commentsCount: 820,
+    sharesCount: 9500,
+    badge: "Sesame",
+    gradient: "linear-gradient(180deg, #1C2B3B 0%, #0F1A24 50%, #070D12 100%)",
+    liveRateBadge: "سفید تل: 14,800 | ہائبرڈ: 13,900",
     comments: [
       {
-        id: "c4",
-        author: "Mian Zahid Iqbal",
-        authorUrdu: "میاں زاہد اقبال",
-        avatar: "MZ",
-        time: "30m ago",
-        timeUrdu: "30 منٹ پہلے",
-        text: "Bohat achi maloomat 👍",
-        textUrdu: "بہت خوب معلومات 👍",
-        likes: 9,
+        id: "c3",
+        author: "Malik Saleem",
+        authorUrdu: "ملک سلیم",
+        avatar: "MS",
+        time: "15m ago",
+        timeUrdu: "15 منٹ پہلے",
+        text: "Til mandi report",
+        textUrdu: "تل منڈی رپورٹ",
+        likes: 19,
       },
     ],
   },
@@ -18879,34 +19317,36 @@ const ZARAI_REELS: ZaraiReel[] = [
     id: "reel-4",
     videoPath: video4,
     imagePath: "",
-    author: "Bilal Malik (Grain Trader)",
-    authorUrdu: "بلال ملک (اوکاڑہ بیوپاری)",
-    handle: "@bilal_grain",
-    avatar: "BM",
+    product: "Rafay Bhai",
+    productUrdu: "رافع بھائی",
+    author: "Rafay Bhai (Agri Expert)",
+    authorUrdu: "رافع بھائی (زرعی ماہر)",
+    handle: "@rafay_bhai_agri",
+    avatar: "RB",
     isVerified: true,
-    category: "Maize & Corn",
-    categoryUrdu: "مکئی منڈی",
-    location: "اوکاڑہ منڈی",
-    title: "Okara Grain Mandi Maize Boli",
-    titleUrdu: "اوکاڑہ غلہ منڈی میں مکئی کی بولیاں",
-    tags: ["#مکئی"],
+    category: "Expert Advisory",
+    categoryUrdu: "رافع بھائی اسپیشل",
+    location: "مرکزی اسٹوڈیو",
+    title: "Market Analysis & Agri Advisory with Rafay Bhai",
+    titleUrdu: "منڈی تجزیہ و زرعی رہنمائی از رافع بھائی",
+    tags: ["#رافع_بھائی"],
     audioTitle: "Original Audio",
     likesCount: 56200,
     commentsCount: 2100,
     sharesCount: 19200,
-    badge: "Hot Boli",
+    badge: "Special",
     gradient: "linear-gradient(180deg, #3B2E0A 0%, #241B05 50%, #120E02 100%)",
-    liveRateBadge: "مکئی سائیلج: 2,950 | ڈرائی: 3,400",
+    liveRateBadge: "زرعی رہنمائی و تجزیات",
     comments: [
       {
-        id: "c5",
+        id: "c4",
         author: "Sardar Taimoor",
         authorUrdu: "سردار تیمور",
         avatar: "ST",
         time: "5m ago",
         timeUrdu: "5 منٹ پہلے",
-        text: "Nice zabardast! 🔥",
-        textUrdu: "شاندار مکئی بولی 🔥",
+        text: "Rafay bhai advisory",
+        textUrdu: "رافع بھائی کا بہترین مشورہ",
         likes: 31,
       },
     ],
@@ -18915,35 +19355,37 @@ const ZARAI_REELS: ZaraiReel[] = [
     id: "reel-5",
     videoPath: video5,
     imagePath: "",
-    author: "Jam Bashir (Sindh Rep)",
-    authorUrdu: "جام بشیر (سندھ نمائندہ)",
-    handle: "@jambashir_sindh",
-    avatar: "JB",
+    product: "Wheat",
+    productUrdu: "گندم",
+    author: "Ahmad Khan (Wheat Rep)",
+    authorUrdu: "احمد خان (گندم نمائندہ)",
+    handle: "@ahmad_wheat",
+    avatar: "AK",
     isVerified: true,
-    category: "Sugarcane & Gur",
-    categoryUrdu: "کماد و گڑ منڈی",
-    location: "حیدرآباد منڈی",
-    title: "Sugarcane Crushing & Desi Gur Rates",
-    titleUrdu: "کماد کرشنگ اور دیسی گڑ کے بھاؤ",
-    tags: ["#گڑ"],
+    category: "Wheat Mandi",
+    categoryUrdu: "گندم منڈی",
+    location: "لاہور منڈی",
+    title: "Punjab Mandis Wheat Arrival & Boli",
+    titleUrdu: "پنجاب منڈیوں میں گندم کی آمد اور بولی",
+    tags: ["#گندم"],
     audioTitle: "Original Audio",
-    likesCount: 27300,
-    commentsCount: 750,
-    sharesCount: 6300,
-    badge: "Season",
-    gradient: "linear-gradient(180deg, #3B1A0A 0%, #241005 50%, #120702 100%)",
-    liveRateBadge: "دیسی گڑ: 6,200 | شکر: 7,100",
+    likesCount: 48200,
+    commentsCount: 1240,
+    sharesCount: 14800,
+    badge: "Wheat",
+    gradient: "linear-gradient(180deg, #0A453B 0%, #062822 50%, #031512 100%)",
+    liveRateBadge: "گندم: 3,980 | بیوپاری: 4,050",
     comments: [
       {
-        id: "c6",
-        author: "Jam Bashir",
-        authorUrdu: "جام بشیر",
-        avatar: "JB",
-        time: "1h ago",
-        timeUrdu: "1 گھنٹہ پہلے",
-        text: "Mashallah zabardast",
-        textUrdu: "ماشاءاللہ زبردست",
-        likes: 14,
+        id: "c5",
+        author: "Chaudhry Riaz Ahmed",
+        authorUrdu: "چوہدری ریاض احمد",
+        avatar: "CR",
+        time: "25m ago",
+        timeUrdu: "25 منٹ پہلے",
+        text: "Wheat mandi rates update",
+        textUrdu: "گندم ریٹ اپڈیٹ",
+        likes: 18,
       },
     ],
   },
@@ -18951,35 +19393,37 @@ const ZARAI_REELS: ZaraiReel[] = [
     id: "reel-6",
     videoPath: video6,
     imagePath: "",
-    author: "Khan Gul (Fruit Market)",
-    authorUrdu: "خان گل (پشاور منڈی)",
-    handle: "@khangul_fruits",
-    avatar: "KG",
-    isVerified: false,
-    category: "Fruits & Dry Fruits",
-    categoryUrdu: "پھل و خشک میوہ جات",
-    location: "پشاور پھل منڈی",
-    title: "Fresh Apples & Dry Fruits Auction",
-    titleUrdu: "تازہ سیب اور خشک میوہ جات نیلامی",
-    tags: ["#سیب"],
+    product: "Sesame",
+    productUrdu: "تل",
+    author: "Sardar Asif (Oilseeds Rep)",
+    authorUrdu: "سردار آصف (تل و تیل دار اجناس)",
+    handle: "@asif_oilseeds",
+    avatar: "SA",
+    isVerified: true,
+    category: "Sesame & Oilseeds",
+    categoryUrdu: "تل منڈی",
+    location: "خانیوال منڈی",
+    title: "Sesame (Til) Crop Inspection & Trading Rates",
+    titleUrdu: "تل کی فصل اور بیوپار ریٹس",
+    tags: ["#تل"],
     audioTitle: "Original Audio",
     likesCount: 41800,
     commentsCount: 1340,
     sharesCount: 11500,
-    badge: "Fresh",
-    gradient: "linear-gradient(180deg, #3B0A1A 0%, #240510 50%, #120207 100%)",
-    liveRateBadge: "سیب: 4,500 | اخروٹ: 18,000",
+    badge: "Sesame",
+    gradient: "linear-gradient(180deg, #2B3B0A 0%, #1A2405 50%, #0C1202 100%)",
+    liveRateBadge: "تل ہائبرڈ: 13,800 | تل دیسی: 14,200",
     comments: [
       {
-        id: "c7",
-        author: "Khan Gul",
-        authorUrdu: "خان گل",
-        avatar: "KG",
-        time: "40m ago",
-        timeUrdu: "40 منٹ پہلے",
-        text: "Good rate 🍎",
-        textUrdu: "بہترین سیب ریٹ 🍎",
-        likes: 22,
+        id: "c6",
+        author: "Mian Rafique",
+        authorUrdu: "میاں رفیق",
+        avatar: "MR",
+        time: "35m ago",
+        timeUrdu: "35 منٹ پہلے",
+        text: "Til rates",
+        textUrdu: "تل کا بھاؤ",
+        likes: 12,
       },
     ],
   },
@@ -18987,34 +19431,36 @@ const ZARAI_REELS: ZaraiReel[] = [
     id: "reel-7",
     videoPath: video7,
     imagePath: "",
-    author: "Haji Farooq (Grain Rep)",
-    authorUrdu: "حاجی فاروق (سرگودھا نمائندہ)",
-    handle: "@farooq_grain",
+    product: "Wheat",
+    productUrdu: "گندم",
+    author: "Haji Farooq (Wheat Trader)",
+    authorUrdu: "حاجی فاروق (گندم بیوپاری)",
+    handle: "@farooq_wheat",
     avatar: "HF",
     isVerified: true,
-    category: "Pulses & Dal Market",
-    categoryUrdu: "دالیں و اجناس منڈی",
+    category: "Wheat Trading",
+    categoryUrdu: "گندم مارکیٹ",
     location: "سرگودھا منڈی",
-    title: "Pulses, Chana & Moong Rates",
-    titleUrdu: "دالیں، چنا اور مونگ کے تازہ ریٹس",
-    tags: ["#دالیں"],
+    title: "Wheat Crop Quality & Trading Rates",
+    titleUrdu: "گندم کی کوالٹی اور بیوپار ریٹس",
+    tags: ["#گندم"],
     audioTitle: "Original Audio",
     likesCount: 38400,
     commentsCount: 920,
     sharesCount: 8100,
-    badge: "Pulses",
+    badge: "Wheat",
     gradient: "linear-gradient(180deg, #0A353B 0%, #051F24 50%, #020F12 100%)",
-    liveRateBadge: "چنا: 9,400 | مونگ: 11,800",
+    liveRateBadge: "گندم پاسکو: 3,900 | اوپن مارکیٹ: 4,120",
     comments: [
       {
-        id: "c8",
+        id: "c7",
         author: "Haji Farooq",
         authorUrdu: "حاجی فاروق",
         avatar: "HF",
         time: "2h ago",
         timeUrdu: "2 گھنٹے پہلے",
-        text: "Behtreen update",
-        textUrdu: "بہترین اپڈیٹ",
+        text: "Wheat trading updates",
+        textUrdu: "گندم بیوپار معلومات",
         likes: 16,
       },
     ],
@@ -19023,35 +19469,151 @@ const ZARAI_REELS: ZaraiReel[] = [
     id: "reel-8",
     videoPath: video8,
     imagePath: "",
-    author: "Engr. Atif (AgriTech)",
-    authorUrdu: "انجینئر عاطف (ایگری ٹیک)",
-    handle: "@atif_agritech",
-    avatar: "EA",
+    product: "Livestock",
+    productUrdu: "مویشی",
+    author: "Chaudhry Babar (Livestock)",
+    authorUrdu: "چوہدری بابر (مویشی منڈی)",
+    handle: "@babar_livestock",
+    avatar: "CB",
     isVerified: true,
-    category: "Agri Machinery & Tech",
-    categoryUrdu: "زرعی مشینری و ڈرون",
-    location: "ملتان ایکسپو",
-    title: "Modern Agri Drone Spray Demo",
-    titleUrdu: "جدید زرعی ڈرون سپرے اور فی ایکڑ لاگت",
-    tags: ["#ڈرون"],
+    category: "Livestock Market",
+    categoryUrdu: "مویشی منڈی",
+    location: "ملتان مویشی منڈی",
+    title: "Livestock & Cattle Market Live Boli",
+    titleUrdu: "مویشی منڈی میں جانوروں کی تازہ بولی",
+    tags: ["#مویشی"],
     audioTitle: "Original Audio",
     likesCount: 64500,
     commentsCount: 2800,
     sharesCount: 22100,
-    badge: "High Tech",
+    badge: "Livestock",
     gradient: "linear-gradient(180deg, #102B3B 0%, #081924 50%, #030B12 100%)",
-    liveRateBadge: "ڈرون سپرے: 650/ایکڑ",
+    liveRateBadge: "بچھڑا: 1,80,000 | گائے: 2,40,000",
     comments: [
       {
-        id: "c9",
+        id: "c8",
         author: "Chaudhry Atif",
         authorUrdu: "چوہدری عاطف",
         avatar: "CA",
         time: "15m ago",
         timeUrdu: "15 منٹ پہلے",
-        text: "Modern technology drone spray 🚀",
-        textUrdu: "بہترین اور جدید ٹیکنالوجی 🚀",
+        text: "Livestock mandi update",
+        textUrdu: "مویشی منڈی اپڈیٹ",
         likes: 35,
+      },
+    ],
+  },
+  {
+    id: "reel-9",
+    videoPath: video9,
+    imagePath: "",
+    product: "Harvesting",
+    productUrdu: "ہارویسٹنگ",
+    author: "Engr. Atif (AgriTech)",
+    authorUrdu: "انجینئر عاطف (ہارویسٹنگ و مشینری)",
+    handle: "@atif_harvest",
+    avatar: "EA",
+    isVerified: true,
+    category: "Crop Harvesting",
+    categoryUrdu: "کٹائی و ہارویسٹنگ",
+    location: "اوکاڑہ فیلڈز",
+    title: "Live Crop Harvesting & Field Operations",
+    titleUrdu: "لائیو فصل کٹائی و ہارویسٹنگ آپریشنز",
+    tags: ["#ہارویسٹنگ"],
+    audioTitle: "Original Audio",
+    likesCount: 39100,
+    commentsCount: 960,
+    sharesCount: 11200,
+    badge: "Harvest",
+    gradient: "linear-gradient(180deg, #0A453B 0%, #062822 50%, #031512 100%)",
+    liveRateBadge: "ہارویسٹر کرایہ: 4,500/ایکڑ",
+    comments: [
+      {
+        id: "c9",
+        author: "Chaudhry Akram",
+        authorUrdu: "چوہدری اکرم",
+        avatar: "CA",
+        time: "20m ago",
+        timeUrdu: "20 منٹ پہلے",
+        text: "Harvesting in progress",
+        textUrdu: "کٹائی کا عمل",
+        likes: 15,
+      },
+    ],
+  },
+  {
+    id: "reel-10",
+    videoPath: video10,
+    imagePath: "",
+    product: "Auctions",
+    productUrdu: "بولیاں",
+    author: "Mian Arshad (Mandi Auctioneer)",
+    authorUrdu: "میاں ارشد (منڈی بولی و نیلامی)",
+    handle: "@arshad_auction",
+    avatar: "MA",
+    isVerified: true,
+    category: "Open Auctions",
+    categoryUrdu: "اوپن بولی و نیلامی",
+    location: "فیصل آباد غلہ منڈی",
+    title: "Live Mandi Auctions & Open Boli",
+    titleUrdu: "اوپن منڈی بولیاں اور نیلامی ریٹس",
+    tags: ["#بولیاں"],
+    audioTitle: "Original Audio",
+    likesCount: 28400,
+    commentsCount: 610,
+    sharesCount: 7400,
+    badge: "Auction",
+    gradient: "linear-gradient(180deg, #2B3B0A 0%, #1A2405 50%, #0C1202 100%)",
+    liveRateBadge: "اوپن نیلامی و بولیاں",
+    comments: [
+      {
+        id: "c10",
+        author: "Mian Rafique",
+        authorUrdu: "میاں رفیق",
+        avatar: "MR",
+        time: "35m ago",
+        timeUrdu: "35 منٹ پہلے",
+        text: "Mandi auction report",
+        textUrdu: "نیلامی رپورٹ",
+        likes: 12,
+      },
+    ],
+  },
+  {
+    id: "reel-11",
+    videoPath: video11,
+    imagePath: "",
+    product: "Harvesting",
+    productUrdu: "ہارویسٹنگ",
+    author: "Tariq Mehmood (Combine)",
+    authorUrdu: "طارق محمود (کمبائن ہارویسٹر)",
+    handle: "@tariq_harvester",
+    avatar: "TM",
+    isVerified: true,
+    category: "Modern Harvesting",
+    categoryUrdu: "ہارویسٹنگ لائیو",
+    location: "بہاولپور فارمز",
+    title: "Modern Combine Harvester in Action",
+    titleUrdu: "جدید کمبائن ہارویسٹر لائیو فیلڈ کٹائی",
+    tags: ["#ہارویسٹنگ"],
+    audioTitle: "Original Audio",
+    likesCount: 33700,
+    commentsCount: 820,
+    sharesCount: 9500,
+    badge: "Harvest",
+    gradient: "linear-gradient(180deg, #1C2B3B 0%, #0F1A24 50%, #070D12 100%)",
+    liveRateBadge: "جدید کٹائی مشینری",
+    comments: [
+      {
+        id: "c11",
+        author: "Malik Saleem",
+        authorUrdu: "ملک سلیم",
+        avatar: "MS",
+        time: "15m ago",
+        timeUrdu: "15 منٹ پہلے",
+        text: "Modern combine machine",
+        textUrdu: "جدید مشینری",
+        likes: 19,
       },
     ],
   },
@@ -19060,12 +19622,18 @@ const ZARAI_REELS: ZaraiReel[] = [
 function ZaraiReelsScreen({
   profileCompleted = false,
   onOpenCompleteProfile,
+  onActiveReelChange,
+  onMinimize,
 }: {
   profileCompleted?: boolean;
   onOpenCompleteProfile?: () => void;
+  onActiveReelChange?: (reel: ZaraiReel, isPlaying: boolean, isMuted: boolean) => void;
+  onMinimize?: (reel: ZaraiReel, isPlaying: boolean, isMuted: boolean) => void;
 }) {
   const { lang } = useLang();
   const [feedTab, setFeedTab] = useState<"forYou" | "following" | "saved">("forYou");
+  const [mainCategory, setMainCategory] = useState<VideoMainCategory>("products");
+  const [selectedProductSub, setSelectedProductSub] = useState<string>("all");
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMuted, setIsMuted] = useState(false); // Default sound OPEN (unmuted)
   const [likedReelIds, setLikedReelIds] = useState<Set<string>>(
@@ -19100,12 +19668,56 @@ function ZaraiReelsScreen({
     y: 0,
   });
 
-  const displayedReels =
+  const tabFilteredReels =
     feedTab === "following"
       ? ZARAI_REELS.filter((r) => followedAuthors.has(r.author))
       : feedTab === "saved"
         ? ZARAI_REELS.filter((r) => savedReelIds.has(r.id))
         : ZARAI_REELS;
+
+  const displayedReels = tabFilteredReels.filter((r) => {
+    if (mainCategory === "general") {
+      return (
+        r.id === "reel-4" ||
+        r.id === "reel-10" ||
+        r.product.toLowerCase().includes("rafay") ||
+        r.product.toLowerCase().includes("auction")
+      );
+    }
+    if (mainCategory === "harvesting") {
+      return (
+        r.id === "reel-9" ||
+        r.id === "reel-11" ||
+        r.product.toLowerCase().includes("harvest")
+      );
+    }
+    // mainCategory === "products"
+    if (selectedProductSub === "all") {
+      return (
+        r.id !== "reel-4" &&
+        r.id !== "reel-9" &&
+        r.id !== "reel-10" &&
+        r.id !== "reel-11"
+      );
+    }
+    const target = selectedProductSub.toLowerCase();
+    return (
+      r.product.toLowerCase().includes(target) ||
+      r.category.toLowerCase().includes(target) ||
+      r.title.toLowerCase().includes(target)
+    );
+  });
+
+  // Sync active reel state to parent for mini-player
+  useEffect(() => {
+    if (displayedReels[activeIndex]) {
+      onActiveReelChange?.(
+        displayedReels[activeIndex],
+        isPlayingMap[displayedReels[activeIndex].id] ?? true,
+        isMuted,
+      );
+    }
+  }, [activeIndex, displayedReels, isPlayingMap, isMuted, onActiveReelChange]);
 
   // Handle intersection / scroll snap active index
   const handleScroll = () => {
@@ -19310,15 +19922,31 @@ function ZaraiReelsScreen({
         color: "#fff",
       }}
     >
+      {/* Top Header: Minimize Button, Tabs (Following, For You, Saved), Mute Toggle */}
       <header
-        className="absolute top-0 left-0 right-0 z-40 px-4 pt-10 pb-2 flex items-center justify-between pointer-events-none"
+        className="absolute top-0 left-0 right-0 z-40 px-3.5 pt-9 pb-1.5 flex items-center justify-between pointer-events-none"
         style={{
           background:
-            "linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%)",
+            "linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
         }}
       >
-        <div className="w-8" />
-        <div className="flex items-center gap-4 text-xs font-extrabold drop-shadow pointer-events-auto">
+        {/* Minimize button to picture-in-picture mini-player */}
+        <button
+          onClick={() => {
+            const curReel = displayedReels[activeIndex] || ZARAI_REELS[0];
+            const isP = isPlayingMap[curReel.id] ?? true;
+            onMinimize?.(curReel, isP, isMuted);
+          }}
+          className="tap-target w-8 h-8 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/20 text-white pointer-events-auto shadow-md hover:scale-105 active:scale-95 transition"
+          title={lang === "ur" ? "ویڈیو نیچے کریں" : "Minimize to mini player"}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+
+        {/* Following / For You / Saved feed tabs */}
+        <div className="flex items-center gap-3.5 text-xs font-extrabold drop-shadow pointer-events-auto">
           <button
             onClick={() => setFeedTab("following")}
             className={`tap-target transition-all ${feedTab === "following"
@@ -19347,22 +19975,91 @@ function ZaraiReelsScreen({
             {lang === "ur" ? "محفوظ شدہ" : "Saved"}
           </button>
         </div>
+
+        {/* Sound mute/unmute button */}
         <button
           onClick={toggleMute}
-          className="tap-target w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/15 text-white pointer-events-auto shadow-md"
+          className="tap-target w-8 h-8 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/20 text-white pointer-events-auto shadow-md"
           title={isMuted ? "Unmute Voice" : "Mute Voice"}
         >
           {isMuted ? (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
               <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27l4.73 4.73H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
             </svg>
           ) : (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
               <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
             </svg>
           )}
         </button>
       </header>
+
+      {/* 3 Main Category Option Tabs: Products | General Info | Harvesting */}
+      <div
+        className="absolute top-[68px] left-0 right-0 z-40 px-3 py-1 flex flex-col gap-1.5 pointer-events-auto"
+        style={{
+          background: "linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0) 100%)",
+        }}
+      >
+        {/* Main 3 Options Bar (Fixed 3 grid columns) */}
+        <div className="grid grid-cols-3 gap-1.5 bg-black/45 backdrop-blur-md p-1 rounded-2xl border border-white/20">
+          {VIDEO_MAIN_CATEGORIES.map((cat) => {
+            const isSelected = mainCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => {
+                  setMainCategory(cat.id);
+                  setActiveIndex(0);
+                  if (containerRef.current) {
+                    containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                }}
+                className={`py-1.5 px-2 rounded-xl text-xs font-bold tap-target transition-all flex items-center justify-center gap-1 ${
+                  isSelected
+                    ? "bg-[#32BA46] text-[#07332F] font-black shadow-md scale-[1.02]"
+                    : "text-white/80 hover:text-white hover:bg-white/10"
+                }`}
+              >
+                <span className="text-xs">{cat.icon}</span>
+                <span className="truncate">{lang === "ur" ? cat.labelUrdu : cat.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Sub-product Horizontal Filter (Shown when Products is selected) */}
+        {mainCategory === "products" && (
+          <div
+            className="flex items-center gap-1.5 overflow-x-auto py-0.5 animate-in fade-in duration-150"
+            style={{ scrollbarWidth: "none" }}
+          >
+            {VIDEO_PRODUCT_OPTIONS.map((prod) => {
+              const isSelected = selectedProductSub === prod.id;
+              return (
+                <button
+                  key={prod.id}
+                  onClick={() => {
+                    setSelectedProductSub(prod.id);
+                    setActiveIndex(0);
+                    if (containerRef.current) {
+                      containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+                    }
+                  }}
+                  className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap tap-target transition-all flex items-center gap-1 flex-shrink-0 ${
+                    isSelected
+                      ? "bg-white text-[#07332F] font-black shadow-md scale-105"
+                      : "bg-black/55 text-white/80 backdrop-blur-md border border-white/15 hover:bg-black/75 hover:text-white"
+                  }`}
+                >
+                  <span>{lang === "ur" ? prod.labelUrdu : prod.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
       <div className="absolute left-2.5 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-2.5 opacity-50 hover:opacity-100 transition-opacity pointer-events-auto">
         {activeIndex > 0 && (
           <button
@@ -19408,7 +20105,7 @@ function ZaraiReelsScreen({
         {displayedReels.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center p-6 text-center">
             <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white text-2xl mb-3 border border-white/15">
-              {feedTab === "saved" ? "🔖" : "👨‍💼"}
+              {feedTab === "saved" ? "🔖" : "🌾"}
             </div>
             <p className="font-bold text-sm text-white">
               {feedTab === "saved"
@@ -19416,8 +20113,8 @@ function ZaraiReelsScreen({
                   ? "کوئی محفوظ شدہ ویڈیو نہیں ہے"
                   : "No Saved Videos Yet"
                 : lang === "ur"
-                  ? "آپ نے ابھی کسی نمائندے کو فالو نہیں کیا"
-                  : "You haven't followed any representative yet"}
+                  ? "اس پراڈکٹ کی کوئی ویڈیو دستیاب نہیں"
+                  : "No videos for this product yet"}
             </p>
             <p className="text-white/60 text-xs mt-1 max-w-[240px]">
               {feedTab === "saved"
@@ -19425,14 +20122,17 @@ function ZaraiReelsScreen({
                   ? "ویڈیو کے ساتھ محفوظ کریں (Save) کا بٹن دبا کر ویڈیوز یہاں دیکھیں"
                   : "Tap the bookmark/save button on any video to see it here"
                 : lang === "ur"
-                  ? "ویڈیو کے ساتھ نمائندے کے پروفائل پر (+) دبا کر فالو کریں"
-                  : "Tap (+) on representative's profile to see their videos here"}
+                  ? "تمام ویڈیوز دیکھنے کے لیے 'تمام' منتخب کریں"
+                  : "Select 'All' to explore all crop and mandi videos"}
             </p>
             <button
-              onClick={() => setFeedTab("forYou")}
+              onClick={() => {
+                setFeedTab("forYou");
+                setSelectedProduct("all");
+              }}
               className="mt-4 px-5 py-2.5 rounded-full bg-[#087F63] text-white font-extrabold text-xs tap-target shadow-lg"
             >
-              {lang === "ur" ? "تمام ویڈیوز دیکھیں" : "Explore For You"}
+              {lang === "ur" ? "تمام ویڈیوز دیکھیں" : "Explore All Videos"}
             </button>
           </div>
         ) : (
@@ -19775,6 +20475,97 @@ function ZaraiReelsScreen({
 
 // Alias for seamless routing
 const NewsVideosScreen = ZaraiReelsScreen;
+
+function FloatingMiniPlayer({
+  video,
+  onExpand,
+  onClose,
+  onTogglePlay,
+}: {
+  video: { reel: ZaraiReel; isPlaying: boolean; isMuted: boolean };
+  onExpand: () => void;
+  onClose: () => void;
+  onTogglePlay: () => void;
+}) {
+  const { lang } = useLang();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (!videoRef.current) return;
+    videoRef.current.muted = video.isMuted;
+    if (video.isPlaying) {
+      videoRef.current.play().catch(() => {});
+    } else {
+      videoRef.current.pause();
+    }
+  }, [video.isPlaying, video.isMuted]);
+
+  return (
+    <div
+      onClick={onExpand}
+      className="absolute bottom-[66px] right-3 z-40 w-44 aspect-video rounded-2xl overflow-hidden shadow-2xl border border-white/25 bg-black cursor-pointer group animate-in fade-in zoom-in-95 duration-200"
+      style={{
+        boxShadow: "0 10px 30px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.15)",
+      }}
+    >
+      <video
+        ref={videoRef}
+        src={video.reel.videoPath}
+        playsInline
+        loop
+        className="w-full h-full object-cover"
+      />
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/40 pointer-events-none" />
+
+      {/* Top action bar: Close button */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/75 backdrop-blur-md text-white flex items-center justify-center border border-white/25 text-[11px] font-black hover:bg-black/90 active:scale-95 transition shadow tap-target"
+        title={lang === "ur" ? "بند کریں" : "Close mini player"}
+      >
+        ✕
+      </button>
+
+      {/* Center play / pause overlay button */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onTogglePlay();
+        }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/65 backdrop-blur-md text-white flex items-center justify-center border border-white/25 shadow-lg active:scale-90 transition hover:bg-black/85 tap-target"
+      >
+        {video.isPlaying ? (
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="6" y="4" width="4" height="16" rx="1" />
+            <rect x="14" y="4" width="4" height="16" rx="1" />
+          </svg>
+        ) : (
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" className="ml-0.5">
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+        )}
+      </button>
+
+      {/* Bottom title & author ticker */}
+      <div className="absolute bottom-1 left-2 right-2 flex items-center justify-between text-left pointer-events-none">
+        <div className="truncate pr-1">
+          <p className="text-[10px] font-black text-white truncate drop-shadow">
+            {lang === "ur" ? video.reel.titleUrdu : video.reel.title}
+          </p>
+          <p className="text-[8.5px] text-[#32BA46] font-extrabold truncate">
+            {lang === "ur" ? video.reel.authorUrdu : video.reel.author}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ─── VOICE ────────────────────────────────────────────────────────────────────
 
@@ -28429,13 +29220,41 @@ function AppInner({
   });
   const [locSheet, setLocSheet] = useState(false);
 
+  // Floating mini-player state (YouTube style when navigating away from video feed)
+  const [floatingVideo, setFloatingVideo] = useState<{
+    reel: ZaraiReel;
+    isPlaying: boolean;
+    isMuted: boolean;
+  } | null>(null);
+  const currentVideoStateRef = useRef<{
+    reel: ZaraiReel;
+    isPlaying: boolean;
+    isMuted: boolean;
+  }>({
+    reel: ZARAI_REELS[0],
+    isPlaying: true,
+    isMuted: false,
+  });
+
   const current = stack[stack.length - 1];
-  const push = (s: Screen) => setStack((p) => [...p, s]);
+  const push = (s: Screen) => {
+    if (activeNav === "news" || current.id === "news") {
+      setFloatingVideo({ ...currentVideoStateRef.current });
+    }
+    setStack((p) => [...p, s]);
+  };
   const pop = () => setStack((p) => (p.length > 1 ? p.slice(0, -1) : p));
   const replace = (s: Screen) => setStack((p) => [...p.slice(0, -1), s]);
 
   const handleNav = (tab: NavTab) => {
     setVoicePhase("idle");
+    if (activeNav === "news" && tab !== "news") {
+      // User navigated away from video section -> minimize to floating mini player
+      setFloatingVideo({ ...currentVideoStateRef.current });
+    } else if (tab === "news") {
+      // User entered video section -> clear floating mini player
+      setFloatingVideo(null);
+    }
     setActiveNav(tab);
     if (tab === "home" || tab === "analytics" || tab === "news") {
       setStack([{ id: tab }]);
@@ -28607,6 +29426,13 @@ function AppInner({
             <NewsVideosScreen
               profileCompleted={profileCompleted}
               onOpenCompleteProfile={() => setCompleteProfileOpen(true)}
+              onActiveReelChange={(reel, isPlaying, isMuted) => {
+                currentVideoStateRef.current = { reel, isPlaying, isMuted };
+              }}
+              onMinimize={(reel, isPlaying, isMuted) => {
+                setFloatingVideo({ reel, isPlaying, isMuted });
+                handleNav("home");
+              }}
             />
           )}
           {current.id === "billing" && (
@@ -28618,6 +29444,21 @@ function AppInner({
             />
           )}
         </div>
+        {floatingVideo && current.id !== "news" && (
+          <FloatingMiniPlayer
+            video={floatingVideo}
+            onExpand={() => {
+              handleNav("news");
+              setFloatingVideo(null);
+            }}
+            onClose={() => setFloatingVideo(null)}
+            onTogglePlay={() => {
+              setFloatingVideo((prev) =>
+                prev ? { ...prev, isPlaying: !prev.isPlaying } : null,
+              );
+            }}
+          />
+        )}
         <BottomNav
           active={navActive}
           onNav={handleNav}
