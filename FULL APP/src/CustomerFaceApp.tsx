@@ -1745,6 +1745,41 @@ const ALL_MANDI_NAMES: string[] = Object.values(LOCATIONS).flatMap((d) =>
   Object.values(d).flat(),
 );
 
+// --- Province Background Maps & Helpers ---
+const PROVINCE_BG: Record<string, string> = {
+  Pakistan: "/assets/backgrounds/bg_pakistan.jpg",
+  Punjab: "/assets/backgrounds/bg_punjab.jpg",
+  Sindh: "/assets/backgrounds/bg_sindh.jpg",
+  KPK: "/assets/backgrounds/bg_kpk.jpg",
+  Balochistan: "/assets/backgrounds/bg_balochistan.jpg",
+};
+
+const PROVINCE_CARD_BG: Record<string, string> = {
+  Punjab: "/assets/backgrounds/card_bg_punjab.jpg",
+  Sindh: "/assets/backgrounds/card_bg_sindh.jpg",
+  KPK: "/assets/backgrounds/card_bg_kpk.jpg",
+  Balochistan: "/assets/backgrounds/card_bg_balochistan.jpg",
+};
+
+function getProvinceFromLoc(loc?: { kind: LocationScope["kind"]; label: string }): string | null {
+  if (!loc || loc.kind === "pakistan") return null;
+  if (loc.kind === "province") return loc.label;
+  const target = (loc.label || "").trim().toLowerCase();
+  for (const [prov, dists] of Object.entries(LOCATIONS)) {
+    if (prov.toLowerCase() === target) return prov;
+    for (const [dist, mandis] of Object.entries(dists)) {
+      if (dist.toLowerCase() === target) return prov;
+      for (const m of mandis) {
+        const cleanM = m.toLowerCase().replace(/\s*mandi\s*/gi, "").trim();
+        if (m.toLowerCase() === target || cleanM === target || target.includes(cleanM)) {
+          return prov;
+        }
+      }
+    }
+  }
+  return null;
+}
+
 //  FEED MESSAGES
 
 const FEED_MESSAGES: FeedMsg[] = [
@@ -5398,6 +5433,17 @@ const MANDI_ROWS: Record<
       trendPct: 1.2,
     },
     {
+      product: "Wheat",
+      byproduct: "Oat",
+      emoji: "",
+      rateType: "Farm Rate",
+      arrival: "650 Bags",
+      min: 1850,
+      max: 2100,
+      trend: "up",
+      trendPct: 0.9,
+    },
+    {
       product: "Dates",
       byproduct: "Ajwa Dates",
       emoji: "",
@@ -7787,15 +7833,21 @@ function LocationScopeSheet({
     sub: string;
     icon: string;
   }[] = [
-      { kind: "pakistan", label: "Pakistan", sub: "My Country", icon: "" },
-      { kind: "province", label: "Punjab", sub: "My Province", icon: "" },
-      { kind: "district", label: "Pakpattan", sub: "My District", icon: "" },
+      { kind: "pakistan", label: "Pakistan", sub: "All Pakistan (National)", icon: "🇵🇰" },
+      { kind: "province", label: "Punjab", sub: "Punjab Province", icon: "🏛️" },
+      { kind: "province", label: "Sindh", sub: "Sindh Province", icon: "🕌" },
+      { kind: "province", label: "KPK", sub: "Khyber Pakhtunkhwa", icon: "🏔️" },
+      { kind: "province", label: "Balochistan", sub: "Balochistan Province", icon: "🏜️" },
+      { kind: "district", label: "Pakpattan", sub: "Pakpattan District", icon: "📍" },
     ];
 
   if (mandiPicker) {
     return (
       <LocationSheet
-        onSelect={(p, d, s) => onSelect({ kind: "mandi", label: s || d || p })}
+        onSelect={(p, d, s) => {
+          onSelect({ kind: "mandi", label: s || d || p });
+          onClose();
+        }}
         onClose={onClose}
       />
     );
@@ -7816,12 +7868,15 @@ function LocationScopeSheet({
         </div>
         <div className="p-4 flex flex-col gap-2">
           {rows.map((r) => {
-            const on = scope.kind === r.kind;
+            const on =
+              scope.kind === r.kind &&
+              (r.kind === "pakistan" || scope.label.toLowerCase() === r.label.toLowerCase());
             return (
               <button
-                key={r.kind}
+                key={`${r.kind}-${r.label}`}
                 onClick={() => {
                   onSelect({ kind: r.kind, label: r.label });
+                  onClose();
                 }}
                 className="tap-target rounded-2xl px-4 flex items-center gap-3"
                 style={{
@@ -9389,6 +9444,7 @@ function ByProductCombinedScreen({
   togglePickBP = () => { },
   locationScope,
   onOpenLocation,
+  onSelectLocation,
   profileCompleted = false,
   onOpenSubscribe,
 }: {
@@ -9401,6 +9457,7 @@ function ByProductCombinedScreen({
   togglePickBP?: (item: RateItem) => void;
   locationScope?: LocationScope;
   onOpenLocation?: () => void;
+  onSelectLocation?: (s: LocationScope) => void;
   profileCompleted?: boolean;
   onOpenSubscribe?: () => void;
 }) {
@@ -9533,13 +9590,51 @@ function ByProductCombinedScreen({
       kind: LocationScope["kind"];
       label: string;
     }[]
-  >([]);
+  >(() => {
+    if (locationScope && locationScope.kind !== "pakistan") {
+      return [locationScope];
+    }
+    return [];
+  });
+
+  // Synchronize with locationScope prop whenever it changes
+  useEffect(() => {
+    if (locationScope) {
+      if (locationScope.kind === "pakistan") {
+        setSelectedLocs([]);
+      } else {
+        setSelectedLocs([locationScope]);
+      }
+    }
+  }, [locationScope]);
+
   const [locSheet, setLocSheet] = useState(false);
   // Derive single locScope for inLocScope fn — if multi selected, show all matching
   const locScope: LocationScope =
     selectedLocs.length === 0
-      ? { kind: "pakistan", label: "All Pakistan" }
+      ? (locationScope || { kind: "pakistan", label: "All Pakistan" })
       : selectedLocs[0];
+
+  // Derive active province from selected locations or parent locationScope prop
+  const activeProvince = useMemo(() => {
+    if (selectedLocs.length > 0) {
+      const provs = Array.from(
+        new Set(selectedLocs.map(getProvinceFromLoc).filter(Boolean)),
+      ) as string[];
+      if (provs.length === 1) return provs[0];
+      if (provs.length > 1) return null;
+    }
+    if (locationScope && locationScope.kind !== "pakistan") {
+      const p = getProvinceFromLoc(locationScope);
+      if (p) return p;
+    }
+    return null;
+  }, [selectedLocs, locationScope]);
+
+  const isAllPakistan = !activeProvince;
+  const screenBg = isAllPakistan
+    ? PROVINCE_BG["Pakistan"]
+    : (activeProvince ? PROVINCE_BG[activeProvince] : PROVINCE_BG["Pakistan"]);
 
   // Reset byproduct filter when active product changes
   const prevIdx = useRef(idx);
@@ -9571,29 +9666,40 @@ function ByProductCombinedScreen({
 
   const activeBPs = selectedBP ? [selectedBP] : byproducts;
 
-  // Check if a mandi row is in the current location scope (multi-select aware)
+  // Check if a mandi row is in the current location scope (multi-select aware and locationScope aware)
   const inLocScope = (
     mandiName: string,
     mandiCity: string,
     province: string,
   ) => {
-    if (selectedLocs.length === 0) return true;
-    return selectedLocs.some((loc) => {
+    const locsToCheck =
+      selectedLocs.length > 0
+        ? selectedLocs
+        : (locationScope && locationScope.kind !== "pakistan" ? [locationScope] : []);
+
+    if (locsToCheck.length === 0) return true;
+    return locsToCheck.some((loc) => {
       switch (loc.kind) {
         case "pakistan":
           return true;
         case "province":
-          return province === loc.label;
+          return province.toLowerCase() === loc.label.toLowerCase();
         case "district":
-          return mandiCity === loc.label || mandiName.includes(loc.label);
+          return (
+            mandiCity.toLowerCase() === loc.label.toLowerCase() ||
+            mandiName.toLowerCase().includes(loc.label.toLowerCase())
+          );
         case "mandi":
-          return mandiName === loc.label || mandiCity === loc.label;
+          return (
+            mandiName.toLowerCase() === loc.label.toLowerCase() ||
+            mandiCity.toLowerCase() === loc.label.toLowerCase()
+          );
       }
     });
   };
 
   // Build best representative rate row for a byproduct — returns null if no real data
-  const buildRepRow = (bp: string): { row: RichRow; hasData: boolean } => {
+  const buildRepRow = (bp: string, bpIndex: number = 0): { row: RichRow; hasData: boolean } => {
     const noData: RichRow = {
       product: activeProduct?.product || "",
       byproduct: bp,
@@ -9635,7 +9741,18 @@ function ByProductCombinedScreen({
           });
         });
     });
-    if (fromMandi.length > 0) return { row: fromMandi[0], hasData: true };
+
+    if (fromMandi.length > 0) {
+      if (isAllPakistan) {
+        const provCycle = ["Punjab", "Sindh", "KPK", "Balochistan"];
+        const targetProv = provCycle[bpIndex % provCycle.length];
+        const matchProv = fromMandi.find(
+          (r) => r.province.toLowerCase() === targetProv.toLowerCase(),
+        );
+        if (matchProv) return { row: matchProv, hasData: true };
+      }
+      return { row: fromMandi[0], hasData: true };
+    }
 
     const fromFeed = FEED_MESSAGES.filter(
       (m) =>
@@ -9702,6 +9819,31 @@ function ByProductCombinedScreen({
           );
         });
     });
+
+    if (isAllPakistan) {
+      const byProv: Record<string, RichRow[]> = {};
+      rows.forEach((r) => {
+        const p = r.province || "Punjab";
+        if (!byProv[p]) byProv[p] = [];
+        byProv[p].push(r);
+      });
+      const provOrder = ["Punjab", "Sindh", "KPK", "Balochistan"];
+      const interleaved: RichRow[] = [];
+      let round = 0;
+      let added = true;
+      while (added) {
+        added = false;
+        for (const p of provOrder) {
+          if (byProv[p] && byProv[p][round]) {
+            interleaved.push(byProv[p][round]);
+            added = true;
+          }
+        }
+        round++;
+      }
+      return interleaved.length > 0 ? interleaved : rows;
+    }
+
     return rows;
   };
 
@@ -9739,9 +9881,9 @@ function ByProductCombinedScreen({
 
   const locLabel =
     selectedLocs.length === 0
-      ? lang === "ur"
-        ? "پاکستان"
-        : "Pakistan"
+      ? (locationScope && locationScope.kind !== "pakistan"
+          ? tmL(locationScope.label)
+          : (lang === "ur" ? "پاکستان" : "Pakistan"))
       : selectedLocs.length === 1
         ? tmL(selectedLocs[0].label)
         : lang === "ur"
@@ -9750,13 +9892,33 @@ function ByProductCombinedScreen({
 
   return (
     <div
-      className="flex flex-col h-full screen-enter"
-      style={{ background: "#F1F7F4" }}
+      className="flex flex-col h-full screen-enter relative overflow-hidden"
+      style={{ background: "#F5F8F6" }}
     >
+      {/* Province Screen Background */}
+      {screenBg && (
+        <div
+          className="absolute inset-0 pointer-events-none transition-all duration-500 ease-out"
+          style={{
+            zIndex: 0,
+            backgroundImage: `url(${screenBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
+            opacity: 0.85,
+          }}
+        />
+      )}
+
       {/*  Header  */}
       <header
-        className="flex-shrink-0"
-        style={{ background: "#F4FAF7", borderBottom: "1px solid #D5E2DD" }}
+        className="flex-shrink-0 relative z-10"
+        style={{
+          background: "rgba(244, 250, 247, 0.86)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          borderBottom: "1px solid rgba(213, 226, 221, 0.8)",
+        }}
       >
         {/* Title row with Wheat emoji, Full product name, Date capsule, and Location */}
         <div className="px-2.5 pt-9 pb-2 flex items-center justify-between gap-1 w-full overflow-x-auto" style={{ scrollbarWidth: "none" }}>
@@ -10044,12 +10206,14 @@ function ByProductCombinedScreen({
               hasData: boolean;
             }[] = [];
 
-            sortedBPs.forEach((bp) => {
+            sortedBPs.forEach((bp, bpIndex) => {
               const allR = buildAllRows(bp);
-              const { row: repRow, hasData } = buildRepRow(bp);
-              const dataRows = allR.slice(0, 3);
+              const { row: repRow, hasData } = buildRepRow(bp, bpIndex);
+              const dataRows = selectedBP
+                ? (isAllPakistan ? allR.slice(0, 4) : allR)
+                : [repRow];
               const showRows =
-                dataRows.length > 0
+                hasData || (selectedBP && allR.length > 0)
                   ? dataRows.map((r) => ({
                     r: {
                       ...r,
@@ -10096,7 +10260,7 @@ function ByProductCombinedScreen({
                     position: "sticky",
                     top: 0,
                     zIndex: 10,
-                    background: "#F1F7F4",
+                    background: "transparent",
                   }}
                 >
                   <div
@@ -10238,6 +10402,11 @@ function ByProductCombinedScreen({
                             return (
                               <RateCard
                                 r={{ ...r, byproduct: bp }}
+                                provinceBg={
+                                  isAllPakistan
+                                    ? (PROVINCE_CARD_BG[r.province] || undefined)
+                                    : undefined
+                                }
                                 dateText={isToday ? "TODAY" : dDisplay}
                                 isToday={isToday}
                                 isFavorite={isPickedBP(cardBaseItem)}
@@ -10341,6 +10510,11 @@ function ByProductCombinedScreen({
           selected={selectedLocs}
           onApply={(locs) => {
             setSelectedLocs(locs);
+            if (locs.length === 1 && onSelectLocation) {
+              onSelectLocation(locs[0]);
+            } else if (locs.length === 0 && onSelectLocation) {
+              onSelectLocation({ kind: "pakistan", label: "All Pakistan" });
+            }
             setLocSheet(false);
             if (voiceEnabled) {
               if (locs.length === 0 || locs.some((l) => l.kind === "pakistan")) {
@@ -11572,6 +11746,7 @@ function RateCard({
   isToday = true,
   isFavorite = false,
   onToggleFavorite,
+  provinceBg,
 }: {
   r: RichRow;
   onClick: () => void;
@@ -11581,6 +11756,7 @@ function RateCard({
   isToday?: boolean;
   isFavorite?: boolean;
   onToggleFavorite?: () => void;
+  provinceBg?: string;
 }) {
   const { lang, tc: tcL, tm: tmL, tr: trL } = useLang();
   const vKey =
@@ -11619,17 +11795,38 @@ function RateCard({
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(e) => e.key === "Enter" && onClick()}
-      className="card-mobile-interactive tap-target w-full rounded-2xl cursor-pointer flex flex-col justify-between transition-transform duration-150 active:scale-[0.98]"
+      className="card-mobile-interactive tap-target w-full rounded-2xl cursor-pointer flex flex-col justify-between transition-transform duration-150 active:scale-[0.98] relative overflow-hidden"
       style={{
-        background: "#FFFFFF",
-        border: "1px solid #E5EBE8",
-        boxShadow: "0 4px 18px rgba(0,0,0,0.05)",
+        background: provinceBg ? "rgba(255, 255, 255, 0.88)" : "rgba(255, 255, 255, 0.22)",
+        backdropFilter: provinceBg ? "blur(8px)" : "blur(4px)",
+        WebkitBackdropFilter: provinceBg ? "blur(8px)" : "blur(4px)",
+        border: provinceBg
+          ? "1.5px solid rgba(255, 255, 255, 0.9)"
+          : "1.8px solid rgba(8, 127, 99, 0.40)",
+        boxShadow: provinceBg
+          ? "0 4px 18px rgba(0,0,0,0.06)"
+          : "0 8px 24px rgba(6, 77, 64, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.85)",
         padding: "12px 10px 10px",
         minHeight: 254,
       }}
     >
+      {/* Province Background Motif (All Pakistan Mode - Specific Card Design) */}
+      {provinceBg && (
+        <div
+          className="absolute inset-0 pointer-events-none rounded-2xl overflow-hidden"
+          style={{
+            zIndex: 0,
+            backgroundImage: `url(${provinceBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            opacity: 0.65,
+          }}
+        />
+      )}
+
       {/* Top Row: Favorite Heart Button on Right */}
-      <div className="flex items-center justify-end w-full">
+      <div className="flex items-center justify-end w-full relative z-1">
 
         <button
           type="button"
@@ -11664,7 +11861,7 @@ function RateCard({
       </div>
 
       {/* Center: 3D Product Icon & Titles */}
-      <div className="flex flex-col items-center justify-center my-1">
+      <div className="flex flex-col items-center justify-center my-1 relative z-1">
         <div className="flex items-center justify-center py-0.5">
           <ProductIcon
             name={r.byproduct || vKey}
@@ -11690,7 +11887,13 @@ function RateCard({
 
       {/* Prices: Clean Side-by-Side with Price on Top (in 1 line) and Min/Max Label Below */}
       <div
-        className="flex items-center justify-between px-2 py-1.5 rounded-xl my-1 w-full bg-white"
+        className="flex items-center justify-between px-2 py-1.5 rounded-xl my-1 w-full relative z-1"
+        style={{
+          background: provinceBg ? "rgba(255, 255, 255, 0.88)" : "rgba(255, 255, 255, 0.38)",
+          border: provinceBg ? "1px solid rgba(229, 235, 232, 0.8)" : "1px solid rgba(255, 255, 255, 0.60)",
+          backdropFilter: "blur(4px)",
+          WebkitBackdropFilter: "blur(4px)",
+        }}
       >
         {/* Min */}
         <div className="flex flex-col items-start flex-1 min-w-0">
@@ -11748,16 +11951,21 @@ function RateCard({
       </div>
 
       {/* Bottom Action Row: Vector Icon Pill on Left + Speaker Button on Right */}
-      <div className="flex items-center gap-1.5 w-full pt-1">
+      <div className="flex items-center gap-1.5 w-full pt-1 relative z-1">
         {/* Rate Type Action Pill */}
         <div
-          className="flex-1 flex items-center justify-between rounded-xl py-1.5 px-2.5 min-w-0 bg-[#EAF8F2] border border-[#C7E8D8] text-[#0F8A5F] shadow-sm"
+          className="flex-1 flex items-center justify-between rounded-xl py-1.5 px-2.5 min-w-0 shadow-sm"
+          style={{
+            background: provinceBg ? "#EAF8F2" : "rgba(255, 255, 255, 0.45)",
+            border: provinceBg ? "1px solid #C7E8D8" : "1px solid rgba(255, 255, 255, 0.65)",
+            color: "#0F8A5F",
+          }}
         >
           <div className="flex items-center gap-1.5 truncate">
             <span className="flex-shrink-0 text-[#0F8A5F]">
               {getRateTypeIcon(r.rateType)}
             </span>
-            <span className="text-xs font-bold truncate">
+            <span className="text-xs font-bold truncate text-[#0F8A5F]">
               {rateTypeFormatted}
             </span>
           </div>
@@ -11780,7 +11988,12 @@ function RateCard({
         <button
           type="button"
           onClick={handleSpeakRate}
-          className="tap-target flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition active:scale-90 bg-[#EAF8F2] border border-[#C7E8D8] text-[#0F8A5F] shadow-sm hover:scale-105"
+          className="tap-target flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition active:scale-90 shadow-sm hover:scale-105"
+          style={{
+            background: provinceBg ? "#EAF8F2" : "rgba(255, 255, 255, 0.45)",
+            border: provinceBg ? "1px solid #C7E8D8" : "1px solid rgba(255, 255, 255, 0.65)",
+            color: "#0F8A5F",
+          }}
           title={lang === "ur" ? "ریٹ سنیں (آواز)" : "Listen to rate"}
         >
           <svg
@@ -22882,6 +23095,7 @@ function HomeScreen({
     setLang,
     t,
     tc,
+    tm,
     voiceEnabled: homeVoiceEnabled,
     setVoiceEnabled: homeSetVoiceEnabled,
   } = useLang();
@@ -29880,6 +30094,7 @@ function AppInner({
               togglePickBP={togglePickBP}
               locationScope={locationScope}
               onOpenLocation={() => setLocSheet(true)}
+              onSelectLocation={(s) => setLocationScope(s)}
               profileCompleted={profileCompleted}
               onOpenSubscribe={() => setCompleteProfileOpen(true)}
             />
