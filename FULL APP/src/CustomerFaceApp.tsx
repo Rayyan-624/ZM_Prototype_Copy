@@ -1755,10 +1755,10 @@ const PROVINCE_BG: Record<string, string> = {
 };
 
 const PROVINCE_CARD_BG: Record<string, string> = {
-  Punjab: "/assets/backgrounds/card_bg_punjab.jpg",
+  Punjab: "/assets/backgrounds/card_bg_punjab.png",
   Sindh: "/assets/backgrounds/card_bg_sindh.jpg",
-  KPK: "/assets/backgrounds/card_bg_kpk.jpg",
-  Balochistan: "/assets/backgrounds/card_bg_balochistan.jpg",
+  KPK: "/assets/backgrounds/card_bg_kpk.png",
+  Balochistan: "/assets/backgrounds/card_bg_balochistan.png",
 };
 
 function getProvinceFromLoc(loc?: { kind: LocationScope["kind"]; label: string }): string | null {
@@ -9882,8 +9882,8 @@ function ByProductCombinedScreen({
   const locLabel =
     selectedLocs.length === 0
       ? (locationScope && locationScope.kind !== "pakistan"
-          ? tmL(locationScope.label)
-          : (lang === "ur" ? "پاکستان" : "Pakistan"))
+        ? tmL(locationScope.label)
+        : (lang === "ur" ? "پاکستان" : "Pakistan"))
       : selectedLocs.length === 1
         ? tmL(selectedLocs[0].label)
         : lang === "ur"
