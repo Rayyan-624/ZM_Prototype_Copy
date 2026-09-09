@@ -1,4 +1,4 @@
-import {
+import React, {
   useState,
   useRef,
   useEffect,
@@ -6,6 +6,7 @@ import {
   useMemo,
   createContext,
   useContext,
+  Fragment,
 } from "react";
 import {
   widthPercentageToDP as wp,
@@ -13076,6 +13077,14 @@ function ProductRatesScreen({
   const [graphTimeframe, setGraphTimeframe] = useState<
     "24h" | "72h" | "7d" | "30d"
   >("24h");
+  const tableScrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (selectedMandiGraphRow && tableScrollRef.current) {
+      tableScrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+    }
+  }, [selectedMandiGraphRow]);
+
   // Date table + its filters
   const [dateTableOpen, setDateTableOpen] = useState(false);
   const [dtSelDate, setDtSelDate] = useState<Date>(new Date());
@@ -15127,6 +15136,7 @@ function ProductRatesScreen({
 
                     {/* Horizontally and vertically scrollable table container with visible scrollbars */}
                     <div
+                      ref={tableScrollRef}
                       className="flex-1 min-h-0 w-full overflow-x-auto overflow-y-auto zm-table-scroll-container"
                       style={{
                         maxHeight: isTableExpanded ? "calc(75vh - 110px)" : 240,
@@ -15757,11 +15767,12 @@ function ProductRatesScreen({
                                         <div
                                           style={{
                                             position: "sticky",
-                                            left: 0,
-                                            width: "100%",
-                                            maxWidth: "min(100vw - 32px, 440px)",
+                                            left: 6,
+                                            width: "calc(min(100vw, 448px) - 16px)",
+                                            maxWidth: "calc(100vw - 16px)",
+                                            boxSizing: "border-box",
                                           }}
-                                          className="mx-auto bg-white rounded-2xl border border-[#D5E2DD] p-3 shadow-md flex flex-col gap-2 animate-in fade-in slide-in-from-top-1 duration-200"
+                                          className="bg-white rounded-2xl border border-[#D5E2DD] p-3 shadow-md flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-1 duration-200"
                                         >
                                           {/* 1. Header: Dot + Mandi Title + RateType Badge + Close Graph 'X' */}
                                           <div className="flex items-center justify-between">
@@ -15915,10 +15926,10 @@ function ProductRatesScreen({
                                               graphTimeframe,
                                               lang,
                                             );
-                                            const W = 320;
+                                            const W = 350;
                                             const H = 115;
-                                            const xLeft = 36;
-                                            const xRight = 304;
+                                            const xLeft = 34;
+                                            const xRight = 334;
                                             const yTop = 12;
                                             const yBottom = 84;
 
