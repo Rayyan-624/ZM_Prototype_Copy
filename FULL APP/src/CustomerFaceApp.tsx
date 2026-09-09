@@ -58,6 +58,36 @@ const ZM_THEME_CSS = `
     font-style: normal;
     font-display: swap;
   }
+  /* Explicitly Visible Scrollbars for Horizontal & Vertical Table Navigation */
+  .zm-table-scroll-container {
+    scrollbar-width: thin !important;
+    scrollbar-color: #087F63 #E4F2EC !important;
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+  }
+  .zm-table-scroll-container::-webkit-scrollbar {
+    width: 7px !important;
+    height: 7px !important;
+    display: block !important;
+    -webkit-appearance: none !important;
+  }
+  .zm-table-scroll-container::-webkit-scrollbar-track {
+    background: #EAF5F0 !important;
+    border-radius: 6px !important;
+    border: 1px solid #D5E2DD !important;
+  }
+  .zm-table-scroll-container::-webkit-scrollbar-thumb {
+    background: #087F63 !important;
+    border-radius: 6px !important;
+    border: 1px solid #055C48 !important;
+  }
+  .zm-table-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #064D40 !important;
+  }
+  .zm-table-scroll-container::-webkit-scrollbar-corner {
+    background: #EAF5F0 !important;
+  }
   :root {
     --zm-deep: #064D40;
     --zm-primary: #087F63;
@@ -373,8 +403,9 @@ const AUTO_URDU_DICT: Record<string, string> = {
   "Price Types": "نرخ کی اقسام",
   VARIETY: "قسم",
   Variety: "قسم",
-  "NEW/OLD": "نیا / پرانا",
-  "New / Old": "نیا / پرانا",
+  "NEW/OLD": "معیار",
+  "New / Old": "معیار",
+  "New/Old": "معیار",
   New: "نیا",
   Old: "پرانا",
   COLOR: "رنگ",
@@ -9761,7 +9792,7 @@ function ByProductCombinedScreen({
 
           {/* Right: Combined Date Capsule (Gregorian + Lunar in 1 pill) + Location selector */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
-            {/* Combined Date Capsule (Text Only with Hyphen, No Icons) */}
+            {/* Combined Date Capsule (2 Columns: Gregorian & Islamic) */}
             <div
               role="button"
               tabIndex={0}
@@ -9774,41 +9805,63 @@ function ByProductCombinedScreen({
                   );
                 }
               }}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EAF5F0] border border-[#C7E8D8] text-[#075E4F] flex-shrink-0 cursor-pointer active:scale-95 transition shadow-xs"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#EAF5F0] border border-[#C7E8D8] text-[#075E4F] flex-shrink-0 cursor-pointer active:scale-95 transition shadow-xs select-none"
+              style={{ minHeight: "34px" }}
               title={lang === "ur" ? "شمسی و قمری تاریخ" : "Gregorian & Lunar Date"}
             >
-              {/* Gregorian Date */}
-              <span
-                className="text-[11px] font-black text-[#075E4F] whitespace-nowrap leading-none"
-                style={{
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                      : "inherit",
-                }}
-              >
-                {lang === "ur"
-                  ? `${visibleDateLabel.d} ${visibleDateLabel.month.toUpperCase() === "AUG" ? "اگست" : visibleDateLabel.month}`
-                  : `${visibleDateLabel.d} ${visibleDateLabel.month === "AUG" ? "Aug" : visibleDateLabel.month}`}
-              </span>
+              {/* Left Column: Gregorian Month over Day */}
+              <div className="flex flex-col items-center justify-center leading-none">
+                <span
+                  className="text-[10px] font-black text-[#075E4F] whitespace-nowrap"
+                  style={{
+                    fontFamily:
+                      lang === "ur"
+                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        : "inherit",
+                  }}
+                >
+                  {lang === "ur"
+                    ? (visibleDateLabel.month.toUpperCase() === "AUG" ? "اگست" : visibleDateLabel.month)
+                    : (visibleDateLabel.month === "AUG" ? "Aug" : visibleDateLabel.month)}
+                </span>
+                <span className="text-[10px] font-black text-[#075E4F] whitespace-nowrap mt-1">
+                  {visibleDateLabel.d}
+                </span>
+              </div>
 
-              {/* Hyphen */}
-              <span className="text-[#087F63] font-black text-xs leading-none">-</span>
+              {/* Hyphen Separator */}
+              <span className="text-[#087F63] font-bold text-xs leading-none opacity-50 px-0.5">-</span>
 
-              {/* Islamic Date & Hijri Year */}
-              <span
-                className="text-[11px] font-extrabold text-[#087F63] whitespace-nowrap leading-none"
-                style={{
-                  fontFamily:
-                    lang === "ur"
-                      ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
-                      : "inherit",
-                }}
+              {/* Right Column: Islamic Date over Hijri Year */}
+              <div
+                className="flex flex-col justify-center leading-none"
+                style={{ alignItems: lang === "ur" ? "flex-end" : "flex-start" }}
               >
-                {lang === "ur"
-                  ? `${String(islamicDate.day).padStart(2, "0")} ${islamicDate.monthName ? islamicDate.monthName : "ربیع الاول"} 1448ھ`
-                  : `${String(islamicDate.day).padStart(2, "0")} ${islamicDate.monthName && islamicDate.monthName !== "ربیع الاول" ? islamicDate.monthName : "Rabi ul Awwal"} 1448 AH`}
-              </span>
+                <span
+                  className="text-[10.5px] font-extrabold text-[#087F63] whitespace-nowrap"
+                  style={{
+                    fontFamily:
+                      lang === "ur"
+                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        : "inherit",
+                  }}
+                >
+                  {lang === "ur"
+                    ? `${String(islamicDate.day).padStart(2, "0")} ${islamicDate.monthName ? islamicDate.monthName : "ربیع الاول"}`
+                    : `${String(islamicDate.day).padStart(2, "0")} ${islamicDate.monthName && islamicDate.monthName !== "ربیع الاول" ? islamicDate.monthName : "Rabi ul Awwal"}`}
+                </span>
+                <span
+                  className="text-[9.5px] font-bold text-[#087F63] whitespace-nowrap mt-1"
+                  style={{
+                    fontFamily:
+                      lang === "ur"
+                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        : "inherit",
+                  }}
+                >
+                  {lang === "ur" ? "1448ھ" : "1448 AH"}
+                </span>
+              </div>
             </div>
 
             {/* Location selector button */}
@@ -14478,7 +14531,7 @@ function ProductRatesScreen({
                           </div>
                         </button>
 
-                        {/* 5. NEW/OLD */}
+                        {/* 5. QUALITY (NEW / OLD) */}
                         <button
                           onClick={() => setAttrSheet("newold")}
                           className="tap-target flex items-center gap-1.5 text-left transition active:scale-[0.98] group w-full py-0.5"
@@ -14502,7 +14555,7 @@ function ProductRatesScreen({
                                     : "inherit",
                               }}
                             >
-                              {lang === "ur" ? "نیا / پرانا" : "New/Old"}
+                              {lang === "ur" ? "معیار" : "Quality"}
                             </span>
                             <div className="flex items-center justify-between gap-1 mt-0.5">
                               <span
@@ -14514,7 +14567,7 @@ function ProductRatesScreen({
                                       : "inherit",
                                 }}
                               >
-                                {attrNewOld ? t(attrNewOld) : "New"}
+                                {attrNewOld ? t(attrNewOld) : (lang === "ur" ? "نیا" : "New")}
                               </span>
                               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#EA580C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
                                 <polyline points="6 9 12 15 18 9" />
@@ -15058,163 +15111,19 @@ function ProductRatesScreen({
                       </div>
                     )}
 
-                    {/* Column header row */}
+                    {/* Horizontally and vertically scrollable table container with visible scrollbars */}
                     <div
-                      className="px-3 py-2"
+                      className="flex-1 min-h-0 w-full overflow-x-auto overflow-y-auto zm-table-scroll-container"
                       style={{
-                        display: "grid",
-                        gridTemplateColumns: "1.35fr 1.15fr 1.15fr 0.75fr 0.95fr",
-                        columnGap: 8,
-                        borderBottom: "1px solid #E8EFEC",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span
-                        className="font-extrabold uppercase tracking-wide"
-                        style={{
-                          color: "#80918B",
-                          fontSize: lang === "ur" ? 13 : 9,
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                          textAlign: lang === "ur" ? "right" : "left",
-                        }}
-                      >
-                        {lang === "ur" ? "منڈی" : "Mandi"}
-                      </span>
-                      <span
-                        className="font-extrabold uppercase tracking-wide text-right"
-                        style={{
-                          color: "#80918B",
-                          fontSize: lang === "ur" ? 13 : 9,
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {lang === "ur" ? "کم سے کم" : "Min"}
-                      </span>
-                      <span
-                        className="font-extrabold uppercase tracking-wide text-right"
-                        style={{
-                          color: "#80918B",
-                          fontSize: lang === "ur" ? 13 : 9,
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {lang === "ur" ? "زیادہ سے زیادہ" : "Max"}
-                      </span>
-                      <span
-                        className="font-extrabold uppercase tracking-wide text-center"
-                        style={{
-                          color: "#80918B",
-                          fontSize: lang === "ur" ? 13 : 9,
-                          fontFamily:
-                            lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                              : "inherit",
-                        }}
-                      >
-                        {lang === "ur" ? "قسم" : "Type"}
-                      </span>
-                      <div className="relative text-right flex justify-end items-center">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setTrendDropdownOpen(!trendDropdownOpen);
-                          }}
-                          className="tap-target inline-flex items-center gap-1 font-extrabold uppercase tracking-wide px-1.5 py-0.5 rounded-md hover:bg-[#E4F2EC] transition"
-                          style={{
-                            color: "#087F63",
-                            fontSize: lang === "ur" ? 13 : 9,
-                            fontFamily:
-                              lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                : "inherit",
-                          }}
-                          title={lang === "ur" ? "رجحان کا دورانیہ منتخب کریں" : "Select trend duration"}
-                        >
-                          <span>
-                            {lang === "ur"
-                              ? `رجحان (${tableTrendInterval === "24h" ? "24گھنٹے" : tableTrendInterval === "72h" ? "72گھنٹے" : tableTrendInterval === "weekly" ? "ہفتہ وار" : "ماہانہ"})`
-                              : `Trend (${tableTrendInterval === "24h" ? "24H" : tableTrendInterval === "72h" ? "72H" : tableTrendInterval === "weekly" ? "7D" : "30D"})`}
-                          </span>
-                          <span className="text-[10px] text-[#087F63]">▾</span>
-                        </button>
-
-                        {/* Elevated Dropdown Menu for Trend Interval */}
-                        {trendDropdownOpen && (
-                          <>
-                            <div
-                              className="fixed inset-0 z-40"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setTrendDropdownOpen(false);
-                              }}
-                            />
-                            <div
-                              className="absolute right-0 top-full mt-1 z-50 bg-white rounded-xl shadow-2xl border border-[#C7E8D8] py-1 min-w-[140px] text-left"
-                              style={{
-                                direction: lang === "ur" ? "rtl" : "ltr",
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <div className="px-3 py-1 text-[10px] font-bold text-[#80918B] border-b border-[#E8EFEC] uppercase tracking-wider">
-                                {lang === "ur" ? "دورانیہ منتخب کریں" : "Select Interval"}
-                              </div>
-                              {[
-                                { id: "24h", labelUr: "24 گھنٹے (24h)", labelEn: "24 Hours (24h)" },
-                                { id: "72h", labelUr: "72 گھنٹے (72h)", labelEn: "72 Hours (72h)" },
-                                { id: "weekly", labelUr: "ہفتہ وار (7 دن)", labelEn: "Weekly (7 Days)" },
-                                { id: "monthly", labelUr: "ماہانہ (30 دن)", labelEn: "Monthly (30 Days)" },
-                              ].map((opt) => (
-                                <button
-                                  key={opt.id}
-                                  type="button"
-                                  onClick={() => {
-                                    setTableTrendInterval(opt.id as any);
-                                    setTrendDropdownOpen(false);
-                                  }}
-                                  className="w-full px-3 py-2 text-xs font-bold flex items-center justify-between hover:bg-[#E8F5EF] transition text-left"
-                                  style={{
-                                    color: tableTrendInterval === opt.id ? "#087F63" : "#183B34",
-                                    background: tableTrendInterval === opt.id ? "#F0F9F5" : "transparent",
-                                    fontFamily:
-                                      lang === "ur"
-                                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                        : "inherit",
-                                  }}
-                                >
-                                  <span>{lang === "ur" ? opt.labelUr : opt.labelEn}</span>
-                                  {tableTrendInterval === opt.id && (
-                                    <span className="text-[#087F63] font-black text-xs">✓</span>
-                                  )}
-                                </button>
-                              ))}
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    {/* Scrollable table body — keeps the deep-view card compact & scrollable through all mandis */}
-                    <div
-                      className="flex flex-col overflow-y-auto"
-                      style={{
-                        maxHeight: isTableExpanded ? "calc(75vh - 160px)" : 220,
-                        flex: isTableExpanded ? "1 1 auto" : "none",
+                        maxHeight: isTableExpanded ? "calc(75vh - 110px)" : 240,
                         overscrollBehavior: "contain",
                         WebkitOverflowScrolling: "touch",
                         scrollbarWidth: "thin",
-                        scrollbarColor: "#A9CFC2 transparent",
+                        scrollbarColor: "#087F63 #E4F2EC",
+                        paddingBottom: isTableExpanded ? 16 : 4,
                       }}
                     >
-                      {tableRows.length === 0 && (
+                      {tableRows.length === 0 ? (
                         <div className="flex items-center justify-center py-8 opacity-50">
                           <p
                             className="font-semibold"
@@ -15231,152 +15140,585 @@ function ProductRatesScreen({
                               : `No mandi data${tableProvinceFilter ? ` in ${tableProvinceFilter}` : ""}`}
                           </p>
                         </div>
-                      )}
-                      {tableRows.map((r, ci) => {
-                        const trendArrow =
-                          r.trend === "up" ? "▲" : r.trend === "down" ? "▼" : "—";
-                        const trendColor =
-                          r.trend === "up"
-                            ? "#16A34A"
-                            : r.trend === "down"
-                              ? "#C94A43"
-                              : "#52635F";
-                        const rtColor = RATE_COLORS[r.rateType] || "#52635F";
-                        const isRowModalActive =
-                          selectedMandiGraphRow?.mandiName === r.mandiName &&
-                          selectedMandiGraphRow?.rateType === r.rateType;
-                        const isSelected =
-                          (locScope.kind === "mandi" &&
-                            locScope.label === r.mandiName) ||
-                          isRowModalActive;
-                        // Each row uses ITS OWN canonical attrs so prices match the byproduct list cards
-                        const rowCanon = getMandiCanonicalAttrs(r.mandiName);
-                        const rowAttrMult = computeAttrMult(
-                          rowCanon.variety,
-                          rowCanon.color,
-                          rowCanon.newOld,
-                          rowCanon.spec,
-                          rowCanon.condition,
-                        );
-                        const effMult = rowAttrMult * tableDateVariation;
-                        const intervalPct =
-                          tableTrendInterval === "72h"
-                            ? Math.round(r.trendPct * 2.2 * 10) / 10
-                            : tableTrendInterval === "weekly"
-                              ? Math.round(r.trendPct * 3.1 * 10) / 10
-                              : tableTrendInterval === "monthly"
-                                ? Math.round(r.trendPct * 5.4 * 10) / 10
-                                : r.trendPct;
-                        return (
-                          <button
-                            key={`${r.mandiName}-${r.rateType}-${ci}`}
-                            onClick={() => {
-                              setSelectedMandiGraphRow({
-                                mandiName: r.mandiName,
-                                rateType: r.rateType,
-                                min: Math.round(r.min * effMult),
-                                max: Math.round(r.max * effMult),
-                                trend: r.trend as any,
-                                trendPct: intervalPct,
-                              });
-                            }}
+                      ) : (
+                        <table
+                          style={{
+                            width: "100%",
+                            minWidth: "740px",
+                            borderCollapse: "separate",
+                            borderSpacing: 0,
+                            fontSize: lang === "ur" ? 12 : 11,
+                          }}
+                        >
+                          <thead
                             style={{
-                              display: "grid",
-                              gridTemplateColumns:
-                                "1.35fr 1.15fr 1.15fr 0.75fr 0.95fr",
-                              columnGap: 8,
-                              padding: "10px 12px",
-                              borderBottom:
-                                ci < tableRows.length - 1
-                                  ? "1px solid #F2F7F5"
-                                  : "none",
-                              background: isRowModalActive
-                                ? "#E4F2EC"
-                                : isSelected
-                                  ? "#E4F2EC"
-                                  : "transparent",
-                              boxShadow: isRowModalActive
-                                ? "inset 0 0 0 1.5px #087F63"
-                                : "none",
-                              borderRadius: isRowModalActive ? 10 : 0,
-                              alignItems: "center",
-                              textAlign: lang === "ur" ? "right" : "left",
-                              width: "100%",
-                              cursor: "pointer",
+                              position: "sticky",
+                              top: 0,
+                              zIndex: 20,
+                              background: "#F1F7F4",
                             }}
                           >
-                            <span
-                              className="font-semibold truncate"
-                              style={{
-                                color: "#183B34",
-                                fontSize: lang === "ur" ? 15 : 12,
-                                fontFamily:
-                                  lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                    : "inherit",
-                              }}
-                            >
-                              {tm(r.mandiName.replace(" Mandi", ""))}
-                            </span>
-                            <span
-                              className="text-xs font-bold"
-                              style={{
-                                color: "#52635F",
-                                textAlign: "right",
-                                fontSize: lang === "ur" ? 13 : 11.5,
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              {fmt(Math.round(r.min * effMult))}
-                            </span>
-                            <span
-                              className="text-xs font-extrabold"
-                              style={{
-                                color: "#087F63",
-                                textAlign: "right",
-                                fontSize: lang === "ur" ? 13 : 11.5,
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              {fmt(Math.round(r.max * effMult))}
-                            </span>
-                            <span
-                              className="font-bold px-1.5 py-0.5 rounded-full"
-                              style={{
-                                background: rtColor + "22",
-                                color: rtColor,
-                                whiteSpace: "nowrap",
-                                textAlign: "center",
-                                justifySelf: "center",
-                                fontSize: lang === "ur" ? 12 : 9,
-                                fontFamily:
-                                  lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                    : "inherit",
-                              }}
-                            >
-                              {tr(r.rateType)
-                                .replace(" ریٹ", "")
-                                .replace(" Rate", "")}
-                            </span>
-                            <span
-                              className="text-xs font-bold"
-                              style={{
-                                color: trendColor,
-                                textAlign: "right",
-                                whiteSpace: "nowrap",
-                                display: "inline-flex",
-                                alignItems: "center",
-                                justifyContent: "flex-end",
-                                gap: 2,
-                              }}
-                            >
-                              <span>{trendArrow}</span>
-                              {intervalPct > 0 && <span>{intervalPct}%</span>}
-                            </span>
-                          </button>
-                        );
-                      })}
+                            <tr style={{ borderBottom: "1.5px solid #D5E2DD" }}>
+                              {/* 1. Station (Sticky Left Column) */}
+                              <th
+                                style={{
+                                  position: "sticky",
+                                  left: 0,
+                                  zIndex: 25,
+                                  background: "#F1F7F4",
+                                  padding: "7px 6px",
+                                  textAlign: lang === "ur" ? "right" : "left",
+                                  fontWeight: 800,
+                                  fontSize: lang === "ur" ? 13 : 10,
+                                  color: "#80918B",
+                                  textTransform: "uppercase",
+                                  letterSpacing: "0.03em",
+                                  borderBottom: "1.5px solid #D5E2DD",
+                                  borderRight: "1px solid #D5E2DD",
+                                  minWidth: 84,
+                                  maxWidth: 90,
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {lang === "ur" ? "منڈی" : "Station"}
+                              </th>
+
+                              {/* 2. Min – Max */}
+                              <th
+                                style={{
+                                  padding: "7px 4px",
+                                  textAlign: "center",
+                                  fontWeight: 800,
+                                  fontSize: lang === "ur" ? 13 : 10,
+                                  color: "#80918B",
+                                  textTransform: "uppercase",
+                                  borderBottom: "1.5px solid #D5E2DD",
+                                  minWidth: 96,
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {lang === "ur" ? "کم – زیادہ" : "Min – Max"}
+                              </th>
+
+                              {/* 3. Price Type */}
+                              <th
+                                style={{
+                                  padding: "7px 2px",
+                                  textAlign: "center",
+                                  fontWeight: 800,
+                                  fontSize: lang === "ur" ? 13 : 9.5,
+                                  color: "#80918B",
+                                  textTransform: "uppercase",
+                                  borderBottom: "1.5px solid #D5E2DD",
+                                  minWidth: 54,
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {lang === "ur" ? "قسم" : "Price Type"}
+                              </th>
+
+                              {/* 4. Trend (with Interval dropdown) */}
+                              <th
+                                style={{
+                                  padding: "7px 4px",
+                                  textAlign: "center",
+                                  fontWeight: 800,
+                                  fontSize: lang === "ur" ? 13 : 9.5,
+                                  color: "#80918B",
+                                  textTransform: "uppercase",
+                                  borderBottom: "1.5px solid #D5E2DD",
+                                  minWidth: 68,
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                <div className="relative inline-flex items-center justify-center">
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setTrendDropdownOpen(!trendDropdownOpen);
+                                    }}
+                                    className="tap-target inline-flex items-center gap-0.5 font-extrabold uppercase tracking-wide px-1 py-0.5 rounded-md hover:bg-[#E4F2EC] transition"
+                                    style={{
+                                      color: "#087F63",
+                                      fontSize: lang === "ur" ? 12 : 9,
+                                      fontFamily:
+                                        lang === "ur"
+                                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                          : "inherit",
+                                    }}
+                                    title={lang === "ur" ? "رجحان کا دورانیہ منتخب کریں" : "Select trend duration"}
+                                  >
+                                    <span>
+                                      {lang === "ur"
+                                        ? `رجحان (${tableTrendInterval === "24h" ? "24گھنٹے" : tableTrendInterval === "72h" ? "72گھنٹے" : tableTrendInterval === "weekly" ? "ہفتہ وار" : "ماہانہ"})`
+                                        : `Trend (${tableTrendInterval === "24h" ? "24H" : tableTrendInterval === "72h" ? "72H" : tableTrendInterval === "weekly" ? "7D" : "30D"})`}
+                                    </span>
+                                    <span className="text-[9px] text-[#087F63]">▾</span>
+                                  </button>
+
+                                  {/* Dropdown Menu for Trend Interval */}
+                                  {trendDropdownOpen && (
+                                    <>
+                                      <div
+                                        className="fixed inset-0 z-40"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setTrendDropdownOpen(false);
+                                        }}
+                                      />
+                                      <div
+                                        className="absolute right-0 top-full mt-1 z-50 bg-white rounded-xl shadow-2xl border border-[#C7E8D8] py-1 min-w-[140px] text-left"
+                                        style={{
+                                          direction: lang === "ur" ? "rtl" : "ltr",
+                                        }}
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        <div className="px-3 py-1 text-[10px] font-bold text-[#80918B] border-b border-[#E8EFEC] uppercase tracking-wider">
+                                          {lang === "ur" ? "دورانیہ منتخب کریں" : "Select Interval"}
+                                        </div>
+                                        {[
+                                          { id: "24h", labelUr: "24 گھنٹے (24h)", labelEn: "24 Hours (24h)" },
+                                          { id: "72h", labelUr: "72 گھنٹے (72h)", labelEn: "72 Hours (72h)" },
+                                          { id: "weekly", labelUr: "ہفتہ وار (7 دن)", labelEn: "Weekly (7 Days)" },
+                                          { id: "monthly", labelUr: "ماہانہ (30 دن)", labelEn: "Monthly (30 Days)" },
+                                        ].map((opt) => (
+                                          <button
+                                            key={opt.id}
+                                            type="button"
+                                            onClick={() => {
+                                              setTableTrendInterval(opt.id as any);
+                                              setTrendDropdownOpen(false);
+                                            }}
+                                            className="w-full px-3 py-2 text-xs font-bold flex items-center justify-between hover:bg-[#E8F5EF] transition text-left"
+                                            style={{
+                                              color: tableTrendInterval === opt.id ? "#087F63" : "#183B34",
+                                              background: tableTrendInterval === opt.id ? "#F0F9F5" : "transparent",
+                                              fontFamily:
+                                                lang === "ur"
+                                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                                  : "inherit",
+                                            }}
+                                          >
+                                            <span>{lang === "ur" ? opt.labelUr : opt.labelEn}</span>
+                                            {tableTrendInterval === opt.id && (
+                                              <span className="text-[#087F63] font-black text-xs">✓</span>
+                                            )}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    </>
+                                  )}
+                                </div>
+                              </th>
+
+                              {/* 5. Quality (New or Old) */}
+                              <th
+                                style={{
+                                  padding: "7px 4px",
+                                  textAlign: "center",
+                                  fontWeight: 800,
+                                  fontSize: lang === "ur" ? 13 : 10,
+                                  color: "#80918B",
+                                  textTransform: "uppercase",
+                                  borderBottom: "1.5px solid #D5E2DD",
+                                  minWidth: 64,
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {lang === "ur" ? "معیار" : "Quality"}
+                              </th>
+
+                              {/* 6. Arrival */}
+                              <th
+                                style={{
+                                  padding: "7px 4px",
+                                  textAlign: "center",
+                                  fontWeight: 800,
+                                  fontSize: lang === "ur" ? 13 : 10,
+                                  color: "#80918B",
+                                  textTransform: "uppercase",
+                                  borderBottom: "1.5px solid #D5E2DD",
+                                  minWidth: 70,
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {lang === "ur" ? "آمد" : "Arrival"}
+                              </th>
+
+                              {/* 7. Color */}
+                              <th
+                                style={{
+                                  padding: "7px 4px",
+                                  textAlign: "center",
+                                  fontWeight: 800,
+                                  fontSize: lang === "ur" ? 13 : 10,
+                                  color: "#80918B",
+                                  textTransform: "uppercase",
+                                  borderBottom: "1.5px solid #D5E2DD",
+                                  minWidth: 64,
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {lang === "ur" ? "رنگ" : "Color"}
+                              </th>
+
+                              {/* 8. Variety */}
+                              <th
+                                style={{
+                                  padding: "7px 4px",
+                                  textAlign: "center",
+                                  fontWeight: 800,
+                                  fontSize: lang === "ur" ? 13 : 10,
+                                  color: "#80918B",
+                                  textTransform: "uppercase",
+                                  borderBottom: "1.5px solid #D5E2DD",
+                                  minWidth: 74,
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {lang === "ur" ? "قسم" : "Variety"}
+                              </th>
+
+                              {/* 9. Condition */}
+                              <th
+                                style={{
+                                  padding: "7px 4px",
+                                  textAlign: "center",
+                                  fontWeight: 800,
+                                  fontSize: lang === "ur" ? 13 : 10,
+                                  color: "#80918B",
+                                  textTransform: "uppercase",
+                                  borderBottom: "1.5px solid #D5E2DD",
+                                  minWidth: 68,
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {lang === "ur" ? "حالت" : "Condition"}
+                              </th>
+
+                              {/* 10. Specification */}
+                              <th
+                                style={{
+                                  padding: "7px 4px",
+                                  textAlign: "center",
+                                  fontWeight: 800,
+                                  fontSize: lang === "ur" ? 13 : 10,
+                                  color: "#80918B",
+                                  textTransform: "uppercase",
+                                  borderBottom: "1.5px solid #D5E2DD",
+                                  minWidth: 84,
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      : "inherit",
+                                }}
+                              >
+                                {lang === "ur" ? "خصوصیت" : "Specification"}
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {tableRows.map((r, ci) => {
+                              const trendArrow =
+                                r.trend === "up" ? "▲" : r.trend === "down" ? "▼" : "—";
+                              const trendColor =
+                                r.trend === "up"
+                                  ? "#16A34A"
+                                  : r.trend === "down"
+                                    ? "#C94A43"
+                                    : "#52635F";
+                              const rtColor = RATE_COLORS[r.rateType] || "#52635F";
+                              const isRowModalActive =
+                                selectedMandiGraphRow?.mandiName === r.mandiName &&
+                                selectedMandiGraphRow?.rateType === r.rateType;
+                              const isSelected =
+                                (locScope.kind === "mandi" &&
+                                  locScope.label === r.mandiName) ||
+                                isRowModalActive;
+                              // Each row uses ITS OWN canonical attrs
+                              const rowCanon = getMandiCanonicalAttrs(r.mandiName);
+                              const rowAttrMult = computeAttrMult(
+                                rowCanon.variety,
+                                rowCanon.color,
+                                rowCanon.newOld,
+                                rowCanon.spec,
+                                rowCanon.condition,
+                              );
+                              const effMult = rowAttrMult * tableDateVariation;
+                              const intervalPct =
+                                tableTrendInterval === "72h"
+                                  ? Math.round(r.trendPct * 2.2 * 10) / 10
+                                  : tableTrendInterval === "weekly"
+                                    ? Math.round(r.trendPct * 3.1 * 10) / 10
+                                    : tableTrendInterval === "monthly"
+                                      ? Math.round(r.trendPct * 5.4 * 10) / 10
+                                      : r.trendPct;
+                              const rowBg = isRowModalActive
+                                ? "#E4F2EC"
+                                : isSelected
+                                  ? "#EAF5F0"
+                                  : ci % 2 === 0
+                                    ? "#FFFFFF"
+                                    : "#F8FCFA";
+
+                              return (
+                                <tr
+                                  key={`${r.mandiName}-${r.rateType}-${ci}`}
+                                  onClick={() => {
+                                    setSelectedMandiGraphRow({
+                                      mandiName: r.mandiName,
+                                      rateType: r.rateType,
+                                      min: Math.round(r.min * effMult),
+                                      max: Math.round(r.max * effMult),
+                                      trend: r.trend as any,
+                                      trendPct: intervalPct,
+                                    });
+                                  }}
+                                  className="cursor-pointer transition hover:bg-[#EAF5F0]"
+                                  style={{
+                                    background: rowBg,
+                                    borderBottom: "1px solid #EBF2EE",
+                                  }}
+                                >
+                                  {/* 1. Station (Sticky) */}
+                                  <td
+                                    style={{
+                                      position: "sticky",
+                                      left: 0,
+                                      zIndex: 10,
+                                      background: rowBg,
+                                      padding: "7px 6px",
+                                      fontWeight: 700,
+                                      color: "#183B34",
+                                      whiteSpace: "nowrap",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      maxWidth: 90,
+                                      borderRight: "1px solid #D5E2DD",
+                                      fontSize: lang === "ur" ? 13.5 : 11,
+                                      fontFamily:
+                                        lang === "ur"
+                                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                          : "inherit",
+                                    }}
+                                  >
+                                    {tm(r.mandiName.replace(" Mandi", ""))}
+                                  </td>
+
+                                  {/* 2. Min – Max */}
+                                  <td
+                                    style={{
+                                      padding: "7px 4px",
+                                      textAlign: "center",
+                                      whiteSpace: "nowrap",
+                                      fontWeight: 800,
+                                      color: "#087F63",
+                                      fontSize: lang === "ur" ? 12.5 : 11,
+                                    }}
+                                  >
+                                    {fmt(Math.round(r.min * effMult))} – {fmt(Math.round(r.max * effMult))}
+                                  </td>
+
+                                  {/* 3. Price Type */}
+                                  <td
+                                    style={{
+                                      padding: "7px 2px",
+                                      textAlign: "center",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    <span
+                                      className="font-bold px-1.5 py-0.5 rounded-full"
+                                      style={{
+                                        background: rtColor + "1A",
+                                        color: rtColor,
+                                        border: `1px solid ${rtColor}30`,
+                                        fontSize: lang === "ur" ? 11 : 9,
+                                        fontFamily:
+                                          lang === "ur"
+                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            : "inherit",
+                                      }}
+                                    >
+                                      {tr(r.rateType)
+                                        .replace(" ریٹ", "")
+                                        .replace(" Rate", "")}
+                                    </span>
+                                  </td>
+
+                                  {/* 4. Trend */}
+                                  <td
+                                    style={{
+                                      padding: "7px 4px",
+                                      textAlign: "center",
+                                      color: trendColor,
+                                      fontWeight: 800,
+                                      fontSize: 10.5,
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    <span>{trendArrow}</span>{" "}
+                                    {intervalPct > 0 ? `${intervalPct}%` : ""}
+                                  </td>
+
+                                  {/* 5. Quality (New or Old) */}
+                                  <td
+                                    style={{
+                                      padding: "7px 4px",
+                                      textAlign: "center",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    <span
+                                      className="px-2 py-0.5 rounded-md font-bold text-[10px]"
+                                      style={{
+                                        background: rowCanon.newOld === "New" ? "#E4F4EC" : "#FFF4E6",
+                                        color: rowCanon.newOld === "New" ? "#0A7F5A" : "#B45309",
+                                        fontFamily:
+                                          lang === "ur"
+                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            : "inherit",
+                                      }}
+                                    >
+                                      {lang === "ur"
+                                        ? rowCanon.newOld === "New"
+                                          ? "نیا"
+                                          : "پرانا"
+                                        : rowCanon.newOld}
+                                    </span>
+                                  </td>
+
+                                  {/* 6. Arrival */}
+                                  <td
+                                    style={{
+                                      padding: "7px 4px",
+                                      textAlign: "center",
+                                      color: "#2F4A43",
+                                      fontWeight: 600,
+                                      whiteSpace: "nowrap",
+                                      fontSize: lang === "ur" ? 13 : 10.5,
+                                      fontFamily:
+                                        lang === "ur"
+                                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                          : "inherit",
+                                    }}
+                                  >
+                                    {r.arrival || "450 Bags"}
+                                  </td>
+
+                                  {/* 7. Color */}
+                                  <td
+                                    style={{
+                                      padding: "7px 4px",
+                                      textAlign: "center",
+                                      color: "#2F4A43",
+                                      fontWeight: 600,
+                                      whiteSpace: "nowrap",
+                                      fontSize: lang === "ur" ? 13 : 10.5,
+                                      fontFamily:
+                                        lang === "ur"
+                                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                          : "inherit",
+                                    }}
+                                  >
+                                    {lang === "ur"
+                                      ? t(rowCanon.color) || rowCanon.color
+                                      : rowCanon.color}
+                                  </td>
+
+                                  {/* 8. Variety */}
+                                  <td
+                                    style={{
+                                      padding: "7px 4px",
+                                      textAlign: "center",
+                                      color: "#075E4F",
+                                      fontWeight: 700,
+                                      whiteSpace: "nowrap",
+                                      fontSize: lang === "ur" ? 13 : 10.5,
+                                      fontFamily:
+                                        lang === "ur"
+                                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                          : "inherit",
+                                    }}
+                                  >
+                                    {lang === "ur"
+                                      ? t(rowCanon.variety) || rowCanon.variety
+                                      : rowCanon.variety}
+                                  </td>
+
+                                  {/* 9. Condition */}
+                                  <td
+                                    style={{
+                                      padding: "7px 4px",
+                                      textAlign: "center",
+                                      color: "#2F4A43",
+                                      fontWeight: 600,
+                                      whiteSpace: "nowrap",
+                                      fontSize: lang === "ur" ? 13 : 10.5,
+                                      fontFamily:
+                                        lang === "ur"
+                                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                          : "inherit",
+                                    }}
+                                  >
+                                    {lang === "ur"
+                                      ? t(rowCanon.condition) || rowCanon.condition
+                                      : rowCanon.condition}
+                                  </td>
+
+                                  {/* 10. Specification */}
+                                  <td
+                                    style={{
+                                      padding: "7px 4px",
+                                      textAlign: "center",
+                                      color: "#2F4A43",
+                                      fontWeight: 600,
+                                      whiteSpace: "nowrap",
+                                      fontSize: lang === "ur" ? 13 : 10.5,
+                                      fontFamily:
+                                        lang === "ur"
+                                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                          : "inherit",
+                                    }}
+                                  >
+                                    {lang === "ur"
+                                      ? t(rowCanon.spec) || rowCanon.spec
+                                      : rowCanon.spec}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      )}
                     </div>
                   </div>
                 </>
@@ -15408,7 +15750,7 @@ function ProductRatesScreen({
                 const labels: Record<string, string> = {
                   variety: lang === "ur" ? "قسم منتخب کریں" : "Variety",
                   newold:
-                    lang === "ur" ? "نیا / پرانا منتخب کریں" : "New / Old",
+                    lang === "ur" ? "معیار منتخب کریں" : "Quality",
                   color: lang === "ur" ? "رنگ منتخب کریں" : "Color",
                   spec: lang === "ur" ? "خصوصیت منتخب کریں" : "Specifications",
                   condition: lang === "ur" ? "حالت منتخب کریں" : "Condition",
@@ -15733,14 +16075,15 @@ function ProductRatesScreen({
                 };
                 const colLabels: Record<string, string> = {
                   Station: lang === "ur" ? "منڈی" : "Station",
-                  Quality: lang === "ur" ? "معیار" : "Quality",
                   "Min – Max": lang === "ur" ? "کم – زیادہ" : "Min – Max",
                   "Price Type": lang === "ur" ? "نرخ کی قسم" : "Price Type",
                   Trend: lang === "ur" ? "رجحان" : "Trend",
-                  Arrivals: lang === "ur" ? "آمد" : "Arrivals",
-                  Unit: lang === "ur" ? "یونٹ" : "Unit",
-                  Specification: lang === "ur" ? "خصوصیت" : "Specification",
+                  Quality: lang === "ur" ? "معیار" : "Quality",
+                  Arrival: lang === "ur" ? "آمد" : "Arrival",
+                  Color: lang === "ur" ? "رنگ" : "Color",
+                  Variety: lang === "ur" ? "قسم" : "Variety",
                   Condition: lang === "ur" ? "حالت" : "Condition",
+                  Specification: lang === "ur" ? "خصوصیت" : "Specification",
                 };
                 const colState: Record<string, string | null> = {
                   Quality: dtQuality,
@@ -15971,9 +16314,13 @@ function ProductRatesScreen({
                         </div>
                       )}
 
-                      {/* Table with column-header dropdowns */}
+                      {/* Table with column-header dropdowns & visible scrollbars */}
                       <div
-                        className="flex-1 overflow-auto"
+                        className="flex-1 overflow-auto zm-table-scroll-container"
+                        style={{
+                          scrollbarWidth: "thin",
+                          scrollbarColor: "#087F63 #E4F2EC",
+                        }}
                         onClick={() => setDtOpenCol(null)}
                       >
                         <table
@@ -15991,14 +16338,15 @@ function ProductRatesScreen({
                             >
                               {[
                                 "Station",
-                                "Quality",
                                 "Min – Max",
                                 "Price Type",
                                 "Trend",
-                                "Arrivals",
-                                "Unit",
-                                "Specification",
+                                "Quality",
+                                "Arrival",
+                                "Color",
+                                "Variety",
                                 "Condition",
+                                "Specification",
                               ].map((col) => {
                                 const hasFilter = col in colOpts;
                                 const activeVal = colState[col];
@@ -16010,7 +16358,9 @@ function ProductRatesScreen({
                                     : activeVal
                                       ? col === "Specification" ||
                                         col === "Condition" ||
-                                        col === "Quality"
+                                        col === "Quality" ||
+                                        col === "Color" ||
+                                        col === "Variety"
                                         ? t(activeVal)
                                         : activeVal
                                       : null;
@@ -16019,14 +16369,19 @@ function ProductRatesScreen({
                                   <th
                                     key={col}
                                     style={{
-                                      padding: "7px 5px",
+                                      padding: "7px 8px",
                                       textAlign:
-                                        lang === "ur" ? "right" : "left",
+                                        col === "Station"
+                                          ? lang === "ur" ? "right" : "left"
+                                          : "center",
                                       fontWeight: 700,
                                       whiteSpace: "nowrap",
                                       borderRight:
                                         "1px solid rgba(255,255,255,0.15)",
-                                      position: "relative",
+                                      position: col === "Station" ? "sticky" : "relative",
+                                      left: col === "Station" ? 0 : "auto",
+                                      zIndex: col === "Station" ? 15 : 10,
+                                      background: "#075E4F",
                                       fontSize: lang === "ur" ? 13 : 10.5,
                                       fontFamily:
                                         lang === "ur"
@@ -16042,7 +16397,7 @@ function ProductRatesScreen({
                                             dtOpenCol === col ? null : col,
                                           );
                                         }}
-                                        className="flex items-center gap-0.5 font-bold text-white"
+                                        className="flex items-center justify-center gap-0.5 font-bold text-white mx-auto"
                                         style={{
                                           fontSize: lang === "ur" ? 13 : 10.5,
                                           fontFamily:
@@ -16176,7 +16531,7 @@ function ProductRatesScreen({
                             {filteredTableRows.length === 0 ? (
                               <tr>
                                 <td
-                                  colSpan={9}
+                                  colSpan={10}
                                   style={{
                                     padding: "24px",
                                     textAlign: "center",
@@ -16207,27 +16562,36 @@ function ProductRatesScreen({
                                     : r.trend === "down"
                                       ? "#C94A43"
                                       : "#80918B";
+                                const rowCanon = getMandiCanonicalAttrs(r.mandiName);
                                 const rowQuality =
-                                  dtQuality || attrNewOld || "New";
-                                const rowSpec = dtSpec || attrSpec || "Retail";
+                                  dtQuality || attrNewOld || rowCanon.newOld || "New";
+                                const rowSpec = dtSpec || attrSpec || rowCanon.spec || "Retail";
                                 const rowCond =
-                                  dtCondition || attrCondition || "Dry";
+                                  dtCondition || attrCondition || rowCanon.condition || "Dry";
+                                const rtColor = RATE_COLORS[r.rateType] || "#075E4F";
+                                const rowBg = i % 2 === 0 ? "#fff" : "#F1F7F4";
+
                                 return (
                                   <tr
                                     key={i}
                                     style={{
-                                      background:
-                                        i % 2 === 0 ? "#fff" : "#F1F7F4",
+                                      background: rowBg,
                                       borderBottom: "1px solid #E6EFEB",
                                     }}
                                   >
+                                    {/* 1. Station */}
                                     <td
                                       style={{
-                                        padding: "7px 5px",
+                                        position: "sticky",
+                                        left: 0,
+                                        zIndex: 5,
+                                        background: rowBg,
+                                        padding: "7px 8px",
                                         fontWeight: 700,
                                         color: "#183B34",
                                         whiteSpace: "nowrap",
                                         fontSize: lang === "ur" ? 14 : 11,
+                                        borderRight: "1px solid #D5E2DD",
                                         fontFamily:
                                           lang === "ur"
                                             ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
@@ -16236,44 +16600,34 @@ function ProductRatesScreen({
                                     >
                                       {tm(r.mandiName.replace(" Mandi", ""))}
                                     </td>
+
+                                    {/* 2. Min – Max */}
                                     <td
                                       style={{
-                                        padding: "7px 5px",
-                                        color: "#2F4A43",
-                                        fontSize: lang === "ur" ? 13 : 10.5,
-                                        fontFamily:
-                                          lang === "ur"
-                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                            : "inherit",
-                                      }}
-                                    >
-                                      {t(rowQuality)}
-                                    </td>
-                                    <td
-                                      style={{
-                                        padding: "7px 5px",
+                                        padding: "7px 8px",
                                         fontWeight: 700,
                                         color: "#075E4F",
                                         whiteSpace: "nowrap",
+                                        textAlign: "center",
                                         fontSize: lang === "ur" ? 13 : 11,
                                       }}
                                     >
                                       {fmt(r.min)} – {fmt(r.max)}
                                     </td>
+
+                                    {/* 3. Price Type */}
                                     <td
                                       style={{
-                                        padding: "7px 5px",
+                                        padding: "7px 8px",
+                                        textAlign: "center",
                                         whiteSpace: "nowrap",
                                       }}
                                     >
                                       <span
                                         className="rounded-full px-1.5 py-0.5 font-semibold"
                                         style={{
-                                          background:
-                                            (RATE_COLORS[r.rateType] ||
-                                              "#999") + "18",
-                                          color:
-                                            RATE_COLORS[r.rateType] || "#999",
+                                          background: rtColor + "18",
+                                          color: rtColor,
                                           fontSize: lang === "ur" ? 11 : 10,
                                           fontFamily:
                                             lang === "ur"
@@ -16286,31 +16640,68 @@ function ProductRatesScreen({
                                           .replace(" Rate", "")}
                                       </span>
                                     </td>
+
+                                    {/* 4. Trend */}
                                     <td
                                       style={{
-                                        padding: "7px 5px",
+                                        padding: "7px 8px",
                                         color: trendColor,
                                         fontWeight: 700,
                                         fontSize: 11,
+                                        textAlign: "center",
+                                        whiteSpace: "nowrap",
                                       }}
                                     >
                                       {trendIcon}{" "}
                                       {r.trendPct > 0 ? r.trendPct + "%" : ""}
                                     </td>
+
+                                    {/* 5. Quality (New or Old) */}
                                     <td
                                       style={{
-                                        padding: "7px 5px",
+                                        padding: "7px 8px",
+                                        textAlign: "center",
+                                        whiteSpace: "nowrap",
+                                      }}
+                                    >
+                                      <span
+                                        className="px-2 py-0.5 rounded-md font-bold text-[10px]"
+                                        style={{
+                                          background: rowQuality === "New" ? "#E4F4EC" : "#FFF4E6",
+                                          color: rowQuality === "New" ? "#0A7F5A" : "#B45309",
+                                          fontFamily:
+                                            lang === "ur"
+                                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                              : "inherit",
+                                        }}
+                                      >
+                                        {lang === "ur"
+                                          ? rowQuality === "New"
+                                            ? "نیا"
+                                            : "پرانا"
+                                          : rowQuality}
+                                      </span>
+                                    </td>
+
+                                    {/* 6. Arrival */}
+                                    <td
+                                      style={{
+                                        padding: "7px 8px",
                                         color: "#2F4A43",
+                                        textAlign: "center",
                                         whiteSpace: "nowrap",
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                       }}
                                     >
-                                      {r.arrival}
+                                      {r.arrival || "450 Bags"}
                                     </td>
+
+                                    {/* 7. Color */}
                                     <td
                                       style={{
-                                        padding: "7px 5px",
+                                        padding: "7px 8px",
                                         color: "#2F4A43",
+                                        textAlign: "center",
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
@@ -16318,12 +16709,18 @@ function ProductRatesScreen({
                                             : "inherit",
                                       }}
                                     >
-                                      {lang === "ur" ? "۴۰ کلو" : "40 kg"}
+                                      {lang === "ur"
+                                        ? t(rowCanon.color) || rowCanon.color
+                                        : rowCanon.color}
                                     </td>
+
+                                    {/* 8. Variety */}
                                     <td
                                       style={{
-                                        padding: "7px 5px",
-                                        color: "#2F4A43",
+                                        padding: "7px 8px",
+                                        color: "#075E4F",
+                                        textAlign: "center",
+                                        fontWeight: 600,
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
@@ -16331,12 +16728,17 @@ function ProductRatesScreen({
                                             : "inherit",
                                       }}
                                     >
-                                      {t(rowSpec)}
+                                      {lang === "ur"
+                                        ? t(rowCanon.variety) || rowCanon.variety
+                                        : rowCanon.variety}
                                     </td>
+
+                                    {/* 9. Condition */}
                                     <td
                                       style={{
-                                        padding: "7px 5px",
+                                        padding: "7px 8px",
                                         color: "#2F4A43",
+                                        textAlign: "center",
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
@@ -16344,7 +16746,27 @@ function ProductRatesScreen({
                                             : "inherit",
                                       }}
                                     >
-                                      {t(rowCond)}
+                                      {lang === "ur"
+                                        ? t(rowCond) || rowCond
+                                        : rowCond}
+                                    </td>
+
+                                    {/* 10. Specification */}
+                                    <td
+                                      style={{
+                                        padding: "7px 8px",
+                                        color: "#2F4A43",
+                                        textAlign: "center",
+                                        fontSize: lang === "ur" ? 13 : 10.5,
+                                        fontFamily:
+                                          lang === "ur"
+                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            : "inherit",
+                                      }}
+                                    >
+                                      {lang === "ur"
+                                        ? t(rowSpec) || rowSpec
+                                        : rowSpec}
                                     </td>
                                   </tr>
                                 );
@@ -19170,9 +19592,9 @@ interface ZaraiReel {
 }
 
 const VIDEO_MAIN_CATEGORIES = [
-  { id: "products", label: "Products", labelUrdu: "مصنوعات", icon: "🌾" },
-  { id: "general", label: "General Info", labelUrdu: "عمومی معلومات", icon: "ℹ️" },
-  { id: "harvesting", label: "Harvesting", labelUrdu: "ہارویسٹنگ", icon: "🚜" },
+  { id: "products", label: "Products", labelUrdu: "مصنوعات" },
+  { id: "general", label: "General Info", labelUrdu: "عمومی معلومات" },
+  { id: "harvesting", label: "Harvesting", labelUrdu: "ہارویسٹنگ" },
 ] as const;
 
 type VideoMainCategory = (typeof VIDEO_MAIN_CATEGORIES)[number]["id"];
@@ -20019,8 +20441,8 @@ function ZaraiReelsScreen({
                   }
                 }}
                 className={`py-1.5 px-2 rounded-xl text-xs font-bold tap-target transition-all flex items-center justify-center gap-1 ${isSelected
-                    ? "bg-[#32BA46] text-[#07332F] font-black shadow-md scale-[1.02]"
-                    : "text-white/80 hover:text-white hover:bg-white/10"
+                  ? "bg-[#32BA46] text-[#07332F] font-black shadow-md scale-[1.02]"
+                  : "text-white/80 hover:text-white hover:bg-white/10"
                   }`}
               >
                 <span className="text-xs">{cat.icon}</span>
@@ -20049,8 +20471,8 @@ function ZaraiReelsScreen({
                     }
                   }}
                   className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap tap-target transition-all flex items-center gap-1 flex-shrink-0 ${isSelected
-                      ? "bg-white text-[#07332F] font-black shadow-md scale-105"
-                      : "bg-black/55 text-white/80 backdrop-blur-md border border-white/15 hover:bg-black/75 hover:text-white"
+                    ? "bg-white text-[#07332F] font-black shadow-md scale-105"
+                    : "bg-black/55 text-white/80 backdrop-blur-md border border-white/15 hover:bg-black/75 hover:text-white"
                     }`}
                 >
                   <span>{lang === "ur" ? prod.labelUrdu : prod.label}</span>
@@ -22396,7 +22818,7 @@ function HomeScreen({
   push,
   setFeedOpen,
   pickedByproducts,
-  togglePickBP = () => {},
+  togglePickBP = () => { },
   isPickedBP = () => false,
   setPickedByproducts,
   voiceGuideActive = false,
@@ -23714,28 +24136,56 @@ function HomeScreen({
                         )}
                       </div>
 
-                      {/* Name: By-product along with Mandi Name */}
+                      {/* Name: By-product (Primary Focal Point) & Mandi Badge */}
                       <div className="mt-auto w-full px-1 flex flex-col items-center justify-center">
                         <span
                           className="text-center font-extrabold truncate w-full text-[#183B34]"
                           style={{
-                            fontSize: "clamp(12px, 1.6vh, 14.5px)",
-                            lineHeight: 1.2,
+                            fontSize: "clamp(12.5px, 1.7vh, 15px)",
+                            lineHeight: 1.25,
                             fontFamily:
                               lang === "ur"
                                 ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
                                 : "'Poppins', sans-serif",
                           }}
-                          title={
-                            lang === "ur"
-                              ? `${tc(item.byproduct)} - ${tm(cleanMandi)}`
-                              : `${item.byproduct} - ${cleanMandi}`
-                          }
+                          title={lang === "ur" ? tc(item.byproduct) : item.byproduct}
                         >
-                          {lang === "ur"
-                            ? `${tc(item.byproduct)} - ${tm(cleanMandi)}`
-                            : `${item.byproduct} - ${cleanMandi}`}
+                          {lang === "ur" ? tc(item.byproduct) : item.byproduct}
                         </span>
+
+                        {/* Mandi Location Pill Badge */}
+                        <div
+                          className="flex items-center justify-center gap-1 mt-1 px-2 py-0.5 rounded-full"
+                          style={{
+                            background: "#EAF5F0",
+                            border: "1px solid #C7E8D8",
+                            maxWidth: "100%",
+                          }}
+                          title={lang === "ur" ? tm(cleanMandi) : cleanMandi}
+                        >
+                          <svg
+                            width="9"
+                            height="9"
+                            viewBox="0 0 24 24"
+                            fill="#087F63"
+                            className="flex-shrink-0"
+                          >
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                            <circle cx="12" cy="9" r="2.5" fill="#EAF5F0" />
+                          </svg>
+                          <span
+                            className="font-bold text-[10px] text-[#075E4F] truncate"
+                            style={{
+                              lineHeight: 1.2,
+                              fontFamily:
+                                lang === "ur"
+                                  ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                                  : "inherit",
+                            }}
+                          >
+                            {lang === "ur" ? tm(cleanMandi) : cleanMandi}
+                          </span>
+                        </div>
                       </div>
                     </button>
                   );
