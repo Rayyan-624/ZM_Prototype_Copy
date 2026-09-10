@@ -899,7 +899,14 @@ let appLang: Lang = "en";
 
 function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Lang>("en");
-  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [voiceEnabled, setVoiceEnabledState] = useState(false);
+
+  const setVoiceEnabled = (v: boolean) => {
+    setVoiceEnabledState(v);
+    if (!v && typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  };
 
   const setLang = (l: Lang) => {
     setLangState(l);
@@ -9193,7 +9200,17 @@ function ProductSelectScreen({
     verticalName?: string,
   ) => {
     if (!subscribed) {
-      if (voiceEnabled) speakText(tl("voice.locked"));
+      if (voiceEnabled) {
+        speakText(lang === "ur" ? "یہ مصنوع مقفل ہے" : "This product is locked");
+        setTimeout(() => {
+          push({
+            id: "billing",
+            product: productName || speakLabel,
+            vertical: verticalName,
+          });
+        }, 450);
+        return;
+      }
       push({
         id: "billing",
         product: productName || speakLabel,
@@ -9201,7 +9218,13 @@ function ProductSelectScreen({
       });
       return;
     }
-    if (voiceEnabled) speakText(tc(speakLabel));
+    if (voiceEnabled) {
+      speakText(tc(speakLabel));
+      setTimeout(() => {
+        onSelect();
+      }, 450);
+      return;
+    }
     onSelect();
   };
 
@@ -9824,19 +9847,18 @@ function ByProductCombinedScreen({
 
   const handleCardTap = (r: RichRow, bp: string, navigateFn: () => void) => {
     if (voiceEnabled) {
-      const bpName = tcL(bp);
-      const commName = tcL(r.product);
+      const selectedItemName = bp || r.product;
+      const bpName = tcL(selectedItemName);
       const mandiName = tmL(r.mandiName);
-      const rateTypeName = trL(r.rateType);
       const text =
         lang === "ur"
-          ? r.min > 0
-            ? `${commName} ${bpName}۔ قیمت ${r.min.toLocaleString()} سے ${r.max.toLocaleString()} روپے۔ ${mandiName} میں آمد ${r.arrival}۔ ${rateTypeName}۔`
-            : `${commName} ${bpName}۔ ${mandiName} میں آج کا ڈیٹا موجود نہیں۔`
-          : r.min > 0
-            ? `${r.product} ${bp}. Rs ${r.min.toLocaleString()} to ${r.max.toLocaleString()}. ${r.arrival} arrived in ${r.mandiName}. ${r.rateType}.`
-            : `${r.product} ${bp}. No data in ${r.mandiName} today.`;
+          ? `${bpName} ${mandiName}`
+          : `${selectedItemName} ${r.mandiName}`;
       speakText(text);
+      setTimeout(() => {
+        navigateFn();
+      }, 450);
+      return;
     }
     navigateFn();
   };
@@ -10283,8 +10305,8 @@ function ByProductCombinedScreen({
                 if (voiceEnabled)
                   speakText(
                     lang === "ur"
-                      ? "تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔"
-                      : "All byproducts shown.",
+                      ? "تمام ضمنی مصنوعات"
+                      : "All byproducts",
                   );
               }}
               className="tap-target zm-beam-border flex-shrink-0 rounded-full font-bold flex items-center justify-center transition active:scale-95"
@@ -10323,11 +10345,9 @@ function ByProductCombinedScreen({
                       speakText(
                         on
                           ? lang === "ur"
-                            ? "تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔"
-                            : "All byproducts shown."
-                          : lang === "ur"
-                            ? `${tcL(bp)} کی قیمتیں دکھائی جا رہی ہیں۔`
-                            : `Prices of ${bp} are shown.`,
+                            ? "تمام ضمنی مصنوعات"
+                            : "All byproducts"
+                          : tcL(bp),
                       );
                   }}
                   className="tap-target zm-beam-border flex-shrink-0 flex items-center gap-1.5 rounded-full font-bold transition active:scale-95"
@@ -13985,7 +14005,20 @@ function ProductRatesScreen({
             </div>
           </div>
           <button
-            onClick={() => togglePickBP(pickItem)}
+            onClick={() => {
+              togglePickBP(pickItem);
+              if (voiceEnabled) {
+                speakText(
+                  picked
+                    ? lang === "ur"
+                      ? "پسندیدہ سے ہٹا دیا گیا"
+                      : "Removed from favorites"
+                    : lang === "ur"
+                      ? "پسندیدہ میں شامل کر دیا گیا"
+                      : "Added to favorites",
+                );
+              }
+            }}
             aria-label={picked ? "Remove from favorites" : "Add to favorites"}
             className="tap-target zm-beam-border w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 transition active:scale-90"
             style={{
@@ -14022,7 +14055,12 @@ function ProductRatesScreen({
           ).map(([tTab, label]) => (
             <button
               key={tTab}
-              onClick={() => setTab(tTab)}
+              onClick={() => {
+                setTab(tTab);
+                if (voiceEnabled) {
+                  speakText(label);
+                }
+              }}
               className="tap-target zm-beam-border flex-1 rounded-xl font-bold text-sm transition active:scale-95"
               style={{
                 height: lang === "ur" ? 44 : 40,
@@ -16888,24 +16926,6 @@ function ProductRatesScreen({
                                                               {arrivalData.yLabels[2].label}
                                                             </text>
 
-                                                            {/* Volume Bars */}
-                                                            {coords.map((c, i) => {
-                                                              const barW = 12;
-                                                              const barH = yBottom - c.y;
-                                                              return (
-                                                                <rect
-                                                                  key={i}
-                                                                  x={c.x - barW / 2}
-                                                                  y={c.y}
-                                                                  width={barW}
-                                                                  height={barH}
-                                                                  rx={2.5}
-                                                                  fill="#A7F3D0"
-                                                                  opacity={0.7}
-                                                                />
-                                                              );
-                                                            })}
-
                                                             {/* Area under curve */}
                                                             <path
                                                               d={areaPath}
@@ -18848,43 +18868,6 @@ function ProductRatesScreen({
                   </p>
                 </div>
                 <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-2">
-                  {/* All Pakistan option */}
-                  <button
-                    onClick={() => {
-                      setLocScope({ kind: "pakistan", label: "All Pakistan" });
-                      setLocSheet(false);
-                    }}
-                    className="tap-target flex items-center gap-3 rounded-2xl px-4"
-                    style={{
-                      background:
-                        locScope.kind === "pakistan" ? "#E4F2EC" : "#F1F7F4",
-                      border:
-                        locScope.kind === "pakistan"
-                          ? "1.5px solid #087F63"
-                          : "1px solid #D5E2DD",
-                      minHeight: 48,
-                    }}
-                  >
-                    <span
-                      className={`flex-1 ${lang === "ur" ? "text-right" : "text-left"} font-semibold text-sm`}
-                      style={{
-                        color:
-                          locScope.kind === "pakistan" ? "#075E4F" : "#183B34",
-                        fontSize: lang === "ur" ? 17 : 14,
-                        fontFamily:
-                          lang === "ur"
-                            ? URDU_FONT
-                            : "inherit",
-                      }}
-                    >
-                      {lang === "ur" ? "پورا پاکستان" : "All Pakistan"}
-                    </span>
-                    {locScope.kind === "pakistan" && (
-                      <span style={{ color: "#087F63", fontWeight: 800 }}>
-                        ✓
-                      </span>
-                    )}
-                  </button>
                   {availMandis.map((mandiName) => {
                     const isActive =
                       locScope.kind === "mandi" && locScope.label === mandiName;
@@ -23833,6 +23816,8 @@ function HomeScreen({
   // Edit Profile Form State & OTP Verification
   const [editName, setEditName] = useState(profileName);
   const [editPhone, setEditPhone] = useState(profilePhone);
+  const [editProvince, setEditProvince] = useState(profileProvince);
+  const [editCity, setEditCity] = useState(profileCity);
   const [showContactVerify, setShowContactVerify] = useState(false);
   const [contactOtp, setContactOtp] = useState(["", "", "", ""]);
   const [contactOtpError, setContactOtpError] = useState("");
@@ -23897,6 +23882,12 @@ function HomeScreen({
   // ORIENTATION / VOICE
   // ---------------------------------------------------------
 
+  useEffect(() => {
+    if (!homeVoiceEnabled) {
+      stopSpeaking();
+    }
+  }, [homeVoiceEnabled]);
+
   const handleOrientationTap = (
     _key: string,
     speakMsg: string,
@@ -23909,6 +23900,10 @@ function HomeScreen({
 
     if (homeVoiceEnabled) {
       speakText(speakMsg);
+      setTimeout(() => {
+        navigateFn();
+      }, 450);
+      return;
     }
 
     navigateFn();
@@ -24102,7 +24097,7 @@ function HomeScreen({
         className="relative flex-shrink-0 w-full"
         style={{
           margin: 0,
-          height: 160,
+          height: 172,
           borderRadius: "0 0 24px 24px",
           position: "relative",
           zIndex: 20,
@@ -24138,13 +24133,20 @@ function HomeScreen({
         </div>
 
         {/* Content Layer */}
-        <div className="relative h-full flex flex-col justify-between px-4 pt-3.5 pb-6 z-10">
+        <div className="relative h-full flex flex-col justify-between px-4 pt-3.5 pb-7 z-10">
           {/* Top Row: Language, Voice, Notifications, Profile */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              {/* Language Toggle */}
+              {/* Language Switch */}
               <button
-                onClick={() => setLang(lang === "ur" ? "en" : "ur")}
+                type="button"
+                onClick={() => {
+                  const nextLang = lang === "ur" ? "en" : "ur";
+                  setLang(nextLang);
+                  if (homeVoiceEnabled) {
+                    speakText(nextLang === "ur" ? "اردو" : "English");
+                  }
+                }}
                 className="tap-target zm-beam-border zm-beam-border-white flex items-center justify-center rounded-full px-3 py-1 transition active:scale-95"
                 style={{
                   background: "rgba(255, 255, 255, 0.22)",
@@ -24162,7 +24164,13 @@ function HomeScreen({
 
               {/* Voice Toggle */}
               <button
-                onClick={() => homeSetVoiceEnabled(!homeVoiceEnabled)}
+                onClick={() => {
+                  const nextVoice = !homeVoiceEnabled;
+                  homeSetVoiceEnabled(nextVoice);
+                  if (nextVoice) {
+                    speakText(lang === "ur" ? "آواز فعال ہے" : "Voice On");
+                  }
+                }}
                 className="tap-target zm-beam-border zm-beam-border-white flex items-center gap-1.5 rounded-full px-2.5 py-1 transition active:scale-95"
                 style={{
                   background: "rgba(255, 255, 255, 0.22)",
@@ -24220,6 +24228,9 @@ function HomeScreen({
               <button
                 type="button"
                 onClick={() => {
+                  if (homeVoiceEnabled) {
+                    speakText(lang === "ur" ? "نوٹیفکیشنز" : "Notifications");
+                  }
                   setShowSwitchToast(
                     lang === "ur"
                       ? "تمام منڈی الرٹس اور نوٹیفکیشنز فعال ہیں"
@@ -24269,6 +24280,9 @@ function HomeScreen({
               {/* Profile Avatar Button with Double-Tap Switching */}
               <button
                 onClick={() => {
+                  if (homeVoiceEnabled) {
+                    speakText(lang === "ur" ? "پروفائل" : "Profile");
+                  }
                   const now = Date.now();
                   if (now - lastProfileTapRef.current < 350 && hasRepAccount) {
                     const targetRole =
@@ -24368,48 +24382,124 @@ function HomeScreen({
             </div>
           )}
 
-          {/* User information */}
-          <div className="mt-auto" style={{ paddingBottom: 2 }}>
-            <h1
-              style={{
-                color: "#FFFFFF",
-                fontSize: 20,
-                lineHeight: 1.15,
-                fontWeight: 800,
-                fontFamily:
-                  lang === "ur"
-                    ? URDU_FONT
-                    : "'Poppins', sans-serif",
-                textShadow: "0 2px 8px rgba(0,0,0,0.5)",
-              }}
-            >
-              {profileName || (lang === "ur" ? "احمد خان" : "Ahmed Khan")}
-            </h1>
-            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="#FFFFFF"
-                style={{
-                  filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.5))",
-                  flexShrink: 0,
-                }}
-              >
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-              </svg>
-              <p
-                style={{
-                  color: "#FFFFFF",
-                  fontSize: 12.5,
-                  fontWeight: 600,
-                  textShadow: "0 1px 4px rgba(0,0,0,0.5)",
-                  fontFamily: lang === "ur" ? URDU_FONT : "inherit",
-                }}
-              >
-                {profileCity || (lang === "ur" ? "لاہور" : "Lahore")}{" "}
-                ({profileProvince || (lang === "ur" ? "پنجاب" : "Punjab")})
-              </p>
+          {/* User information with Direct Edit Option and Phone/Email instead of Location */}
+          <div className="mt-auto flex items-end justify-between" style={{ paddingBottom: 6 }}>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1
+                  style={{
+                    color: "#FFFFFF",
+                    fontSize: 20,
+                    lineHeight: 1.15,
+                    fontWeight: 800,
+                    fontFamily:
+                      lang === "ur"
+                        ? URDU_FONT
+                        : "'Poppins', sans-serif",
+                    textShadow: "0 2px 8px rgba(0,0,0,0.5)",
+                  }}
+                >
+                  {profileName || (lang === "ur" ? "محمد عارف" : "Muhammad Arif")}
+                </h1>
+
+                {/* Edit Button right in header */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (homeVoiceEnabled) {
+                      speakText(lang === "ur" ? "پروفائل ترمیم" : "Edit Profile");
+                    }
+                    setEditName(profileName || (lang === "ur" ? "محمد عارف" : "Muhammad Arif"));
+                    setEditPhone(profilePhone || "0300 1234567");
+                    setEditProvince(profileProvince || "Punjab");
+                    setEditCity(profileCity || "Pakpattan Mandi");
+                    setShowContactVerify(false);
+                    setContactOtp(["", "", "", ""]);
+                    setContactOtpError("");
+                    setContactOtpSuccess(false);
+                    setEditProfileOpen(true);
+                  }}
+                  className="tap-target zm-beam-border zm-beam-border-white flex items-center gap-1 px-2.5 py-0.5 rounded-full transition active:scale-95"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.24)",
+                    border: "1px solid rgba(255, 255, 255, 0.5)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    color: "#FFFFFF",
+                    fontSize: 10,
+                    fontWeight: 800,
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.18)",
+                  }}
+                  title={lang === "ur" ? "نام اور مقام تبدیل کریں" : "Edit Name & Location"}
+                >
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FFFFFF"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                  <span>{lang === "ur" ? "ترمیم" : "Edit"}</span>
+                </button>
+              </div>
+
+              {/* Number or Email of user below name instead of location */}
+              <div className="flex items-center gap-1.5 mt-1">
+                {(profilePhone || "0300 1234567").includes("@") ? (
+                  <svg
+                    width="12.5"
+                    height="12.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FFFFFF"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{
+                      filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.5))",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                ) : (
+                  <svg
+                    width="12.5"
+                    height="12.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FFFFFF"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{
+                      filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.5))",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
+                )}
+                <p
+                  style={{
+                    color: "#FFFFFF",
+                    fontSize: 12.5,
+                    fontWeight: 600,
+                    textShadow: "0 1px 4px rgba(0,0,0,0.5)",
+                    fontFamily: lang === "ur" ? URDU_FONT : "inherit",
+                    letterSpacing: "0.02em",
+                  }}
+                >
+                  {profilePhone || initialUserData?.phone || initialUserData?.contact || "0300 1234567"}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -24417,7 +24507,7 @@ function HomeScreen({
         {/* Floating Search Bar */}
         <button
           onClick={() =>
-            handleOrientationTap("search", t("orient.search"), () =>
+            handleOrientationTap("search", lang === "ur" ? "تلاش" : "Search", () =>
               push({ id: "search" }),
             )
           }
@@ -24427,7 +24517,7 @@ function HomeScreen({
             position: "absolute",
             left: 16,
             right: 16,
-            bottom: -22,
+            bottom: -23,
             height: 46,
             paddingLeft: 18,
             paddingRight: 18,
@@ -24704,16 +24794,21 @@ function HomeScreen({
               {/* View All Button */}
               <button
                 onClick={() =>
-                  push({
-                    id: "byproduct-combined",
-                    products: [
-                      {
-                        vertical: "Grains",
-                        product: "Wheat",
-                      },
-                    ],
-                    active: 0,
-                  })
+                  handleOrientationTap(
+                    "all-products",
+                    lang === "ur" ? "تمام مصنوعات" : "All Products",
+                    () =>
+                      push({
+                        id: "byproduct-combined",
+                        products: [
+                          {
+                            vertical: "Grains",
+                            product: "Wheat",
+                          },
+                        ],
+                        active: 0,
+                      }),
+                  )
                 }
                 className="tap-target zm-beam-border flex items-center justify-center rounded-full px-3 py-1 transition active:scale-95"
                 style={{
@@ -24751,7 +24846,7 @@ function HomeScreen({
                   <button
                     key={div.name}
                     onClick={() =>
-                      handleOrientationTap("product", t("orient.product"), () =>
+                      handleOrientationTap("product", tc(div.name), () =>
                         push({
                           id: "byproduct-combined",
                           products: [
@@ -25046,16 +25141,22 @@ function HomeScreen({
               {/* See All Button */}
               <button
                 onClick={() => {
-                  push({
-                    id: "byproduct-combined",
-                    products: [
-                      {
-                        vertical: "Grains",
-                        product: "Wheat",
-                      },
-                    ],
-                    active: 0,
-                  });
+                  handleOrientationTap(
+                    "favorites-all",
+                    lang === "ur" ? "پسندیدہ ریٹس" : "Favorite Rates",
+                    () => {
+                      push({
+                        id: "byproduct-combined",
+                        products: [
+                          {
+                            vertical: "Grains",
+                            product: "Wheat",
+                          },
+                        ],
+                        active: 0,
+                      });
+                    },
+                  );
                 }}
                 className="tap-target zm-beam-border flex items-center justify-center rounded-full px-3 py-1 transition active:scale-95"
                 style={{
@@ -25129,13 +25230,19 @@ function HomeScreen({
                     <button
                       key={`${item.byproduct}-${item.mandiName}-${idx}`}
                       onClick={() => {
-                        push({
-                          id: "product-rates",
-                          vertical: item.vertical,
-                          product: item.product,
-                          byproduct: item.byproduct,
-                          initialMandi: item.mandiName,
-                          initialRateType: item.rateType,
+                        const spokenName =
+                          lang === "ur"
+                            ? `${tc(item.byproduct)} ${tm(item.mandiName)}`
+                            : `${item.byproduct} ${item.mandiName}`;
+                        handleOrientationTap("favorite-card", spokenName, () => {
+                          push({
+                            id: "product-rates",
+                            vertical: item.vertical,
+                            product: item.product,
+                            byproduct: item.byproduct,
+                            initialMandi: item.mandiName,
+                            initialRateType: item.rateType,
+                          });
                         });
                       }}
                       className="flex-shrink-0 zm-beam-border zm-beam-border-card flex flex-col items-center relative tap-target"
@@ -26024,6 +26131,73 @@ function HomeScreen({
                     </p>
                   </div>
 
+                  {/* Province Selection */}
+                  <div>
+                    <label className="block text-xs font-extrabold text-[#183B34] mb-1.5">
+                      {lang === "ur" ? "صوبہ منتخب کریں" : "Select Province"}
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {Object.keys(LOCATIONS).map((prov) => (
+                        <button
+                          key={prov}
+                          type="button"
+                          onClick={() => {
+                            setEditProvince(prov);
+                            const firstMandi = LOCATIONS[prov]
+                              ? Object.values(LOCATIONS[prov]).flat()[0] || "Pakpattan Mandi"
+                              : "Pakpattan Mandi";
+                            setEditCity(firstMandi);
+                          }}
+                          className="py-2 px-3 rounded-xl text-xs font-bold border transition text-center"
+                          style={{
+                            background: editProvince === prov ? "#087F63" : "#fff",
+                            color: editProvince === prov ? "#fff" : "#183B34",
+                            borderColor: editProvince === prov ? "#087F63" : "#D5E2DD",
+                          }}
+                        >
+                          {prov}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Primary Mandi Selection */}
+                  <div>
+                    <label className="block text-xs font-extrabold text-[#183B34] mb-1.5">
+                      {lang === "ur" ? "منڈی / مقام منتخب کریں" : "Select Primary Mandi / Location"}
+                    </label>
+                    <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                      {(
+                        LOCATIONS[editProvince]
+                          ? Object.values(LOCATIONS[editProvince]).flat()
+                          : [
+                            "Pakpattan Mandi",
+                            "Arifwala Mandi",
+                            "Lahore Grain Market",
+                            "Multan Mandi",
+                            "Faisalabad Mandi",
+                            "Okara Mandi",
+                          ]
+                      ).map((mandi) => (
+                        <button
+                          key={mandi}
+                          type="button"
+                          onClick={() => setEditCity(mandi)}
+                          className="w-full flex items-center justify-between p-2.5 rounded-xl border transition text-left bg-white"
+                          style={{
+                            borderColor: editCity === mandi ? "#087F63" : "#D5E2DD",
+                            background: editCity === mandi ? "#E8F5EF" : "#fff",
+                          }}
+                        >
+                          <span className="text-xs font-bold text-[#183B34]">{mandi}</span>
+                          {editCity === mandi && (
+                            <span className="text-xs font-extrabold text-[#087F63]">✓ Active</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <button
                     type="button"
                     onClick={() => {
@@ -26034,13 +26208,24 @@ function HomeScreen({
                         setContactOtpSuccess(false);
                       } else {
                         setProfileName(editName);
+                        setProfileProvince(editProvince);
+                        setProfileCity(editCity);
                         if (initialUserData) {
                           initialUserData.name = editName;
+                          initialUserData.province = editProvince;
+                          initialUserData.city = editCity;
+                          initialUserData.district = editCity;
                         }
                         setEditProfileOpen(false);
+                        setShowSwitchToast(
+                          lang === "ur"
+                            ? "پروفائل اور مقام کامیابی سے تبدیل ہو گیا"
+                            : "Profile & Location updated successfully"
+                        );
+                        setTimeout(() => setShowSwitchToast(null), 2500);
                       }
                     }}
-                    className="w-full py-3.5 rounded-2xl bg-[#087F63] text-white font-extrabold text-sm shadow-md mt-4"
+                    className="w-full py-3.5 rounded-2xl bg-[#087F63] text-white font-extrabold text-sm shadow-md mt-4 transition active:scale-[0.99]"
                   >
                     {lang === "ur" ? "تبدیلیاں محفوظ کریں" : "Save Changes"}
                   </button>
@@ -26122,16 +26307,27 @@ function HomeScreen({
                       setTimeout(() => {
                         setProfileName(editName);
                         setProfilePhone(editPhone);
+                        setProfileProvince(editProvince);
+                        setProfileCity(editCity);
                         if (initialUserData) {
                           initialUserData.name = editName;
                           initialUserData.phone = editPhone;
                           initialUserData.contact = editPhone;
+                          initialUserData.province = editProvince;
+                          initialUserData.city = editCity;
+                          initialUserData.district = editCity;
                         }
                         setShowContactVerify(false);
                         setEditProfileOpen(false);
+                        setShowSwitchToast(
+                          lang === "ur"
+                            ? "پروفائل اور مقام کامیابی سے تبدیل ہو گیا"
+                            : "Profile & Location updated successfully"
+                        );
+                        setTimeout(() => setShowSwitchToast(null), 2500);
                       }, 500);
                     }}
-                    className="w-full py-3.5 rounded-2xl bg-[#087F63] text-white font-extrabold text-sm shadow-md"
+                    className="w-full py-3.5 rounded-2xl bg-[#087F63] text-white font-extrabold text-sm shadow-md transition active:scale-[0.99]"
                   >
                     {lang === "ur" ? "OTP تصدیق اور محفوظ کریں" : "Verify OTP & Save"}
                   </button>
@@ -27539,6 +27735,12 @@ function translateVoiceUrdu(text: string): string {
   }
 
   return AUTO_URDU_DICT[trimmed] || trimmed;
+}
+
+function stopSpeaking() {
+  if (typeof window !== "undefined" && "speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
 }
 
 function speakText(text: string) {
@@ -30749,7 +30951,7 @@ function AppInner({
     }
   }, [initialUserData]);
 
-  const { lang } = useLang();
+  const { lang, voiceEnabled } = useLang();
   const [stack, setStack] = useState<Screen[]>([{ id: "home" }]);
   const [activeNav, setActiveNav] = useState<NavTab>("home");
   const [feedOpen, setFeedOpen] = useState(false);
@@ -30864,22 +31066,43 @@ function AppInner({
     }
     setStack((p) => [...p, s]);
   };
-  const pop = () => setStack((p) => (p.length > 1 ? p.slice(0, -1) : p));
+  const pop = () => {
+    const doPop = () => setStack((p) => (p.length > 1 ? p.slice(0, -1) : p));
+    if (voiceEnabled) {
+      speakText(lang === "ur" ? "واپس" : "Back");
+      setTimeout(doPop, 450);
+      return;
+    }
+    doPop();
+  };
   const replace = (s: Screen) => setStack((p) => [...p.slice(0, -1), s]);
 
   const handleNav = (tab: NavTab) => {
     setVoicePhase("idle");
-    if (activeNav === "news" && tab !== "news") {
-      // User navigated away from video section -> minimize to floating mini player
-      setFloatingVideo({ ...currentVideoStateRef.current });
-    } else if (tab === "news") {
-      // User entered video section -> clear floating mini player
-      setFloatingVideo(null);
+    const doNav = () => {
+      if (activeNav === "news" && tab !== "news") {
+        // User navigated away from video section -> minimize to floating mini player
+        setFloatingVideo({ ...currentVideoStateRef.current });
+      } else if (tab === "news") {
+        // User entered video section -> clear floating mini player
+        setFloatingVideo(null);
+      }
+      setActiveNav(tab);
+      if (tab === "home" || tab === "analytics" || tab === "news") {
+        setStack([{ id: tab }]);
+      }
+    };
+
+    if (voiceEnabled) {
+      let speech = "";
+      if (tab === "home") speech = lang === "ur" ? "مرکزی صفحہ" : "Home";
+      else if (tab === "analytics") speech = lang === "ur" ? "تجزیات" : "Analytics";
+      else if (tab === "news") speech = lang === "ur" ? "ویڈیوز" : "Videos";
+      if (speech) speakText(speech);
+      setTimeout(doNav, 450);
+      return;
     }
-    setActiveNav(tab);
-    if (tab === "home" || tab === "analytics" || tab === "news") {
-      setStack([{ id: tab }]);
-    }
+    doNav();
   };
 
   const openFeed = (filter?: Partial<FeedFilter>) => {
