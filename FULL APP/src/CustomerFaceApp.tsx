@@ -117,6 +117,66 @@ const ZM_THEME_CSS = `
   [dir="rtl"] p, [dir="rtl"] span, [dir="rtl"] button {
     line-height: 1.45;
   }
+  @property --beam-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+  @keyframes zmAngleSpin {
+    to {
+      --beam-angle: 360deg;
+    }
+  }
+  .zm-beam-border {
+    position: relative;
+    isolation: isolate;
+  }
+  .zm-beam-border::after {
+    content: "";
+    position: absolute;
+    inset: -1.5px;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(
+      from var(--beam-angle, 0deg) at 50% 50%,
+      transparent 0deg,
+      transparent 255deg,
+      rgba(16, 185, 129, 0.25) 285deg,
+      rgba(52, 211, 153, 0.95) 330deg,
+      rgba(16, 185, 129, 1) 360deg
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    animation: zmAngleSpin 4s linear infinite;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .zm-beam-border-white::after {
+    background: conic-gradient(
+      from var(--beam-angle, 0deg) at 50% 50%,
+      transparent 0deg,
+      transparent 255deg,
+      rgba(255, 255, 255, 0.2) 285deg,
+      rgba(255, 255, 255, 0.9) 330deg,
+      rgba(255, 255, 255, 1) 360deg
+    );
+    animation: zmAngleSpin 4.5s linear infinite;
+  }
+  .zm-beam-border-card::after {
+    padding: 2px;
+    inset: -2px;
+    background: conic-gradient(
+      from var(--beam-angle, 0deg) at 50% 50%,
+      transparent 0deg,
+      transparent 260deg,
+      rgba(16, 185, 129, 0.3) 290deg,
+      rgba(245, 158, 11, 0.9) 330deg,
+      rgba(16, 185, 129, 1) 360deg
+    );
+    animation: zmAngleSpin 5.5s linear infinite;
+  }
   [dir="rtl"] .ltr-only {
     direction: ltr;
     text-align: left;
@@ -10045,7 +10105,14 @@ function ByProductCombinedScreen({
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <button
               onClick={onBack}
-              className="tap-target w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 text-[#183B34] bg-[#EAF5F0] border border-[#C7E8D8] hover:bg-[#D5E2DD] transition active:scale-95 shadow-xs"
+              className="tap-target zm-beam-border w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 text-[#183B34] transition active:scale-95"
+              style={{
+                background: "rgba(255, 255, 255, 0.65)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                border: "1.2px solid rgba(16, 185, 129, 0.45)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+              }}
             >
               {lang === "ur" ? "→" : "←"}
             </button>
@@ -10087,8 +10154,15 @@ function ByProductCombinedScreen({
                   );
                 }
               }}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#EAF5F0] border border-[#C7E8D8] text-[#075E4F] flex-shrink-0 cursor-pointer active:scale-95 transition shadow-xs select-none"
-              style={{ minHeight: "34px" }}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[#075E4F] flex-shrink-0 cursor-pointer active:scale-95 transition select-none zm-beam-border"
+              style={{
+                minHeight: "34px",
+                background: "rgba(255, 255, 255, 0.65)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                border: "1.2px solid rgba(16, 185, 129, 0.45)",
+                boxShadow: "0 2px 10px rgba(16, 185, 129, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8)",
+              }}
               title={lang === "ur" ? "شمسی و قمری تاریخ" : "Gregorian & Lunar Date"}
             >
               {/* Left Column: Gregorian Month over Day */}
@@ -10155,7 +10229,15 @@ function ByProductCombinedScreen({
                   );
                 }
               }}
-              className="tap-target flex-shrink-0 flex items-center gap-1 rounded-full font-bold text-xs px-2.5 py-1 bg-[#EAF5F0] border border-[#C7E8D8] text-[#075E4F] shadow-xs cursor-pointer active:scale-95 transition"
+              className="tap-target zm-beam-border flex-shrink-0 flex items-center gap-1 rounded-full font-bold text-xs px-2.5 py-1 text-[#075E4F] cursor-pointer active:scale-95 transition"
+              style={{
+                minHeight: "34px",
+                background: "rgba(255, 255, 255, 0.65)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                border: "1.2px solid rgba(16, 185, 129, 0.45)",
+                boxShadow: "0 2px 10px rgba(16, 185, 129, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8)",
+              }}
             >
               <svg width="11" height="11" viewBox="0 0 24 24" fill="#075E4F" className="text-[#075E4F] flex-shrink-0">
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
@@ -10181,12 +10263,15 @@ function ByProductCombinedScreen({
           </div>
         </div>
 
-        {/* Streamlined Minimal By-Products Filter Bar (Full Width, Rates Filter Removed) */}
+        {/* Streamlined Minimal By-Products Filter Bar (Transparent Glassmorphic) */}
         <div
           className="px-3 py-2 flex items-center gap-2 flex-shrink-0 relative"
           style={{
-            background: "#FFFFFF",
-            borderTop: "1px solid #E8EFEC",
+            background: "rgba(244, 250, 247, 0.45)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            borderTop: "1px solid rgba(255, 255, 255, 0.6)",
+            borderBottom: "1px solid rgba(16, 185, 129, 0.15)",
           }}
         >
           {/* By-Products horizontal scroll pill selector */}
@@ -10204,14 +10289,23 @@ function ByProductCombinedScreen({
                       : "All byproducts shown.",
                   );
               }}
-              className="tap-target flex-shrink-0 rounded-full font-bold flex items-center justify-center transition active:scale-95"
+              className="tap-target zm-beam-border flex-shrink-0 rounded-full font-bold flex items-center justify-center transition active:scale-95"
               style={{
-                background: !selectedBP ? "#087F63" : "#F1F7F4",
-                color: !selectedBP ? "#fff" : "#52635F",
-                border: !selectedBP ? "none" : "1px solid #D5E2DD",
-                fontSize: lang === "ur" ? 15 : 11.5,
-                padding: lang === "ur" ? "4px 14px" : "3px 10px",
-                minHeight: 32,
+                background: !selectedBP
+                  ? "linear-gradient(135deg, rgba(167, 243, 208, 0.75), rgba(110, 231, 183, 0.6))"
+                  : "rgba(255, 255, 255, 0.55)",
+                color: "#064E3B",
+                border: !selectedBP
+                  ? "1.2px solid #10B981"
+                  : "1.2px solid rgba(16, 185, 129, 0.4)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                boxShadow: !selectedBP
+                  ? "0 4px 14px rgba(16, 185, 129, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.7)"
+                  : "0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.7)",
+                fontSize: lang === "ur" ? 15 : 12,
+                padding: lang === "ur" ? "4px 14px" : "4px 12px",
+                minHeight: 34,
                 fontFamily:
                   lang === "ur"
                     ? URDU_FONT
@@ -10238,14 +10332,23 @@ function ByProductCombinedScreen({
                             : `Prices of ${bp} are shown.`,
                       );
                   }}
-                  className="tap-target flex-shrink-0 flex items-center gap-1.5 rounded-full font-bold transition active:scale-95"
+                  className="tap-target zm-beam-border flex-shrink-0 flex items-center gap-1.5 rounded-full font-bold transition active:scale-95"
                   style={{
-                    background: on ? "#087F63" : "#F1F7F4",
-                    color: on ? "#fff" : "#52635F",
-                    border: on ? "none" : "1px solid #D5E2DD",
-                    fontSize: lang === "ur" ? 15 : 11.5,
-                    padding: lang === "ur" ? "4px 12px" : "3px 10px",
-                    minHeight: 32,
+                    background: on
+                      ? "linear-gradient(135deg, rgba(167, 243, 208, 0.75), rgba(110, 231, 183, 0.6))"
+                      : "rgba(255, 255, 255, 0.55)",
+                    color: "#064E3B",
+                    border: on
+                      ? "1.2px solid #10B981"
+                      : "1.2px solid rgba(16, 185, 129, 0.4)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    boxShadow: on
+                      ? "0 4px 14px rgba(16, 185, 129, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.7)"
+                      : "0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.7)",
+                    fontSize: lang === "ur" ? 15 : 12,
+                    padding: lang === "ur" ? "4px 14px" : "4px 12px",
+                    minHeight: 34,
                     fontFamily:
                       lang === "ur"
                         ? URDU_FONT
@@ -10255,11 +10358,8 @@ function ByProductCombinedScreen({
                   <ProductIcon
                     name={bp}
                     vertical={activeProduct?.vertical}
-                    size={lang === "ur" ? 16 : 12}
-                    style={{
-                      filter: on ? "brightness(0) invert(1)" : "none",
-                      flexShrink: 0,
-                    }}
+                    size={lang === "ur" ? 17 : 14}
+                    style={{ flexShrink: 0 }}
                   />
                   <span>{tcL(bp)}</span>
                 </button>
@@ -10391,7 +10491,13 @@ function ByProductCombinedScreen({
                   <span
                     className="font-extrabold text-xs px-4 py-1.5 rounded-full flex-shrink-0 flex items-center gap-1.5 text-white shadow-sm"
                     style={{
-                      background: isToday ? "#084E41" : "#087F63",
+                      background: isToday
+                        ? "linear-gradient(135deg, rgba(6, 78, 65, 0.95), rgba(8, 127, 99, 0.9))"
+                        : "linear-gradient(135deg, rgba(8, 127, 99, 0.92), rgba(16, 185, 129, 0.85))",
+                      border: "1px solid rgba(255, 255, 255, 0.4)",
+                      backdropFilter: "blur(10px)",
+                      WebkitBackdropFilter: "blur(10px)",
+                      boxShadow: "0 4px 14px rgba(8, 127, 99, 0.22)",
                     }}
                   >
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
@@ -11942,7 +12048,7 @@ function RateCard({
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(e) => e.key === "Enter" && onClick()}
-      className="card-mobile-interactive tap-target w-full rounded-2xl cursor-pointer flex flex-col justify-between transition-transform duration-150 active:scale-[0.98] relative overflow-hidden"
+      className="card-mobile-interactive tap-target zm-beam-border zm-beam-border-card w-full rounded-2xl cursor-pointer flex flex-col justify-between transition-transform duration-150 active:scale-[0.98] relative overflow-hidden"
       style={{
         background: provinceBg ? "rgba(255, 255, 255, 0.88)" : "rgba(255, 255, 255, 0.22)",
         backdropFilter: provinceBg ? "blur(8px)" : "blur(4px)",
@@ -11981,7 +12087,7 @@ function RateCard({
             e.stopPropagation();
             onToggleFavorite?.();
           }}
-          className="tap-target w-7 h-7 flex items-center justify-center transition active:scale-90 text-[#183B34]"
+          className="tap-target zm-beam-border w-7 h-7 flex items-center justify-center rounded-full transition active:scale-90 text-[#183B34]"
           title={
             isFavorite
               ? lang === "ur"
@@ -12143,7 +12249,7 @@ function RateCard({
         <button
           type="button"
           onClick={handleSpeakRate}
-          className="tap-target flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition active:scale-90 shadow-sm hover:scale-105"
+          className="tap-target zm-beam-border flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition active:scale-90 shadow-sm hover:scale-105"
           style={{
             background: provinceBg ? "#EAF8F2" : "rgba(255, 255, 255, 0.45)",
             border: provinceBg ? "1px solid #C7E8D8" : "1px solid rgba(255, 255, 255, 0.65)",
@@ -13332,6 +13438,75 @@ function getMandiModalGraphData(
   return { points, xLabels, yLabels, yMinBound, yMaxBound };
 }
 
+// Helper to generate realistic arrival volume curve and axis data for Mandi Graph Popup modal
+function getMandiArrivalModalGraphData(
+  arrivalCountStr: string | number | undefined,
+  timeframe: "24h" | "72h" | "7d" | "30d",
+  lang: string,
+) {
+  const baseArrival = typeof arrivalCountStr === "number"
+    ? arrivalCountStr
+    : parseInt(String(arrivalCountStr || "8400").replace(/[^0-9]/g, ""), 10) || 8400;
+
+  const minVal = Math.round(baseArrival * 0.55);
+  const maxVal = Math.round(baseArrival * 1.35);
+  const diff = Math.max(maxVal - minVal, 500);
+
+  const pattern = [0.28, 0.52, 0.88, 0.65, 0.95, 0.72, 0.82];
+
+  const tfShift =
+    timeframe === "24h"
+      ? [0, 0, 0, 0, 0, 0, 0]
+      : timeframe === "72h"
+        ? [0.04, -0.03, 0.02, -0.04, 0.03, -0.02, 0]
+        : timeframe === "7d"
+          ? [-0.03, 0.04, -0.02, 0.05, -0.03, 0.02, 0]
+          : [0.04, -0.03, 0.05, -0.02, 0.03, -0.04, 0];
+
+  const points = pattern.map((p, i) => {
+    const val = minVal + diff * Math.max(0.08, Math.min(0.98, p + tfShift[i]));
+    return Math.round(val);
+  });
+
+  let xLabels: string[] = [];
+  if (timeframe === "24h") {
+    xLabels = ["06:00", "09:00", "12:00", "15:00", "18:00", "21:00", "Now"];
+  } else if (timeframe === "72h") {
+    xLabels =
+      lang === "ur"
+        ? ["دن 1", "12:00", "دن 2", "12:00", "دن 3", "12:00", "اب"]
+        : ["Day 1", "12:00", "Day 2", "12:00", "Day 3", "12:00", "Now"];
+  } else if (timeframe === "7d") {
+    xLabels =
+      lang === "ur"
+        ? ["پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ", "اتوار"]
+        : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  } else {
+    xLabels =
+      lang === "ur"
+        ? ["یکم", "5ویں", "10ویں", "15ویں", "20ویں", "25ویں", "آج"]
+        : ["1st", "5th", "10th", "15th", "20th", "25th", "Today"];
+  }
+
+  const yMinBound = 0;
+  const yMaxBound = Math.ceil((maxVal * 1.15) / 1000) * 1000;
+  const yMidVal = Math.round(yMaxBound / 2);
+
+  const fmtK = (v: number) =>
+    v >= 1000 ? (v / 1000).toFixed(1) + "k" : String(Math.round(v));
+
+  const yLabels = [
+    { label: fmtK(yMaxBound), val: yMaxBound },
+    { label: fmtK(yMidVal), val: yMidVal },
+    { label: "0", val: 0 },
+  ];
+
+  const totalArrival = points.reduce((a, b) => a + b, 0);
+  const peakArrival = Math.max(...points);
+
+  return { points, xLabels, yLabels, yMinBound, yMaxBound, totalArrival, peakArrival, baseArrival };
+}
+
 function ProductRatesScreen({
   vertical,
   product,
@@ -13444,7 +13619,9 @@ function ProductRatesScreen({
     max: number;
     trend: "up" | "down" | "flat" | "stable";
     trendPct: number;
+    arrival?: string | number;
   } | null>(null);
+  const [tableGraphView, setTableGraphView] = useState<"price" | "arrival">("price");
   const [graphTimeframe, setGraphTimeframe] = useState<
     "24h" | "72h" | "7d" | "30d"
   >("24h");
@@ -13735,11 +13912,15 @@ function ProductRatesScreen({
         >
           <button
             onClick={onBack}
-            className="tap-target flex-shrink-0 flex items-center justify-center rounded-2xl font-bold text-sm"
+            className="tap-target zm-beam-border flex-shrink-0 flex items-center justify-center rounded-2xl font-bold text-sm transition active:scale-95"
             style={{
               width: 44,
               height: 44,
-              background: "#E8EFEC",
+              background: "rgba(255, 255, 255, 0.65)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              border: "1.2px solid rgba(16, 185, 129, 0.4)",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
               color: "#183B34",
               fontSize: 18,
             }}
@@ -13785,14 +13966,16 @@ function ProductRatesScreen({
           <button
             onClick={() => togglePickBP(pickItem)}
             aria-label={picked ? "Remove from favorites" : "Add to favorites"}
-            className="tap-target w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 transition active:scale-90"
+            className="tap-target zm-beam-border w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 transition active:scale-90"
             style={{
-              background: picked ? "#FFEBEB" : "#F4FAF7",
+              background: picked ? "rgba(255, 235, 235, 0.85)" : "rgba(255, 255, 255, 0.65)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
               color: picked ? "#E11D48" : "#80918B",
-              border: picked ? "1.5px solid #FDA4AF" : "1.5px solid #D5E2DD",
+              border: picked ? "1.5px solid #FDA4AF" : "1.2px solid rgba(16, 185, 129, 0.4)",
               boxShadow: picked
-                ? "0 2px 6px rgba(225,29,72,0.18)"
-                : "0 1px 3px rgba(0,0,0,0.04)",
+                ? "0 2px 8px rgba(225,29,72,0.18)"
+                : "0 2px 8px rgba(0,0,0,0.06)",
             }}
           >
             <svg
@@ -13819,11 +14002,24 @@ function ProductRatesScreen({
             <button
               key={tTab}
               onClick={() => setTab(tTab)}
-              className="tap-target flex-1 rounded-xl font-bold text-sm"
+              className="tap-target zm-beam-border flex-1 rounded-xl font-bold text-sm transition active:scale-95"
               style={{
                 height: lang === "ur" ? 44 : 40,
-                background: tab === tTab ? "#087F63" : "#E8EFEC",
-                color: tab === tTab ? "#fff" : "#183B34",
+                background:
+                  tab === tTab
+                    ? "linear-gradient(135deg, rgba(8, 127, 99, 0.9), rgba(5, 150, 105, 0.85))"
+                    : "rgba(255, 255, 255, 0.6)",
+                border:
+                  tab === tTab
+                    ? "1.2px solid rgba(255, 255, 255, 0.4)"
+                    : "1.2px solid rgba(16, 185, 129, 0.3)",
+                color: tab === tTab ? "#FFFFFF" : "#064E3B",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                boxShadow:
+                  tab === tTab
+                    ? "0 4px 14px rgba(8, 127, 99, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.45)"
+                    : "0 2px 6px rgba(0, 0, 0, 0.04)",
                 fontSize: lang === "ur" ? 18 : 14,
                 fontFamily:
                   lang === "ur"
@@ -15178,12 +15374,18 @@ function ProductRatesScreen({
                                 return true;
                               });
                             }}
-                            className="tap-target flex items-center gap-1 px-2.5 py-1.5 rounded-xl font-bold text-xs"
+                            className="tap-target zm-beam-border flex items-center gap-1 px-3 py-1 rounded-full font-bold text-xs transition active:scale-95"
                             style={{
-                              background: isTableExpanded ? "#087F63" : "#E4F2EC",
-                              color: isTableExpanded ? "#FFFFFF" : "#075E4F",
-                              border: isTableExpanded ? "1.5px solid #087F63" : "1px solid #C7E8D8",
-                              boxShadow: isTableExpanded ? "0 2px 8px rgba(8,127,99,0.25)" : "none",
+                              background: isTableExpanded
+                                ? "linear-gradient(135deg, rgba(167, 243, 208, 0.75), rgba(110, 231, 183, 0.6))"
+                                : "rgba(255, 255, 255, 0.65)",
+                              color: "#064E3B",
+                              border: "1.2px solid #10B981",
+                              backdropFilter: "blur(12px)",
+                              WebkitBackdropFilter: "blur(12px)",
+                              boxShadow: isTableExpanded
+                                ? "0 4px 14px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.7)"
+                                : "0 2px 8px rgba(16, 185, 129, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.7)",
                               fontSize: lang === "ur" ? 14 : 12,
                               fontFamily:
                                 lang === "ur"
@@ -15207,7 +15409,7 @@ function ProductRatesScreen({
                                 height="12"
                                 viewBox="0 0 24 24"
                                 fill="none"
-                                stroke="currentColor"
+                                stroke="#064E3B"
                                 strokeWidth="2.5"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -15221,7 +15423,7 @@ function ProductRatesScreen({
                                 height="12"
                                 viewBox="0 0 24 24"
                                 fill="none"
-                                stroke="currentColor"
+                                stroke="#064E3B"
                                 strokeWidth="2.5"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -15246,13 +15448,18 @@ function ProductRatesScreen({
                           {/* Date picker button */}
                           <button
                             onClick={() => setTableDateCalOpen((o) => !o)}
-                            className="tap-target flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl font-bold text-xs flex-shrink-0"
+                            className="tap-target zm-beam-border flex items-center gap-1.5 px-3 py-1 rounded-full font-bold text-xs flex-shrink-0 transition active:scale-95"
                             style={{
-                              background: tableDateFilter ? "#087F63" : "#E4F2EC",
-                              color: tableDateFilter ? "#fff" : "#075E4F",
-                              border: tableDateFilter
-                                ? "none"
-                                : "1px solid #C7E8D8",
+                              background: tableDateFilter
+                                ? "linear-gradient(135deg, rgba(167, 243, 208, 0.75), rgba(110, 231, 183, 0.6))"
+                                : "rgba(255, 255, 255, 0.65)",
+                              color: "#064E3B",
+                              border: "1.2px solid #10B981",
+                              backdropFilter: "blur(12px)",
+                              WebkitBackdropFilter: "blur(12px)",
+                              boxShadow: tableDateFilter
+                                ? "0 4px 14px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.7)"
+                                : "0 2px 8px rgba(16, 185, 129, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.7)",
                               fontSize: lang === "ur" ? 14 : 12,
                               fontFamily:
                                 lang === "ur"
@@ -15265,7 +15472,7 @@ function ProductRatesScreen({
                               height="12"
                               viewBox="0 0 24 24"
                               fill="none"
-                              stroke="currentColor"
+                              stroke="#064E3B"
                               strokeWidth="2.5"
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -15287,32 +15494,39 @@ function ProductRatesScreen({
                           className="flex gap-1.5 overflow-x-auto pb-0.5"
                           style={{ scrollbarWidth: "none" }}
                         >
-                          {[null, ...PROVINCES].map((p) => (
-                            <button
-                              key={p || "all"}
-                              onClick={() => setTableProvinceFilter(p)}
-                              className="flex-shrink-0 px-2.5 py-1 rounded-full font-bold text-[10px]"
-                              style={{
-                                background:
-                                  tableProvinceFilter === p ? "#087F63" : "#fff",
-                                color:
-                                  tableProvinceFilter === p ? "#fff" : "#52635F",
-                                border: `1px solid ${tableProvinceFilter === p ? "#087F63" : "#D5E2DD"
-                                  }`,
-                                fontSize: lang === "ur" ? 13 : 10,
-                                fontFamily:
-                                  lang === "ur"
-                                    ? URDU_FONT
-                                    : "inherit",
-                              }}
-                            >
-                              {p
-                                ? tm(p)
-                                : lang === "ur"
-                                  ? "تمام صوبے"
-                                  : "All Provinces"}
-                            </button>
-                          ))}
+                          {[null, ...PROVINCES].map((p) => {
+                            const isSelected = tableProvinceFilter === p;
+                            return (
+                              <button
+                                key={p || "all"}
+                                onClick={() => setTableProvinceFilter(p)}
+                                className="flex-shrink-0 zm-beam-border px-3.5 py-1 rounded-full font-bold text-xs transition active:scale-95"
+                                style={{
+                                  background: isSelected
+                                    ? "linear-gradient(135deg, rgba(167, 243, 208, 0.75), rgba(110, 231, 183, 0.6))"
+                                    : "rgba(255, 255, 255, 0.65)",
+                                  color: "#064E3B",
+                                  border: "1.2px solid #10B981",
+                                  backdropFilter: "blur(12px)",
+                                  WebkitBackdropFilter: "blur(12px)",
+                                  boxShadow: isSelected
+                                    ? "0 4px 14px rgba(16, 185, 129, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.7)"
+                                    : "0 2px 6px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.7)",
+                                  fontSize: lang === "ur" ? 13.5 : 11,
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? URDU_FONT
+                                      : "inherit",
+                                }}
+                              >
+                                {p
+                                  ? tm(p)
+                                  : lang === "ur"
+                                    ? "تمام صوبے"
+                                    : "All Provinces"}
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
@@ -16144,20 +16358,20 @@ function ProductRatesScreen({
                                             maxWidth: "calc(100vw - 16px)",
                                             boxSizing: "border-box",
                                           }}
-                                          className="bg-white rounded-2xl border border-[#D5E2DD] p-3 shadow-md flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-1 duration-200"
+                                          className="bg-white rounded-2xl border border-[#D5E2DD] p-3 shadow-md flex flex-col gap-2 relative overflow-hidden zm-beam-border zm-beam-border-card animate-in fade-in slide-in-from-top-1 duration-200"
                                         >
-                                          {/* 1. Header: Dot + Mandi Title + RateType Badge + Close Graph 'X' */}
-                                          <div className="flex items-center justify-between">
+                                          {/* 1. Header: Dot + Mandi Title + Tabs (Price vs Arrival) + Close 'X' */}
+                                          <div className="flex items-center justify-between gap-2">
                                             <div className="flex items-center gap-1.5 min-w-0">
                                               <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] flex-shrink-0 animate-pulse" />
                                               <h3
-                                                className="font-black text-[14px] text-[#111827] truncate"
+                                                className="font-black text-[13.5px] text-[#111827] truncate"
                                                 style={{
                                                   fontFamily:
                                                     lang === "ur"
                                                       ? URDU_FONT
                                                       : "inherit",
-                                                  fontSize: lang === "ur" ? 16 : 14,
+                                                  fontSize: lang === "ur" ? 15.5 : 13.5,
                                                 }}
                                               >
                                                 {lang === "ur"
@@ -16166,24 +16380,48 @@ function ProductRatesScreen({
                                                     ? r.mandiName
                                                     : `${r.mandiName} Mandi`}
                                               </h3>
-                                              <span
-                                                className="px-1.5 py-0.5 rounded-md text-[10px] font-extrabold flex-shrink-0"
+                                            </div>
+
+                                            {/* Graph View Switcher Tabs: Price vs Arrival */}
+                                            <div className="flex items-center bg-[#EAF5F0] p-0.5 rounded-full border border-[#CDE5DC] flex-shrink-0">
+                                              <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  setTableGraphView("price");
+                                                }}
+                                                className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold transition ${
+                                                  tableGraphView === "price"
+                                                    ? "bg-[#087F63] text-white shadow-sm"
+                                                    : "text-[#2D5A4C] hover:text-[#087F63]"
+                                                }`}
                                                 style={{
-                                                  background: "#E8F8F0",
-                                                  color: "#059669",
-                                                  fontFamily:
-                                                    lang === "ur"
-                                                      ? URDU_FONT
-                                                      : "inherit",
+                                                  fontFamily: lang === "ur" ? URDU_FONT : "inherit",
+                                                  fontSize: lang === "ur" ? 11 : 10,
                                                 }}
                                               >
-                                                {lang === "ur"
-                                                  ? tr(r.rateType)
-                                                    .replace(" ریٹ", "")
-                                                    .replace(" Rate", "")
-                                                  : r.rateType.replace(" Rate", "")}
-                                              </span>
+                                                {lang === "ur" ? "📈 قیمت" : "📈 Price"}
+                                              </button>
+                                              <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  setTableGraphView("arrival");
+                                                }}
+                                                className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold transition ${
+                                                  tableGraphView === "arrival"
+                                                    ? "bg-[#087F63] text-white shadow-sm"
+                                                    : "text-[#2D5A4C] hover:text-[#087F63]"
+                                                }`}
+                                                style={{
+                                                  fontFamily: lang === "ur" ? URDU_FONT : "inherit",
+                                                  fontSize: lang === "ur" ? 11 : 10,
+                                                }}
+                                              >
+                                                {lang === "ur" ? "🚛 آمد" : "🚛 Arrival"}
+                                              </button>
                                             </div>
+
                                             <button
                                               type="button"
                                               onClick={(e) => {
@@ -16226,7 +16464,9 @@ function ProductRatesScreen({
                                                     e.stopPropagation();
                                                     setGraphTimeframe(tf.id as any);
                                                   }}
-                                                  className="flex-1 py-0.5 px-1 rounded-full font-extrabold text-[9.5px] transition text-center active:scale-[0.97]"
+                                                  className={`flex-1 py-0.5 px-1 rounded-full font-extrabold text-[9.5px] transition text-center active:scale-[0.97] ${
+                                                    isActive ? "zm-beam-border" : ""
+                                                  }`}
                                                   style={{
                                                     background: isActive ? "#087F63" : "#F4FAF7",
                                                     color: isActive ? "#FFFFFF" : "#374151",
@@ -16246,225 +16486,462 @@ function ProductRatesScreen({
                                             })}
                                           </div>
 
-                                          {/* 3. Rates Summary Box: Min Rate | Max Rate | Trend Pct */}
-                                          <div className="rounded-lg p-1.5 px-2 bg-[#F4FAF7] border border-[#D5E2DD] flex items-center justify-between">
-                                            <div className="flex items-center gap-2.5">
-                                              <div>
-                                                <span className="text-[8.5px] font-bold text-[#6B7280] uppercase tracking-wider block leading-none">
-                                                  {lang === "ur" ? "کم سے کم ریٹ" : "Min Rate"}
-                                                </span>
-                                                <span className="text-xs font-black text-[#1F2937] block mt-0.5 leading-tight">
-                                                  Rs.{Math.round(r.min * effMult).toLocaleString()}
-                                                </span>
-                                              </div>
-                                              <div className="w-[1px] h-5 bg-[#D5E2DD]" />
-                                              <div>
-                                                <span className="text-[8.5px] font-bold text-[#6B7280] uppercase tracking-wider block leading-none">
-                                                  {lang === "ur" ? "زیادہ سے زیادہ ریٹ" : "Max Rate"}
-                                                </span>
-                                                <span className="text-xs font-black text-[#087F63] block mt-0.5 leading-tight">
-                                                  Rs.{Math.round(r.max * effMult).toLocaleString()}
-                                                </span>
-                                              </div>
-                                            </div>
-                                            <div
-                                              className="px-2 py-0.5 rounded-md text-[10.5px] font-black flex items-center gap-1"
-                                              style={{
-                                                background:
-                                                  r.trend === "down" ? "#FEE2E2" : "#E8F8F0",
-                                                color:
-                                                  r.trend === "down" ? "#DC2626" : "#059669",
-                                              }}
-                                            >
-                                              <span>
-                                                {r.trend === "up"
-                                                  ? "▲"
-                                                  : r.trend === "down"
-                                                    ? "▼"
-                                                    : "—"}
-                                              </span>
-                                              <span>
-                                                {intervalPct > 0 ? `${intervalPct}%` : "1.8%"}
-                                              </span>
-                                            </div>
-                                          </div>
-
-                                          {/* 4. Graph Visual with SVG Line, Area Gradient, Markers, Dashed Grid, Y/X Labels */}
-                                          {(() => {
-                                            const graphData = getMandiModalGraphData(
-                                              Math.round(r.min * effMult),
-                                              Math.round(r.max * effMult),
-                                              r.trend as any,
-                                              graphTimeframe,
-                                              lang,
-                                            );
-                                            const W = 350;
-                                            const H = 115;
-                                            const xLeft = 34;
-                                            const xRight = 334;
-                                            const yTop = 12;
-                                            const yBottom = 84;
-
-                                            const coords = graphData.points.map((p, i) => {
-                                              const x =
-                                                xLeft + (i / (graphData.points.length - 1)) * (xRight - xLeft);
-                                              const y =
-                                                yBottom -
-                                                ((p - graphData.yMinBound) /
-                                                  (graphData.yMaxBound - graphData.yMinBound)) *
-                                                (yBottom - yTop);
-                                              return { x, y, val: p };
-                                            });
-
-                                            const linePath = coords
-                                              .map((c, i) => (i === 0 ? `M ${c.x} ${c.y}` : `L ${c.x} ${c.y}`))
-                                              .join(" ");
-                                            const areaPath = `${linePath} L ${coords[coords.length - 1].x} ${yBottom + 6} L ${coords[0].x} ${yBottom + 6} Z`;
-                                            const yMidY = (yTop + yBottom) / 2;
-
-                                            return (
-                                              <div className="rounded-lg border border-[#D5E2DD] p-1 bg-white flex flex-col justify-center">
-                                                <svg
-                                                  viewBox={`0 0 ${W} ${H}`}
-                                                  className="w-full h-auto"
-                                                  style={{ maxHeight: 110, overflow: "visible" }}
+                                          {/* 3. Summary Box & Chart according to tableGraphView */}
+                                          {tableGraphView === "price" ? (
+                                            <>
+                                              {/* Price Rates Summary Box */}
+                                              <div className="rounded-lg p-1.5 px-2 bg-[#F4FAF7] border border-[#D5E2DD] flex items-center justify-between">
+                                                <div className="flex items-center gap-2.5">
+                                                  <div>
+                                                    <span className="text-[8.5px] font-bold text-[#6B7280] uppercase tracking-wider block leading-none">
+                                                      {lang === "ur" ? "کم سے کم ریٹ" : "Min Rate"}
+                                                    </span>
+                                                    <span className="text-xs font-black text-[#1F2937] block mt-0.5 leading-tight">
+                                                      Rs.{Math.round(r.min * effMult).toLocaleString()}
+                                                    </span>
+                                                  </div>
+                                                  <div className="w-[1px] h-5 bg-[#D5E2DD]" />
+                                                  <div>
+                                                    <span className="text-[8.5px] font-bold text-[#6B7280] uppercase tracking-wider block leading-none">
+                                                      {lang === "ur" ? "زیادہ سے زیادہ ریٹ" : "Max Rate"}
+                                                    </span>
+                                                    <span className="text-xs font-black text-[#087F63] block mt-0.5 leading-tight">
+                                                      Rs.{Math.round(r.max * effMult).toLocaleString()}
+                                                    </span>
+                                                  </div>
+                                                </div>
+                                                <div
+                                                  className="px-2 py-0.5 rounded-md text-[10.5px] font-black flex items-center gap-1"
+                                                  style={{
+                                                    background:
+                                                      r.trend === "down" ? "#FEE2E2" : "#E8F8F0",
+                                                    color:
+                                                      r.trend === "down" ? "#DC2626" : "#059669",
+                                                  }}
                                                 >
-                                                  <defs>
-                                                    <linearGradient
-                                                      id={`mandiInlineGraphGrad-${ci}`}
-                                                      x1="0"
-                                                      y1="0"
-                                                      x2="0"
-                                                      y2="1"
-                                                    >
-                                                      <stop
-                                                        offset="0%"
-                                                        stopColor="#10B981"
-                                                        stopOpacity="0.25"
-                                                      />
-                                                      <stop
-                                                        offset="100%"
-                                                        stopColor="#10B981"
-                                                        stopOpacity="0.0"
-                                                      />
-                                                    </linearGradient>
-                                                  </defs>
-
-                                                  {/* Top Grid */}
-                                                  <line
-                                                    x1={xLeft}
-                                                    y1={yTop}
-                                                    x2={xRight}
-                                                    y2={yTop}
-                                                    stroke="#E5E7EB"
-                                                    strokeDasharray="3 3"
-                                                    strokeWidth="1"
-                                                  />
-                                                  <text
-                                                    x={xLeft - 5}
-                                                    y={yTop + 3}
-                                                    textAnchor="end"
-                                                    fill="#9CA3AF"
-                                                    fontSize="7.5"
-                                                    fontWeight="600"
-                                                  >
-                                                    {graphData.yLabels[0].label}
-                                                  </text>
-
-                                                  {/* Mid Grid */}
-                                                  <line
-                                                    x1={xLeft}
-                                                    y1={yMidY}
-                                                    x2={xRight}
-                                                    y2={yMidY}
-                                                    stroke="#E5E7EB"
-                                                    strokeDasharray="3 3"
-                                                    strokeWidth="1"
-                                                  />
-                                                  <text
-                                                    x={xLeft - 5}
-                                                    y={yMidY + 3}
-                                                    textAnchor="end"
-                                                    fill="#9CA3AF"
-                                                    fontSize="7.5"
-                                                    fontWeight="600"
-                                                  >
-                                                    {graphData.yLabels[1].label}
-                                                  </text>
-
-                                                  {/* Bot Grid */}
-                                                  <line
-                                                    x1={xLeft}
-                                                    y1={yBottom}
-                                                    x2={xRight}
-                                                    y2={yBottom}
-                                                    stroke="#E5E7EB"
-                                                    strokeDasharray="3 3"
-                                                    strokeWidth="1"
-                                                  />
-                                                  <text
-                                                    x={xLeft - 5}
-                                                    y={yBottom + 3}
-                                                    textAnchor="end"
-                                                    fill="#9CA3AF"
-                                                    fontSize="7.5"
-                                                    fontWeight="600"
-                                                  >
-                                                    {graphData.yLabels[2].label}
-                                                  </text>
-
-                                                  {/* Area under curve */}
-                                                  <path
-                                                    d={areaPath}
-                                                    fill={`url(#mandiInlineGraphGrad-${ci})`}
-                                                  />
-
-                                                  {/* Line curve */}
-                                                  <path
-                                                    d={linePath}
-                                                    fill="none"
-                                                    stroke="#10B981"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                  />
-
-                                                  {/* Node points */}
-                                                  {coords.map((c, i) => (
-                                                    <circle
-                                                      key={i}
-                                                      cx={c.x}
-                                                      cy={c.y}
-                                                      r="2.8"
-                                                      fill="#FFFFFF"
-                                                      stroke="#10B981"
-                                                      strokeWidth="1.8"
-                                                    />
-                                                  ))}
-
-                                                  {/* X-axis Labels */}
-                                                  {graphData.xLabels.map((lbl, i) => (
-                                                    <text
-                                                      key={i}
-                                                      x={coords[i].x}
-                                                      y={H - 5}
-                                                      textAnchor="middle"
-                                                      fill="#9CA3AF"
-                                                      fontSize="7.5"
-                                                      fontWeight="600"
-                                                      fontFamily={
-                                                        lang === "ur"
-                                                          ? URDU_FONT
-                                                          : "inherit"
-                                                      }
-                                                    >
-                                                      {lbl}
-                                                    </text>
-                                                  ))}
-                                                </svg>
+                                                  <span>
+                                                    {r.trend === "up"
+                                                      ? "▲"
+                                                      : r.trend === "down"
+                                                        ? "▼"
+                                                        : "—"}
+                                                  </span>
+                                                  <span>
+                                                    {intervalPct > 0 ? `${intervalPct}%` : "1.8%"}
+                                                  </span>
+                                                </div>
                                               </div>
-                                            );
-                                          })()}
+
+                                              {/* Price Visual Line Chart */}
+                                              {(() => {
+                                                const graphData = getMandiModalGraphData(
+                                                  Math.round(r.min * effMult),
+                                                  Math.round(r.max * effMult),
+                                                  r.trend as any,
+                                                  graphTimeframe,
+                                                  lang,
+                                                );
+                                                const W = 350;
+                                                const H = 115;
+                                                const xLeft = 34;
+                                                const xRight = 334;
+                                                const yTop = 12;
+                                                const yBottom = 84;
+
+                                                const coords = graphData.points.map((p, i) => {
+                                                  const x =
+                                                    xLeft + (i / (graphData.points.length - 1)) * (xRight - xLeft);
+                                                  const y =
+                                                    yBottom -
+                                                    ((p - graphData.yMinBound) /
+                                                      (graphData.yMaxBound - graphData.yMinBound)) *
+                                                    (yBottom - yTop);
+                                                  return { x, y, val: p };
+                                                });
+
+                                                const linePath = coords
+                                                  .map((c, i) => (i === 0 ? `M ${c.x} ${c.y}` : `L ${c.x} ${c.y}`))
+                                                  .join(" ");
+                                                const areaPath = `${linePath} L ${coords[coords.length - 1].x} ${yBottom + 6} L ${coords[0].x} ${yBottom + 6} Z`;
+                                                const yMidY = (yTop + yBottom) / 2;
+
+                                                return (
+                                                  <div className="rounded-lg border border-[#D5E2DD] p-1 bg-white flex flex-col justify-center">
+                                                    <svg
+                                                      viewBox={`0 0 ${W} ${H}`}
+                                                      className="w-full h-auto"
+                                                      style={{ maxHeight: 110, overflow: "visible" }}
+                                                    >
+                                                      <defs>
+                                                        <linearGradient
+                                                          id={`mandiInlineGraphGrad-${ci}`}
+                                                          x1="0"
+                                                          y1="0"
+                                                          x2="0"
+                                                          y2="1"
+                                                        >
+                                                          <stop
+                                                            offset="0%"
+                                                            stopColor="#10B981"
+                                                            stopOpacity="0.25"
+                                                          />
+                                                          <stop
+                                                            offset="100%"
+                                                            stopColor="#10B981"
+                                                            stopOpacity="0.0"
+                                                          />
+                                                        </linearGradient>
+                                                      </defs>
+
+                                                      {/* Top Grid */}
+                                                      <line
+                                                        x1={xLeft}
+                                                        y1={yTop}
+                                                        x2={xRight}
+                                                        y2={yTop}
+                                                        stroke="#E5E7EB"
+                                                        strokeDasharray="3 3"
+                                                        strokeWidth="1"
+                                                      />
+                                                      <text
+                                                        x={xLeft - 5}
+                                                        y={yTop + 3}
+                                                        textAnchor="end"
+                                                        fill="#9CA3AF"
+                                                        fontSize="7.5"
+                                                        fontWeight="600"
+                                                      >
+                                                        {graphData.yLabels[0].label}
+                                                      </text>
+
+                                                      {/* Mid Grid */}
+                                                      <line
+                                                        x1={xLeft}
+                                                        y1={yMidY}
+                                                        x2={xRight}
+                                                        y2={yMidY}
+                                                        stroke="#E5E7EB"
+                                                        strokeDasharray="3 3"
+                                                        strokeWidth="1"
+                                                      />
+                                                      <text
+                                                        x={xLeft - 5}
+                                                        y={yMidY + 3}
+                                                        textAnchor="end"
+                                                        fill="#9CA3AF"
+                                                        fontSize="7.5"
+                                                        fontWeight="600"
+                                                      >
+                                                        {graphData.yLabels[1].label}
+                                                      </text>
+
+                                                      {/* Bot Grid */}
+                                                      <line
+                                                        x1={xLeft}
+                                                        y1={yBottom}
+                                                        x2={xRight}
+                                                        y2={yBottom}
+                                                        stroke="#E5E7EB"
+                                                        strokeDasharray="3 3"
+                                                        strokeWidth="1"
+                                                      />
+                                                      <text
+                                                        x={xLeft - 5}
+                                                        y={yBottom + 3}
+                                                        textAnchor="end"
+                                                        fill="#9CA3AF"
+                                                        fontSize="7.5"
+                                                        fontWeight="600"
+                                                      >
+                                                        {graphData.yLabels[2].label}
+                                                      </text>
+
+                                                      {/* Area under curve */}
+                                                      <path
+                                                        d={areaPath}
+                                                        fill={`url(#mandiInlineGraphGrad-${ci})`}
+                                                      />
+
+                                                      {/* Line curve */}
+                                                      <path
+                                                        d={linePath}
+                                                        fill="none"
+                                                        stroke="#10B981"
+                                                        strokeWidth="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                      />
+
+                                                      {/* Node points */}
+                                                      {coords.map((c, i) => (
+                                                        <circle
+                                                          key={i}
+                                                          cx={c.x}
+                                                          cy={c.y}
+                                                          r="2.8"
+                                                          fill="#FFFFFF"
+                                                          stroke="#10B981"
+                                                          strokeWidth="1.8"
+                                                        />
+                                                      ))}
+
+                                                      {/* X-axis Labels */}
+                                                      {graphData.xLabels.map((lbl, i) => (
+                                                        <text
+                                                          key={i}
+                                                          x={coords[i].x}
+                                                          y={H - 5}
+                                                          textAnchor="middle"
+                                                          fill="#9CA3AF"
+                                                          fontSize="7.5"
+                                                          fontWeight="600"
+                                                          fontFamily={
+                                                            lang === "ur"
+                                                              ? URDU_FONT
+                                                              : "inherit"
+                                                          }
+                                                        >
+                                                          {lbl}
+                                                        </text>
+                                                      ))}
+                                                    </svg>
+                                                  </div>
+                                                );
+                                              })()}
+                                            </>
+                                          ) : (
+                                            <>
+                                              {/* Arrival Volume Summary Box */}
+                                              {(() => {
+                                                const arrivalData = getMandiArrivalModalGraphData(
+                                                  (r as any).arrival || (r as any).arrivalCount || "8,400",
+                                                  graphTimeframe,
+                                                  lang,
+                                                );
+
+                                                return (
+                                                  <>
+                                                    <div className="rounded-lg p-1.5 px-2 bg-[#F0FDF4] border border-[#BBF7D0] flex items-center justify-between">
+                                                      <div className="flex items-center gap-2.5">
+                                                        <div>
+                                                          <span className="text-[8.5px] font-bold text-[#15803D] uppercase tracking-wider block leading-none">
+                                                            {lang === "ur" ? "کل آمد" : "Total Arrivals"}
+                                                          </span>
+                                                          <span className="text-xs font-black text-[#14532D] block mt-0.5 leading-tight">
+                                                            {arrivalData.totalArrival.toLocaleString()}{" "}
+                                                            <span className="text-[9px] font-semibold text-[#16A34A]">
+                                                              {lang === "ur" ? "تھیلے" : "Bags"}
+                                                            </span>
+                                                          </span>
+                                                        </div>
+                                                        <div className="w-[1px] h-5 bg-[#BBF7D0]" />
+                                                        <div>
+                                                          <span className="text-[8.5px] font-bold text-[#15803D] uppercase tracking-wider block leading-none">
+                                                            {lang === "ur" ? "سب سے زیادہ آمد" : "Peak Volume"}
+                                                          </span>
+                                                          <span className="text-xs font-black text-[#047857] block mt-0.5 leading-tight">
+                                                            {arrivalData.peakArrival.toLocaleString()}{" "}
+                                                            <span className="text-[9px] font-semibold text-[#10B981]">
+                                                              {lang === "ur" ? "تھیلے" : "Bags"}
+                                                            </span>
+                                                          </span>
+                                                        </div>
+                                                      </div>
+                                                      <div className="px-2 py-0.5 rounded-md text-[10px] font-black bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC]">
+                                                        {lang === "ur" ? "نارمل سپلائی" : "Steady Flow"}
+                                                      </div>
+                                                    </div>
+
+                                                    {/* Arrival Visual Bar + Area Chart */}
+                                                    {(() => {
+                                                      const W = 350;
+                                                      const H = 115;
+                                                      const xLeft = 34;
+                                                      const xRight = 334;
+                                                      const yTop = 12;
+                                                      const yBottom = 84;
+
+                                                      const coords = arrivalData.points.map((p, i) => {
+                                                        const x =
+                                                          xLeft + (i / (arrivalData.points.length - 1)) * (xRight - xLeft);
+                                                        const y =
+                                                          yBottom -
+                                                          (p / arrivalData.yMaxBound) * (yBottom - yTop);
+                                                        return { x, y, val: p };
+                                                      });
+
+                                                      const linePath = coords
+                                                        .map((c, i) => (i === 0 ? `M ${c.x} ${c.y}` : `L ${c.x} ${c.y}`))
+                                                        .join(" ");
+                                                      const areaPath = `${linePath} L ${coords[coords.length - 1].x} ${yBottom} L ${coords[0].x} ${yBottom} Z`;
+                                                      const yMidY = (yTop + yBottom) / 2;
+
+                                                      return (
+                                                        <div className="rounded-lg border border-[#D5E2DD] p-1 bg-white flex flex-col justify-center">
+                                                          <svg
+                                                            viewBox={`0 0 ${W} ${H}`}
+                                                            className="w-full h-auto"
+                                                            style={{ maxHeight: 110, overflow: "visible" }}
+                                                          >
+                                                            <defs>
+                                                              <linearGradient
+                                                                id={`mandiInlineArrivalGrad-${ci}`}
+                                                                x1="0"
+                                                                y1="0"
+                                                                x2="0"
+                                                                y2="1"
+                                                              >
+                                                                <stop
+                                                                  offset="0%"
+                                                                  stopColor="#059669"
+                                                                  stopOpacity="0.32"
+                                                                />
+                                                                <stop
+                                                                  offset="100%"
+                                                                  stopColor="#059669"
+                                                                  stopOpacity="0.02"
+                                                                />
+                                                              </linearGradient>
+                                                            </defs>
+
+                                                            {/* Top Grid */}
+                                                            <line
+                                                              x1={xLeft}
+                                                              y1={yTop}
+                                                              x2={xRight}
+                                                              y2={yTop}
+                                                              stroke="#E5E7EB"
+                                                              strokeDasharray="3 3"
+                                                              strokeWidth="1"
+                                                            />
+                                                            <text
+                                                              x={xLeft - 5}
+                                                              y={yTop + 3}
+                                                              textAnchor="end"
+                                                              fill="#9CA3AF"
+                                                              fontSize="7.5"
+                                                              fontWeight="600"
+                                                            >
+                                                              {arrivalData.yLabels[0].label}
+                                                            </text>
+
+                                                            {/* Mid Grid */}
+                                                            <line
+                                                              x1={xLeft}
+                                                              y1={yMidY}
+                                                              x2={xRight}
+                                                              y2={yMidY}
+                                                              stroke="#E5E7EB"
+                                                              strokeDasharray="3 3"
+                                                              strokeWidth="1"
+                                                            />
+                                                            <text
+                                                              x={xLeft - 5}
+                                                              y={yMidY + 3}
+                                                              textAnchor="end"
+                                                              fill="#9CA3AF"
+                                                              fontSize="7.5"
+                                                              fontWeight="600"
+                                                            >
+                                                              {arrivalData.yLabels[1].label}
+                                                            </text>
+
+                                                            {/* Bot Grid */}
+                                                            <line
+                                                              x1={xLeft}
+                                                              y1={yBottom}
+                                                              x2={xRight}
+                                                              y2={yBottom}
+                                                              stroke="#E5E7EB"
+                                                              strokeDasharray="3 3"
+                                                              strokeWidth="1"
+                                                            />
+                                                            <text
+                                                              x={xLeft - 5}
+                                                              y={yBottom + 3}
+                                                              textAnchor="end"
+                                                              fill="#9CA3AF"
+                                                              fontSize="7.5"
+                                                              fontWeight="600"
+                                                            >
+                                                              {arrivalData.yLabels[2].label}
+                                                            </text>
+
+                                                            {/* Volume Bars */}
+                                                            {coords.map((c, i) => {
+                                                              const barW = 12;
+                                                              const barH = yBottom - c.y;
+                                                              return (
+                                                                <rect
+                                                                  key={i}
+                                                                  x={c.x - barW / 2}
+                                                                  y={c.y}
+                                                                  width={barW}
+                                                                  height={barH}
+                                                                  rx={2.5}
+                                                                  fill="#A7F3D0"
+                                                                  opacity={0.7}
+                                                                />
+                                                              );
+                                                            })}
+
+                                                            {/* Area under curve */}
+                                                            <path
+                                                              d={areaPath}
+                                                              fill={`url(#mandiInlineArrivalGrad-${ci})`}
+                                                            />
+
+                                                            {/* Line curve */}
+                                                            <path
+                                                              d={linePath}
+                                                              fill="none"
+                                                              stroke="#059669"
+                                                              strokeWidth="2.2"
+                                                              strokeLinecap="round"
+                                                              strokeLinejoin="round"
+                                                            />
+
+                                                            {/* Node points */}
+                                                            {coords.map((c, i) => (
+                                                              <circle
+                                                                key={i}
+                                                                cx={c.x}
+                                                                cy={c.y}
+                                                                r="2.8"
+                                                                fill="#FFFFFF"
+                                                                stroke="#059669"
+                                                                strokeWidth="1.8"
+                                                              />
+                                                            ))}
+
+                                                            {/* X-axis Labels */}
+                                                            {arrivalData.xLabels.map((lbl, i) => (
+                                                              <text
+                                                                key={i}
+                                                                x={coords[i].x}
+                                                                y={H - 5}
+                                                                textAnchor="middle"
+                                                                fill="#9CA3AF"
+                                                                fontSize="7.5"
+                                                                fontWeight="600"
+                                                                fontFamily={
+                                                                  lang === "ur"
+                                                                    ? URDU_FONT
+                                                                    : "inherit"
+                                                                }
+                                                              >
+                                                                {lbl}
+                                                              </text>
+                                                            ))}
+                                                          </svg>
+                                                        </div>
+                                                      );
+                                                    })()}
+                                                  </>
+                                                );
+                                              })()}
+                                            </>
+                                          )}
                                         </div>
                                       </td>
                                     </tr>
@@ -23647,15 +24124,16 @@ function HomeScreen({
               {/* Language Toggle */}
               <button
                 onClick={() => setLang(lang === "ur" ? "en" : "ur")}
-                className="tap-target flex items-center justify-center rounded-full px-3 py-1"
+                className="tap-target zm-beam-border zm-beam-border-white flex items-center justify-center rounded-full px-3 py-1 transition active:scale-95"
                 style={{
-                  background: "rgba(0, 0, 0, 0.22)",
+                  background: "rgba(255, 255, 255, 0.22)",
                   border: "1.2px solid rgba(255, 255, 255, 0.45)",
                   color: "#FFFFFF",
                   fontSize: lang === "ur" ? 13.5 : 12,
                   fontWeight: 800,
-                  backdropFilter: "blur(10px)",
-                  boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
+                  backdropFilter: "blur(12px)",
+                  WebkitBackdropFilter: "blur(12px)",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                 }}
               >
                 {lang === "ur" ? "English" : "اردو"}
@@ -23664,12 +24142,13 @@ function HomeScreen({
               {/* Voice Toggle */}
               <button
                 onClick={() => homeSetVoiceEnabled(!homeVoiceEnabled)}
-                className="tap-target flex items-center gap-1.5 rounded-full px-2.5 py-1"
+                className="tap-target zm-beam-border zm-beam-border-white flex items-center gap-1.5 rounded-full px-2.5 py-1 transition active:scale-95"
                 style={{
-                  background: "rgba(0, 0, 0, 0.22)",
+                  background: "rgba(255, 255, 255, 0.22)",
                   border: "1.2px solid rgba(255, 255, 255, 0.45)",
-                  backdropFilter: "blur(10px)",
-                  boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
+                  backdropFilter: "blur(12px)",
+                  WebkitBackdropFilter: "blur(12px)",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                 }}
               >
                 <span
@@ -23727,13 +24206,14 @@ function HomeScreen({
                   );
                   setTimeout(() => setShowSwitchToast(null), 2500);
                 }}
-                className="tap-target relative flex items-center justify-center rounded-full"
+                className="tap-target zm-beam-border zm-beam-border-white relative flex items-center justify-center rounded-full transition active:scale-95"
                 style={{
                   width: 36,
                   height: 36,
-                  background: "rgba(255, 248, 235, 0.72)",
-                  border: "1.5px solid rgba(255, 255, 255, 0.8)",
-                  backdropFilter: "blur(10px)",
+                  background: "rgba(255, 255, 255, 0.22)",
+                  border: "1.2px solid rgba(255, 255, 255, 0.45)",
+                  backdropFilter: "blur(12px)",
+                  WebkitBackdropFilter: "blur(12px)",
                   boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                 }}
                 title={lang === "ur" ? "نوٹیفکیشنز" : "Notifications"}
@@ -23743,7 +24223,7 @@ function HomeScreen({
                   height="17"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#183B34"
+                  stroke="#FFFFFF"
                   strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -23790,13 +24270,14 @@ function HomeScreen({
                   }
                   lastProfileTapRef.current = now;
                 }}
-                className="tap-target relative flex items-center justify-center rounded-full"
+                className="tap-target zm-beam-border zm-beam-border-white relative flex items-center justify-center rounded-full transition active:scale-95"
                 style={{
                   width: 36,
                   height: 36,
-                  background: "rgba(255, 248, 235, 0.72)",
-                  border: "1.5px solid rgba(255, 255, 255, 0.8)",
-                  backdropFilter: "blur(10px)",
+                  background: "rgba(255, 255, 255, 0.22)",
+                  border: "1.2px solid rgba(255, 255, 255, 0.45)",
+                  backdropFilter: "blur(12px)",
+                  WebkitBackdropFilter: "blur(12px)",
                   boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                   zIndex: voiceGuideActive ? 45 : undefined,
                 }}
@@ -23811,7 +24292,7 @@ function HomeScreen({
                   height="17"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#183B34"
+                  stroke="#FFFFFF"
                   strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -23824,7 +24305,7 @@ function HomeScreen({
                     style={{
                       position: "absolute",
                       bottom: -2,
-                      background: "#059669",
+                      background: "#087F63",
                       color: "#fff",
                       fontSize: 7.5,
                       fontWeight: 900,
@@ -23919,7 +24400,7 @@ function HomeScreen({
               push({ id: "search" }),
             )
           }
-          className={`tap-target flex items-center gap-2.5 ${lang === "ur" ? "text-right" : "text-left"
+          className={`tap-target zm-beam-border flex items-center gap-2.5 ${lang === "ur" ? "text-right" : "text-left"
             }`}
           style={{
             position: "absolute",
@@ -24006,29 +24487,91 @@ function HomeScreen({
           }}
         >
           {/* ===================================================
-              COMPLETE YOUR PROFILE PROGRESS CARD
+              COMPLETE YOUR PROFILE PROGRESS CARD (Wavy Organic Contour Banner)
               (Only visible when profile is NOT yet completed)
               =================================================== */}
           {!profileCompleted && (
             <div className="px-4 pt-7">
               <div
+                onClick={() => setCompleteProfileOpen(true)}
+                className="tap-target zm-beam-border zm-beam-border-card cursor-pointer transition active:scale-[0.99] relative overflow-hidden"
                 style={{
-                  background: "linear-gradient(135deg, #FFFFFF, #F6FBF8)",
-                  border: "1.5px solid #B8DCCF",
-                  borderRadius: 16,
-                  padding: "clamp(10px, 1.4vh, 14px) 14px",
-                  boxShadow: "0 3px 12px rgba(6,77,64,0.06)",
-                  position: "relative",
-                  overflow: "hidden",
+                  background:
+                    "linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(240, 252, 246, 0.94) 52%, rgba(220, 248, 238, 0.92) 100%)",
+                  backdropFilter: "blur(14px)",
+                  WebkitBackdropFilter: "blur(14px)",
+                  border: "1.5px solid rgba(255, 255, 255, 0.95)",
+                  borderRadius: 24,
+                  padding: "13px 15px",
+                  boxShadow: "0 8px 24px rgba(6, 77, 64, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.95)",
                 }}
               >
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-1.5">
-                    <span
+                {/* Organic curved waves on right side flowing into screen background */}
+                <svg
+                  className="absolute right-0 top-0 bottom-0 h-full pointer-events-none"
+                  style={{ width: "48%", minWidth: 150 }}
+                  viewBox="0 0 160 100"
+                  preserveAspectRatio="none"
+                  fill="none"
+                >
+                  <path
+                    d="M 25,0 C 70,22 35,70 80,100 L 160,100 L 160,0 Z"
+                    fill="rgba(167, 243, 208, 0.45)"
+                  />
+                  <path
+                    d="M 55,0 C 100,18 68,78 115,100 L 160,100 L 160,0 Z"
+                    fill="rgba(110, 231, 183, 0.55)"
+                  />
+                  <path
+                    d="M 90,0 C 130,22 105,82 145,100 L 160,100 L 160,0 Z"
+                    fill="rgba(52, 211, 153, 0.45)"
+                  />
+                </svg>
+
+                <div className="flex items-center justify-between gap-3 relative z-10">
+                  {/* Left: Leaf / Plant Icon */}
+                  <div
+                    className="flex-shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center zm-beam-border"
+                    style={{
+                      background: "rgba(8, 127, 99, 0.12)",
+                      border: "1px solid rgba(8, 127, 99, 0.2)",
+                    }}
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#087F63"
+                      strokeWidth="2.3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+                      <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+                    </svg>
+                  </div>
+
+                  {/* Center: Title, Subtitle, and Progress */}
+                  <div className="flex-1 min-w-0">
+                    <h3
+                      className="font-extrabold text-[#183B34] leading-tight"
                       style={{
-                        fontSize: 13,
-                        fontWeight: 800,
-                        color: "#183B34",
+                        fontSize: lang === "ur" ? 16 : 14.5,
+                        fontFamily:
+                          lang === "ur"
+                            ? URDU_FONT
+                            : "'Poppins', sans-serif",
+                      }}
+                    >
+                      {lang === "ur"
+                        ? "پروفائل مکمل کریں"
+                        : "Complete Your Profile"}
+                    </h3>
+                    <p
+                      className="text-[#475F57] leading-snug mt-0.5"
+                      style={{
+                        fontSize: lang === "ur" ? 11.5 : 10,
                         fontFamily:
                           lang === "ur"
                             ? URDU_FONT
@@ -24036,124 +24579,150 @@ function HomeScreen({
                       }}
                     >
                       {lang === "ur"
-                        ? "پروفائل سیٹ اپ"
-                        : "Complete Your Profile"}
-                    </span>
+                        ? `مرحلہ ${currentStepNum} از ${totalSteps} — تازہ ترین ریٹس اور رجحانات حاصل کریں۔`
+                        : `Step ${currentStepNum} of ${totalSteps} — Subscribe to get latest rates & trends.`}
+                    </p>
+
+                    {/* Progress track */}
+                    <div
+                      className="w-full mt-1.5"
+                      style={{
+                        height: 4.5,
+                        background: "rgba(8, 127, 99, 0.14)",
+                        borderRadius: 999,
+                        overflow: "hidden",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: `${progressPct}%`,
+                          height: "100%",
+                          background: "linear-gradient(90deg, #F59E0B, #087F63)",
+                          borderRadius: 999,
+                          transition: "width 0.4s ease-in-out",
+                        }}
+                      />
+                    </div>
                   </div>
-                  <span
-                    style={{
-                      background: "#E8F5E9",
-                      color: "#087F63",
-                      borderRadius: 999,
-                      padding: "2px 8px",
-                      fontSize: 10,
-                      fontWeight: 800,
+
+                  {/* Right: Round Action Button with Arrow */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCompleteProfileOpen(true);
                     }}
+                    className="tap-target zm-beam-border zm-beam-border-white flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition active:scale-90"
+                    style={{
+                      background: "#087F63",
+                      color: "#FFFFFF",
+                      boxShadow: "0 4px 14px rgba(8, 127, 99, 0.4)",
+                    }}
+                    title={lang === "ur" ? "پروفائل مکمل کریں" : "Complete Profile"}
                   >
-                    {progressPct}%
-                  </span>
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#FFFFFF"
+                      strokeWidth="2.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points={lang === "ur" ? "15 18 9 12 15 6" : "9 18 15 12 9 6"} />
+                    </svg>
+                  </button>
                 </div>
-
-                {/* Progress bar track */}
-                <div
-                  style={{
-                    width: "100%",
-                    height: 5,
-                    background: "#E2EFE9",
-                    borderRadius: 999,
-                    overflow: "hidden",
-                    margin: "4px 0 6px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${progressPct}%`,
-                      height: "100%",
-                      background: "linear-gradient(90deg, #F59E0B, #2FAE68)",
-                      borderRadius: 999,
-                      transition: "width 0.4s ease-in-out",
-                    }}
-                  />
-                </div>
-
-                <p
-                  style={{
-                    fontSize: 11,
-                    color: "#52635F",
-                    lineHeight: 1.35,
-                    marginBottom: 8,
-                    fontFamily:
-                      lang === "ur"
-                        ? URDU_FONT
-                        : "inherit",
-                  }}
-                >
-                  {lang === "ur"
-                    ? `مرحلہ ${currentStepNum} از ${totalSteps} — اپنی پسند کی مصنوعات اور پلان مکمل کریں۔`
-                    : `Step ${currentStepNum} of ${totalSteps} — Resume where you left off.`}
-                </p>
-
-                <button
-                  onClick={() => setCompleteProfileOpen(true)}
-                  className="tap-target w-full py-1.5 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5"
-                  style={{
-                    background: "#087F63",
-                    color: "#fff",
-                    boxShadow: "0 2px 8px rgba(8,127,99,0.2)",
-                    fontFamily:
-                      lang === "ur"
-                        ? URDU_FONT
-                        : "inherit",
-                    fontSize: lang === "ur" ? 13 : 11.5,
-                  }}
-                >
-                  <span>
-                    {lang === "ur"
-                      ? `سیٹ اپ جاری رکھیں (مرحلہ ${currentStepNum})`
-                      : `Continue Setup`}
-                  </span>
-                  <span>➔</span>
-                </button>
               </div>
             </div>
           )}
 
           {/* ===================================================
-              MY PRODUCTS (Harmoniously spaced below search bar)
+              MY PRODUCTS (Harmoniously sized to fill vertical space)
               =================================================== */}
 
           <section
             style={{
               paddingTop: profileCompleted
-                ? "clamp(42px, 5.5vh, 58px)"
-                : "clamp(4px, 1.2vh, 12px)",
+                ? "clamp(34px, 4.2vh, 48px)"
+                : "clamp(12px, 1.8vh, 18px)",
+              paddingBottom: "clamp(4px, 1vh, 10px)",
             }}
           >
-            <div className="px-4 flex items-center justify-between mb-2">
-              <p
+            <div className="px-4 flex items-center justify-between mb-2.5">
+              <div className="flex items-center gap-1.5">
+                <svg
+                  width="19"
+                  height="19"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#087F63"
+                  strokeWidth="2.3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="flex-shrink-0"
+                >
+                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+                  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+                </svg>
+                <p
+                  style={{
+                    fontSize: profileCompleted ? 16 : 14.5,
+                    fontWeight: 800,
+                    color: "#183B34",
+                    letterSpacing: lang === "ur" ? "0" : "0.02em",
+                    fontFamily:
+                      lang === "ur"
+                        ? URDU_FONT
+                        : "inherit",
+                  }}
+                >
+                  {t("My Products")}
+                </p>
+              </div>
+
+              {/* View All Button */}
+              <button
+                onClick={() =>
+                  push({
+                    id: "byproduct-combined",
+                    products: [
+                      {
+                        vertical: "Grains",
+                        product: "Wheat",
+                      },
+                    ],
+                    active: 0,
+                  })
+                }
+                className="tap-target zm-beam-border flex items-center justify-center rounded-full px-3 py-1 transition active:scale-95"
                 style={{
-                  fontSize: profileCompleted ? 15 : 13,
-                  fontWeight: 800,
-                  color: "#183B34",
-                  letterSpacing: lang === "ur" ? "0" : "0.05em",
-                  textTransform: lang === "ur" ? "none" : "uppercase",
-                  fontFamily:
-                    lang === "ur"
-                      ? URDU_FONT
-                      : "inherit",
+                  background: "rgba(255, 255, 255, 0.65)",
+                  border: "1.2px solid rgba(16, 185, 129, 0.35)",
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
+                  color: "#087F63",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  gap: "4px",
+                  fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                 }}
               >
-                {t("My Products")}
-              </p>
+                <span>{lang === "ur" ? "سب دیکھیں" : "View All"}</span>
+                <span style={{ fontSize: "12px", fontWeight: 800 }}>
+                  {lang === "ur" ? "←" : "›"}
+                </span>
+              </button>
             </div>
 
             <div
-              className="flex items-start overflow-x-auto px-4 pb-1"
+              className="flex items-start overflow-x-auto px-4 pb-1.5"
               style={{
                 scrollbarWidth: "none",
                 gap: profileCompleted
                   ? "clamp(16px, 4.5vw, 22px)"
-                  : "clamp(12px, 3.5vw, 16px)",
+                  : "clamp(14px, 3.8vw, 18px)",
               }}
             >
               {activeProducts.map((div) => {
@@ -24179,20 +24748,21 @@ function HomeScreen({
                     className="flex-shrink-0 flex flex-col items-center tap-target"
                     style={{
                       width: profileCompleted
-                        ? "clamp(96px, 25vw, 116px)"
-                        : "clamp(82px, 20vw, 92px)",
+                        ? "clamp(102px, 26vw, 122px)"
+                        : "clamp(96px, 24vw, 112px)",
                       zIndex: voiceGuideActive ? 45 : undefined,
                     }}
                   >
-                    {/* Active Circle */}
+                    {/* Active Circle - Grown to fill space luxuriously */}
                     <div
+                      className="zm-beam-border"
                       style={{
                         width: profileCompleted
-                          ? "clamp(92px, 12vh, 108px)"
-                          : "clamp(76px, 9.2vh, 84px)",
+                          ? "clamp(100px, 13vh, 116px)"
+                          : "clamp(92px, 12.2vh, 104px)",
                         height: profileCompleted
-                          ? "clamp(92px, 12vh, 108px)"
-                          : "clamp(76px, 9.2vh, 84px)",
+                          ? "clamp(100px, 13vh, 116px)"
+                          : "clamp(92px, 12.2vh, 104px)",
                         borderRadius: "50%",
                         border: "3px solid #087F63",
                         background: "#F4FAF7",
@@ -24200,15 +24770,15 @@ function HomeScreen({
                         alignItems: "center",
                         justifyContent: "center",
                         position: "relative",
-                        boxShadow: "0 5px 16px rgba(8,127,99,0.2)",
+                        boxShadow: "0 6px 18px rgba(8,127,99,0.22)",
                       }}
                     >
                       <img
                         src={getproductIconSrc(div.name, verticalFor)}
                         alt={div.name}
                         style={{
-                          width: profileCompleted ? "78%" : "74%",
-                          height: profileCompleted ? "78%" : "74%",
+                          width: "80%",
+                          height: "80%",
                           objectFit: "contain",
                         }}
                       />
@@ -24217,10 +24787,10 @@ function HomeScreen({
                       <span
                         style={{
                           position: "absolute",
-                          bottom: 1,
-                          right: 1,
-                          width: profileCompleted ? 22 : 18,
-                          height: profileCompleted ? 22 : 18,
+                          bottom: 2,
+                          right: 2,
+                          width: 22,
+                          height: 22,
                           borderRadius: "50%",
                           background: "#087F63",
                           color: "#fff",
@@ -24228,7 +24798,7 @@ function HomeScreen({
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          fontSize: profileCompleted ? 12 : 10,
+                          fontSize: 12,
                           fontWeight: 900,
                         }}
                       >
@@ -24239,8 +24809,8 @@ function HomeScreen({
                     {/* Name */}
                     <span
                       style={{
-                        marginTop: profileCompleted ? 6 : 4,
-                        fontSize: profileCompleted ? 14.5 : 13,
+                        marginTop: 6,
+                        fontSize: profileCompleted ? 15 : 14,
                         fontWeight: 800,
                         color: "#183B34",
                         fontFamily:
@@ -24255,13 +24825,18 @@ function HomeScreen({
 
                     {/* Active Badge */}
                     <span
+                      className="zm-beam-border"
                       style={{
-                        marginTop: 2,
-                        padding: profileCompleted ? "2.5px 11px" : "1.5px 8px",
+                        marginTop: 3,
+                        padding: "2.5px 11px",
                         borderRadius: 9999,
-                        background: "#087F63",
+                        background: "linear-gradient(135deg, rgba(8, 127, 99, 0.95), rgba(5, 150, 105, 0.9))",
+                        border: "1px solid rgba(255, 255, 255, 0.5)",
+                        backdropFilter: "blur(6px)",
+                        WebkitBackdropFilter: "blur(6px)",
+                        boxShadow: "0 2px 8px rgba(8, 127, 99, 0.25)",
                         color: "#fff",
-                        fontSize: profileCompleted ? 9.5 : 8.5,
+                        fontSize: 9.5,
                         fontWeight: 800,
                         letterSpacing: "0.04em",
                         fontFamily:
@@ -24294,19 +24869,20 @@ function HomeScreen({
                     className="flex-shrink-0 flex flex-col items-center tap-target"
                     style={{
                       width: profileCompleted
-                        ? "clamp(66px, 17vw, 78px)"
-                        : "clamp(54px, 14vw, 62px)",
+                        ? "clamp(74px, 18vw, 86px)"
+                        : "clamp(68px, 16vw, 78px)",
                     }}
                   >
                     {/* Locked circle */}
                     <div
+                      className="zm-beam-border"
                       style={{
                         width: profileCompleted
-                          ? "clamp(58px, 7.5vh, 68px)"
-                          : "clamp(48px, 5.8vh, 54px)",
+                          ? "clamp(68px, 8.8vh, 80px)"
+                          : "clamp(62px, 8vh, 74px)",
                         height: profileCompleted
-                          ? "clamp(58px, 7.5vh, 68px)"
-                          : "clamp(48px, 5.8vh, 54px)",
+                          ? "clamp(68px, 8.8vh, 80px)"
+                          : "clamp(62px, 8vh, 74px)",
                         marginTop: profileCompleted ? 18 : 14,
                         borderRadius: "50%",
                         background: "#E4EFE9",
@@ -24334,8 +24910,8 @@ function HomeScreen({
 
                       <div
                         style={{
-                          width: profileCompleted ? 24 : 20,
-                          height: profileCompleted ? 24 : 20,
+                          width: 24,
+                          height: 24,
                           borderRadius: "50%",
                           background: "rgba(255, 255, 255, 0.85)",
                           backdropFilter: "blur(2px)",
@@ -24348,7 +24924,7 @@ function HomeScreen({
                         }}
                       >
                         <LockIconSVG
-                          size={profileCompleted ? 12 : 10}
+                          size={12}
                           color="#2A483E"
                         />
                       </div>
@@ -24357,12 +24933,12 @@ function HomeScreen({
                     <span
                       style={{
                         marginTop: 4,
-                        fontSize: profileCompleted ? 12 : 10.5,
+                        fontSize: profileCompleted ? 13 : 11.5,
                         color: "#475F57",
                         fontWeight: 700,
                         textAlign: "center",
                         lineHeight: 1.15,
-                        maxWidth: 72,
+                        maxWidth: 76,
                         fontFamily:
                           lang === "ur"
                             ? URDU_FONT
@@ -24373,14 +24949,18 @@ function HomeScreen({
                     </span>
 
                     <span
+                      className="zm-beam-border"
                       style={{
                         marginTop: 2,
-                        padding: "1.5px 6px",
+                        padding: "2px 8px",
                         borderRadius: 9999,
-                        background: "#E4F0EA",
-                        border: "1px solid #C6DFD4",
+                        background: "rgba(228, 240, 234, 0.75)",
+                        border: "1px solid rgba(16, 185, 129, 0.35)",
+                        backdropFilter: "blur(6px)",
+                        WebkitBackdropFilter: "blur(6px)",
+                        boxShadow: "0 1.5px 4px rgba(8, 127, 99, 0.08)",
                         color: "#35594C",
-                        fontSize: profileCompleted ? 8.5 : 8,
+                        fontSize: 9,
                         fontWeight: 700,
                         whiteSpace: "nowrap",
                         fontFamily:
@@ -24406,7 +24986,7 @@ function HomeScreen({
             style={{
               position: "relative",
               zIndex: voiceGuideActive ? 45 : 10,
-              paddingTop: profileCompleted ? "8px" : "0px",
+              paddingTop: profileCompleted ? "10px" : "4px",
             }}
           >
             {/* Favorites heading */}
@@ -24458,10 +25038,12 @@ function HomeScreen({
                     active: 0,
                   });
                 }}
-                className="tap-target flex items-center justify-center rounded-full px-3 py-1"
+                className="tap-target zm-beam-border flex items-center justify-center rounded-full px-3 py-1 transition active:scale-95"
                 style={{
-                  background: "#E8F5EE",
-                  border: "1px solid #C4E5D5",
+                  background: "rgba(255, 255, 255, 0.65)",
+                  border: "1.2px solid rgba(16, 185, 129, 0.35)",
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
                   color: "#087F63",
                   fontSize: "12px",
                   fontWeight: 700,
@@ -24537,7 +25119,7 @@ function HomeScreen({
                           initialRateType: item.rateType,
                         });
                       }}
-                      className="flex-shrink-0 flex flex-col items-center relative tap-target"
+                      className="flex-shrink-0 zm-beam-border zm-beam-border-card flex flex-col items-center relative tap-target"
                       style={{
                         width: "calc((100% - 16px) / 3)",
                         minWidth: "calc((100% - 16px) / 3)",
