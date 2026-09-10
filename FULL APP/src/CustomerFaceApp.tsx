@@ -7917,24 +7917,22 @@ function LocationSheet({
         >
           {!province &&
             Object.keys(LOCATIONS).map((p) => {
-              const pPattern: "phulkari" | "ajrak" | "khyber" | "baloch" =
-                p === "Sindh" ? "ajrak" : p === "KPK" ? "khyber" : p === "Balochistan" ? "baloch" : "phulkari";
               return (
                 <button
                   key={p}
                   onClick={() => setProvince(p)}
                   className="tap-target relative overflow-hidden rounded-2xl px-4 flex items-center justify-between"
                   style={{
-                    background: "#F1F7F4",
-                    border: "1px solid #D5E2DD",
+                    backgroundImage: `linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.55)), url(${PROVINCE_CARD_BG[p] || PROVINCE_CARD_BG.Punjab})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    border: "1px solid rgba(255,255,255,0.4)",
                     minHeight: 52,
+                    color: "#FFFFFF",
                   }}
                 >
-                  <div className="absolute inset-0 pointer-events-none opacity-25">
-                    <ProvincePatternSvg pattern={pPattern} opacity={0.3} />
-                  </div>
-                  <span className="relative z-10 font-bold text-base">{p}</span>
-                  <span className="relative z-10" style={{ color: "#52635F" }}>›</span>
+                  <span className="relative z-10 font-extrabold text-base text-white drop-shadow-sm">{p}</span>
+                  <span className="relative z-10 font-bold text-white">›</span>
                 </button>
               );
             })}
@@ -11076,7 +11074,7 @@ function MultiLocSheet({
               marginBottom: 12,
             }}
           >
-            {/* Province Cultural Selector Cards in 2x2 Grid (Rich Backgrounds by default, single checkmark) */}
+            {/* Province Cultural Selector Cards in 2x2 Grid (Clean background images, single checkmark) */}
             <div>
               <div
                 style={{
@@ -11088,7 +11086,7 @@ function MultiLocSheet({
                   marginBottom: 8,
                 }}
               >
-                {lang === "ur" ? "صوبہ اور روایت منتخب کریں" : "Select Province (Tradition & Region)"}
+                {lang === "ur" ? "صوبہ منتخب کریں" : "Select Province"}
               </div>
               <div
                 style={{
@@ -11101,39 +11099,29 @@ function MultiLocSheet({
                 {provinces.map((p) => {
                   const isSelectedInDraft = isProvSelected(p);
                   const pConfig: Record<string, {
-                    pattern: "phulkari" | "ajrak" | "khyber" | "baloch";
-                    traditionUr: string;
-                    traditionEn: string;
                     cardBg: string;
                     borderColor: string;
+                    accentColor: string;
                   }> = {
                     Punjab: {
-                      pattern: "phulkari",
-                      traditionUr: "روایت: پھلکاری",
-                      traditionEn: "Tradition: Phulkari",
                       cardBg: PROVINCE_CARD_BG.Punjab,
                       borderColor: "#087F63",
+                      accentColor: "#087F63",
                     },
                     Sindh: {
-                      pattern: "ajrak",
-                      traditionUr: "روایت: اجرک",
-                      traditionEn: "Tradition: Ajrak",
                       cardBg: PROVINCE_CARD_BG.Sindh,
-                      borderColor: "#0E7490",
+                      borderColor: "#DC2626",
+                      accentColor: "#DC2626",
                     },
                     KPK: {
-                      pattern: "khyber",
-                      traditionUr: "روایت: خیبر",
-                      traditionEn: "Tradition: Khyber",
                       cardBg: PROVINCE_CARD_BG.KPK,
-                      borderColor: "#1F694F",
+                      borderColor: "#0284C7",
+                      accentColor: "#0284C7",
                     },
                     Balochistan: {
-                      pattern: "baloch",
-                      traditionUr: "روایت: بلوچی کڑھائی",
-                      traditionEn: "Tradition: Balochi",
                       cardBg: PROVINCE_CARD_BG.Balochistan,
-                      borderColor: "#78350F",
+                      borderColor: "#EA580C",
+                      accentColor: "#EA580C",
                     },
                   };
 
@@ -11146,27 +11134,23 @@ function MultiLocSheet({
                       onClick={() => toggleProvince(p)}
                       className="tap-target relative overflow-hidden rounded-2xl p-3 flex flex-col justify-between text-left transition active:scale-[0.98] shadow-md"
                       style={{
-                        backgroundImage: `linear-gradient(${isSelectedInDraft ? "rgba(0,0,0,0.18), rgba(0,0,0,0.48)" : "rgba(0,0,0,0.28), rgba(0,0,0,0.58)"}), url(${cfg.cardBg})`,
+                        backgroundImage: `linear-gradient(${isSelectedInDraft ? "rgba(0,0,0,0.18), rgba(0,0,0,0.50)" : "rgba(0,0,0,0.22), rgba(0,0,0,0.52)"}), url(${cfg.cardBg})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         border: isSelectedInDraft ? "2.5px solid #FFFFFF" : `1.5px solid ${cfg.borderColor}`,
-                        boxShadow: isSelectedInDraft ? "0 0 0 2px #087F63, 0 4px 14px rgba(8,127,99,0.3)" : "0 2px 8px rgba(0,0,0,0.12)",
+                        boxShadow: isSelectedInDraft ? `0 0 0 2px ${cfg.accentColor}, 0 4px 14px rgba(0,0,0,0.25)` : "0 2px 8px rgba(0,0,0,0.12)",
                         minHeight: 68,
                         cursor: "pointer",
                       }}
                     >
-                      {/* Rich Traditional Cultural SVG Pattern with Full Default Visibility */}
-                      <div className="absolute inset-0 pointer-events-none z-0">
-                        <ProvincePatternSvg pattern={cfg.pattern} opacity={0.4} />
-                      </div>
-
                       {/* Header with Province Title and White Circle Checkmark */}
                       <div className="relative z-10 flex items-center justify-between w-full">
                         <span
                           style={{
-                            fontSize: 14.5,
+                            fontSize: 15,
                             fontWeight: 900,
                             color: "#FFFFFF",
+                            textShadow: "0 1px 3px rgba(0,0,0,0.6)",
                             fontFamily:
                               lang === "ur"
                                 ? URDU_FONT
@@ -11179,37 +11163,20 @@ function MultiLocSheet({
                         {/* White Circular Checkbox: Ticked only if selected */}
                         <div
                           style={{
-                            width: 20,
-                            height: 20,
+                            width: 22,
+                            height: 22,
                             borderRadius: "50%",
                             background: "#FFFFFF",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
-                            color: "#087F63",
-                            fontSize: 11,
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+                            color: cfg.accentColor,
+                            fontSize: 12,
                             fontWeight: 900,
                           }}
                         >
                           {isSelectedInDraft ? "✓" : ""}
-                        </div>
-                      </div>
-
-                      {/* Tradition Subtitle in Clean Light Text */}
-                      <div className="relative z-10 mt-1">
-                        <div
-                          style={{
-                            fontSize: 10,
-                            fontWeight: 700,
-                            color: "rgba(255,255,255,0.92)",
-                            fontFamily:
-                              lang === "ur"
-                                ? URDU_FONT
-                                : "inherit",
-                          }}
-                        >
-                          {lang === "ur" ? cfg.traditionUr : cfg.traditionEn}
                         </div>
                       </div>
                     </button>
@@ -11271,7 +11238,75 @@ function MultiLocSheet({
               >
                 {filteredDistricts.map((d) => {
                   const isDistExpanded = !!expandedDistricts[d];
-                  const mandiList = LOCATIONS[selectedProvince]?.[d] || [];
+                  const distProvince =
+                    Object.keys(LOCATIONS).find((p) => LOCATIONS[p]?.[d]) ||
+                    selectedProvince ||
+                    "Punjab";
+
+                  const PROV_COLOR_CONFIG: Record<string, {
+                    nameUr: string;
+                    nameEn: string;
+                    accent: string;
+                    gradientStrip: string;
+                    lightBg: string;
+                    cardTint: string;
+                    selectedBg: string;
+                    borderNormal: string;
+                    borderActive: string;
+                    badgeBg: string;
+                  }> = {
+                    Punjab: {
+                      nameUr: "پنجاب",
+                      nameEn: "Punjab",
+                      accent: "#087F63",
+                      gradientStrip: "linear-gradient(90deg, #033D31 0%, #087F63 50%, #033D31 100%)",
+                      lightBg: "#F0F8F4",
+                      cardTint: "rgba(8, 127, 99, 0.08)",
+                      selectedBg: "#E2F5EC",
+                      borderNormal: "rgba(8, 127, 99, 0.35)",
+                      borderActive: "#087F63",
+                      badgeBg: "rgba(8, 127, 99, 0.14)",
+                    },
+                    Sindh: {
+                      nameUr: "سندھ",
+                      nameEn: "Sindh",
+                      accent: "#DC2626",
+                      gradientStrip: "linear-gradient(90deg, #5C0B14 0%, #DC2626 50%, #5C0B14 100%)",
+                      lightBg: "#FEF2F2",
+                      cardTint: "rgba(220, 38, 38, 0.08)",
+                      selectedBg: "#FEE2E2",
+                      borderNormal: "rgba(220, 38, 38, 0.35)",
+                      borderActive: "#DC2626",
+                      badgeBg: "rgba(220, 38, 38, 0.14)",
+                    },
+                    KPK: {
+                      nameUr: "خیبر پختونخوا",
+                      nameEn: "KPK",
+                      accent: "#0284C7",
+                      gradientStrip: "linear-gradient(90deg, #0C4A6E 0%, #0284C7 50%, #0C4A6E 100%)",
+                      lightBg: "#F0F9FF",
+                      cardTint: "rgba(2, 132, 199, 0.08)",
+                      selectedBg: "#E0F2FE",
+                      borderNormal: "rgba(2, 132, 199, 0.35)",
+                      borderActive: "#0284C7",
+                      badgeBg: "rgba(2, 132, 199, 0.14)",
+                    },
+                    Balochistan: {
+                      nameUr: "بلوچستان",
+                      nameEn: "Balochistan",
+                      accent: "#EA580C",
+                      gradientStrip: "linear-gradient(90deg, #7C2D12 0%, #EA580C 50%, #7C2D12 100%)",
+                      lightBg: "#FFF7ED",
+                      cardTint: "rgba(234, 88, 12, 0.08)",
+                      selectedBg: "#FFEDD5",
+                      borderNormal: "rgba(234, 88, 12, 0.35)",
+                      borderActive: "#EA580C",
+                      badgeBg: "rgba(234, 88, 12, 0.14)",
+                    },
+                  };
+
+                  const pTheme = PROV_COLOR_CONFIG[distProvince] || PROV_COLOR_CONFIG.Punjab;
+                  const mandiList = LOCATIONS[distProvince]?.[d] || LOCATIONS[selectedProvince]?.[d] || [];
                   const selectedInDistrictCount = mandiList.filter((m) =>
                     isMandiSelected(m),
                   ).length;
@@ -11284,15 +11319,27 @@ function MultiLocSheet({
                       key={d}
                       style={{
                         flexShrink: 0,
-                        background: "#F9FBFB",
+                        background: selectedInDistrictCount > 0 ? pTheme.selectedBg : pTheme.lightBg,
                         border:
                           selectedInDistrictCount > 0
-                            ? "1.5px solid #087F63"
-                            : "1px solid #E2EFE9",
-                        borderRadius: 12,
+                            ? `1.8px solid ${pTheme.borderActive}`
+                            : `1.2px solid ${pTheme.borderNormal}`,
+                        borderLeft: `5px solid ${pTheme.accent}`,
+                        borderRadius: 14,
                         overflow: "hidden",
+                        boxShadow: selectedInDistrictCount > 0 ? `0 3px 10px ${pTheme.borderNormal}` : "0 1.5px 4px rgba(0,0,0,0.03)",
+                        transition: "all 0.15s ease",
                       }}
                     >
+                      {/* Top Accent Strip with Province Deeper View Gradient */}
+                      <div
+                        style={{
+                          height: 3,
+                          width: "100%",
+                          background: pTheme.gradientStrip,
+                        }}
+                      />
+
                       {/* District Accordion Header */}
                       <div
                         onClick={() => toggleDistrictAccordion(d)}
@@ -11300,8 +11347,8 @@ function MultiLocSheet({
                           padding: "10px 12px",
                           background:
                             selectedInDistrictCount > 0
-                              ? "#F0F8F4"
-                              : "#FFFFFF",
+                              ? pTheme.selectedBg
+                              : `linear-gradient(135deg, ${pTheme.cardTint} 0%, #FFFFFF 100%)`,
                           display: "flex",
                           justifyContent: "space-between",
                           alignItems: "center",
@@ -11309,7 +11356,7 @@ function MultiLocSheet({
                           userSelect: "none",
                           borderBottom:
                             isDistExpanded && mandiList.length > 0
-                              ? "1px solid #E2EFE9"
+                              ? `1px solid ${pTheme.borderNormal}`
                               : "none",
                         }}
                       >
@@ -11327,7 +11374,7 @@ function MultiLocSheet({
                                 fontWeight: 800,
                                 color:
                                   selectedInDistrictCount > 0
-                                    ? "#087F63"
+                                    ? pTheme.accent
                                     : "#183B34",
                                 fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                               }}
@@ -11374,11 +11421,11 @@ function MultiLocSheet({
                                 fontWeight: 800,
                                 color: allInDistrictSelected
                                   ? "#FFFFFF"
-                                  : "#087F63",
+                                  : pTheme.accent,
                                 background: allInDistrictSelected
-                                  ? "#087F63"
-                                  : "#E4F2EC",
-                                border: "1px solid #087F63",
+                                  ? pTheme.accent
+                                  : pTheme.badgeBg,
+                                border: `1px solid ${pTheme.accent}`,
                                 padding: "3px 8px",
                                 borderRadius: 6,
                                 cursor: "pointer",
@@ -11394,7 +11441,7 @@ function MultiLocSheet({
                           {/* Accordion Expand / Collapse Indicator */}
                           <span
                             style={{
-                              color: isDistExpanded ? "#087F63" : "#80918B",
+                              color: isDistExpanded ? pTheme.accent : "#80918B",
                               fontSize: 12,
                               fontWeight: 800,
                               transform: isDistExpanded
@@ -11416,7 +11463,7 @@ function MultiLocSheet({
                             display: "flex",
                             flexDirection: "column",
                             gap: 6,
-                            background: "#FFFFFF",
+                            background: pTheme.lightBg,
                           }}
                         >
                           {mandiList.map((mName) => {
@@ -11434,20 +11481,22 @@ function MultiLocSheet({
                                   padding: "8px 10px",
                                   borderRadius: 8,
                                   border: isSelected
-                                    ? "1.5px solid #087F63"
-                                    : "1px solid #E2EFE9",
+                                    ? `1.5px solid ${pTheme.accent}`
+                                    : `1px solid ${pTheme.borderNormal}`,
+                                  borderLeft: `3.5px solid ${pTheme.accent}`,
                                   background: isSelected
-                                    ? "#E4F2EC"
-                                    : "#FAFCFB",
+                                    ? pTheme.selectedBg
+                                    : "#FFFFFF",
                                   textAlign: "left",
                                   cursor: "pointer",
+                                  boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
                                 }}
                               >
                                 <span
                                   style={{
                                     fontSize: 12,
                                     fontWeight: isSelected ? 800 : 600,
-                                    color: isSelected ? "#087F63" : "#183B34",
+                                    color: isSelected ? pTheme.accent : "#183B34",
                                     fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                                   }}
                                 >
@@ -11459,10 +11508,10 @@ function MultiLocSheet({
                                     height: 18,
                                     borderRadius: 4,
                                     border: isSelected
-                                      ? "1.5px solid #087F63"
-                                      : "1.5px solid #C7D6D0",
+                                      ? `1.5px solid ${pTheme.accent}`
+                                      : `1.5px solid ${pTheme.borderNormal}`,
                                     background: isSelected
-                                      ? "#087F63"
+                                      ? pTheme.accent
                                       : "#FFFFFF",
                                     display: "flex",
                                     alignItems: "center",
@@ -13112,32 +13161,24 @@ function DeepViewLocationSheet({
                     borderColor: string;
                   }> = {
                     Punjab: {
-                      pattern: "phulkari",
-                      traditionUr: "روایت: پھلکاری",
-                      traditionEn: "Tradition: Phulkari",
                       cardBg: PROVINCE_CARD_BG.Punjab,
                       borderColor: "#087F63",
+                      accentColor: "#087F63",
                     },
                     Sindh: {
-                      pattern: "ajrak",
-                      traditionUr: "روایت: اجرک",
-                      traditionEn: "Tradition: Ajrak",
                       cardBg: PROVINCE_CARD_BG.Sindh,
-                      borderColor: "#0E7490",
+                      borderColor: "#DC2626",
+                      accentColor: "#DC2626",
                     },
                     KPK: {
-                      pattern: "khyber",
-                      traditionUr: "روایت: خیبر",
-                      traditionEn: "Tradition: Khyber",
                       cardBg: PROVINCE_CARD_BG.KPK,
-                      borderColor: "#1F694F",
+                      borderColor: "#0284C7",
+                      accentColor: "#0284C7",
                     },
                     Balochistan: {
-                      pattern: "baloch",
-                      traditionUr: "روایت: بلوچی کڑھائی",
-                      traditionEn: "Tradition: Balochi",
                       cardBg: PROVINCE_CARD_BG.Balochistan,
-                      borderColor: "#78350F",
+                      borderColor: "#EA580C",
+                      accentColor: "#EA580C",
                     },
                   };
                   const cfg = pConfig[p] || pConfig.Punjab;
@@ -13151,26 +13192,22 @@ function DeepViewLocationSheet({
                       }}
                       className="tap-target relative overflow-hidden rounded-2xl p-3 flex flex-col justify-between text-left transition active:scale-[0.98] shadow-md"
                       style={{
-                        backgroundImage: `linear-gradient(${isSelected ? "rgba(0,0,0,0.18), rgba(0,0,0,0.48)" : "rgba(0,0,0,0.28), rgba(0,0,0,0.58)"}), url(${cfg.cardBg})`,
+                        backgroundImage: `linear-gradient(${isSelected ? "rgba(0,0,0,0.18), rgba(0,0,0,0.50)" : "rgba(0,0,0,0.22), rgba(0,0,0,0.52)"}), url(${cfg.cardBg})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         border: isSelected ? "2.5px solid #FFFFFF" : `1.5px solid ${cfg.borderColor}`,
-                        boxShadow: isSelected ? "0 0 0 2px #087F63, 0 4px 14px rgba(8,127,99,0.3)" : "0 2px 8px rgba(0,0,0,0.12)",
+                        boxShadow: isSelected ? `0 0 0 2px ${cfg.accentColor}, 0 4px 14px rgba(0,0,0,0.25)` : "0 2px 8px rgba(0,0,0,0.12)",
                         minHeight: 68,
                         cursor: "pointer",
                       }}
                     >
-                      {/* Traditional Cultural Background Pattern */}
-                      <div className="absolute inset-0 pointer-events-none z-0">
-                        <ProvincePatternSvg pattern={cfg.pattern} opacity={0.4} />
-                      </div>
-
                       <div className="relative z-10 flex items-center justify-between w-full">
                         <span
                           style={{
-                            fontSize: 14.5,
+                            fontSize: 15,
                             fontWeight: 900,
                             color: "#FFFFFF",
+                            textShadow: "0 1px 3px rgba(0,0,0,0.6)",
                             fontFamily:
                               lang === "ur"
                                 ? URDU_FONT
@@ -13182,36 +13219,20 @@ function DeepViewLocationSheet({
 
                         <div
                           style={{
-                            width: 20,
-                            height: 20,
+                            width: 22,
+                            height: 22,
                             borderRadius: "50%",
                             background: "#FFFFFF",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
-                            color: "#087F63",
-                            fontSize: 11,
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+                            color: cfg.accentColor,
+                            fontSize: 12,
                             fontWeight: 900,
                           }}
                         >
                           {isSelected ? "✓" : ""}
-                        </div>
-                      </div>
-
-                      <div className="relative z-10 mt-1">
-                        <div
-                          style={{
-                            fontSize: 10,
-                            fontWeight: 700,
-                            color: "rgba(255,255,255,0.92)",
-                            fontFamily:
-                              lang === "ur"
-                                ? URDU_FONT
-                                : "inherit",
-                          }}
-                        >
-                          {lang === "ur" ? cfg.traditionUr : cfg.traditionEn}
                         </div>
                       </div>
                     </button>
@@ -16383,24 +16404,24 @@ function ProductRatesScreen({
                                             </div>
 
                                             {/* Graph View Switcher Tabs: Price vs Arrival */}
-                                            <div className="flex items-center bg-[#EAF5F0] p-0.5 rounded-full border border-[#CDE5DC] flex-shrink-0">
+                                            <div className="flex items-center bg-[#EAF5F0] p-1 rounded-full border border-[#CDE5DC] flex-shrink-0 gap-1">
                                               <button
                                                 type="button"
                                                 onClick={(e) => {
                                                   e.stopPropagation();
                                                   setTableGraphView("price");
                                                 }}
-                                                className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold transition ${
+                                                className={`px-3 py-1 rounded-full text-xs font-black transition active:scale-95 ${
                                                   tableGraphView === "price"
-                                                    ? "bg-[#087F63] text-white shadow-sm"
-                                                    : "text-[#2D5A4C] hover:text-[#087F63]"
+                                                    ? "zm-beam-border bg-[#087F63] text-white shadow-sm"
+                                                    : "text-[#2D5A4C] hover:text-[#087F63] bg-transparent"
                                                 }`}
                                                 style={{
                                                   fontFamily: lang === "ur" ? URDU_FONT : "inherit",
-                                                  fontSize: lang === "ur" ? 11 : 10,
+                                                  fontSize: lang === "ur" ? 13 : 11.5,
                                                 }}
                                               >
-                                                {lang === "ur" ? "📈 قیمت" : "📈 Price"}
+                                                {lang === "ur" ? "قیمت" : "Price"}
                                               </button>
                                               <button
                                                 type="button"
@@ -16408,17 +16429,17 @@ function ProductRatesScreen({
                                                   e.stopPropagation();
                                                   setTableGraphView("arrival");
                                                 }}
-                                                className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold transition ${
+                                                className={`px-3 py-1 rounded-full text-xs font-black transition active:scale-95 ${
                                                   tableGraphView === "arrival"
-                                                    ? "bg-[#087F63] text-white shadow-sm"
-                                                    : "text-[#2D5A4C] hover:text-[#087F63]"
+                                                    ? "zm-beam-border bg-[#087F63] text-white shadow-sm"
+                                                    : "text-[#2D5A4C] hover:text-[#087F63] bg-transparent"
                                                 }`}
                                                 style={{
                                                   fontFamily: lang === "ur" ? URDU_FONT : "inherit",
-                                                  fontSize: lang === "ur" ? 11 : 10,
+                                                  fontSize: lang === "ur" ? 13 : 11.5,
                                                 }}
                                               >
-                                                {lang === "ur" ? "🚛 آمد" : "🚛 Arrival"}
+                                                {lang === "ur" ? "آمد" : "Arrival"}
                                               </button>
                                             </div>
 
@@ -24657,14 +24678,12 @@ function HomeScreen({
                   height="19"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#087F63"
-                  strokeWidth="2.3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
                   className="flex-shrink-0"
                 >
-                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
-                  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+                  <rect x="3" y="3" width="7.5" height="7.5" rx="2" fill="#087F63" />
+                  <rect x="13.5" y="3" width="7.5" height="7.5" rx="2" stroke="#087F63" strokeWidth="2.2" />
+                  <rect x="3" y="13.5" width="7.5" height="7.5" rx="2" stroke="#087F63" strokeWidth="2.2" />
+                  <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2" stroke="#087F63" strokeWidth="2.2" />
                 </svg>
                 <p
                   style={{
@@ -25151,7 +25170,7 @@ function HomeScreen({
                           overflow: "hidden",
                         }}
                       >
-                        {/* Star Badge in Top Corner */}
+                        {/* Heart Badge in Top Corner */}
                         <div
                           style={{
                             position: "absolute",
@@ -25174,11 +25193,13 @@ function HomeScreen({
                             width="11"
                             height="11"
                             viewBox="0 0 24 24"
-                            fill="#F59E0B"
-                            stroke="#D97706"
-                            strokeWidth="1"
+                            fill="#E11D48"
+                            stroke="#E11D48"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           >
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                           </svg>
                         </div>
 
