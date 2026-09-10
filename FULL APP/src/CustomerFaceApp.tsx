@@ -15854,10 +15854,13 @@ function ProductRatesScreen({
                               const isRowModalActive =
                                 selectedMandiGraphRow?.mandiName === r.mandiName &&
                                 selectedMandiGraphRow?.rateType === r.rateType;
-                              const isSelected =
-                                (locScope.kind === "mandi" &&
-                                  locScope.label === r.mandiName) ||
-                                isRowModalActive;
+                              // If a mandi graph is selected/open, highlight only that active mandi; otherwise highlight the initial/scope mandi
+                              const isSelected = selectedMandiGraphRow
+                                ? isRowModalActive
+                                : (locScope.kind === "mandi" &&
+                                    (locScope.label === r.mandiName ||
+                                      locScope.label.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "") ===
+                                        r.mandiName.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "")));
                               // Each row uses ITS OWN canonical attrs
                               const rowCanon = getMandiCanonicalAttrs(r.mandiName);
                               const rowAttrMult = computeAttrMult(
@@ -15876,13 +15879,11 @@ function ProductRatesScreen({
                                     : tableTrendInterval === "monthly"
                                       ? Math.round(r.trendPct * 5.4 * 10) / 10
                                       : r.trendPct;
-                              const rowBg = isRowModalActive
+                              const rowBg = isSelected
                                 ? "#E4F2EC"
-                                : isSelected
-                                  ? "#EAF5F0"
-                                  : ci % 2 === 0
-                                    ? "#FFFFFF"
-                                    : "#F8FCFA";
+                                : ci % 2 === 0
+                                  ? "#FFFFFF"
+                                  : "#F8FCFA";
 
                               return (
                                 <React.Fragment key={`${r.mandiName}-${r.rateType}-${ci}`}>
