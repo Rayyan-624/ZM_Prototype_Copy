@@ -105,51 +105,30 @@ const ZM_THEME_CSS = `
   input, select, textarea { color: #183B34; }
   input::placeholder { color: #80918B; }
   .urdu, [dir="rtl"], .lang-ur {
-    font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
+    font-family: 'Noto Sans Arabic', 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', sans-serif !important;
   }
   [dir="rtl"] {
     text-align: right;
-    --urdu-body-size: clamp(18px, 4.8vw, 22px);
-    --urdu-label-size: clamp(17px, 4.5vw, 21px);
-    --urdu-button-size: clamp(18px, 4.8vw, 22px);
-    --urdu-heading-size: clamp(24px, 6.5vw, 32px);
-    font-size: 110%;
   }
   [dir="rtl"] * {
     letter-spacing: 0 !important;
   }
-  [dir="rtl"] h1 {
-    font-size: 1.45em;
-    line-height: 1.5;
-  }
-  [dir="rtl"] h2 {
-    font-size: 1.3em;
-    line-height: 1.5;
-  }
-  [dir="rtl"] h3 {
-    font-size: 1.2em;
-    line-height: 1.5;
-  }
   [dir="rtl"] p, [dir="rtl"] span, [dir="rtl"] button {
-    line-height: 1.6;
+    line-height: 1.45;
   }
-  [dir="rtl"] .text-\[8px\] { font-size: 14px !important; }
-  [dir="rtl"] .text-\[9px\] { font-size: 14.5px !important; }
-  [dir="rtl"] .text-\[10px\] { font-size: 15.5px !important; }
-  [dir="rtl"] .text-\[11px\] { font-size: 16.5px !important; }
-  [dir="rtl"] .text-\[12px\] { font-size: 17.5px !important; }
-  [dir="rtl"] .text-xs { font-size: 17px !important; }
-  [dir="rtl"] .text-sm { font-size: 19px !important; }
-  [dir="rtl"] .text-base { font-size: 21px !important; }
-  [dir="rtl"] .text-lg { font-size: 24px !important; }
-  [dir="rtl"] .text-xl { font-size: 28px !important; }
-  [dir="rtl"] .text-2xl { font-size: 32px !important; }
-  [dir="rtl"] .text-3xl { font-size: 36px !important; }
   [dir="rtl"] .ltr-only {
     direction: ltr;
     text-align: left;
   }
 `;
+
+export const URDU_FONT = "'Noto Sans Arabic', 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', sans-serif";
+
+// ─── Urdu digit converter helper ──────────────────────────────
+export function toUrduDigits(n: number | string): string {
+  const urduDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  return String(n).replace(/[0-9]/g, (w) => urduDigits[+w]);
+}
 
 // ─── COMPREHENSIVE URDU DICTIONARY & TRANSLATION SYSTEM ────────────────────────
 
@@ -176,7 +155,6 @@ const AUTO_URDU_DICT: Record<string, string> = {
   Search: "تلاش",
   "Search product or byproduct...": "اجناس یا ضمنی مصنوع تلاش کریں…",
   "Search product or byproduct…": "اجناس یا ضمنی مصنوع تلاش کریں…",
-  "Search product or byproduct…": "اجناس یا ضمنی مصنوع تلاش کریں…",
 
   "Search Mandis, Cities...": "منڈیاں یا شہر تلاش کریں…",
   "Search byproducts...": "ضمنی مصنوعات تلاش کریں…",
@@ -184,6 +162,93 @@ const AUTO_URDU_DICT: Record<string, string> = {
   "Muhammad Arif": "محمد عارف",
   "Pakpattan Mandi": "پاکپتن منڈی",
   Pakpattan: "پاکپتن",
+  "Karachi Mandi": "کراچی منڈی",
+  Karachi: "کراچی",
+  "Peshawar Mandi": "پشاور منڈی",
+  Peshawar: "پشاور",
+  "Quetta Mandi": "کوئٹہ منڈی",
+  Quetta: "کوئٹہ",
+  "Lahore Mandi": "لاہور منڈی",
+  Lahore: "لاہور",
+  "Faisalabad Mandi": "فیصل آباد منڈی",
+  Faisalabad: "فیصل آباد",
+  "Multan Mandi": "ملتان منڈی",
+  Multan: "ملتان",
+  "Sukkur Mandi": "سکھر منڈی",
+  Sukkur: "سکھر",
+  "Hyderabad Mandi": "حیدرآباد منڈی",
+  Hyderabad: "حیدرآباد",
+  "Gujranwala Mandi": "گوجرانوالہ منڈی",
+  Gujranwala: "گوجرانوالہ",
+  "Rawalpindi Mandi": "راولپنڈی منڈی",
+  Rawalpindi: "راولپنڈی",
+  "Sargodha Mandi": "سرگودھا منڈی",
+  Sargodha: "سرگودھا",
+  "Bahawalpur Mandi": "بہاولپور منڈی",
+  Bahawalpur: "بہاولپور",
+  "Sahiwal Mandi": "ساہیوال منڈی",
+  Sahiwal: "ساہیوال",
+  "Okara Mandi": "اوکاڑہ منڈی",
+  Okara: "اوکاڑہ",
+  "Jhang Mandi": "جھنگ منڈی",
+  Jhang: "جھنگ",
+  "Kasur Mandi": "قصور منڈی",
+  Kasur: "قصور",
+  "Vehari Mandi": "وہاڑی منڈی",
+  Vehari: "وہاڑی",
+  "Khanewal Mandi": "خانیوال منڈی",
+  Khanewal: "خانیوال",
+  "Chiniot Mandi": "چنیوٹ منڈی",
+  Chiniot: "چنیوٹ",
+  "Sheikhupura Mandi": "شیخوپورہ منڈی",
+  Sheikhupura: "شیخوپورہ",
+  "Burewala Mandi": "بورے والا منڈی",
+  Burewala: "بورے والا",
+  "D.G. Khan Mandi": "ڈیرہ غازی خان منڈی",
+  "D.G. Khan": "ڈیرہ غازی خان",
+  "D.I. Khan Mandi": "ڈیرہ اسماعیل خان منڈی",
+  "D.I. Khan": "ڈیرہ اسماعیل خان",
+  "Mandi Bahauddin Mandi": "منڈی بہاؤالدین",
+  "Mandi Bahauddin": "منڈی بہاؤالدین",
+  "Bahawalnagar Mandi": "بہاولنگر منڈی",
+  Bahawalnagar: "بہاولنگر",
+  "Muzaffargarh Mandi": "مظفر گڑھ منڈی",
+  Muzaffargarh: "مظفر گڑھ",
+  "Layyah Mandi": "لیہ منڈی",
+  Layyah: "لیہ",
+  "Lodhran Mandi": "لودھراں منڈی",
+  Lodhran: "لودھراں",
+  "Toba Tek Singh Mandi": "ٹوبہ ٹیک سنگھ منڈی",
+  "Toba Tek Singh": "ٹوبہ ٹیک سنگھ",
+  "Hafizabad Mandi": "حافظ آباد منڈی",
+  Hafizabad: "حافظ آباد",
+  "Nankana Sahib Mandi": "ننکانہ صاحب منڈی",
+  "Nankana Sahib": "ننکانہ صاحب",
+  "Attock Mandi": "اٹک منڈی",
+  Attock: "اٹک",
+  "Chakwal Mandi": "چکوال منڈی",
+  Chakwal: "چکوال",
+  "Jhelum Mandi": "جہلم منڈی",
+  Jhelum: "جہلم",
+  "Mianwali Mandi": "میانوالی منڈی",
+  Mianwali: "میانوالی",
+  "Bhakkar Mandi": "بھکر منڈی",
+  Bhakkar: "بھکر",
+  "Khushab Mandi": "خوشاب منڈی",
+  Khushab: "خوشاب",
+  "Sialkot Mandi": "سیالکوٹ منڈی",
+  Sialkot: "سیالکوٹ",
+  "Narowal Mandi": "نارووال منڈی",
+  Narowal: "نارووال",
+  "Gujrat Mandi": "گجرات منڈی",
+  Gujrat: "گجرات",
+  "Badami Bagh": "بادامی باغ",
+  "Badami Bagh Mandi": "بادامی باغ منڈی",
+  "Grain Market": "غلہ منڈی",
+  "Sabzi Mandi": "سبزی منڈی",
+  "Fruit Market": "فروٹ منڈی",
+  "Rahim Yar Khan Mandi": "رحیم یار خان منڈی",
+  "Rahim Yar Khan": "رحیم یار خان",
   Today: "آج",
   Yesterday: "گزشتہ کل",
   All: "سب",
@@ -196,47 +261,6 @@ const AUTO_URDU_DICT: Record<string, string> = {
   KPK: "خیبر پختونخوا",
   Balochistan: "بلوچستان",
   Islamabad: "اسلام آباد",
-  Lahore: "لاہور",
-  Faisalabad: "فیصل آباد",
-  Multan: "ملتان",
-  Okara: "اوکاڑہ",
-  Sahiwal: "ساہیوال",
-  Sargodha: "سرگودھا",
-  Bahawalpur: "بہاولپور",
-  "Rahim Yar Khan": "رحیم یار خان",
-  Gujranwala: "گوجرانوالہ",
-  Rawalpindi: "راولپنڈی",
-  Peshawar: "پشاور",
-  Quetta: "کوئٹہ",
-  Karachi: "کراچی",
-  Hyderabad: "حیدرآباد",
-  Sukkur: "سکھر",
-  Jhang: "جھنگ",
-  Kasur: "قصور",
-  Vehari: "وہاڑی",
-  Khanewal: "خانیوال",
-  Chiniot: "چنیوٹ",
-  Sheikhupura: "شیخوپورہ",
-  Burewala: "بورے والا",
-  "D.G. Khan": "ڈیرہ غازی خان",
-  "D.I. Khan": "ڈیرہ اسماعیل خان",
-  "Mandi Bahauddin": "منڈی بہاؤالدین",
-  Bahawalnagar: "بہاولنگر",
-  Muzaffargarh: "مظفر گڑھ",
-  Layyah: "لیہ",
-  Lodhran: "لودھراں",
-  "Toba Tek Singh": "ٹوبہ ٹیک سنگھ",
-  Hafizabad: "حافظ آباد",
-  "Nankana Sahib": "ننکانہ صاحب",
-  Attock: "اٹک",
-  Chakwal: "چکوال",
-  Jhelum: "جہلم",
-  Mianwali: "میانوالی",
-  Bhakkar: "بھکر",
-  Khushab: "خوشاب",
-  Sialkot: "سیالکوٹ",
-  Narowal: "نارووال",
-  Gujrat: "گجرات",
 
   // Verticals / Categories
   Grains: "اجناس و اناج",
@@ -570,6 +594,73 @@ const AUTO_URDU_DICT: Record<string, string> = {
     "تمام اجناس اور تفصیلی مارکیٹ تجزیات تک رسائی کے لیے اکاؤنٹ اپگریڈ کریں۔",
   "Upgrade Now": "ابھی اپگریڈ کریں",
   "Not Now": "بعد میں",
+
+  // Location & Province Filter Modal
+  "Location Filter": "مقام کا فلٹر",
+  "SEARCH ANY MANDI OR DISTRICT": "منڈی یا ضلع تلاش کریں",
+  "Search Any Mandi or District": "منڈی یا ضلع تلاش کریں",
+  "e.g. Badami Bagh, Faisalabad, Multan...": "مثال: بادامی باغ، فیصل آباد، ملتان...",
+  "All Pakistan": "پورا پاکستان",
+  "All Pakistan (National)": "پورا پاکستان (قومی)",
+  "SELECT PROVINCE (TRADITION & REGION)": "صوبہ اور روایت منتخب کریں",
+  "Select Province (Tradition & Region)": "صوبہ اور روایت منتخب کریں",
+  "Punjab Province": "صوبہ پنجاب",
+  "Sindh Province": "صوبہ سندھ",
+  "Khyber Pakhtunkhwa": "خیبر پختونخوا",
+  "Balochistan Province": "صوبہ بلوچستان",
+  "Tradition: Phulkari": "روایت: پھلکاری",
+  "Tradition: Ajrak": "روایت: اجرک",
+  "Tradition: Khyber": "روایت: خیبر",
+  "Tradition: Balochi": "روایت: بلوچی کڑھائی",
+  "DISTRICTS & MANDIS": "اضلاع اور منڈیاں",
+  "Districts & Mandis": "اضلاع اور منڈیاں",
+  "0 filters active": "۰ فلٹرز فعال",
+  "1 filter active": "۱ فلٹر فعال",
+  "filters active": "فلٹرز فعال",
+  "Select All": "سب منتخب کریں",
+  "✓ All Selected": "✓ سب منتخب",
+  "Apply All Pakistan": "پورا پاکستان لاگو کریں",
+  "Apply 1 Selected Location": "۱ منتخب مقام لاگو کریں",
+
+  // Deep View, Rates & Quality Metrics
+  "TODAY'S OVERVIEW": "آج کا جائزہ",
+  "Today's Overview": "آج کا جائزہ",
+  "MAX PRICE": "زیادہ قیمت",
+  "Max Price": "زیادہ قیمت",
+  "MIN PRICE": "کم قیمت",
+  "Min Price": "کم قیمت",
+  "ARRIVAL": "آمد",
+  "Arrival": "آمد",
+  "TOTAL BAGS": "کل بوریاں",
+  "Total Bags": "کل بوریاں",
+  "(40 KG)": "(۴۰ کلو)",
+  "(40 kg)": "(۴۰ کلو)",
+  "RATE TYPE": "ریٹ کی قسم",
+  "Rate Type": "ریٹ کی قسم",
+  "VARIETY": "ورائٹی / قسم",
+  "Variety": "ورائٹی / قسم",
+  "COLOR": "رنگ",
+  "Color": "رنگ",
+  "QUALITY": "معیار",
+  "Quality": "معیار",
+  "SPEC": "پیکنگ / تفصیل",
+  "Spec": "پیکنگ / تفصیل",
+  "CONDITION": "حالت",
+  "Condition": "حالت",
+  "Complete Profile to Unlock Rate": "ریٹ دیکھنے کے لیے پروفائل مکمل کریں",
+  "Complete your profile to unlock historical price data.": "پچھلے ریکارڈ دیکھنے کے لیے پروفائل مکمل کریں۔",
+  "Unlock ➔": "انلاک کریں ➔",
+  "Customer App": "کسٹمر ایپ",
+  "Rep Dashboard": "نمائندہ ڈیش بورڈ",
+  "Sign In": "سائن ان",
+  "Onboarding": "آن بورڈنگ",
+  "Rep Onboarding": "نمائندہ آن بورڈنگ",
+  "Restart Onboarding": "دوبارہ آن بورڈنگ",
+  "Skip to Customer App": "کسٹمر ایپ پر جائیں",
+  "TODAY": "آج",
+  "YESTERDAY": "گزشتہ کل",
+  "All": "تمام",
+  "ALL": "تمام",
 };
 
 const TRANS: Record<string, { en: string; ur: string }> = {
@@ -771,9 +862,20 @@ function LangProvider({ children }: { children: React.ReactNode }) {
   const tm = (mandiName: string): string => {
     if (!mandiName) return "";
     if (lang === "en") return mandiName;
-    return (
-      AUTO_URDU_DICT[mandiName] || AUTO_URDU_DICT[mandiName.trim()] || mandiName
-    );
+    const trimmed = mandiName.trim();
+    if (AUTO_URDU_DICT[trimmed]) return AUTO_URDU_DICT[trimmed];
+
+    const stripped = trimmed
+      .replace(/\s*mandi\s*/gi, "")
+      .replace(/\s*grain market\s*/gi, "")
+      .replace(/\s*منڈی\s*/g, "")
+      .trim();
+
+    if (AUTO_URDU_DICT[stripped]) {
+      const isMandi = /mandi/i.test(trimmed) || /منڈی/.test(trimmed);
+      return isMandi ? `${AUTO_URDU_DICT[stripped]} منڈی` : AUTO_URDU_DICT[stripped];
+    }
+    return AUTO_URDU_DICT[trimmed] || trimmed;
   };
 
   const tr = (rateType: string): string => {
@@ -8877,7 +8979,7 @@ function SearchScreen({
                 fontSize: lang === "ur" ? 19 : 14,
                 fontFamily:
                   lang === "ur"
-                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                    ? URDU_FONT
                     : "'Inter', sans-serif",
                 direction: lang === "ur" ? "rtl" : "ltr",
               }}
@@ -8910,7 +9012,7 @@ function SearchScreen({
               lineHeight: 1.5,
               fontFamily:
                 lang === "ur"
-                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                  ? URDU_FONT
                   : "inherit",
             }}
           >
@@ -8930,7 +9032,7 @@ function SearchScreen({
               fontSize: lang === "ur" ? 20 : 14,
               fontFamily:
                 lang === "ur"
-                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                  ? URDU_FONT
                   : "inherit",
             }}
           >
@@ -9246,7 +9348,7 @@ function ProductSelectScreen({
                         fontSize: 12,
                         fontFamily:
                           lang === "ur"
-                            ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                            ? URDU_FONT
                             : "'Inter', sans-serif",
                         color: !subscribed
                           ? "#475F57"
@@ -9518,6 +9620,23 @@ function ByProductCombinedScreen({
     ];
     return { d: d.getDate(), month: months[d.getMonth()] };
   };
+  const monthsUr = [
+    "جنوری",
+    "فروری",
+    "مارچ",
+    "اپریل",
+    "مئی",
+    "جون",
+    "جولائی",
+    "اگست",
+    "ستمبر",
+    "اکتوبر",
+    "نومبر",
+    "دسمبر",
+  ];
+  const weekdaysUr = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"];
+  const weekdaysEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
   const dateLabelStr = (d: Date) =>
     `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
   const dateDisplayStr = (d: Date) => {
@@ -9535,6 +9654,9 @@ function ByProductCombinedScreen({
       "Nov",
       "Dec",
     ];
+    if (lang === "ur") {
+      return `${toUrduDigits(d.getDate())} ${monthsUr[d.getMonth()]} ${toUrduDigits(d.getFullYear())}`;
+    }
     return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
   };
 
@@ -9941,7 +10063,7 @@ function ByProductCombinedScreen({
               style={{
                 fontFamily:
                   lang === "ur"
-                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                    ? URDU_FONT
                     : "'Poppins', sans-serif",
               }}
             >
@@ -9979,7 +10101,7 @@ function ByProductCombinedScreen({
                   style={{
                     fontFamily:
                       lang === "ur"
-                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        ? URDU_FONT
                         : "inherit",
                   }}
                 >
@@ -9988,7 +10110,7 @@ function ByProductCombinedScreen({
                     : (visibleDateLabel.month === "AUG" ? "Aug" : visibleDateLabel.month)}
                 </span>
                 <span className="text-[10px] font-black text-[#075E4F] whitespace-nowrap mt-1">
-                  {visibleDateLabel.d}
+                  {lang === "ur" ? toUrduDigits(visibleDateLabel.d) : visibleDateLabel.d}
                 </span>
               </div>
 
@@ -10005,12 +10127,12 @@ function ByProductCombinedScreen({
                   style={{
                     fontFamily:
                       lang === "ur"
-                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        ? URDU_FONT
                         : "inherit",
                   }}
                 >
                   {lang === "ur"
-                    ? `${String(islamicDate.day).padStart(2, "0")} ${islamicDate.monthName ? islamicDate.monthName : "ربیع الاول"}`
+                    ? `${toUrduDigits(String(islamicDate.day).padStart(2, "0"))} ${islamicDate.monthName ? islamicDate.monthName : "ربیع الاول"}`
                     : `${String(islamicDate.day).padStart(2, "0")} ${islamicDate.monthName && islamicDate.monthName !== "ربیع الاول" ? islamicDate.monthName : "Rabi ul Awwal"}`}
                 </span>
                 <span
@@ -10018,11 +10140,11 @@ function ByProductCombinedScreen({
                   style={{
                     fontFamily:
                       lang === "ur"
-                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        ? URDU_FONT
                         : "inherit",
                   }}
                 >
-                  {lang === "ur" ? "1448ھ" : "1448 AH"}
+                  {lang === "ur" ? `${toUrduDigits("1448")}ھ` : "1448 AH"}
                 </span>
               </div>
             </div>
@@ -10096,7 +10218,7 @@ function ByProductCombinedScreen({
                 minHeight: 32,
                 fontFamily:
                   lang === "ur"
-                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                    ? URDU_FONT
                     : "inherit",
               }}
             >
@@ -10130,7 +10252,7 @@ function ByProductCombinedScreen({
                     minHeight: 32,
                     fontFamily:
                       lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                        ? URDU_FONT
                         : "inherit",
                   }}
                 >
@@ -10279,9 +10401,14 @@ function ByProductCombinedScreen({
                       <line x1="8" y1="2" x2="8" y2="6" />
                       <line x1="3" y1="10" x2="21" y2="10" />
                     </svg>
-                    <span>
-                      {isToday ? (lang === "ur" ? "جمعرات، " : "Thu, ") : ""}
-                      {dDisplay}
+                    <span
+                      style={{
+                        fontFamily: lang === "ur" ? URDU_FONT : "inherit",
+                      }}
+                    >
+                      {isToday
+                        ? (lang === "ur" ? `جمعرات، ${dDisplay}` : `Thu, ${dDisplay}`)
+                        : dDisplay}
                     </span>
                   </span>
                   <div
@@ -10796,7 +10923,7 @@ function MultiLocSheet({
                       color: isWholeCountrySelected ? "#FFFFFF" : "#183B34",
                       fontFamily:
                         lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          ? URDU_FONT
                           : "inherit",
                     }}
                   >
@@ -10872,35 +10999,35 @@ function MultiLocSheet({
                     pattern: "phulkari" | "ajrak" | "khyber" | "baloch";
                     traditionUr: string;
                     traditionEn: string;
-                    bg: string;
+                    cardBg: string;
                     borderColor: string;
                   }> = {
                     Punjab: {
                       pattern: "phulkari",
                       traditionUr: "روایت: پھلکاری",
                       traditionEn: "Tradition: Phulkari",
-                      bg: "linear-gradient(135deg, #033D31 0%, #087F63 100%)",
+                      cardBg: PROVINCE_CARD_BG.Punjab,
                       borderColor: "#087F63",
                     },
                     Sindh: {
                       pattern: "ajrak",
                       traditionUr: "روایت: اجرک",
                       traditionEn: "Tradition: Ajrak",
-                      bg: "linear-gradient(135deg, #072F3E 0%, #0E7490 100%)",
+                      cardBg: PROVINCE_CARD_BG.Sindh,
                       borderColor: "#0E7490",
                     },
                     KPK: {
                       pattern: "khyber",
                       traditionUr: "روایت: خیبر",
                       traditionEn: "Tradition: Khyber",
-                      bg: "linear-gradient(135deg, #103326 0%, #1F694F 100%)",
+                      cardBg: PROVINCE_CARD_BG.KPK,
                       borderColor: "#1F694F",
                     },
                     Balochistan: {
                       pattern: "baloch",
                       traditionUr: "روایت: بلوچی کڑھائی",
                       traditionEn: "Tradition: Balochi",
-                      bg: "linear-gradient(135deg, #381A03 0%, #78350F 100%)",
+                      cardBg: PROVINCE_CARD_BG.Balochistan,
                       borderColor: "#78350F",
                     },
                   };
@@ -10914,8 +11041,11 @@ function MultiLocSheet({
                       onClick={() => toggleProvince(p)}
                       className="tap-target relative overflow-hidden rounded-2xl p-3 flex flex-col justify-between text-left transition active:scale-[0.98] shadow-md"
                       style={{
-                        background: cfg.bg,
-                        border: `1.5px solid ${cfg.borderColor}`,
+                        backgroundImage: `linear-gradient(${isSelectedInDraft ? "rgba(0,0,0,0.18), rgba(0,0,0,0.48)" : "rgba(0,0,0,0.28), rgba(0,0,0,0.58)"}), url(${cfg.cardBg})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        border: isSelectedInDraft ? "2.5px solid #FFFFFF" : `1.5px solid ${cfg.borderColor}`,
+                        boxShadow: isSelectedInDraft ? "0 0 0 2px #087F63, 0 4px 14px rgba(8,127,99,0.3)" : "0 2px 8px rgba(0,0,0,0.12)",
                         minHeight: 68,
                         cursor: "pointer",
                       }}
@@ -10934,7 +11064,7 @@ function MultiLocSheet({
                             color: "#FFFFFF",
                             fontFamily:
                               lang === "ur"
-                                ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                                ? URDU_FONT
                                 : "inherit",
                           }}
                         >
@@ -10970,7 +11100,7 @@ function MultiLocSheet({
                             color: "rgba(255,255,255,0.92)",
                             fontFamily:
                               lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                ? URDU_FONT
                                 : "inherit",
                           }}
                         >
@@ -11013,9 +11143,12 @@ function MultiLocSheet({
                     fontSize: 10.5,
                     color: "#087F63",
                     fontWeight: 700,
+                    fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                   }}
                 >
-                  {draft.length} filter{draft.length !== 1 ? "s" : ""} active
+                  {lang === "ur"
+                    ? `${draft.length} فلٹرز فعال`
+                    : `${draft.length} filter${draft.length !== 1 ? "s" : ""} active`}
                 </span>
               </div>
 
@@ -11091,21 +11224,27 @@ function MultiLocSheet({
                                   selectedInDistrictCount > 0
                                     ? "#087F63"
                                     : "#183B34",
+                                fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                               }}
                             >
-                              {d}
+                              {tmL(d)}
                             </div>
                             <div
                               style={{
                                 fontSize: 10.5,
                                 color: "#52635F",
                                 marginTop: 1,
+                                fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                               }}
                             >
                               {mandiList.length}{" "}
-                              {mandiList.length === 1 ? "Mandi" : "Mandis"}
+                              {mandiList.length === 1
+                                ? (lang === "ur" ? "منڈی" : "Mandi")
+                                : (lang === "ur" ? "منڈیاں" : "Mandis")}
                               {selectedInDistrictCount > 0 &&
-                                ` · ${selectedInDistrictCount} Selected`}
+                                (lang === "ur"
+                                  ? ` · ${selectedInDistrictCount} منتخب`
+                                  : ` · ${selectedInDistrictCount} Selected`)}
                             </div>
                           </div>
                         </div>
@@ -11126,7 +11265,7 @@ function MultiLocSheet({
                                 toggleSelectAllInDistrict(d, mandiList);
                               }}
                               style={{
-                                fontSize: 10,
+                                fontSize: lang === "ur" ? 11 : 10,
                                 fontWeight: 800,
                                 color: allInDistrictSelected
                                   ? "#FFFFFF"
@@ -11138,11 +11277,12 @@ function MultiLocSheet({
                                 padding: "3px 8px",
                                 borderRadius: 6,
                                 cursor: "pointer",
+                                fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                               }}
                             >
                               {allInDistrictSelected
-                                ? "✓ All Selected"
-                                : "Select All"}
+                                ? (lang === "ur" ? "✓ سب منتخب" : "✓ All Selected")
+                                : (lang === "ur" ? "سب منتخب کریں" : "Select All")}
                             </button>
                           )}
 
@@ -11203,9 +11343,10 @@ function MultiLocSheet({
                                     fontSize: 12,
                                     fontWeight: isSelected ? 800 : 600,
                                     color: isSelected ? "#087F63" : "#183B34",
+                                    fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                                   }}
                                 >
-                                  {mName}
+                                  {tmL(mName)}
                                 </span>
                                 <div
                                   style={{
@@ -11247,16 +11388,25 @@ function MultiLocSheet({
                       border: "1.5px dashed #D5E2DD",
                       color: "#52635F",
                       fontSize: 12.5,
+                      fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                     }}
                   >
-                    <div>🔍 No locations matching "{distSearch}"</div>
+                    <div>
+                      {lang === "ur"
+                        ? `🔍 کوئی مقام نہیں ملا "${distSearch}"`
+                        : `🔍 No locations matching "${distSearch}"`}
+                    </div>
                     <button
                       type="button"
                       onClick={() => setDistSearch("")}
                       className="tap-target px-3 py-1 rounded-lg text-xs font-bold mt-2"
-                      style={{ background: "#087F63", color: "#fff" }}
+                      style={{
+                        background: "#087F63",
+                        color: "#fff",
+                        fontFamily: lang === "ur" ? URDU_FONT : "inherit",
+                      }}
                     >
-                      Clear Search
+                      {lang === "ur" ? "تلاش صاف کریں" : "Clear Search"}
                     </button>
                   </div>
                 )}
@@ -11582,11 +11732,7 @@ type RichRow = {
   newOld?: string;
 };
 
-// ─── Urdu digit converter helper ──────────────────────────────
-function toUrduDigits(n: number | string): string {
-  const urduDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-  return String(n).replace(/[0-9]/g, (w) => urduDigits[+w]);
-}
+// ─── Islamic / Lunar Calendar Helper ──────────────────────────
 
 // ─── Islamic / Lunar Calendar Helper ──────────────────────────
 function getIslamicDate(
@@ -11777,11 +11923,13 @@ function RateCard({
   };
 
   // Strip 'Mandi' / 'منڈی' from city name for clean single line
-  const rawMandi = tmL(r.mandiName);
-  const cleanCity = rawMandi
+  const rawMandi = tmL(r.mandiCity || r.mandiName || "");
+  const strippedCity = rawMandi
     .replace(/\s*mandi\s*/gi, "")
+    .replace(/\s*grain market\s*/gi, "")
     .replace(/\s*منڈی\s*/g, "")
     .trim() || rawMandi;
+  const cleanCity = lang === "ur" ? (AUTO_URDU_DICT[strippedCity] || strippedCity) : strippedCity;
   const cleanBP = tcL(r.byproduct || r.product);
   const singleLineTitle = `${cleanBP} - ${cleanCity}`;
 
@@ -11876,7 +12024,7 @@ function RateCard({
           style={{
             fontFamily:
               lang === "ur"
-                ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                ? URDU_FONT
                 : "'Poppins', sans-serif",
           }}
           title={singleLineTitle}
@@ -11887,65 +12035,73 @@ function RateCard({
 
       {/* Prices: Clean Side-by-Side with Price on Top (in 1 line) and Min/Max Label Below */}
       <div
-        className="flex items-center justify-between px-2 py-1.5 rounded-xl my-1 w-full relative z-1"
+        className="flex items-center justify-between px-2 py-1 rounded-xl my-1 w-full relative z-1"
         style={{
-          background: provinceBg ? "rgba(255, 255, 255, 0.88)" : "rgba(255, 255, 255, 0.38)",
+          background: provinceBg ? "rgba(255, 255, 255, 0.90)" : "rgba(255, 255, 255, 0.40)",
           border: provinceBg ? "1px solid rgba(229, 235, 232, 0.8)" : "1px solid rgba(255, 255, 255, 0.60)",
           backdropFilter: "blur(4px)",
           WebkitBackdropFilter: "blur(4px)",
         }}
       >
         {/* Min */}
-        <div className="flex flex-col items-start flex-1 min-w-0">
+        <div className="flex flex-col items-start flex-1 min-w-0 pr-0.5">
           <span
-            className="font-extrabold text-[13.5px] text-[#183B34] tracking-tight leading-none whitespace-nowrap truncate w-full"
+            className="font-extrabold text-[#183B34] tracking-tight leading-none whitespace-nowrap truncate w-full"
             style={{
+              fontSize: lang === "ur" ? 11 : 13,
               fontFamily:
                 lang === "ur"
-                  ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                  ? URDU_FONT
                   : "'Poppins', sans-serif",
             }}
           >
-            {lang === "ur" ? `روپے ${r.min.toLocaleString("en-PK")}` : `Rs. ${r.min.toLocaleString("en-PK")}`}
+            {lang === "ur"
+              ? `${toUrduDigits(r.min.toLocaleString("en-PK"))} روپے`
+              : `Rs. ${r.min.toLocaleString("en-PK")}`}
           </span>
           <span
-            className="text-[9.5px] font-semibold tracking-tight text-[#80918B] mt-0.5 whitespace-nowrap"
+            className="font-semibold tracking-tight text-[#80918B] mt-0.5 whitespace-nowrap truncate w-full"
             style={{
+              fontSize: lang === "ur" ? 8 : 9.5,
               fontFamily:
                 lang === "ur"
-                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                  ? URDU_FONT
                   : "inherit",
             }}
           >
-            {lang === "ur" ? "کم سے کم (۴۰ کلو)" : "Min (40 KG)"}
+            {lang === "ur" ? "کم قیمت (۴۰ کلو)" : "Min (40 KG)"}
           </span>
         </div>
 
-        <div className="w-[1px] h-6 bg-[#E5EBE8] mx-1.5 flex-shrink-0" />
+        <div className="w-[1px] h-5 bg-[#D5E2DD] mx-1 flex-shrink-0" />
 
         {/* Max */}
-        <div className="flex flex-col items-start flex-1 pl-1 min-w-0">
+        <div className="flex flex-col items-start flex-1 min-w-0 pl-0.5">
           <span
-            className="font-extrabold text-[13.5px] text-[#183B34] tracking-tight leading-none whitespace-nowrap truncate w-full"
+            className="font-extrabold text-[#183B34] tracking-tight leading-none whitespace-nowrap truncate w-full"
             style={{
+              fontSize: lang === "ur" ? 11 : 13,
               fontFamily:
                 lang === "ur"
-                  ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                  ? URDU_FONT
                   : "'Poppins', sans-serif",
             }}
           >
-            {lang === "ur" ? `روپے ${r.max.toLocaleString("en-PK")}` : `Rs. ${r.max.toLocaleString("en-PK")}`}
+            {lang === "ur"
+              ? `${toUrduDigits(r.max.toLocaleString("en-PK"))} روپے`
+              : `Rs. ${r.max.toLocaleString("en-PK")}`}
           </span>
           <span
-            className="text-[9.5px] font-semibold tracking-tight text-[#80918B] mt-0.5 whitespace-nowrap"
+            className="font-semibold tracking-tight text-[#80918B] mt-0.5 whitespace-nowrap truncate w-full"
             style={{
+              fontSize: lang === "ur" ? 8 : 9.5,
               fontFamily:
                 lang === "ur"
-                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                  ? URDU_FONT
                   : "inherit",
             }}
           >
-            {lang === "ur" ? "زیادہ سے زیادہ (۴۰ کلو)" : "Max (40 KG)"}
+            {lang === "ur" ? "زیادہ قیمت (۴۰ کلو)" : "Max (40 KG)"}
           </span>
         </div>
       </div>
@@ -12740,7 +12896,7 @@ function DeepViewLocationSheet({
                       color: current.kind === "pakistan" ? "#FFFFFF" : "#075E4F",
                       fontFamily:
                         lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          ? URDU_FONT
                           : "inherit",
                     }}
                   >
@@ -12847,35 +13003,35 @@ function DeepViewLocationSheet({
                     pattern: "phulkari" | "ajrak" | "khyber" | "baloch";
                     traditionUr: string;
                     traditionEn: string;
-                    bg: string;
+                    cardBg: string;
                     borderColor: string;
                   }> = {
                     Punjab: {
                       pattern: "phulkari",
                       traditionUr: "روایت: پھلکاری",
                       traditionEn: "Tradition: Phulkari",
-                      bg: "linear-gradient(135deg, #033D31 0%, #087F63 100%)",
+                      cardBg: PROVINCE_CARD_BG.Punjab,
                       borderColor: "#087F63",
                     },
                     Sindh: {
                       pattern: "ajrak",
                       traditionUr: "روایت: اجرک",
                       traditionEn: "Tradition: Ajrak",
-                      bg: "linear-gradient(135deg, #072F3E 0%, #0E7490 100%)",
+                      cardBg: PROVINCE_CARD_BG.Sindh,
                       borderColor: "#0E7490",
                     },
                     KPK: {
                       pattern: "khyber",
                       traditionUr: "روایت: خیبر",
                       traditionEn: "Tradition: Khyber",
-                      bg: "linear-gradient(135deg, #103326 0%, #1F694F 100%)",
+                      cardBg: PROVINCE_CARD_BG.KPK,
                       borderColor: "#1F694F",
                     },
                     Balochistan: {
                       pattern: "baloch",
                       traditionUr: "روایت: بلوچی کڑھائی",
                       traditionEn: "Tradition: Balochi",
-                      bg: "linear-gradient(135deg, #381A03 0%, #78350F 100%)",
+                      cardBg: PROVINCE_CARD_BG.Balochistan,
                       borderColor: "#78350F",
                     },
                   };
@@ -12890,8 +13046,11 @@ function DeepViewLocationSheet({
                       }}
                       className="tap-target relative overflow-hidden rounded-2xl p-3 flex flex-col justify-between text-left transition active:scale-[0.98] shadow-md"
                       style={{
-                        background: cfg.bg,
-                        border: `1.5px solid ${cfg.borderColor}`,
+                        backgroundImage: `linear-gradient(${isSelected ? "rgba(0,0,0,0.18), rgba(0,0,0,0.48)" : "rgba(0,0,0,0.28), rgba(0,0,0,0.58)"}), url(${cfg.cardBg})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        border: isSelected ? "2.5px solid #FFFFFF" : `1.5px solid ${cfg.borderColor}`,
+                        boxShadow: isSelected ? "0 0 0 2px #087F63, 0 4px 14px rgba(8,127,99,0.3)" : "0 2px 8px rgba(0,0,0,0.12)",
                         minHeight: 68,
                         cursor: "pointer",
                       }}
@@ -12909,7 +13068,7 @@ function DeepViewLocationSheet({
                             color: "#FFFFFF",
                             fontFamily:
                               lang === "ur"
-                                ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                                ? URDU_FONT
                                 : "inherit",
                           }}
                         >
@@ -12943,7 +13102,7 @@ function DeepViewLocationSheet({
                             color: "rgba(255,255,255,0.92)",
                             fontFamily:
                               lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                ? URDU_FONT
                                 : "inherit",
                           }}
                         >
@@ -13601,7 +13760,7 @@ function ProductRatesScreen({
                   fontSize: lang === "ur" ? 22 : 20,
                   fontFamily:
                     lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      ? URDU_FONT
                       : "inherit",
                   color: "#183B34",
                 }}
@@ -13614,7 +13773,7 @@ function ProductRatesScreen({
                   color: "#80918B",
                   fontFamily:
                     lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      ? URDU_FONT
                       : "inherit",
                 }}
               >
@@ -13669,7 +13828,7 @@ function ProductRatesScreen({
                 fontSize: lang === "ur" ? 18 : 14,
                 fontFamily:
                   lang === "ur"
-                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                    ? URDU_FONT
                     : "inherit",
               }}
             >
@@ -13689,7 +13848,7 @@ function ProductRatesScreen({
                 fontSize: lang === "ur" ? 18 : 14,
                 fontFamily:
                   lang === "ur"
-                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                    ? URDU_FONT
                     : "inherit",
               }}
             >
@@ -13762,7 +13921,7 @@ function ProductRatesScreen({
                   fontSize: lang === "ur" ? 16 : 11.5,
                   fontFamily:
                     lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      ? URDU_FONT
                       : "inherit",
                 }}
               >
@@ -13890,7 +14049,7 @@ function ProductRatesScreen({
                             letterSpacing: 0.5,
                             fontFamily:
                               lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                ? URDU_FONT
                                 : "inherit",
                           }}
                         >
@@ -13962,7 +14121,7 @@ function ProductRatesScreen({
                                 fontSize: lang === "ur" ? 16 : 14,
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -13998,7 +14157,7 @@ function ProductRatesScreen({
                                   fontSize: lang === "ur" ? 12 : 10,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -14027,7 +14186,7 @@ function ProductRatesScreen({
                                   paddingBottom: 2,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -14139,23 +14298,23 @@ function ProductRatesScreen({
                   pattern: "phulkari",
                 },
                 Sindh: {
-                  gradientH: "linear-gradient(90deg, #072F3E 0%, #0E7490 50%, #072F3E 100%)",
-                  gradientV: "linear-gradient(180deg, #072F3E 0%, #0E7490 50%, #072F3E 100%)",
-                  borderColor: "#0E7490",
+                  gradientH: "linear-gradient(90deg, #5C0B14 0%, #B91C1C 50%, #5C0B14 100%)",
+                  gradientV: "linear-gradient(180deg, #5C0B14 0%, #B91C1C 50%, #5C0B14 100%)",
+                  borderColor: "#DC2626",
                   bulletColor: "#FDA4AF",
                   pattern: "ajrak",
                 },
                 KPK: {
-                  gradientH: "linear-gradient(90deg, #103326 0%, #1F694F 50%, #103326 100%)",
-                  gradientV: "linear-gradient(180deg, #103326 0%, #1F694F 50%, #103326 100%)",
-                  borderColor: "#1F694F",
-                  bulletColor: "#FCD34D",
+                  gradientH: "linear-gradient(90deg, #0C4A6E 0%, #0284C7 50%, #0C4A6E 100%)",
+                  gradientV: "linear-gradient(180deg, #0C4A6E 0%, #0284C7 50%, #0C4A6E 100%)",
+                  borderColor: "#0284C7",
+                  bulletColor: "#BAE6FD",
                   pattern: "khyber",
                 },
                 Balochistan: {
-                  gradientH: "linear-gradient(90deg, #381A03 0%, #78350F 50%, #381A03 100%)",
-                  gradientV: "linear-gradient(180deg, #381A03 0%, #78350F 50%, #381A03 100%)",
-                  borderColor: "#78350F",
+                  gradientH: "linear-gradient(90deg, #7C2D12 0%, #EA580C 50%, #7C2D12 100%)",
+                  gradientV: "linear-gradient(180deg, #7C2D12 0%, #EA580C 50%, #7C2D12 100%)",
+                  borderColor: "#EA580C",
                   bulletColor: "#FDBA74",
                   pattern: "baloch",
                 },
@@ -14228,7 +14387,7 @@ function ProductRatesScreen({
                       style={{
                         fontFamily:
                           lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            ? URDU_FONT
                             : "inherit",
                       }}
                     >
@@ -14279,7 +14438,7 @@ function ProductRatesScreen({
                         style={{
                           fontFamily:
                             lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              ? URDU_FONT
                               : "inherit",
                         }}
                       >
@@ -14318,7 +14477,7 @@ function ProductRatesScreen({
                       style={{
                         fontFamily:
                           lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            ? URDU_FONT
                             : "inherit",
                       }}
                     >
@@ -14369,7 +14528,7 @@ function ProductRatesScreen({
                         style={{
                           fontFamily:
                             lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              ? URDU_FONT
                               : "inherit",
                         }}
                       >
@@ -14448,7 +14607,7 @@ function ProductRatesScreen({
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -14472,22 +14631,22 @@ function ProductRatesScreen({
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
-                              {lang === "ur" ? "زیادہ" : "Max Price"}
+                              {lang === "ur" ? "زیادہ قیمت" : "Max Price"}
                             </span>
                             <span
-                              className="font-extrabold text-[12.5px] leading-tight text-[#087F63] mt-0.5"
+                              className="font-extrabold text-[12px] leading-tight text-[#087F63] mt-0.5 whitespace-nowrap truncate"
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
-                              {fmt(statMax)}
+                              {lang === "ur" ? `${toUrduDigits(statMax.toLocaleString("en-PK"))} روپے` : fmt(statMax)}
                             </span>
                             <span className="text-[7.5px] text-[#80918B] leading-none mt-0.5">
                               {lang === "ur" ? "فی ۴۰ کلو" : "(40 KG)"}
@@ -14504,22 +14663,22 @@ function ProductRatesScreen({
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
-                              {lang === "ur" ? "کم" : "Min Price"}
+                              {lang === "ur" ? "کم قیمت" : "Min Price"}
                             </span>
                             <span
-                              className="font-extrabold text-[12.5px] leading-tight text-[#B45309] mt-0.5"
+                              className="font-extrabold text-[12px] leading-tight text-[#B45309] mt-0.5 whitespace-nowrap truncate"
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
-                              {fmt(statMin)}
+                              {lang === "ur" ? `${toUrduDigits(statMin.toLocaleString("en-PK"))} روپے` : fmt(statMin)}
                             </span>
                             <span className="text-[7.5px] text-[#80918B] leading-none mt-0.5">
                               {lang === "ur" ? "فی ۴۰ کلو" : "(40 KG)"}
@@ -14536,24 +14695,24 @@ function ProductRatesScreen({
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
                               {lang === "ur" ? "آمد" : "Arrival"}
                             </span>
                             <span
-                              className="font-extrabold text-[12.5px] leading-tight text-[#0E7465] mt-0.5"
+                              className="font-extrabold text-[12px] leading-tight text-[#0E7465] mt-0.5 whitespace-nowrap truncate"
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
                               {statArrival > 0
                                 ? lang === "ur"
-                                  ? `${statArrival.toLocaleString()}`
+                                  ? `${toUrduDigits(statArrival.toLocaleString())}`
                                   : statArrival.toLocaleString()
                                 : "—"}
                             </span>
@@ -14591,7 +14750,7 @@ function ProductRatesScreen({
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -14603,13 +14762,13 @@ function ProductRatesScreen({
                                 style={{
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
                                 {attrRateType
                                   ? tr(attrRateType).replace(" ریٹ", "").replace(" Rate", "")
-                                  : "Mill"}
+                                  : (lang === "ur" ? "مل" : "Mill")}
                               </span>
                               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
                                 <polyline points="6 9 12 15 18 9" />
@@ -14637,7 +14796,7 @@ function ProductRatesScreen({
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -14649,11 +14808,11 @@ function ProductRatesScreen({
                                 style={{
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                      : "inherit",
+                                    ? URDU_FONT
+                                    : "inherit",
                                 }}
                               >
-                                {attrColor ? t(attrColor) : "Golden"}
+                                {attrColor ? t(attrColor) : (lang === "ur" ? "سنہری" : "Golden")}
                               </span>
                               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
                                 <polyline points="6 9 12 15 18 9" />
@@ -14681,7 +14840,7 @@ function ProductRatesScreen({
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -14693,11 +14852,11 @@ function ProductRatesScreen({
                                 style={{
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                      : "inherit",
+                                    ? URDU_FONT
+                                    : "inherit",
                                 }}
                               >
-                                {attrSpec ? t(attrSpec) : "Seed Quality"}
+                                {attrSpec ? t(attrSpec) : (lang === "ur" ? "بیج کا معیار" : "Seed Quality")}
                               </span>
                               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
                                 <polyline points="6 9 12 15 18 9" />
@@ -14728,7 +14887,7 @@ function ProductRatesScreen({
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -14740,11 +14899,11 @@ function ProductRatesScreen({
                                 style={{
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                      : "inherit",
+                                    ? URDU_FONT
+                                    : "inherit",
                                 }}
                               >
-                                {attrVariety ? tc(attrVariety) : "Sona Moti"}
+                                {attrVariety ? tc(attrVariety) : (lang === "ur" ? "سونا موتی" : "Sona Moti")}
                               </span>
                               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
                                 <polyline points="6 9 12 15 18 9" />
@@ -14773,7 +14932,7 @@ function ProductRatesScreen({
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -14785,8 +14944,8 @@ function ProductRatesScreen({
                                 style={{
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                      : "inherit",
+                                    ? URDU_FONT
+                                    : "inherit",
                                 }}
                               >
                                 {attrNewOld ? t(attrNewOld) : (lang === "ur" ? "نیا" : "New")}
@@ -14817,7 +14976,7 @@ function ProductRatesScreen({
                               style={{
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -14829,11 +14988,11 @@ function ProductRatesScreen({
                                 style={{
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
-                                      : "inherit",
+                                    ? URDU_FONT
+                                    : "inherit",
                                 }}
                               >
-                                {attrCondition ? t(attrCondition) : "Dry"}
+                                {attrCondition ? t(attrCondition) : (lang === "ur" ? "خشک" : "Dry")}
                               </span>
                               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#0D9488" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
                                 <polyline points="6 9 12 15 18 9" />
@@ -14982,7 +15141,7 @@ function ProductRatesScreen({
                               fontSize: lang === "ur" ? 17 : 14,
                               fontFamily:
                                 lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  ? URDU_FONT
                                   : "inherit",
                             }}
                           >
@@ -14997,7 +15156,7 @@ function ProductRatesScreen({
                               fontSize: lang === "ur" ? 13 : 10,
                               fontFamily:
                                 lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  ? URDU_FONT
                                   : "inherit",
                             }}
                           >
@@ -15029,7 +15188,7 @@ function ProductRatesScreen({
                               fontSize: lang === "ur" ? 14 : 12,
                               fontFamily:
                                 lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  ? URDU_FONT
                                   : "inherit",
                             }}
                             title={
@@ -15098,7 +15257,7 @@ function ProductRatesScreen({
                               fontSize: lang === "ur" ? 14 : 12,
                               fontFamily:
                                 lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  ? URDU_FONT
                                   : "inherit",
                             }}
                           >
@@ -15144,7 +15303,7 @@ function ProductRatesScreen({
                                 fontSize: lang === "ur" ? 13 : 10,
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -15191,7 +15350,7 @@ function ProductRatesScreen({
                               fontSize: lang === "ur" ? 16 : 14,
                               fontFamily:
                                 lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  ? URDU_FONT
                                   : "inherit",
                             }}
                           >
@@ -15227,7 +15386,7 @@ function ProductRatesScreen({
                                 fontSize: lang === "ur" ? 12 : 10,
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -15254,7 +15413,7 @@ function ProductRatesScreen({
                                 paddingBottom: 2,
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -15336,7 +15495,7 @@ function ProductRatesScreen({
                           style={{
                             fontFamily:
                               lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                ? URDU_FONT
                                 : "inherit",
                           }}
                         >
@@ -15368,7 +15527,7 @@ function ProductRatesScreen({
                               fontSize: lang === "ur" ? 16 : 14,
                               fontFamily:
                                 lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  ? URDU_FONT
                                   : "inherit",
                             }}
                           >
@@ -15416,7 +15575,7 @@ function ProductRatesScreen({
                                   maxWidth: 90,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -15436,7 +15595,7 @@ function ProductRatesScreen({
                                   minWidth: 96,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -15456,7 +15615,7 @@ function ProductRatesScreen({
                                   minWidth: 54,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -15476,7 +15635,7 @@ function ProductRatesScreen({
                                   minWidth: 68,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -15493,7 +15652,7 @@ function ProductRatesScreen({
                                       fontSize: lang === "ur" ? 12 : 9,
                                       fontFamily:
                                         lang === "ur"
-                                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                          ? URDU_FONT
                                           : "inherit",
                                     }}
                                     title={lang === "ur" ? "رجحان کا دورانیہ منتخب کریں" : "Select trend duration"}
@@ -15545,7 +15704,7 @@ function ProductRatesScreen({
                                               background: tableTrendInterval === opt.id ? "#F0F9F5" : "transparent",
                                               fontFamily:
                                                 lang === "ur"
-                                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                                  ? URDU_FONT
                                                   : "inherit",
                                             }}
                                           >
@@ -15574,7 +15733,7 @@ function ProductRatesScreen({
                                   minWidth: 64,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -15594,7 +15753,7 @@ function ProductRatesScreen({
                                   minWidth: 70,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -15614,7 +15773,7 @@ function ProductRatesScreen({
                                   minWidth: 64,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -15634,7 +15793,7 @@ function ProductRatesScreen({
                                   minWidth: 74,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -15654,7 +15813,7 @@ function ProductRatesScreen({
                                   minWidth: 68,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -15674,7 +15833,7 @@ function ProductRatesScreen({
                                   minWidth: 84,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -15772,7 +15931,7 @@ function ProductRatesScreen({
                                         fontSize: lang === "ur" ? 13.5 : 11,
                                         fontFamily:
                                           lang === "ur"
-                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
@@ -15810,7 +15969,7 @@ function ProductRatesScreen({
                                           fontSize: lang === "ur" ? 11 : 9,
                                           fontFamily:
                                             lang === "ur"
-                                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                              ? URDU_FONT
                                               : "inherit",
                                         }}
                                       >
@@ -15850,7 +16009,7 @@ function ProductRatesScreen({
                                           color: rowCanon.newOld === "New" ? "#0A7F5A" : "#B45309",
                                           fontFamily:
                                             lang === "ur"
-                                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                              ? URDU_FONT
                                               : "inherit",
                                         }}
                                       >
@@ -15873,7 +16032,7 @@ function ProductRatesScreen({
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
-                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
@@ -15891,7 +16050,7 @@ function ProductRatesScreen({
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
-                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
@@ -15911,7 +16070,7 @@ function ProductRatesScreen({
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
-                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
@@ -15931,7 +16090,7 @@ function ProductRatesScreen({
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
-                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
@@ -15951,7 +16110,7 @@ function ProductRatesScreen({
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
-                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
@@ -15996,7 +16155,7 @@ function ProductRatesScreen({
                                                 style={{
                                                   fontFamily:
                                                     lang === "ur"
-                                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                                      ? URDU_FONT
                                                       : "inherit",
                                                   fontSize: lang === "ur" ? 16 : 14,
                                                 }}
@@ -16014,7 +16173,7 @@ function ProductRatesScreen({
                                                   color: "#059669",
                                                   fontFamily:
                                                     lang === "ur"
-                                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                                      ? URDU_FONT
                                                       : "inherit",
                                                 }}
                                               >
@@ -16076,7 +16235,7 @@ function ProductRatesScreen({
                                                       : "1px solid #D5E2DD",
                                                     fontFamily:
                                                       lang === "ur"
-                                                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                                        ? URDU_FONT
                                                         : "inherit",
                                                     fontSize: lang === "ur" ? 11 : 9.5,
                                                   }}
@@ -16295,7 +16454,7 @@ function ProductRatesScreen({
                                                       fontWeight="600"
                                                       fontFamily={
                                                         lang === "ur"
-                                                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                                          ? URDU_FONT
                                                           : "inherit"
                                                       }
                                                     >
@@ -16402,7 +16561,7 @@ function ProductRatesScreen({
                             fontSize: lang === "ur" ? 19 : 16,
                             fontFamily:
                               lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                ? URDU_FONT
                                 : "inherit",
                           }}
                         >
@@ -16429,7 +16588,7 @@ function ProductRatesScreen({
                                 fontSize: lang === "ur" ? 15 : 13.5,
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -16501,7 +16660,7 @@ function ProductRatesScreen({
                                   fontSize: lang === "ur" ? 16 : 13.5,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -16514,7 +16673,7 @@ function ProductRatesScreen({
                                     color: "#80918B",
                                     fontFamily:
                                       lang === "ur"
-                                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                        ? URDU_FONT
                                         : "inherit",
                                   }}
                                 >
@@ -16730,7 +16889,7 @@ function ProductRatesScreen({
                                 fontSize: lang === "ur" ? 18 : 16,
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -16745,7 +16904,7 @@ function ProductRatesScreen({
                                 fontSize: lang === "ur" ? 13 : 12,
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -16766,7 +16925,7 @@ function ProductRatesScreen({
                               fontSize: lang === "ur" ? 14 : 12,
                               fontFamily:
                                 lang === "ur"
-                                  ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                  ? URDU_FONT
                                   : "inherit",
                             }}
                           >
@@ -16818,7 +16977,7 @@ function ProductRatesScreen({
                                 fontSize: lang === "ur" ? 16 : 14,
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -16855,7 +17014,7 @@ function ProductRatesScreen({
                                   paddingBottom: 2,
                                   fontFamily:
                                     lang === "ur"
-                                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                      ? URDU_FONT
                                       : "inherit",
                                 }}
                               >
@@ -16982,7 +17141,7 @@ function ProductRatesScreen({
                                       fontSize: lang === "ur" ? 13 : 10.5,
                                       fontFamily:
                                         lang === "ur"
-                                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                          ? URDU_FONT
                                           : "inherit",
                                     }}
                                   >
@@ -16999,7 +17158,7 @@ function ProductRatesScreen({
                                           fontSize: lang === "ur" ? 13 : 10.5,
                                           fontFamily:
                                             lang === "ur"
-                                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                              ? URDU_FONT
                                               : "inherit",
                                         }}
                                       >
@@ -17071,7 +17230,7 @@ function ProductRatesScreen({
                                             fontSize: lang === "ur" ? 14 : 12,
                                             fontFamily:
                                               lang === "ur"
-                                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                                ? URDU_FONT
                                                 : "inherit",
                                           }}
                                         >
@@ -17109,7 +17268,7 @@ function ProductRatesScreen({
                                                   lang === "ur" ? 14 : 12,
                                                 fontFamily:
                                                   lang === "ur"
-                                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                                    ? URDU_FONT
                                                     : "inherit",
                                               }}
                                             >
@@ -17136,7 +17295,7 @@ function ProductRatesScreen({
                                     fontSize: lang === "ur" ? 16 : 13,
                                     fontFamily:
                                       lang === "ur"
-                                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                        ? URDU_FONT
                                         : "inherit",
                                   }}
                                 >
@@ -17191,7 +17350,7 @@ function ProductRatesScreen({
                                         borderRight: "1px solid #D5E2DD",
                                         fontFamily:
                                           lang === "ur"
-                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
@@ -17228,7 +17387,7 @@ function ProductRatesScreen({
                                           fontSize: lang === "ur" ? 11 : 10,
                                           fontFamily:
                                             lang === "ur"
-                                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                              ? URDU_FONT
                                               : "inherit",
                                         }}
                                       >
@@ -17268,7 +17427,7 @@ function ProductRatesScreen({
                                           color: rowQuality === "New" ? "#0A7F5A" : "#B45309",
                                           fontFamily:
                                             lang === "ur"
-                                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                              ? URDU_FONT
                                               : "inherit",
                                         }}
                                       >
@@ -17302,7 +17461,7 @@ function ProductRatesScreen({
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
-                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
@@ -17321,7 +17480,7 @@ function ProductRatesScreen({
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
-                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
@@ -17339,7 +17498,7 @@ function ProductRatesScreen({
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
-                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
@@ -17357,7 +17516,7 @@ function ProductRatesScreen({
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
-                                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                            ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
@@ -17387,7 +17546,7 @@ function ProductRatesScreen({
                             fontSize: lang === "ur" ? 13 : 10,
                             fontFamily:
                               lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                ? URDU_FONT
                                 : "inherit",
                           }}
                         >
@@ -17403,7 +17562,7 @@ function ProductRatesScreen({
                             fontSize: lang === "ur" ? 15 : 12,
                             fontFamily:
                               lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                ? URDU_FONT
                                 : "inherit",
                           }}
                         >
@@ -17428,7 +17587,7 @@ function ProductRatesScreen({
                   fontSize: lang === "ur" ? 16 : 12,
                   fontFamily:
                     lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      ? URDU_FONT
                       : "inherit",
                 }}
               >
@@ -17446,7 +17605,7 @@ function ProductRatesScreen({
                   fontSize: lang === "ur" ? 14 : 12,
                   fontFamily:
                     lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      ? URDU_FONT
                       : "inherit",
                 }}
               >
@@ -17481,7 +17640,7 @@ function ProductRatesScreen({
                     fontSize: lang === "ur" ? 16 : 12,
                     fontFamily:
                       lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                        ? URDU_FONT
                         : "inherit",
                   }}
                 >
@@ -17510,7 +17669,7 @@ function ProductRatesScreen({
                     fontSize: lang === "ur" ? 16 : 12,
                     fontFamily:
                       lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                        ? URDU_FONT
                         : "inherit",
                   }}
                 >
@@ -17545,7 +17704,7 @@ function ProductRatesScreen({
                           fontSize: lang === "ur" ? 14 : 11,
                           fontFamily:
                             lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              ? URDU_FONT
                               : "inherit",
                         }}
                       >
@@ -17563,7 +17722,7 @@ function ProductRatesScreen({
                             fontSize: lang === "ur" ? 13 : 11,
                             fontFamily:
                               lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                ? URDU_FONT
                                 : "inherit",
                           }}
                         >
@@ -17641,7 +17800,7 @@ function ProductRatesScreen({
                           fill="#80918B"
                           fontFamily={
                             lang === "ur"
-                              ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                              ? URDU_FONT
                               : "inherit"
                           }
                         >
@@ -17721,7 +17880,7 @@ function ProductRatesScreen({
                       fill="#52635F"
                       fontFamily={
                         lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          ? URDU_FONT
                           : "inherit"
                       }
                     >
@@ -17738,7 +17897,7 @@ function ProductRatesScreen({
                       transform={`rotate(-90, 12, ${(PT + CH - PB) / 2})`}
                       fontFamily={
                         lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          ? URDU_FONT
                           : "inherit"
                       }
                     >
@@ -17757,7 +17916,7 @@ function ProductRatesScreen({
                       fontSize: lang === "ur" ? 15 : 12,
                       fontFamily:
                         lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          ? URDU_FONT
                           : "inherit",
                       textAlign: "left",
                     }}
@@ -17793,7 +17952,7 @@ function ProductRatesScreen({
                                 color: on ? "#183B34" : "#80918B",
                                 fontFamily:
                                   lang === "ur"
-                                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                    ? URDU_FONT
                                     : "inherit",
                               }}
                             >
@@ -17839,7 +17998,7 @@ function ProductRatesScreen({
                                 : "#52635F",
                             fontFamily:
                               lang === "ur"
-                                ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                                ? URDU_FONT
                                 : "inherit",
                           }}
                         >
@@ -17871,7 +18030,7 @@ function ProductRatesScreen({
                         fontSize: lang === "ur" ? 14 : 11,
                         fontFamily:
                           lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            ? URDU_FONT
                             : "inherit",
                       }}
                     >
@@ -17887,7 +18046,7 @@ function ProductRatesScreen({
                         fontSize: lang === "ur" ? 14 : 11,
                         fontFamily:
                           lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            ? URDU_FONT
                             : "inherit",
                       }}
                     >
@@ -17961,7 +18120,7 @@ function ProductRatesScreen({
                         fill="#80918B"
                         fontFamily={
                           lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            ? URDU_FONT
                             : "inherit"
                         }
                       >
@@ -18044,7 +18203,7 @@ function ProductRatesScreen({
                     fill="#52635F"
                     fontFamily={
                       lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                        ? URDU_FONT
                         : "inherit"
                     }
                   >
@@ -18061,7 +18220,7 @@ function ProductRatesScreen({
                     transform={`rotate(-90, 12, ${(PT + CH - PB) / 2})`}
                     fontFamily={
                       lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                        ? URDU_FONT
                         : "inherit"
                     }
                   >
@@ -18082,7 +18241,7 @@ function ProductRatesScreen({
                       fontSize: lang === "ur" ? 17 : 14,
                       fontFamily:
                         lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          ? URDU_FONT
                           : "inherit",
                     }}
                   >
@@ -18097,7 +18256,7 @@ function ProductRatesScreen({
                       fontSize: lang === "ur" ? 13 : 12,
                       fontFamily:
                         lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          ? URDU_FONT
                           : "inherit",
                     }}
                   >
@@ -18114,7 +18273,7 @@ function ProductRatesScreen({
                     fontSize: lang === "ur" ? 15 : 12,
                     fontFamily:
                       lang === "ur"
-                        ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                        ? URDU_FONT
                         : "inherit",
                   }}
                 >
@@ -18168,7 +18327,7 @@ function ProductRatesScreen({
                       fontSize: lang === "ur" ? 20 : 18,
                       fontFamily:
                         lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          ? URDU_FONT
                           : "inherit",
                     }}
                   >
@@ -18181,7 +18340,7 @@ function ProductRatesScreen({
                       fontSize: lang === "ur" ? 14 : 12,
                       fontFamily:
                         lang === "ur"
-                          ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                          ? URDU_FONT
                           : "inherit",
                     }}
                   >
@@ -18216,7 +18375,7 @@ function ProductRatesScreen({
                         fontSize: lang === "ur" ? 17 : 14,
                         fontFamily:
                           lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            ? URDU_FONT
                             : "inherit",
                       }}
                     >
@@ -18254,7 +18413,7 @@ function ProductRatesScreen({
                             fontSize: lang === "ur" ? 17 : 14,
                             fontFamily:
                               lang === "ur"
-                                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                                ? URDU_FONT
                                 : "inherit",
                           }}
                         >
@@ -18298,7 +18457,7 @@ function ProductRatesScreen({
                   fontSize: lang === "ur" ? 20 : 18,
                   fontFamily:
                     lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      ? URDU_FONT
                       : "inherit",
                 }}
               >
@@ -18311,7 +18470,7 @@ function ProductRatesScreen({
                   fontSize: lang === "ur" ? 14 : 12,
                   fontFamily:
                     lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      ? URDU_FONT
                       : "inherit",
                 }}
               >
@@ -18384,7 +18543,7 @@ function ProductRatesScreen({
                         fontSize: lang === "ur" ? 17 : 14,
                         fontFamily:
                           lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            ? URDU_FONT
                             : "inherit",
                       }}
                     >
@@ -18397,7 +18556,7 @@ function ProductRatesScreen({
                         fontSize: lang === "ur" ? 13 : 11,
                         fontFamily:
                           lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            ? URDU_FONT
                             : "inherit",
                       }}
                     >
@@ -18410,7 +18569,7 @@ function ProductRatesScreen({
                         fontSize: lang === "ur" ? 12 : 10,
                         fontFamily:
                           lang === "ur"
-                            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                            ? URDU_FONT
                             : "inherit",
                       }}
                     >
@@ -23649,7 +23808,7 @@ function HomeScreen({
                 fontWeight: 800,
                 fontFamily:
                   lang === "ur"
-                    ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                    ? URDU_FONT
                     : "'Poppins', sans-serif",
                 textShadow: "0 2px 6px rgba(0,0,0,0.3)",
               }}
@@ -23731,7 +23890,7 @@ function HomeScreen({
               color: "#6B7C77",
               fontFamily:
                 lang === "ur"
-                  ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                  ? URDU_FONT
                   : "'Inter', sans-serif",
               fontWeight: 600,
             }}
@@ -23789,7 +23948,7 @@ function HomeScreen({
                         color: "#183B34",
                         fontFamily:
                           lang === "ur"
-                            ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                            ? URDU_FONT
                             : "inherit",
                       }}
                     >
@@ -23842,7 +24001,7 @@ function HomeScreen({
                     marginBottom: 8,
                     fontFamily:
                       lang === "ur"
-                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        ? URDU_FONT
                         : "inherit",
                   }}
                 >
@@ -23860,7 +24019,7 @@ function HomeScreen({
                     boxShadow: "0 2px 8px rgba(8,127,99,0.2)",
                     fontFamily:
                       lang === "ur"
-                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        ? URDU_FONT
                         : "inherit",
                     fontSize: lang === "ur" ? 13 : 11.5,
                   }}
@@ -23897,7 +24056,7 @@ function HomeScreen({
                   textTransform: lang === "ur" ? "none" : "uppercase",
                   fontFamily:
                     lang === "ur"
-                      ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                      ? URDU_FONT
                       : "inherit",
                 }}
               >
@@ -24003,7 +24162,7 @@ function HomeScreen({
                         color: "#183B34",
                         fontFamily:
                           lang === "ur"
-                            ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                            ? URDU_FONT
                             : "inherit",
                         lineHeight: 1.15,
                       }}
@@ -24024,7 +24183,7 @@ function HomeScreen({
                         letterSpacing: "0.04em",
                         fontFamily:
                           lang === "ur"
-                            ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                            ? URDU_FONT
                             : "inherit",
                       }}
                     >
@@ -24123,7 +24282,7 @@ function HomeScreen({
                         maxWidth: 72,
                         fontFamily:
                           lang === "ur"
-                            ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                            ? URDU_FONT
                             : "inherit",
                       }}
                     >
@@ -24143,7 +24302,7 @@ function HomeScreen({
                         whiteSpace: "nowrap",
                         fontFamily:
                           lang === "ur"
-                            ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                            ? URDU_FONT
                             : "inherit",
                       }}
                     >
@@ -24181,7 +24340,7 @@ function HomeScreen({
                       lineHeight: 1.2,
                       fontFamily:
                         lang === "ur"
-                          ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                          ? URDU_FONT
                           : "inherit",
                     }}
                   >
@@ -24374,7 +24533,7 @@ function HomeScreen({
                             lineHeight: 1.25,
                             fontFamily:
                               lang === "ur"
-                                ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                                ? URDU_FONT
                                 : "'Poppins', sans-serif",
                           }}
                           title={lang === "ur" ? tc(item.byproduct) : item.byproduct}
@@ -24408,7 +24567,7 @@ function HomeScreen({
                               lineHeight: 1.2,
                               fontFamily:
                                 lang === "ur"
-                                  ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                                  ? URDU_FONT
                                   : "inherit",
                             }}
                           >
@@ -24701,7 +24860,7 @@ function HomeScreen({
                     color: "#183B34",
                     fontFamily:
                       lang === "ur"
-                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        ? URDU_FONT
                         : "inherit",
                   }}
                 >
@@ -24776,7 +24935,7 @@ function HomeScreen({
                     color: "#183B34",
                     fontFamily:
                       lang === "ur"
-                        ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif"
+                        ? URDU_FONT
                         : "inherit",
                   }}
                 >
@@ -26704,7 +26863,7 @@ function VoiceOrientationOverlay({ onClose }: { onClose: () => void }) {
         pointerEvents: "none",
         fontFamily:
           lang === "ur"
-            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+            ? URDU_FONT
             : "'Inter', sans-serif",
       }}
     >
@@ -26816,7 +26975,7 @@ function VoiceOrientationOverlay({ onClose }: { onClose: () => void }) {
                   color: isActive ? "#fff" : "#16352F",
                   fontFamily:
                     lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      ? URDU_FONT
                       : "'Poppins', sans-serif",
                 }}
               >
@@ -26828,7 +26987,7 @@ function VoiceOrientationOverlay({ onClose }: { onClose: () => void }) {
                   color: isActive ? "rgba(255,255,255,0.85)" : "#52635F",
                   fontFamily:
                     lang === "ur"
-                      ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                      ? URDU_FONT
                       : "'Inter', sans-serif",
                 }}
               >
@@ -26917,7 +27076,7 @@ function VoiceQueryOverlay({
         backdropFilter: "blur(4px)",
         fontFamily:
           lang === "ur"
-            ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+            ? URDU_FONT
             : "'Inter', sans-serif",
       }}
     >
@@ -27181,7 +27340,7 @@ function BottomNav({
                 color: isActive ? "#087F63" : "#52635F",
                 fontFamily:
                   lang === "ur"
-                    ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                    ? URDU_FONT
                     : "inherit",
                 lineHeight: lang === "ur" ? 1.2 : 1.1,
               }}
@@ -27235,7 +27394,7 @@ function BottomNav({
             color: voiceActive ? "#C94A43" : "#52635F",
             fontFamily:
               lang === "ur"
-                ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif"
+                ? URDU_FONT
                 : "inherit",
             lineHeight: lang === "ur" ? 1.2 : 1,
           }}
@@ -29638,7 +29797,7 @@ function RepDashboardScreen({
                 fontSize: 20,
                 lineHeight: 1.2,
                 fontWeight: 800,
-                fontFamily: lang === "ur" ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif" : "'Poppins', sans-serif",
+                fontFamily: lang === "ur" ? URDU_FONT : "'Poppins', sans-serif",
                 textShadow: "0 2px 6px rgba(0,0,0,0.3)",
               }}
             >
@@ -29929,8 +30088,8 @@ function AppInner({
 
   // Contextual location scope, shared across the product/detail flow
   const [locationScope, setLocationScope] = useState<LocationScope>({
-    kind: "province",
-    label: "Punjab",
+    kind: "pakistan",
+    label: "All Pakistan",
   });
   const [locSheet, setLocSheet] = useState(false);
 

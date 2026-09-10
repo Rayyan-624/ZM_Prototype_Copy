@@ -3,7 +3,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 
-/* ── Jameel Noori & Noto Nastaliq Font Definitions ────────────────────────── */
+/* ── Noto Sans Arabic, Jameel Noori & Noto Nastaliq Font Definitions ───────── */
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  src: url('/fonts/NotoSansArabic-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: 'NotoNastaliqUrdu';
   src: url('/fonts/NotoNastaliqUrdu-VariableFont_wght.ttf') format('truetype');
@@ -96,6 +104,13 @@ body {
   color: var(--zm-text);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+[lang="ur"],
+[lang="ur"] *,
+.lang-ur,
+.lang-ur * {
+  font-family: 'Noto Sans Arabic', 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', sans-serif;
 }
 
 #root {
