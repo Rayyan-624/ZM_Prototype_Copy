@@ -13,7 +13,8 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-import farmHeroBg from "./assets/farm_hero_bg.jpg";
+import farmHeroBg from "./assets/farm_hero_bg.png";
+import homeBgMint from "./assets/home_bg_mint.jpg";
 import agriForegroundImg from "./assets/agri_foreground.png";
 import pakistanFlagImg from "./assets/pakistan_flag.png";
 import { div } from "motion/react-client";
@@ -147,6 +148,8 @@ const AUTO_URDU_DICT: Record<string, string> = {
   "MY PRODUCTS": "میری مصنوعات",
   Favorites: "پسندیدہ",
   FAVORITES: "پسندیدہ",
+  "See All": "سب دیکھیں",
+  "See all": "سب دیکھیں",
   "Today's Rates": "آج کے نرخ",
   Subscribe: "سبسکرائب",
   "+ Subscribe": "+ سبسکرائب",
@@ -336,6 +339,10 @@ const AUTO_URDU_DICT: Record<string, string> = {
   Semolina: "سوجی",
   Straw: "بھوسہ",
   "Wheat Straw": "گندم کا بھوسہ",
+  Sorghum: "جوار",
+  Barley: "جَو",
+  "Special Flour": "اسپیشل آٹا",
+  "Special-Flour": "اسپیشل آٹا",
   "Maize Grain": "مکئی دانہ",
   "Corn Silage": "مکئی سائیلج",
   "Corn Gluten": "کارن گلوٹن",
@@ -9584,13 +9591,6 @@ function ByProductCombinedScreen({
   // Date scroll system - restricted to 2 days (Today & Yesterday) for non-subscribers
   const { voiceEnabled, lang, t: tL, tc: tcL, tm: tmL, tr: trL } = useLang();
 
-  const [visibleDateLabel, setVisibleDateLabel] = useState<{
-    d: number;
-    month: string;
-  }>({ d: 21, month: "AUG" });
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const dateSectionRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-
   const BASE_DATE = new Date(2026, 7, 21); // Aug 21 2026 = today
   const NUM_DAYS = profileCompleted ? 7 : 2;
 
@@ -9600,9 +9600,10 @@ function ByProductCombinedScreen({
     return d;
   };
 
-  const islamicDate = useMemo(() => {
-    return getIslamicDate(dateForOffset(0), lang);
-  }, [lang]);
+  const [currentVisibleDate, setCurrentVisibleDate] = useState<Date>(() => dateForOffset(0));
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const dateSectionRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
   const dateLabel = (d: Date) => {
     const months = [
       "JAN",
@@ -9620,6 +9621,9 @@ function ByProductCombinedScreen({
     ];
     return { d: d.getDate(), month: months[d.getMonth()] };
   };
+
+  const visibleDateLabel = useMemo(() => dateLabel(currentVisibleDate), [currentVisibleDate]);
+  const islamicDate = useMemo(() => getIslamicDate(currentVisibleDate, lang), [currentVisibleDate, lang]);
   const monthsUr = [
     "جنوری",
     "فروری",
@@ -9664,36 +9668,29 @@ function ByProductCombinedScreen({
     const container = scrollAreaRef.current;
     if (!container) return;
     const containerTop = container.getBoundingClientRect().top;
-    let found = {
-      d: dateForOffset(0).getDate(),
-      month: [
-        "JAN",
-        "FEB",
-        "MAR",
-        "APR",
-        "MAY",
-        "JUN",
-        "JUL",
-        "AUG",
-        "SEP",
-        "OCT",
-        "NOV",
-        "DEC",
-      ][dateForOffset(0).getMonth()],
-    };
+    let foundDate = dateForOffset(0);
     dateSectionRefs.current.forEach((el, key) => {
       const rect = el.getBoundingClientRect();
-      if (rect.top - containerTop <= 60) {
+      if (rect.top - containerTop <= 80) {
         const parts = key.split("-");
         const dObj = new Date(
           parseInt(parts[0]),
           parseInt(parts[1]),
           parseInt(parts[2]),
         );
-        found = dateLabel(dObj);
+        foundDate = dObj;
       }
     });
-    setVisibleDateLabel(found);
+    setCurrentVisibleDate((prev) => {
+      if (
+        prev.getFullYear() === foundDate.getFullYear() &&
+        prev.getMonth() === foundDate.getMonth() &&
+        prev.getDate() === foundDate.getDate()
+      ) {
+        return prev;
+      }
+      return foundDate;
+    });
   }, []);
 
   useEffect(() => {
@@ -10117,13 +10114,12 @@ function ByProductCombinedScreen({
               {/* Hyphen Separator */}
               <span className="text-[#087F63] font-bold text-xs leading-none opacity-50 px-0.5">-</span>
 
-              {/* Right Column: Islamic Date over Hijri Year */}
+              {/* Right Column: Islamic Date over Hijri Year (Centered) */}
               <div
-                className="flex flex-col justify-center leading-none"
-                style={{ alignItems: lang === "ur" ? "flex-end" : "flex-start" }}
+                className="flex flex-col items-center justify-center leading-none text-center"
               >
                 <span
-                  className="text-[10.5px] font-extrabold text-[#087F63] whitespace-nowrap"
+                  className="text-[10.5px] font-extrabold text-[#087F63] whitespace-nowrap text-center"
                   style={{
                     fontFamily:
                       lang === "ur"
@@ -10136,7 +10132,7 @@ function ByProductCombinedScreen({
                     : `${String(islamicDate.day).padStart(2, "0")} ${islamicDate.monthName && islamicDate.monthName !== "ربیع الاول" ? islamicDate.monthName : "Rabi ul Awwal"}`}
                 </span>
                 <span
-                  className="text-[9.5px] font-bold text-[#087F63] whitespace-nowrap mt-1"
+                  className="text-[9.5px] font-bold text-[#087F63] whitespace-nowrap mt-1 text-center"
                   style={{
                     fontFamily:
                       lang === "ur"
@@ -10144,7 +10140,7 @@ function ByProductCombinedScreen({
                         : "inherit",
                   }}
                 >
-                  {lang === "ur" ? `${toUrduDigits("1448")}ھ` : "1448 AH"}
+                  {lang === "ur" ? `${toUrduDigits(String(islamicDate.year || 1448))}ھ` : `${islamicDate.year || 1448} AH`}
                 </span>
               </div>
             </div>
@@ -10292,6 +10288,9 @@ function ByProductCombinedScreen({
             const dDisplay = dateDisplayStr(dateObj);
             const isToday = offset === 0;
             const priceVariation = 1 - offset * 0.012;
+            const secIslamic = getIslamicDate(dateObj, lang);
+            const dayOfWeek = dateObj.getDay();
+            const weekday = lang === "ur" ? weekdaysUr[dayOfWeek] : weekdaysEn[dayOfWeek];
 
             const sortedBPs = [...activeBPs].sort((a, b) => {
               const aHas = buildRepRow(a).hasData;
@@ -10406,9 +10405,9 @@ function ByProductCombinedScreen({
                         fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                       }}
                     >
-                      {isToday
-                        ? (lang === "ur" ? `جمعرات، ${dDisplay}` : `Thu, ${dDisplay}`)
-                        : dDisplay}
+                      {lang === "ur"
+                        ? `${weekday}، ${dDisplay} • ${toUrduDigits(String(secIslamic.day).padStart(2, "0"))} ${secIslamic.monthName} ${toUrduDigits(String(secIslamic.year || 1448))}ھ`
+                        : `${weekday}, ${dDisplay} • ${String(secIslamic.day).padStart(2, "0")} ${secIslamic.monthName} ${secIslamic.year || 1448} AH`}
                     </span>
                   </span>
                   <div
@@ -11738,7 +11737,7 @@ type RichRow = {
 function getIslamicDate(
   gregorianDate: Date,
   lang: string,
-): { day: number; monthName: string; fullText: string } {
+): { day: number; monthName: string; fullText: string; year: number } {
   const islamicMonthsEn = [
     "Muharram", "Safar", "Rabi al-Awwal", "Rabi al-Thani",
     "Jumada al-Awwal", "Jumada al-Thani", "Rajab", "Sha'ban",
@@ -11772,7 +11771,7 @@ function getIslamicDate(
   const dayStr = lang === "ur" ? toUrduDigits(day) : String(day);
   const fullText = lang === "ur" ? `${dayStr} ${monthName}` : `${dayStr} ${monthName}`;
 
-  return { day, monthName, fullText };
+  return { day, monthName, fullText, year };
 }
 
 // ─── Province cultural pattern SVG overlay ──────────────────────
@@ -23535,6 +23534,8 @@ function HomeScreen({
     "Semolina",
     "Straw",
     "Sorghum",
+    "Barley",
+    "Special Flour",
   ];
 
   const getFavoriteImage = (bp: string) => {
@@ -23595,70 +23596,124 @@ function HomeScreen({
       }}
     >
       {/* =====================================================
-          HERO BANNER (Optimized compact height)
+          HERO BANNER (Refined aesthetic with sunset farm image)
           ===================================================== */}
 
       <div
-        className="relative flex-shrink-0"
+        className="relative flex-shrink-0 w-full"
         style={{
-          height: 175,
-          background: "linear-gradient(135deg, #064D40 0%, #087F63 100%)",
+          margin: 0,
+          height: 160,
+          borderRadius: "0 0 24px 24px",
+          position: "relative",
+          zIndex: 20,
         }}
       >
-        <img
-          src={farmHeroBg}
-          alt="Agriculture"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ opacity: 0.38 }}
-        />
+        {/* Rounded Image Container */}
         <div
-          className="absolute inset-0"
           style={{
-            background:
-              "linear-gradient(180deg, rgba(6,77,64,0.3) 0%, rgba(6,77,64,0.85) 100%)",
+            position: "absolute",
+            inset: 0,
+            borderRadius: "0 0 24px 24px",
+            overflow: "hidden",
           }}
-        />
+        >
+          <img
+            src={farmHeroBg}
+            alt="Agriculture Farm"
+            className="w-full h-full object-cover"
+            style={{
+              objectPosition: "center 42%",
+              transform: "scale(1.02)",
+            }}
+          />
+          {/* Subtle natural lighting overlay */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(180deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.02) 40%, rgba(0,0,0,0.65) 100%)",
+            }}
+          />
+        </div>
 
-        <div className="relative h-full flex flex-col justify-between px-4 pt-4 pb-9 z-10">
+        {/* Content Layer */}
+        <div className="relative h-full flex flex-col justify-between px-4 pt-3.5 pb-6 z-10">
+          {/* Top Row: Language, Voice, Notifications, Profile */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
+              {/* Language Toggle */}
               <button
                 onClick={() => setLang(lang === "ur" ? "en" : "ur")}
-                className="tap-target flex items-center justify-center rounded-full px-2.5 py-1"
+                className="tap-target flex items-center justify-center rounded-full px-3 py-1"
                 style={{
-                  background: "rgba(255,255,255,0.22)",
-                  border: "1.2px solid rgba(255,255,255,0.4)",
-                  color: "#fff",
-                  fontSize: lang === "ur" ? 14 : 11.5,
+                  background: "rgba(0, 0, 0, 0.22)",
+                  border: "1.2px solid rgba(255, 255, 255, 0.45)",
+                  color: "#FFFFFF",
+                  fontSize: lang === "ur" ? 13.5 : 12,
                   fontWeight: 800,
-                  backdropFilter: "blur(8px)",
+                  backdropFilter: "blur(10px)",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
                 }}
               >
                 {lang === "ur" ? "English" : "اردو"}
               </button>
 
+              {/* Voice Toggle */}
               <button
                 onClick={() => homeSetVoiceEnabled(!homeVoiceEnabled)}
-                className="tap-target flex items-center gap-1.5 rounded-full px-3 py-1"
+                className="tap-target flex items-center gap-1.5 rounded-full px-2.5 py-1"
                 style={{
-                  background: "rgba(255,255,255,0.22)",
-                  border: "1.2px solid rgba(255,255,255,0.4)",
-                  color: "#fff",
-                  fontSize: lang === "ur" ? 15 : 12,
-                  fontWeight: 800,
-                  backdropFilter: "blur(8px)",
+                  background: "rgba(0, 0, 0, 0.22)",
+                  border: "1.2px solid rgba(255, 255, 255, 0.45)",
+                  backdropFilter: "blur(10px)",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
                 }}
               >
-                <VoiceBadgeIconSVG
-                  active={homeVoiceEnabled}
-                  size={lang === "ur" ? 16 : 13}
-                />
-                <span>{homeVoiceEnabled ? t("Voice On") : t("Voice Off")}</span>
+                <span
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    background: homeVoiceEnabled ? "#10B981" : "#EF4444",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  {homeVoiceEnabled ? (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                      <line x1="12" y1="19" x2="12" y2="23" />
+                      <line x1="8" y1="23" x2="16" y2="23" />
+                    </svg>
+                  ) : (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="1" y1="1" x2="23" y2="23" />
+                      <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />
+                      <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" />
+                      <line x1="12" y1="19" x2="12" y2="23" />
+                      <line x1="8" y1="23" x2="16" y2="23" />
+                    </svg>
+                  )}
+                </span>
+                <span
+                  style={{
+                    color: "#FFFFFF",
+                    fontSize: lang === "ur" ? 13 : 11.5,
+                    fontWeight: 700,
+                    fontFamily: lang === "ur" ? URDU_FONT : "inherit",
+                  }}
+                >
+                  {homeVoiceEnabled ? t("Voice On") : t("Voice Off")}
+                </span>
               </button>
             </div>
 
-            {/* Top Right: Free Trial Chip + Profile */}
-            {/* Top Right: Notification Bell Button + Profile */}
+            {/* Top Right: Notification Bell + Profile */}
             <div className="flex items-center gap-2">
               {/* Notification Button */}
               <button
@@ -23673,21 +23728,22 @@ function HomeScreen({
                 }}
                 className="tap-target relative flex items-center justify-center rounded-full"
                 style={{
-                  width: 38,
-                  height: 38,
-                  background: "rgba(255,255,255,0.22)",
-                  border: "1.2px solid rgba(255,255,255,0.4)",
-                  backdropFilter: "blur(8px)",
+                  width: 36,
+                  height: 36,
+                  background: "rgba(255, 248, 235, 0.72)",
+                  border: "1.5px solid rgba(255, 255, 255, 0.8)",
+                  backdropFilter: "blur(10px)",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                 }}
                 title={lang === "ur" ? "نوٹیفکیشنز" : "Notifications"}
               >
                 <svg
-                  width="18"
-                  height="18"
+                  width="17"
+                  height="17"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#fff"
-                  strokeWidth="2"
+                  stroke="#183B34"
+                  strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
@@ -23697,13 +23753,13 @@ function HomeScreen({
                 <span
                   style={{
                     position: "absolute",
-                    top: 7,
-                    right: 8,
+                    top: 5,
+                    right: 6,
                     width: 7,
                     height: 7,
                     borderRadius: "50%",
-                    background: "#E4B04D",
-                    border: "1.5px solid #07332F",
+                    background: "#F97316",
+                    border: "1.5px solid #FFFFFF",
                   }}
                 />
               </button>
@@ -23713,12 +23769,19 @@ function HomeScreen({
                 onClick={() => {
                   const now = Date.now();
                   if (now - lastProfileTapRef.current < 350 && hasRepAccount) {
-                    const targetRole = activeRole === "representative" ? "customer" : "representative";
+                    const targetRole =
+                      activeRole === "representative"
+                        ? "customer"
+                        : "representative";
                     onSwitchRole?.(targetRole);
                     setShowSwitchToast(
                       targetRole === "representative"
-                        ? (lang === "ur" ? "نمائندہ ڈیش بورڈ پر تبدیل ہو گئے" : "Switched to Rep Dashboard")
-                        : (lang === "ur" ? "کسٹمر ڈیش بورڈ پر تبدیل ہو گئے" : "Switched to Customer App")
+                        ? lang === "ur"
+                          ? "نمائندہ ڈیش بورڈ پر تبدیل ہو گئے"
+                          : "Switched to Rep Dashboard"
+                        : lang === "ur"
+                          ? "کسٹمر ڈیش بورڈ پر تبدیل ہو گئے"
+                          : "Switched to Customer App",
                     );
                     setTimeout(() => setShowSwitchToast(null), 2500);
                   } else {
@@ -23728,22 +23791,27 @@ function HomeScreen({
                 }}
                 className="tap-target relative flex items-center justify-center rounded-full"
                 style={{
-                  width: 38,
-                  height: 38,
-                  background: activeRole === "representative" ? "rgba(15, 138, 95, 0.45)" : "rgba(255,255,255,0.22)",
-                  border: activeRole === "representative" ? "1.5px solid #2FAE68" : "1.2px solid rgba(255,255,255,0.4)",
-                  backdropFilter: "blur(8px)",
+                  width: 36,
+                  height: 36,
+                  background: "rgba(255, 248, 235, 0.72)",
+                  border: "1.5px solid rgba(255, 255, 255, 0.8)",
+                  backdropFilter: "blur(10px)",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                   zIndex: voiceGuideActive ? 45 : undefined,
                 }}
-                title={hasRepAccount ? "Tap for Profile • Double tap to switch dashboard" : "Tap for Profile"}
+                title={
+                  hasRepAccount
+                    ? "Tap for Profile • Double tap to switch dashboard"
+                    : "Tap for Profile"
+                }
               >
                 <svg
-                  width="18"
-                  height="18"
+                  width="17"
+                  height="17"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#fff"
-                  strokeWidth="2"
+                  stroke="#183B34"
+                  strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
@@ -23755,15 +23823,14 @@ function HomeScreen({
                     style={{
                       position: "absolute",
                       bottom: -2,
-                      right: -2,
-                      background: "#2FAE68",
+                      background: "#059669",
                       color: "#fff",
-                      fontSize: 8,
+                      fontSize: 7.5,
                       fontWeight: 900,
-                      padding: "1px 3px",
-                      borderRadius: 6,
-                      border: "1px solid #fff",
-                      lineHeight: 1,
+                      padding: "1px 4px",
+                      borderRadius: 999,
+                      border: "1.5px solid #fff",
+                      lineHeight: 1.1,
                     }}
                   >
                     {activeRole === "representative" ? "REP" : "CUST"}
@@ -23778,12 +23845,12 @@ function HomeScreen({
             <div
               style={{
                 position: "absolute",
-                top: 54,
+                top: 48,
                 left: "50%",
                 transform: "translateX(-50%)",
                 background: "rgba(6, 45, 36, 0.95)",
                 color: "#B4E6D2",
-                padding: "6px 14px",
+                padding: "5px 12px",
                 borderRadius: 20,
                 fontSize: 11,
                 fontWeight: 800,
@@ -23799,47 +23866,47 @@ function HomeScreen({
           )}
 
           {/* User information */}
-          <div className="mt-auto" style={{ paddingBottom: 6 }}>
+          <div className="mt-auto" style={{ paddingBottom: 2 }}>
             <h1
               style={{
-                color: "#fff",
+                color: "#FFFFFF",
                 fontSize: 20,
-                lineHeight: 1.2,
+                lineHeight: 1.15,
                 fontWeight: 800,
                 fontFamily:
                   lang === "ur"
                     ? URDU_FONT
                     : "'Poppins', sans-serif",
-                textShadow: "0 2px 6px rgba(0,0,0,0.3)",
+                textShadow: "0 2px 8px rgba(0,0,0,0.5)",
               }}
             >
-              {profileName || (lang === "ur" ? "محمد عارف" : "Muhammad Arif")}
+              {profileName || (lang === "ur" ? "احمد خان" : "Ahmed Khan")}
             </h1>
-            <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-              <p
+            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="#FFFFFF"
                 style={{
-                  color: "#B4E6D2",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  textShadow: "0 1px 3px rgba(0,0,0,0.4)",
+                  filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.5))",
+                  flexShrink: 0,
                 }}
               >
-                {profileCity} {profileProvince ? `(${profileProvince})` : ""}
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+              </svg>
+              <p
+                style={{
+                  color: "#FFFFFF",
+                  fontSize: 12.5,
+                  fontWeight: 600,
+                  textShadow: "0 1px 4px rgba(0,0,0,0.5)",
+                  fontFamily: lang === "ur" ? URDU_FONT : "inherit",
+                }}
+              >
+                {profileCity || (lang === "ur" ? "لاہور" : "Lahore")}{" "}
+                ({profileProvince || (lang === "ur" ? "پنجاب" : "Punjab")})
               </p>
-              {!profileCompleted && (
-                <span
-                  className="px-2 py-0.5 font-black text-[10px] tracking-wide inline-flex items-center gap-1 shadow-sm"
-                  style={{
-                    background: "#FEF3C7",
-                    border: "1.2px solid #F59E0B",
-                    color: "#92400E",
-                    borderRadius: "6px",
-                    lineHeight: 1.2,
-                  }}
-                >
-                  {lang === "ur" ? "مفت ٹرائل" : "Free Trial"}
-                </span>
-              )}
             </div>
           </div>
         </div>
@@ -23863,12 +23930,12 @@ function HomeScreen({
             paddingRight: 18,
             borderRadius: 9999,
             background: "#FFFFFF",
-            border: "1.5px solid rgba(8,127,99,0.18)",
-            boxShadow: "0 6px 20px rgba(6,77,64,0.14)",
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
             zIndex: 30,
           }}
         >
-          <svg width={18} height={18} viewBox="0 0 24 24" fill="none">
+          <svg width={17} height={17} viewBox="0 0 24 24" fill="none">
             <circle
               cx="11"
               cy="11"
@@ -23886,7 +23953,7 @@ function HomeScreen({
           <span
             className="flex-1"
             style={{
-              fontSize: 13.5,
+              fontSize: 13,
               color: "#6B7C77",
               fontFamily:
                 lang === "ur"
@@ -23901,17 +23968,32 @@ function HomeScreen({
       </div>
 
       {/* =====================================================
-          MAIN HOME CONTENT (Non-scrollable, responsive to iPhone 15 & 15 Pro Max)
+          MAIN HOME CONTENT (Mint waves botanical ambient background)
           ===================================================== */}
 
       <div
         className="flex-1 min-h-0 overflow-hidden relative flex flex-col justify-between"
         style={{
-          background:
-            "linear-gradient(180deg,#EAF7F1 0%,#F2F8F5 45%,#EEF7F2 100%)",
+          background: "linear-gradient(180deg, #EAF6F0 0%, #F4FAF7 45%, #EEF7F2 100%)",
+          position: "relative",
         }}
       >
-        <AgriAmbientCanvas />
+        {/* Soft Mint Waves Ambient Layer */}
+        <img
+          src={homeBgMint}
+          alt="Ambient Botanical Background"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center top",
+            pointerEvents: "none",
+            zIndex: 0,
+            opacity: 0.45,
+          }}
+        />
 
         <div
           className={`relative z-10 flex-1 flex flex-col ${profileCompleted ? "justify-around" : "justify-between"
@@ -24327,9 +24409,9 @@ function HomeScreen({
             }}
           >
             {/* Favorites heading */}
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-2.5">
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
                   <p
                     style={{
                       fontSize: profileCompleted
@@ -24346,27 +24428,22 @@ function HomeScreen({
                   >
                     {t("Favorites")}
                   </p>
-                  {!profileCompleted && (
-                    <span
-                      style={{
-                        fontSize: 9.5,
-                        fontWeight: 800,
-                        color: "#2A483E",
-                        background: "#E4F0EA",
-                        padding: "2px 8px",
-                        borderRadius: 999,
-                        border: "1px solid #C6DFD4",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 4,
-                      }}
-                    >
-                    </span>
-                  )}
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#183B34"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                  </svg>
                 </div>
               </div>
 
-              {/* Arrow Button */}
+              {/* See All Button */}
               <button
                 onClick={() => {
                   push({
@@ -24380,33 +24457,34 @@ function HomeScreen({
                     active: 0,
                   });
                 }}
-                className="tap-target flex items-center justify-center rounded-full"
+                className="tap-target flex items-center justify-center rounded-full px-3 py-1"
                 style={{
-                  width: "clamp(38px, 4.8vh, 44px)",
-                  height: "clamp(38px, 4.8vh, 44px)",
-                  background: "#E3F1EB",
-                  border: "1.2px solid #A0CEBC",
+                  background: "#E8F5EE",
+                  border: "1px solid #C4E5D5",
                   color: "#087F63",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  gap: "4px",
+                  fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                 }}
               >
-                <span
-                  style={{
-                    fontSize: "clamp(18px, 2.5vh, 22px)",
-                    fontWeight: 800,
-                    lineHeight: 1,
-                  }}
-                >
-                  {lang === "ur" ? "←" : "→"}
+                <span>{lang === "ur" ? "سب دیکھیں" : "See All"}</span>
+                <span style={{ fontSize: "12px", fontWeight: 800 }}>
+                  {lang === "ur" ? "←" : "›"}
                 </span>
               </button>
             </div>
 
-            {/* Favorite cards — Unlocked for Free Trial */}
+            {/* Favorite cards — 3 cards visible at a time with swipe */}
             <div
-              className="flex gap-3 overflow-x-auto pb-1"
+              className="flex gap-2 overflow-x-auto"
               style={{
                 scrollbarWidth: "none",
                 scrollSnapType: "x mandatory",
+                paddingTop: "6px",
+                paddingBottom: "8px",
+                paddingLeft: "2px",
+                paddingRight: "2px",
               }}
             >
               {(() => {
@@ -24429,12 +24507,21 @@ function HomeScreen({
                       rateType: "Mill",
                     }));
 
+                const rotAngles =
+                  lang === "ur"
+                    ? [4, 0, -4]
+                    : [-4, 0, 4];
+                const yOffsets = [4, 0, 4];
+
                 return favoriteCardsList.map((item, idx) => {
                   const imgSrc = getFavoriteImage(item.byproduct);
                   const cleanMandi = item.mandiName
                     .replace(/\s*Mandi\s*/i, "")
                     .replace(/\s*منڈی\s*/g, "")
                     .trim();
+
+                  const cardRot = rotAngles[idx % 3];
+                  const cardY = yOffsets[idx % 3];
 
                   return (
                     <button
@@ -24451,60 +24538,76 @@ function HomeScreen({
                       }}
                       className="flex-shrink-0 flex flex-col items-center relative tap-target"
                       style={{
-                        width: "clamp(136px, 34vw, 160px)",
-                        minWidth: "clamp(130px, 33vw, 154px)",
-                        height: "clamp(185px, 24vh, 215px)",
-                        padding:
-                          "clamp(10px, 1.5vh, 14px) 8px clamp(12px, 1.7vh, 16px)",
-                        borderRadius: 20,
+                        width: "calc((100% - 16px) / 3)",
+                        minWidth: "calc((100% - 16px) / 3)",
+                        maxWidth: "calc((100% - 16px) / 3)",
+                        height: "clamp(152px, 19.5vh, 176px)",
+                        padding: "6px 5px 8px",
+                        borderRadius: 18,
                         background: "#FFFFFF",
-                        border: "1.5px solid #D5E5DE",
-                        boxShadow: "0 4px 14px rgba(18,65,48,0.07)",
+                        border: "1.2px solid #D5E5DE",
+                        boxShadow: "0 4px 14px rgba(18,65,48,0.08)",
                         scrollSnapAlign: "start",
+                        transform: `translateY(${cardY}px) rotate(${cardRot}deg)`,
+                        transformOrigin: "center bottom",
+                        transition: "transform 0.2s ease, box-shadow 0.2s ease",
                       }}
                     >
-                      {/* Favorite Heart indicator */}
+                      {/* Inner Image Frame */}
                       <div
                         style={{
-                          position: "absolute",
-                          top: 8,
-                          right: 8,
-                          zIndex: 3,
-                        }}
-                      >
-                        <svg
-                          width="15"
-                          height="15"
-                          viewBox="0 0 24 24"
-                          fill="#E11D48"
-                          stroke="#E11D48"
-                          strokeWidth="1"
-                        >
-                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                        </svg>
-                      </div>
-
-                      {/* Image */}
-                      <div
-                        style={{
-                          width: "clamp(74px, 9.5vh, 88px)",
-                          height: "clamp(74px, 9.5vh, 88px)",
-                          marginTop: 4,
-                          marginBottom: 4,
+                          width: "100%",
+                          height: "clamp(74px, 9.6vh, 88px)",
+                          borderRadius: 13,
+                          background: "#F2F7F4",
+                          border: "1px solid #E1ECE6",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                           position: "relative",
+                          overflow: "hidden",
                         }}
                       >
+                        {/* Star Badge in Top Corner */}
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: 4,
+                            right: lang === "ur" ? "auto" : 4,
+                            left: lang === "ur" ? 4 : "auto",
+                            width: 19,
+                            height: 19,
+                            borderRadius: "50%",
+                            background: "rgba(255, 255, 255, 0.95)",
+                            backdropFilter: "blur(4px)",
+                            boxShadow: "0 1.5px 4px rgba(0,0,0,0.12)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            zIndex: 3,
+                          }}
+                        >
+                          <svg
+                            width="11"
+                            height="11"
+                            viewBox="0 0 24 24"
+                            fill="#F59E0B"
+                            stroke="#D97706"
+                            strokeWidth="1"
+                          >
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                          </svg>
+                        </div>
+
+                        {/* By-product Icon/Image */}
                         {imgSrc ? (
                           <img
                             src={imgSrc}
                             alt={item.byproduct}
                             loading="lazy"
                             style={{
-                              width: "90%",
-                              height: "90%",
+                              width: "78%",
+                              height: "78%",
                               objectFit: "contain",
                               display: "block",
                               filter: "none",
@@ -24515,7 +24618,7 @@ function HomeScreen({
                           <ProductIcon
                             name={item.byproduct}
                             vertical={item.vertical || "Grains"}
-                            size={56}
+                            size={44}
                             style={{
                               filter: "none",
                               opacity: 1,
@@ -24524,13 +24627,13 @@ function HomeScreen({
                         )}
                       </div>
 
-                      {/* Name: By-product (Primary Focal Point) & Mandi Badge */}
-                      <div className="mt-auto w-full px-1 flex flex-col items-center justify-center">
+                      {/* Name: By-product & Mandi Badge */}
+                      <div className="mt-auto w-full px-0.5 flex flex-col items-center justify-center pt-1">
                         <span
                           className="text-center font-extrabold truncate w-full text-[#183B34]"
                           style={{
-                            fontSize: "clamp(12.5px, 1.7vh, 15px)",
-                            lineHeight: 1.25,
+                            fontSize: "clamp(11.5px, 1.5vh, 13.5px)",
+                            lineHeight: 1.2,
                             fontFamily:
                               lang === "ur"
                                 ? URDU_FONT
@@ -24541,9 +24644,9 @@ function HomeScreen({
                           {lang === "ur" ? tc(item.byproduct) : item.byproduct}
                         </span>
 
-                        {/* Mandi Location Pill Badge */}
+                        {/* Mandi Location Badge */}
                         <div
-                          className="flex items-center justify-center gap-1 mt-1 px-2 py-0.5 rounded-full"
+                          className="flex items-center justify-center gap-1 mt-1 px-1.5 py-0.5 rounded-full"
                           style={{
                             background: "#EAF5F0",
                             border: "1px solid #C7E8D8",
@@ -24552,8 +24655,8 @@ function HomeScreen({
                           title={lang === "ur" ? tm(cleanMandi) : cleanMandi}
                         >
                           <svg
-                            width="9"
-                            height="9"
+                            width="8"
+                            height="8"
                             viewBox="0 0 24 24"
                             fill="#087F63"
                             className="flex-shrink-0"
@@ -24562,9 +24665,9 @@ function HomeScreen({
                             <circle cx="12" cy="9" r="2.5" fill="#EAF5F0" />
                           </svg>
                           <span
-                            className="font-bold text-[10px] text-[#075E4F] truncate"
+                            className="font-bold text-[9px] text-[#075E4F] truncate"
                             style={{
-                              lineHeight: 1.2,
+                              lineHeight: 1.15,
                               fontFamily:
                                 lang === "ur"
                                   ? URDU_FONT
@@ -24580,14 +24683,55 @@ function HomeScreen({
                 });
               })()}
             </div>
+
+            {/* Pagination Dots Indicator — 3 swipe pages */}
+            <div className="flex items-center justify-center gap-1.5 mt-2">
+              <div
+                style={{
+                  width: 18,
+                  height: 3.5,
+                  borderRadius: 999,
+                  background: "#087F63",
+                }}
+              />
+              <div
+                style={{
+                  width: 5.5,
+                  height: 3.5,
+                  borderRadius: 999,
+                  background: "#C6DFD4",
+                }}
+              />
+              <div
+                style={{
+                  width: 5.5,
+                  height: 3.5,
+                  borderRadius: 999,
+                  background: "#C6DFD4",
+                }}
+              />
+            </div>
           </section>
         </div>
 
-        {/* ===================================================
-            AGRICULTURAL FOREGROUND CANVAS LAYER (Leaves anchored above Nav)
-            =================================================== */}
-
-        <AgriForegroundCanvas />
+        {/* Agricultural Foreground Foliage Layer (Leaves anchored at bottom) */}
+        <img
+          src={agriForegroundImg}
+          alt="Agricultural Foliage Foreground"
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            width: "100%",
+            height: "auto",
+            maxHeight: "clamp(55px, 8.5vh, 78px)",
+            objectFit: "fill",
+            pointerEvents: "none",
+            zIndex: 1,
+            opacity: 0.95,
+          }}
+        />
 
         {/* ===================================================
             YOUR PICKS SHEET
