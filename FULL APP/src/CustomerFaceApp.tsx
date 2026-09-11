@@ -17,7 +17,7 @@ import farmHeroBg from "./assets/farm_hero_bg.png";
 import homeBgMint from "./assets/home_bg_mint.jpg";
 import agriForegroundImg from "./assets/agri_foreground.png";
 import pakistanFlagImg from "./assets/pakistan_flag.png";
-import { div } from "motion/react-client";
+import { AnimatedTabBar, type TabItem } from "./components/ui/animated-tab-bar";
 
 import video1 from "./videos/video1.mp4";
 import video2 from "./videos/video2.mp4";
@@ -163,6 +163,28 @@ const ZM_THEME_CSS = `
       rgba(255, 255, 255, 1) 360deg
     );
     animation: zmAngleSpin 4.5s linear infinite;
+  }
+  .zm-beam-border-pink::after {
+    background: conic-gradient(
+      from var(--beam-angle, 0deg) at 50% 50%,
+      transparent 0deg,
+      transparent 250deg,
+      rgba(251, 113, 133, 0.3) 280deg,
+      rgba(244, 63, 94, 0.95) 330deg,
+      rgba(225, 29, 72, 1) 360deg
+    ) !important;
+    animation: zmAngleSpin 4s linear infinite;
+  }
+  .zm-beam-border-green::after {
+    background: conic-gradient(
+      from var(--beam-angle, 0deg) at 50% 50%,
+      transparent 0deg,
+      transparent 255deg,
+      rgba(16, 185, 129, 0.25) 285deg,
+      rgba(52, 211, 153, 0.95) 330deg,
+      rgba(16, 185, 129, 1) 360deg
+    ) !important;
+    animation: zmAngleSpin 4s linear infinite;
   }
   .zm-beam-border-card::after {
     padding: 2px;
@@ -345,7 +367,7 @@ const AUTO_URDU_DICT: Record<string, string> = {
   Maize: "مکئی",
   Cotton: "کپاس",
   Rice: "چاول",
-  Paddy: "دھان",
+  Paddy: "پھٹی",
   Millet: "باجرہ",
   Sesame: "تل",
   "Edible Oil": "خوردنی تیل",
@@ -796,7 +818,7 @@ const TRANS: Record<string, { en: string; ur: string }> = {
   "c.Maize": { en: "Maize", ur: "مکئی" },
   "c.Cotton": { en: "Cotton", ur: "کپاس" },
   "c.Rice": { en: "Rice", ur: "چاول" },
-  "c.Paddy": { en: "Paddy", ur: "دھان" },
+  "c.Paddy": { en: "Paddy", ur: "پھٹی" },
   "c.Millet": { en: "Millet", ur: "باجرہ" },
   "c.Sesame": { en: "Sesame", ur: "تل" },
   "c.Fertilizer": { en: "Fertilizer", ur: "کھاد" },
@@ -2306,7 +2328,7 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 13,
     time: "9:30 AM",
     vertical: "Grains",
-    productUrdu: "دھان",
+    productUrdu: "پھٹی",
     product: "Paddy",
     byproduct: "Paddy Irri 6",
     stationUrdu: "سیرانوالی",
@@ -2334,7 +2356,7 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 14,
     time: "9:40 AM",
     vertical: "Grains",
-    productUrdu: "دھان",
+    productUrdu: "پھٹی",
     product: "Paddy",
     byproduct: "Paddy Kainat-1121",
     stationUrdu: "حافظ آباد",
@@ -3426,7 +3448,7 @@ const FEED_MESSAGES: FeedMsg[] = [
     id: 53,
     time: "4:10 PM",
     vertical: "Grains",
-    productUrdu: "دھان",
+    productUrdu: "پھٹی",
     product: "Paddy",
     byproduct: "Paddy Irri 6",
     stationUrdu: "حیدرآباد",
@@ -7934,7 +7956,10 @@ function LocationSheet({
               return (
                 <button
                   key={p}
-                  onClick={() => setProvince(p)}
+                  onClick={() => {
+                    speakText(appLang === "ur" ? `صوبہ ${AUTO_URDU_DICT[p] || p}` : `${p} Province`);
+                    setProvince(p);
+                  }}
                   className="tap-target relative overflow-hidden rounded-2xl px-4 flex items-center justify-between"
                   style={{
                     backgroundImage: `linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.55)), url(${PROVINCE_CARD_BG[p] || PROVINCE_CARD_BG.Punjab})`,
@@ -7955,11 +7980,15 @@ function LocationSheet({
             Object.keys(LOCATIONS[province]).map((d) => (
               <button
                 key={d}
-                onClick={() =>
-                  districtOnly
-                    ? (onSelect(province, d), onClose())
-                    : setDistrict(d)
-                }
+                onClick={() => {
+                  speakText(appLang === "ur" ? `ضلع ${AUTO_URDU_DICT[d] || d}` : `${d} District`);
+                  if (districtOnly) {
+                    onSelect(province, d);
+                    onClose();
+                  } else {
+                    setDistrict(d);
+                  }
+                }}
                 className="tap-target rounded-2xl px-4 flex items-center justify-between"
                 style={{
                   background: "#F1F7F4",
@@ -7977,6 +8006,7 @@ function LocationSheet({
               <button
                 key={s}
                 onClick={() => {
+                  speakText(appLang === "ur" ? `${AUTO_URDU_DICT[s] || s} منڈی` : `${s} Mandi`);
                   onSelect(province, district, s);
                   onClose();
                 }}
@@ -8026,7 +8056,9 @@ function LocationScopeSheet({
     return (
       <LocationSheet
         onSelect={(p, d, s) => {
-          onSelect({ kind: "mandi", label: s || d || p });
+          const sel = s || d || p;
+          speakText(appLang === "ur" ? `${AUTO_URDU_DICT[sel] || sel} کی قیمتیں` : `Prices for ${sel}`);
+          onSelect({ kind: "mandi", label: sel });
           onClose();
         }}
         onClose={onClose}
@@ -8056,6 +8088,10 @@ function LocationScopeSheet({
               <button
                 key={`${r.kind}-${r.label}`}
                 onClick={() => {
+                  const spoken = appLang === "ur"
+                    ? (r.kind === "pakistan" ? "پورے پاکستان کی قیمتیں" : r.kind === "province" ? `صوبہ ${AUTO_URDU_DICT[r.label] || r.label}` : `ضلع ${AUTO_URDU_DICT[r.label] || r.label}`)
+                    : (r.kind === "pakistan" ? "All Pakistan prices" : `${r.label} ${r.kind}`);
+                  speakText(spoken);
                   onSelect({ kind: r.kind, label: r.label });
                   onClose();
                 }}
@@ -8085,7 +8121,10 @@ function LocationScopeSheet({
             );
           })}
           <button
-            onClick={() => setMandiPicker(true)}
+            onClick={() => {
+              speakText(appLang === "ur" ? "منڈی منتخب کریں" : "Select Mandi");
+              setMandiPicker(true);
+            }}
             className="tap-target rounded-2xl px-4 flex items-center gap-3"
             style={{
               background: "#F1F7F4",
@@ -9215,7 +9254,7 @@ function ProductSelectScreen({
             product: productName || speakLabel,
             vertical: verticalName,
           });
-        }, 450);
+        }, 850);
         return;
       }
       push({
@@ -9229,7 +9268,7 @@ function ProductSelectScreen({
       speakText(tc(speakLabel));
       setTimeout(() => {
         onSelect();
-      }, 450);
+      }, 850);
       return;
     }
     onSelect();
@@ -9864,7 +9903,7 @@ function ByProductCombinedScreen({
       speakText(text);
       setTimeout(() => {
         navigateFn();
-      }, 450);
+      }, 850);
       return;
     }
     navigateFn();
@@ -10850,25 +10889,40 @@ function MultiLocSheet({
     );
     if (isAlready) {
       setDraft([{ kind: "pakistan", label: "All Pakistan" }]);
+      if (voiceEnabled) {
+        speakText(lang === "ur" ? "پورا پاکستان منتخب کیا گیا۔" : "All Pakistan selected.");
+      }
     } else {
       setDraft([{ kind: "province", label: p }]);
+      if (voiceEnabled) {
+        speakText(lang === "ur" ? `صوبہ ${tmL(p)} منتخب کیا گیا` : `${p} Province selected`);
+      }
     }
     setSelectedProvince(p);
   };
 
   const toggleDistrictAccordion = (d: string) => {
     setExpandedDistricts((prev) => ({ ...prev, [d]: !prev[d] }));
+    if (voiceEnabled) {
+      speakText(lang === "ur" ? `ضلع ${tmL(d)}` : `${d} District`);
+    }
   };
 
-  const toggleMandi = (mName: string, distName: string) => {
+  const toggleMandi = (mName: string, _distName: string) => {
     const isAlready = draft.some((x) => x.label === mName);
     if (isAlready) {
       setDraft((prev) => prev.filter((x) => x.label !== mName));
+      if (voiceEnabled) {
+        speakText(lang === "ur" ? `${tmL(mName)} منڈی ہٹا دی گئی` : `${mName} Mandi unselected`);
+      }
     } else {
       setDraft((prev) => [
         ...prev.filter((x) => x.kind !== "pakistan"),
         { kind: "mandi", label: mName },
       ]);
+      if (voiceEnabled) {
+        speakText(lang === "ur" ? `${tmL(mName)} منڈی` : `${mName} Mandi`);
+      }
     }
   };
 
@@ -10881,6 +10935,9 @@ function MultiLocSheet({
     );
     if (allSelected) {
       setDraft((prev) => prev.filter((x) => !mandiList.includes(x.label)));
+      if (voiceEnabled) {
+        speakText(lang === "ur" ? `ضلع ${tmL(distName)} کی منڈیاں غیر منتخب` : `Mandis in ${distName} unselected`);
+      }
     } else {
       const toAdd = mandiList
         .filter((m) => !draft.some((x) => x.label === m))
@@ -10889,6 +10946,9 @@ function MultiLocSheet({
         ...prev.filter((x) => x.kind !== "pakistan"),
         ...toAdd,
       ]);
+      if (voiceEnabled) {
+        speakText(lang === "ur" ? `ضلع ${tmL(distName)} کی تمام منڈیاں منتخب` : `All mandis in ${distName} selected`);
+      }
     }
   };
 
@@ -12163,7 +12223,7 @@ function RateCard({
             e.stopPropagation();
             onToggleFavorite?.();
           }}
-          className="tap-target zm-beam-border w-7 h-7 flex items-center justify-center rounded-full transition active:scale-90 text-[#183B34]"
+          className="tap-target zm-beam-border zm-beam-border-pink w-7 h-7 flex items-center justify-center rounded-full transition active:scale-90 text-[#183B34]"
           title={
             isFavorite
               ? lang === "ur"
@@ -14027,7 +14087,7 @@ function ProductRatesScreen({
               }
             }}
             aria-label={picked ? "Remove from favorites" : "Add to favorites"}
-            className="tap-target zm-beam-border w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 transition active:scale-90"
+            className="tap-target zm-beam-border zm-beam-border-pink w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 transition active:scale-90"
             style={{
               background: picked ? "rgba(255, 235, 235, 0.85)" : "rgba(255, 255, 255, 0.65)",
               backdropFilter: "blur(12px)",
@@ -14848,7 +14908,12 @@ function ProductRatesScreen({
                       <div className="flex-1 min-w-0 flex flex-col justify-between py-0">
                         {/* Location dropdown header (Clean: Mandi Name only, no province subtitle) */}
                         <button
-                          onClick={() => setLocSheet(true)}
+                          onClick={() => {
+                            setLocSheet(true);
+                            if (voiceEnabled) {
+                              speakText(lang === "ur" ? "مقام کا انتخاب" : "Select location");
+                            }
+                          }}
                           className="tap-target flex items-center gap-1.5 text-left mb-1 group w-full"
                           style={{ background: "none", border: "none", padding: 0 }}
                         >
@@ -15069,8 +15134,8 @@ function ProductRatesScreen({
                                 style={{
                                   fontFamily:
                                     lang === "ur"
-                                    ? URDU_FONT
-                                    : "inherit",
+                                      ? URDU_FONT
+                                      : "inherit",
                                 }}
                               >
                                 {attrColor ? t(attrColor) : (lang === "ur" ? "سنہری" : "Golden")}
@@ -15113,8 +15178,8 @@ function ProductRatesScreen({
                                 style={{
                                   fontFamily:
                                     lang === "ur"
-                                    ? URDU_FONT
-                                    : "inherit",
+                                      ? URDU_FONT
+                                      : "inherit",
                                 }}
                               >
                                 {attrSpec ? t(attrSpec) : (lang === "ur" ? "بیج کا معیار" : "Seed Quality")}
@@ -15160,8 +15225,8 @@ function ProductRatesScreen({
                                 style={{
                                   fontFamily:
                                     lang === "ur"
-                                    ? URDU_FONT
-                                    : "inherit",
+                                      ? URDU_FONT
+                                      : "inherit",
                                 }}
                               >
                                 {attrVariety ? tc(attrVariety) : (lang === "ur" ? "سونا موتی" : "Sona Moti")}
@@ -15205,8 +15270,8 @@ function ProductRatesScreen({
                                 style={{
                                   fontFamily:
                                     lang === "ur"
-                                    ? URDU_FONT
-                                    : "inherit",
+                                      ? URDU_FONT
+                                      : "inherit",
                                 }}
                               >
                                 {attrNewOld ? t(attrNewOld) : (lang === "ur" ? "نیا" : "New")}
@@ -15249,8 +15314,8 @@ function ProductRatesScreen({
                                 style={{
                                   fontFamily:
                                     lang === "ur"
-                                    ? URDU_FONT
-                                    : "inherit",
+                                      ? URDU_FONT
+                                      : "inherit",
                                 }}
                               >
                                 {attrCondition ? t(attrCondition) : (lang === "ur" ? "خشک" : "Dry")}
@@ -15565,7 +15630,15 @@ function ProductRatesScreen({
                             return (
                               <button
                                 key={p || "all"}
-                                onClick={() => setTableProvinceFilter(p)}
+                                onClick={() => {
+                                  setTableProvinceFilter(p);
+                                  if (voiceEnabled) {
+                                    const msg = p
+                                      ? (lang === "ur" ? `صوبہ ${tm(p)}` : `${p} Province`)
+                                      : (lang === "ur" ? "تمام صوبے" : "All Provinces");
+                                    speakText(msg);
+                                  }
+                                }}
                                 className="flex-shrink-0 zm-beam-border px-3.5 py-1 rounded-full font-bold text-xs transition active:scale-95"
                                 style={{
                                   background: isSelected
@@ -16138,9 +16211,9 @@ function ProductRatesScreen({
                               const isSelected = selectedMandiGraphRow
                                 ? isRowModalActive
                                 : (locScope.kind === "mandi" &&
-                                    (locScope.label === r.mandiName ||
-                                      locScope.label.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "") ===
-                                        r.mandiName.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "")));
+                                  (locScope.label === r.mandiName ||
+                                    locScope.label.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "") ===
+                                    r.mandiName.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "")));
                               // Each row uses ITS OWN canonical attrs
                               const rowCanon = getMandiCanonicalAttrs(r.mandiName);
                               const rowAttrMult = computeAttrMult(
@@ -16186,6 +16259,17 @@ function ProductRatesScreen({
                                           trendPct: intervalPct,
                                         };
                                       });
+
+                                      if (voiceEnabled) {
+                                        const cleanMandi = r.mandiName.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "");
+                                        const minVal = Math.round(r.min * effMult).toLocaleString("en-PK");
+                                        const maxVal = Math.round(r.max * effMult).toLocaleString("en-PK");
+                                        const rtUr = tr(r.rateType).replace(" ریٹ", "").replace(" Rate", "");
+                                        const spoken = lang === "ur"
+                                          ? `${tm(cleanMandi)} منڈی، ${rtUr}، ریٹ ${minVal} سے ${maxVal} روپے`
+                                          : `${cleanMandi} Mandi, ${r.rateType} rate, ${minVal} to ${maxVal} rupees`;
+                                        speakText(spoken);
+                                      }
                                     }}
                                     className="cursor-pointer transition hover:bg-[#EAF5F0]"
                                     style={{
@@ -16456,11 +16540,10 @@ function ProductRatesScreen({
                                                   e.stopPropagation();
                                                   setTableGraphView("price");
                                                 }}
-                                                className={`px-3 py-1 rounded-full text-xs font-black transition active:scale-95 ${
-                                                  tableGraphView === "price"
-                                                    ? "zm-beam-border bg-[#087F63] text-white shadow-sm"
-                                                    : "text-[#2D5A4C] hover:text-[#087F63] bg-transparent"
-                                                }`}
+                                                className={`px-3 py-1 rounded-full text-xs font-black transition active:scale-95 ${tableGraphView === "price"
+                                                  ? "zm-beam-border bg-[#087F63] text-white shadow-sm"
+                                                  : "text-[#2D5A4C] hover:text-[#087F63] bg-transparent"
+                                                  }`}
                                                 style={{
                                                   fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                                                   fontSize: lang === "ur" ? 13 : 11.5,
@@ -16474,11 +16557,10 @@ function ProductRatesScreen({
                                                   e.stopPropagation();
                                                   setTableGraphView("arrival");
                                                 }}
-                                                className={`px-3 py-1 rounded-full text-xs font-black transition active:scale-95 ${
-                                                  tableGraphView === "arrival"
-                                                    ? "zm-beam-border bg-[#087F63] text-white shadow-sm"
-                                                    : "text-[#2D5A4C] hover:text-[#087F63] bg-transparent"
-                                                }`}
+                                                className={`px-3 py-1 rounded-full text-xs font-black transition active:scale-95 ${tableGraphView === "arrival"
+                                                  ? "zm-beam-border bg-[#087F63] text-white shadow-sm"
+                                                  : "text-[#2D5A4C] hover:text-[#087F63] bg-transparent"
+                                                  }`}
                                                 style={{
                                                   fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                                                   fontSize: lang === "ur" ? 13 : 11.5,
@@ -16530,9 +16612,8 @@ function ProductRatesScreen({
                                                     e.stopPropagation();
                                                     setGraphTimeframe(tf.id as any);
                                                   }}
-                                                  className={`flex-1 py-0.5 px-1 rounded-full font-extrabold text-[9.5px] transition text-center active:scale-[0.97] ${
-                                                    isActive ? "zm-beam-border" : ""
-                                                  }`}
+                                                  className={`flex-1 py-0.5 px-1 rounded-full font-extrabold text-[9.5px] transition text-center active:scale-[0.97] ${isActive ? "zm-beam-border" : ""
+                                                    }`}
                                                   style={{
                                                     background: isActive ? "#087F63" : "#F4FAF7",
                                                     color: isActive ? "#FFFFFF" : "#374151",
@@ -17855,6 +17936,19 @@ function ProductRatesScreen({
                                 return (
                                   <tr
                                     key={i}
+                                    onClick={() => {
+                                      if (voiceEnabled) {
+                                        const cleanMandi = r.mandiName.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "");
+                                        const minVal = Math.round(r.min).toLocaleString("en-PK");
+                                        const maxVal = Math.round(r.max).toLocaleString("en-PK");
+                                        const rtUr = tr(r.rateType).replace(" ریٹ", "").replace(" Rate", "");
+                                        const spoken = lang === "ur"
+                                          ? `${tm(cleanMandi)} منڈی، ${rtUr}، ریٹ ${minVal} سے ${maxVal} روپے`
+                                          : `${cleanMandi} Mandi, ${r.rateType} rate, ${minVal} to ${maxVal} rupees`;
+                                        speakText(spoken);
+                                      }
+                                    }}
+                                    className="cursor-pointer transition hover:bg-[#EAF5F0]"
                                     style={{
                                       background: rowBg,
                                       borderBottom: "1px solid #E6EFEB",
@@ -20481,7 +20575,7 @@ const VIDEO_PRODUCT_OPTIONS = [
   { id: "sesame", label: "Sesame", labelUrdu: "تل" },
   { id: "millet", label: "Millet", labelUrdu: "باجرہ" },
   { id: "cotton", label: "Cotton", labelUrdu: "کپاس" },
-  { id: "paddy", label: "Paddy", labelUrdu: "دھان" },
+  { id: "paddy", label: "Paddy", labelUrdu: "پھٹی" },
   { id: "rice", label: "Rice", labelUrdu: "چاول" },
   { id: "edible oil", label: "Edible Oil", labelUrdu: "خوردنی تیل" },
   { id: "fertilizer", label: "Fertilizer", labelUrdu: "کھاد" },
@@ -23913,7 +24007,7 @@ function HomeScreen({
       speakText(speakMsg);
       setTimeout(() => {
         navigateFn();
-      }, 450);
+      }, 850);
       return;
     }
 
@@ -24771,21 +24865,10 @@ function HomeScreen({
           >
             <div className="px-4 flex items-center justify-between mb-2.5">
               <div className="flex items-center gap-1.5">
-                <svg
-                  width="19"
-                  height="19"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="flex-shrink-0"
-                >
-                  <rect x="3" y="3" width="7.5" height="7.5" rx="2" fill="#087F63" />
-                  <rect x="13.5" y="3" width="7.5" height="7.5" rx="2" stroke="#087F63" strokeWidth="2.2" />
-                  <rect x="3" y="13.5" width="7.5" height="7.5" rx="2" stroke="#087F63" strokeWidth="2.2" />
-                  <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2" stroke="#087F63" strokeWidth="2.2" />
-                </svg>
+
                 <p
                   style={{
-                    fontSize: profileCompleted ? 16 : 14.5,
+                    fontSize: profileCompleted ? 20 : 18,
                     fontWeight: 800,
                     color: "#183B34",
                     letterSpacing: lang === "ur" ? "0" : "0.02em",
@@ -24795,7 +24878,7 @@ function HomeScreen({
                         : "inherit",
                   }}
                 >
-                  {t("My Products")}
+                  {t("Products")}
                 </p>
               </div>
 
@@ -24877,7 +24960,7 @@ function HomeScreen({
                   >
                     {/* Active Circle - Grown to fill space luxuriously */}
                     <div
-                      className="zm-beam-border"
+                      className="zm-beam-border zm-beam-border-white"
                       style={{
                         width: profileCompleted
                           ? "clamp(100px, 13vh, 116px)"
@@ -24947,7 +25030,7 @@ function HomeScreen({
 
                     {/* Active Badge */}
                     <span
-                      className="zm-beam-border"
+                      className="zm-beam-border zm-beam-border-white"
                       style={{
                         marginTop: 3,
                         padding: "2.5px 11px",
@@ -24993,7 +25076,7 @@ function HomeScreen({
                   >
                     {/* Locked circle */}
                     <div
-                      className="zm-beam-border"
+                      className="zm-beam-border zm-beam-border-green"
                       style={{
                         width: profileCompleted
                           ? "clamp(68px, 8.8vh, 80px)"
@@ -25067,7 +25150,7 @@ function HomeScreen({
                     </span>
 
                     <span
-                      className="zm-beam-border"
+                      className="zm-beam-border zm-beam-border-green"
                       style={{
                         marginTop: 2,
                         padding: "2px 8px",
@@ -25127,18 +25210,7 @@ function HomeScreen({
                   >
                     {t("Favorites")}
                   </p>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#183B34"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                  </svg>
+
                 </div>
               </div>
 
@@ -27671,20 +27743,113 @@ const ORIENT_CARDS = [
   },
 ];
 
+let globalVoices: SpeechSynthesisVoice[] = [];
+if (typeof window !== "undefined" && "speechSynthesis" in window) {
+  globalVoices = window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => {
+    globalVoices = window.speechSynthesis.getVoices();
+  };
+}
+
+function getBestVoice(isUrdu: boolean): SpeechSynthesisVoice | null {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return null;
+  const voices = globalVoices.length > 0 ? globalVoices : window.speechSynthesis.getVoices();
+  if (!voices || voices.length === 0) return null;
+
+  if (isUrdu) {
+    // 1. Exact match for Azure / MS Uzma Neural
+    const uzma = voices.find((v) =>
+      v.name.toLowerCase().includes("uzma") ||
+      v.name.toLowerCase().includes("uzmaneural")
+    );
+    if (uzma) return uzma;
+
+    // 2. Exact match for ur-PK
+    const urPk = voices.find((v) =>
+      v.lang.toLowerCase() === "ur-pk" || v.lang.toLowerCase() === "ur_pk"
+    );
+    if (urPk) return urPk;
+
+    // 3. Asad Neural or other Urdu voices
+    const urduVoice = voices.find((v) =>
+      v.name.toLowerCase().includes("asad") ||
+      v.lang.toLowerCase().startsWith("ur") ||
+      v.name.toLowerCase().includes("urdu")
+    );
+    if (urduVoice) return urduVoice;
+
+    // 4. Subcontinent natural voices (e.g. Swara / Madhur / Hindi which accurately pronounce Urdu vocabulary)
+    const hiVoice = voices.find((v) =>
+      v.name.toLowerCase().includes("swara") ||
+      v.name.toLowerCase().includes("madhur") ||
+      v.lang.toLowerCase().startsWith("hi")
+    );
+    if (hiVoice) return hiVoice;
+
+    // 5. Arabic / Persian fallback
+    const fallback = voices.find((v) =>
+      v.lang.toLowerCase().startsWith("ar") || v.lang.toLowerCase().startsWith("fa")
+    );
+    if (fallback) return fallback;
+  } else {
+    const en =
+      voices.find((v) =>
+        v.name.toLowerCase().includes("natural") && v.lang.toLowerCase().startsWith("en")
+      ) ||
+      voices.find((v) => v.lang.toLowerCase() === "en-us" || v.lang.toLowerCase().startsWith("en"));
+    if (en) return en;
+  }
+
+  return null;
+}
+
 function translateVoiceUrdu(text: string): string {
   if (!text) return "";
-  // If text already contains Urdu characters, return as is
-  if (/[\u0600-\u06FF]/.test(text)) return text;
-
   const trimmed = text.trim();
-  if (AUTO_URDU_DICT[trimmed]) return AUTO_URDU_DICT[trimmed];
 
   const PHRASES: Record<string, string> = {
+    Wheat: "گندم",
+    wheat: "گندم",
+    Paddy: "پھٹی",
+    paddy: "پھٹی",
+    Cotton: "کپاس",
+    cotton: "کپاس",
+    Rice: "چاول",
+    rice: "چاول",
+    Maize: "مکئی",
+    maize: "مکئی",
+    Sesame: "تل",
+    sesame: "تل",
+    Mustard: "سرسوں",
+    mustard: "سرسوں",
+    Millet: "باجرہ",
+    millet: "باجرہ",
+    Sugarcane: "گنا",
+    sugarcane: "گنا",
+    Sugar: "چینی",
+    sugar: "چینی",
+    Kiryana: "کریانہ",
+    kiryana: "کریانہ",
+    Livestock: "مویشی",
+    livestock: "مویشی",
+    Fertilizers: "کھاد",
+    fertilizers: "کھاد",
+    Vegetables: "سبزیاں",
+    vegetables: "سبزیاں",
+    Fruits: "پھل",
+    fruits: "پھل",
+    "Dry-Fruits": "خشک میوہ جات",
+    Herbals: "جڑی بوٹیاں",
+    "Edible Oil": "خوردنی تیل",
     "All products selected. All prices are shown.":
       "تمام مصنوعات منتخب ہیں۔ تمام قیمتیں دکھائی جا رہی ہیں۔",
     "All byproducts shown.": "تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔",
+    "All byproducts": "تمام ضمنی مصنوعات",
     "All price types are shown.": "تمام ریٹس دکھائے جا رہے ہیں۔",
     "Prices of my country shown.": "پورے ملک کی قیمتیں دکھائی جا رہی ہیں۔",
+    "All Pakistan prices": "پورے پاکستان کی قیمتیں",
+    "All Pakistan": "پورا پاکستان",
+    "Select location": "مقام منتخب کریں",
     "Search. Find any product or byproduct by name to see its prices.":
       "تلاش۔ کسی بھی اجناس یا ضمنی مصنوع کا نام بول کر یا لکھ کر قیمت دیکھیں۔",
     "Product. Select a crop or product to discover its byproduct prices.":
@@ -27698,9 +27863,14 @@ function translateVoiceUrdu(text: string): string {
     "Your Picks. Your favourite byproducts are shown here on your homescreen.":
       "آپ کی پسند۔ آپ کی پسندیدہ ضمنی مصنوعات یہاں دکھائی دیتی ہیں۔",
     "This product is locked. Please upgrade to access it.":
-      "یہ مصنوع لاک ہے۔ رسائی کے لیے اکاؤنٹ اپگریڈ کریں۔",
+      "یہ مصنوع مقفل ہے۔ رسائی کے لیے اکاؤنٹ اپگریڈ کریں۔",
+    "This product is locked": "یہ مصنوع مقفل ہے",
   };
   if (PHRASES[trimmed]) return PHRASES[trimmed];
+  if (AUTO_URDU_DICT[trimmed]) return AUTO_URDU_DICT[trimmed];
+
+  // If text already contains Urdu characters, return as is
+  if (/[\u0600-\u06FF]/.test(text)) return text;
 
   // Dynamic patterns
   let m = trimmed.match(/^All (.*?) byproduct prices are shown\.$/i);
@@ -27716,6 +27886,12 @@ function translateVoiceUrdu(text: string): string {
   }
 
   m = trimmed.match(/^Prices of (.*?) are shown\.$/i);
+  if (m) {
+    const item = AUTO_URDU_DICT[m[1]] || m[1];
+    return `${item} کی قیمتیں دکھائی جا رہی ہیں۔`;
+  }
+
+  m = trimmed.match(/^Prices for (.*?)$/i);
   if (m) {
     const item = AUTO_URDU_DICT[m[1]] || m[1];
     return `${item} کی قیمتیں دکھائی جا رہی ہیں۔`;
@@ -27738,6 +27914,13 @@ function translateVoiceUrdu(text: string): string {
     return `${m[1]} مقامات کی قیمتیں دکھائی جا رہی ہیں۔`;
   }
 
+  m = trimmed.match(/^(.*?), (.*?)\. Min rate (.*?), Max rate (.*?) rupees\.$/i);
+  if (m) {
+    const crop = AUTO_URDU_DICT[m[1]] || m[1];
+    const mandi = AUTO_URDU_DICT[m[2]] || m[2];
+    return `${crop}، ${mandi}۔ کم سے کم ریٹ ${m[3]}، زیادہ سے زیادہ ${m[4]} روپے`;
+  }
+
   return AUTO_URDU_DICT[trimmed] || trimmed;
 }
 
@@ -27756,26 +27939,23 @@ function speakText(text: string) {
       textToSpeak = translateVoiceUrdu(text);
     }
 
+    // Clean text of non-pronounceable glyphs
+    textToSpeak = textToSpeak
+      .replace(/<[^>]+>/g, " ")
+      .replace(/[•★✓›‹→←▲▼]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    if (!textToSpeak) return;
+
     const u = new SpeechSynthesisUtterance(textToSpeak);
     u.lang = appLang === "ur" ? "ur-PK" : "en-US";
-    u.rate = appLang === "ur" ? 0.85 : 0.95;
+    u.rate = appLang === "ur" ? 0.84 : 0.95;
+    u.pitch = 1.0;
 
-    if (appLang === "ur") {
-      const voices = window.speechSynthesis.getVoices();
-      const urVoice =
-        voices.find(
-          (v) =>
-            v.lang === "ur-PK" || v.lang === "ur" || v.lang.startsWith("ur-"),
-        ) ||
-        voices.find(
-          (v) =>
-            v.name.toLowerCase().includes("urdu") ||
-            v.lang.toLowerCase().includes("ur"),
-        ) ||
-        voices.find((v) => v.lang.startsWith("hi") || v.lang.startsWith("ar"));
-      if (urVoice) {
-        u.voice = urVoice;
-      }
+    const voice = getBestVoice(appLang === "ur");
+    if (voice) {
+      u.voice = voice;
     }
 
     window.speechSynthesis.speak(u);
@@ -28160,94 +28340,12 @@ function BottomNav({
   onVoiceHold: () => void;
   voiceActive: boolean;
 }) {
-  const NAV_ICONS: Record<string, (active: boolean) => React.ReactNode> = {
-    home: (on) => (
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill={on ? "#087F63" : "#52635F"}
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" />
-        <path d="M9 21V12h6v9" fill="white" />
-      </svg>
-    ),
-    analytics: (on) => (
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect
-          x="3"
-          y="12"
-          width="4"
-          height="9"
-          rx="1"
-          fill={on ? "#087F63" : "#52635F"}
-        />
-        <rect
-          x="10"
-          y="7"
-          width="4"
-          height="14"
-          rx="1"
-          fill={on ? "#087F63" : "#52635F"}
-        />
-        <rect
-          x="17"
-          y="3"
-          width="4"
-          height="18"
-          rx="1"
-          fill={on ? "#087F63" : "#52635F"}
-        />
-      </svg>
-    ),
-    news: (on) => (
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect
-          x="3"
-          y="3"
-          width="18"
-          height="18"
-          rx="5"
-          stroke={on ? "#087F63" : "#52635F"}
-          strokeWidth="2"
-        />
-        <path
-          d="M7 3L10.5 8M13.5 3L17 8M3 8H21"
-          stroke={on ? "#087F63" : "#52635F"}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <polygon
-          points="10,11 16,14.5 10,18"
-          fill={on ? "#087F63" : "#52635F"}
-        />
-      </svg>
-    ),
-  };
   const { t, lang } = useLang();
-  const regularTabs: { id: NavTab; label: string }[] = [
-    { id: "home", label: t("nav.home") },
-    { id: "analytics", label: t("nav.analytics") },
-    { id: "news", label: t("nav.news") },
-  ];
 
   // Tap = orientation, Hold (≥380ms) = voice query
   const holdTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const didHoldRef = useRef(false);
-  const pointerDownRef = useRef(false); // guards against spurious onPointerLeave after release
+  const pointerDownRef = useRef(false);
 
   const handleVoiceDown = () => {
     pointerDownRef.current = true;
@@ -28259,106 +28357,125 @@ function BottomNav({
     }, 380);
   };
   const handleVoiceUp = () => {
-    if (!pointerDownRef.current) return; // already released — ignore spurious leave events
+    if (!pointerDownRef.current) return;
     pointerDownRef.current = false;
     if (holdTimerRef.current) clearTimeout(holdTimerRef.current);
     if (!didHoldRef.current) onVoiceTap();
   };
 
+  const tabIndexMap: Record<string, number> = {
+    home: 0,
+    analytics: 1,
+    news: 2,
+    voice: 3,
+  };
+
+  const currentActiveIndex = voiceActive ? 3 : (tabIndexMap[active] ?? 0);
+
+  const navItems: TabItem[] = [
+    {
+      id: "home",
+      label: t("nav.home"),
+      color: "#087F63",
+      icon: (
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill={currentActiveIndex === 0 ? "#ffffff" : "#183B34"}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" />
+          <path d="M9 21V12h6v9" fill={currentActiveIndex === 0 ? "#087F63" : "#C7D8D1"} />
+        </svg>
+      ),
+      onClick: () => onNav("home"),
+    },
+    {
+      id: "analytics",
+      label: t("nav.analytics"),
+      color: "#2FAE68",
+      icon: (
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect x="3" y="12" width="4" height="9" rx="1" fill={currentActiveIndex === 1 ? "#ffffff" : "#183B34"} />
+          <rect x="10" y="7" width="4" height="14" rx="1" fill={currentActiveIndex === 1 ? "#ffffff" : "#183B34"} />
+          <rect x="17" y="3" width="4" height="18" rx="1" fill={currentActiveIndex === 1 ? "#ffffff" : "#183B34"} />
+        </svg>
+      ),
+      onClick: () => onNav("analytics"),
+    },
+    {
+      id: "news",
+      label: t("nav.news"),
+      color: "#0E645C",
+      icon: (
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            x="3"
+            y="3"
+            width="18"
+            height="18"
+            rx="5"
+            stroke={currentActiveIndex === 2 ? "#ffffff" : "#183B34"}
+            strokeWidth="2"
+          />
+          <path
+            d="M7 3L10.5 8M13.5 3L17 8M3 8H21"
+            stroke={currentActiveIndex === 2 ? "#ffffff" : "#183B34"}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <polygon
+            points="10,11 16,14.5 10,18"
+            fill={currentActiveIndex === 2 ? "#ffffff" : "#183B34"}
+          />
+        </svg>
+      ),
+      onClick: () => onNav("news"),
+    },
+    {
+      id: "voice",
+      label: t("nav.voice"),
+      color: voiceActive ? "#C94A43" : "#087F63",
+      icon: (
+        <MicSVG size={22} color={currentActiveIndex === 3 ? "#ffffff" : "#183B34"} />
+      ),
+      onPointerDown: handleVoiceDown,
+      onPointerUp: handleVoiceUp,
+      onPointerLeave: handleVoiceUp,
+    },
+  ];
+
   return (
     <nav
-      className="flex-shrink-0 flex items-center justify-around px-2 relative z-50 ltr-only"
-      style={{
-        height: "clamp(64px, 8.5vh, 76px)",
-        background: "#F4FAF7",
-        borderTop: "1px solid #D5E2DD",
-        paddingTop: 4,
-        paddingBottom: "max(8px, env(safe-area-inset-bottom, 8px))",
-        direction: "ltr", // constant button placements across both EN and UR
-      }}
+      className="flex-shrink-0 relative z-50 ltr-only w-full"
+      style={{ direction: "ltr" }}
     >
-      {regularTabs.map((t) => {
-        const isActive = active === t.id;
-        return (
-          <button
-            key={t.id}
-            onClick={() => onNav(t.id)}
-            className="tap-target flex flex-col items-center justify-center gap-0.5 flex-1 relative py-1"
-            style={{ color: isActive ? "#087F63" : "#52635F" }}
-          >
-            {NAV_ICONS[t.id]?.(isActive)}
-            <span
-              style={{
-                fontSize: lang === "ur" ? 16 : 12,
-                fontWeight: isActive ? 800 : 700,
-                color: isActive ? "#087F63" : "#52635F",
-                fontFamily:
-                  lang === "ur"
-                    ? URDU_FONT
-                    : "inherit",
-                lineHeight: lang === "ur" ? 1.2 : 1.1,
-              }}
-            >
-              {t.label}
-            </span>
-            {isActive && t.id === "home" && (
-              <span
-                style={{
-                  position: "absolute",
-                  bottom: -1,
-                  width: 22,
-                  height: 3,
-                  borderRadius: 2,
-                  background: "#087F63",
-                }}
-              />
-            )}
-          </button>
-        );
-      })}
-
-      {/* Voice button — rightmost, tap=orientation, hold=listen */}
-      <button
-        onPointerDown={handleVoiceDown}
-        onPointerUp={handleVoiceUp}
-        onPointerLeave={handleVoiceUp}
-        className="tap-target flex flex-col items-center gap-0.5 flex-1 select-none py-1"
-        style={{ touchAction: "none" }}
-      >
-        <span
-          className="flex items-center justify-center rounded-full"
-          style={{
-            width: lang === "ur" ? 38 : 36,
-            height: lang === "ur" ? 38 : 36,
-            background: voiceActive
-              ? "linear-gradient(135deg,#C94A43,#D95A51)"
-              : "linear-gradient(135deg,#087F63,#2FAE68)",
-            boxShadow: voiceActive
-              ? "0 0 0 5px rgba(220,38,38,0.18)"
-              : "0 3px 12px rgba(15,138,95,0.35)",
-            transition: "all 0.2s ease",
-          }}
-        >
-          <MicSVG size={18} color="#fff" />
-        </span>
-        <span
-          style={{
-            fontSize: lang === "ur" ? 16 : 10,
-            fontWeight: 800,
-            color: voiceActive ? "#C94A43" : "#52635F",
-            fontFamily:
-              lang === "ur"
-                ? URDU_FONT
-                : "inherit",
-            lineHeight: lang === "ur" ? 1.2 : 1,
-          }}
-        >
-          {t("nav.voice")}
-        </span>
-      </button>
+      <AnimatedTabBar
+        items={navItems}
+        activeIndex={currentActiveIndex}
+        onTabChange={(index) => {
+          if (index === 0) onNav("home");
+          else if (index === 1) onNav("analytics");
+          else if (index === 2) onNav("news");
+        }}
+      />
     </nav>
   );
 }
+
 
 //  ROOT APP
 
@@ -29448,12 +29565,10 @@ function BillingScreen({
               </p>
               <p className="text-xs font-semibold" style={{ color: "#52635F" }}>
                 {lang === "ur"
-                  ? `مرحلہ ${step === "plan" ? 2 : 3} از 3: ${
-                      step === "plan" ? "سبسکرپشن پلان" : "ادائیگی کی تفصیلات"
-                    }`
-                  : `Step ${step === "plan" ? 2 : 3} of 3: ${
-                      step === "plan" ? "Subscription Plan" : "Card & Payment"
-                    }`}
+                  ? `مرحلہ ${step === "plan" ? 2 : 3} از 3: ${step === "plan" ? "سبسکرپشن پلان" : "ادائیگی کی تفصیلات"
+                  }`
+                  : `Step ${step === "plan" ? 2 : 3} of 3: ${step === "plan" ? "Subscription Plan" : "Card & Payment"
+                  }`}
               </p>
             </div>
             <button
@@ -29484,421 +29599,266 @@ function BillingScreen({
           </div>
         </div>
 
-      {/* Scrollable Content Body */}
-      <div className="flex-1 overflow-y-auto px-5 py-4">
-        {step === "plan" ? (
-          <div>
-            <div style={{ marginBottom: 14 }}>
-              <h2 style={{ fontSize: 16, fontWeight: 800, color: "#183B34" }}>
-                {lang === "ur"
-                  ? "اپنا سبسکرپشن پلان منتخب کریں"
-                  : "Choose Your ZM Plan"}
-              </h2>
-            </div>
+        {/* Scrollable Content Body */}
+        <div className="flex-1 overflow-y-auto px-5 py-4">
+          {step === "plan" ? (
+            <div>
+              <div style={{ marginBottom: 14 }}>
+                <h2 style={{ fontSize: 16, fontWeight: 800, color: "#183B34" }}>
+                  {lang === "ur"
+                    ? "اپنا سبسکرپشن پلان منتخب کریں"
+                    : "Choose Your ZM Plan"}
+                </h2>
+              </div>
 
-            {/* Standard Duration Tabs */}
-            <div
-              style={{
-                display: "flex",
-                background: "rgba(15,138,95,0.07)",
-                borderRadius: 12,
-                padding: 4,
-                gap: 3,
-                marginBottom: 10,
-              }}
-            >
-              {[
-                { label: "1 Mo", durIdx: 0, badge: "Standard" },
-                { label: "3 Mos", durIdx: 1, badge: "10% off" },
-                { label: "6 Mos", durIdx: 2, badge: "15% off" },
-                { label: "12 Mos", durIdx: 3, badge: "25% off" },
-              ].map((item) => {
-                const active = !customMode && dur === item.durIdx;
-                return (
-                  <button
-                    key={item.label}
-                    type="button"
-                    className={`dur-tab${active ? " active" : ""}`}
-                    onClick={() => {
-                      setCustomMode(false);
-                      setDur(item.durIdx);
-                    }}
-                    style={{
-                      flex: 1,
-                      padding: "8px 2px",
-                      borderRadius: 10,
-                      border: "none",
-                      background: active ? "#087F63" : "transparent",
-                      color: active ? "#fff" : "#183B34",
-                      fontWeight: 700,
-                      fontSize: 11,
-                      cursor: "pointer",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      gap: 2,
-                    }}
-                  >
-                    <span>{item.label}</span>
-                    <span
+              {/* Standard Duration Tabs */}
+              <div
+                style={{
+                  display: "flex",
+                  background: "rgba(15,138,95,0.07)",
+                  borderRadius: 12,
+                  padding: 4,
+                  gap: 3,
+                  marginBottom: 10,
+                }}
+              >
+                {[
+                  { label: "1 Mo", durIdx: 0, badge: "Standard" },
+                  { label: "3 Mos", durIdx: 1, badge: "10% off" },
+                  { label: "6 Mos", durIdx: 2, badge: "15% off" },
+                  { label: "12 Mos", durIdx: 3, badge: "25% off" },
+                ].map((item) => {
+                  const active = !customMode && dur === item.durIdx;
+                  return (
+                    <button
+                      key={item.label}
+                      type="button"
+                      className={`dur-tab${active ? " active" : ""}`}
+                      onClick={() => {
+                        setCustomMode(false);
+                        setDur(item.durIdx);
+                      }}
                       style={{
-                        fontSize: 8.5,
-                        opacity: active ? 0.95 : 0.65,
-                        fontWeight: 800,
+                        flex: 1,
+                        padding: "8px 2px",
+                        borderRadius: 10,
+                        border: "none",
+                        background: active ? "#087F63" : "transparent",
+                        color: active ? "#fff" : "#183B34",
+                        fontWeight: 700,
+                        fontSize: 11,
+                        cursor: "pointer",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: 2,
                       }}
                     >
-                      {item.badge}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Customize Mode Toggle Button */}
-            <button
-              type="button"
-              onClick={() => {
-                setCustomMode(!customMode);
-                if (!customMode) setCustomMonths(3);
-              }}
-              style={{
-                width: "100%",
-                padding: "10px 14px",
-                borderRadius: 12,
-                border: customMode
-                  ? "2px solid #087F63"
-                  : "1.5px dashed #D5E2DD",
-                background: customMode ? "#E4F2EC" : "#fff",
-                color: customMode ? "#087F63" : "#52635F",
-                fontSize: 12.5,
-                fontWeight: 700,
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: 12,
-                transition: "all 0.15s",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                <span>
-                  {lang === "ur"
-                    ? "اپنی مرضی کے مہینے منتخب کریں (1 تا 12)"
-                    : "Customize Specific Months"}
-                </span>
-              </div>
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: 800,
-                  color: customMode ? "#087F63" : "#80918B",
-                }}
-              >
-                {customMode ? "Hide Picker ▴" : "Show Picker ▾"}
-              </span>
-            </button>
-
-            {/* Custom Duration Fluid Month Picker */}
-            {customMode && (
-              <div
-                style={{
-                  border: "1.5px solid #087F63",
-                  borderRadius: 16,
-                  padding: "14px",
-                  marginBottom: 12,
-                  background: "#fff",
-                  boxShadow: "0 2px 10px rgba(8,127,99,0.06)",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 10,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 800,
-                      color: "#183B34",
-                    }}
-                  >
-                    {customMonths} Month{customMonths > 1 ? "s" : ""} Plan
-                  </span>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 800,
-                      color: "#16A34A",
-                      background: "rgba(22,163,74,0.12)",
-                      borderRadius: 20,
-                      padding: "2px 9px",
-                    }}
-                  >
-                    {getMonthlyDiscount(customMonths) > 0
-                      ? `${Math.round(getMonthlyDiscount(customMonths) * 100)}% Discount`
-                      : "Regular Rate"}
-                  </span>
-                </div>
-
-                {/* 12 Months Grid Chips */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(4, 1fr)",
-                    gap: 6,
-                    marginBottom: 4,
-                  }}
-                >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m) => {
-                    const sel = customMonths === m;
-                    const disc = getMonthlyDiscount(m);
-                    return (
-                      <button
-                        key={m}
-                        type="button"
-                        onClick={() => setCustomMonths(m)}
+                      <span>{item.label}</span>
+                      <span
                         style={{
-                          padding: "6px 2px",
-                          borderRadius: 8,
-                          border: sel
-                            ? "2px solid #087F63"
-                            : "1.5px solid #D5E2DD",
-                          background: sel ? "#087F63" : "#F4FAF7",
-                          color: sel ? "#fff" : "#183B34",
-                          cursor: "pointer",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          gap: 1,
+                          fontSize: 8.5,
+                          opacity: active ? 0.95 : 0.65,
+                          fontWeight: 800,
                         }}
                       >
-                        <span style={{ fontSize: 11.5, fontWeight: 800 }}>
-                          {m} mo
-                        </span>
-                        <span
-                          style={{
-                            fontSize: 8.5,
-                            fontWeight: 700,
-                            color: sel
-                              ? "#D1FAE5"
-                              : disc > 0
-                                ? "#16A34A"
-                                : "#80918B",
-                          }}
-                        >
-                          {disc > 0 ? `-${disc * 100}%` : "0%"}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
+                        {item.badge}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
-            )}
 
-            {/* Product Pricing Breakdown Card (Matches Image 2) */}
-            <div
-              style={{
-                background: "#FFFFFF",
-                borderRadius: 16,
-                border: "1.4px solid #D5E2DD",
-                marginBottom: 12,
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{
-                  padding: "8px 14px 6px",
-                  borderBottom: "1px solid #D5E2DD",
-                  fontSize: 10,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: "#B9822E",
-                  fontWeight: 700,
+              {/* Customize Mode Toggle Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  setCustomMode(!customMode);
+                  if (!customMode) setCustomMonths(3);
                 }}
-              >
-                SELECTED PRODUCTS (1 ITEMS)
-              </div>
-              <div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "8px 14px",
-                    borderBottom: "1px solid rgba(15,138,95,0.06)",
-                    fontSize: 12.5,
-                    color: "#52635F",
-                  }}
-                >
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 8,
-                      fontWeight: 700,
-                      color: "#183B34",
-                    }}
-                  >
-                    <img
-                      src={iconSrc}
-                      alt=""
-                      style={{
-                        width: 22,
-                        height: 22,
-                        objectFit: "contain",
-                      }}
-                    />
-                    {tc(product)}
-                  </span>
-                  <span style={{ fontWeight: 600, color: "#183B34" }}>
-                    PKR {basePrice.toLocaleString()}/mo
-                  </span>
-                </div>
-              </div>
-              <div
                 style={{
-                  borderTop: "1.5px solid rgba(15,138,95,0.1)",
-                  background: "#E4F2EC",
+                  width: "100%",
                   padding: "10px 14px",
+                  borderRadius: 12,
+                  border: customMode
+                    ? "2px solid #087F63"
+                    : "1.5px dashed #D5E2DD",
+                  background: customMode ? "#E4F2EC" : "#fff",
+                  color: customMode ? "#087F63" : "#52635F",
+                  fontSize: 12.5,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: 12,
+                  transition: "all 0.15s",
                 }}
               >
-                <div
+                <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                  <span>
+                    {lang === "ur"
+                      ? "اپنی مرضی کے مہینے منتخب کریں (1 تا 12)"
+                      : "Customize Specific Months"}
+                  </span>
+                </div>
+                <span
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    fontSize: 12,
-                    color: "#52635F",
-                    marginBottom: 4,
+                    fontSize: 11,
+                    fontWeight: 800,
+                    color: customMode ? "#087F63" : "#80918B",
                   }}
                 >
-                  <span>
-                    Total/mo × {months} month{months > 1 ? "s" : ""}
-                  </span>
-                  <span>PKR {regularTotal.toLocaleString()}</span>
-                </div>
-                {discount > 0 && (
+                  {customMode ? "Hide Picker ▴" : "Show Picker ▾"}
+                </span>
+              </button>
+
+              {/* Custom Duration Fluid Month Picker */}
+              {customMode && (
+                <div
+                  style={{
+                    border: "1.5px solid #087F63",
+                    borderRadius: 16,
+                    padding: "14px",
+                    marginBottom: 12,
+                    background: "#fff",
+                    boxShadow: "0 2px 10px rgba(8,127,99,0.06)",
+                  }}
+                >
                   <div
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
-                      fontSize: 12,
-                      color: "#16A34A",
-                      fontWeight: 700,
-                      marginBottom: 6,
+                      alignItems: "center",
+                      marginBottom: 10,
                     }}
                   >
-                    <span>Discount ({discount * 100}% off)</span>
-                    <span>− PKR {discountAmt.toLocaleString()}</span>
-                  </div>
-                )}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    paddingTop: 6,
-                    borderTop: "1px solid rgba(15,138,95,0.1)",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontWeight: 700,
-                      fontSize: 13.5,
-                      color: "#183B34",
-                    }}
-                  >
-                    Your Total
-                  </span>
-                  <div style={{ textAlign: "right" }}>
-                    <div
+                    <span
                       style={{
-                        fontSize: 17,
-                        fontWeight: 900,
-                        color: "#087F63",
+                        fontSize: 13,
+                        fontWeight: 800,
+                        color: "#183B34",
                       }}
                     >
-                      PKR {finalTotal.toLocaleString()}
-                    </div>
-                    <div style={{ fontSize: 10.5, color: "#52635F" }}>
-                      PKR {Math.round(finalTotal / months).toLocaleString()}/mo
-                    </div>
+                      {customMonths} Month{customMonths > 1 ? "s" : ""} Plan
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 800,
+                        color: "#16A34A",
+                        background: "rgba(22,163,74,0.12)",
+                        borderRadius: 20,
+                        padding: "2px 9px",
+                      }}
+                    >
+                      {getMonthlyDiscount(customMonths) > 0
+                        ? `${Math.round(getMonthlyDiscount(customMonths) * 100)}% Discount`
+                        : "Regular Rate"}
+                    </span>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* STEP 2: PAYMENT SCREEN */
-          <div>
-            <div style={{ marginBottom: 14 }}>
-              <h2 style={{ fontSize: 16, fontWeight: 800, color: "#183B34" }}>
-                {lang === "ur"
-                  ? "ادائیگی مکمل کریں"
-                  : "Complete Your Payment"}
-              </h2>
-            </div>
 
-            {/* 3 Payment Type Selector Buttons */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 8,
-                marginBottom: 14,
-              }}
-            >
-              {[
-                {
-                  id: "wallet",
-                  iconSrc: "/src/icons/mobilewallet.png",
-                  label: "Mobile Wallet",
-                  sub: "JazzCash, EasyPaisa",
-                },
-                {
-                  id: "card",
-                  iconSrc: "/src/icons/cardpayment.png",
-                  label: "Card Payment",
-                  sub: "Debit / Credit",
-                },
-                {
-                  id: "direct",
-                  iconSrc: "/src/icons/directtransfer.png",
-                  label: "Direct Transfer",
-                  sub: "Bank IBFT",
-                },
-              ].map((opt) => {
-                const active = paymentType === opt.id;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    onClick={() => setPaymentType(opt.id as any)}
+                  {/* 12 Months Grid Chips */}
+                  <div
                     style={{
-                      padding: "10px 4px",
-                      borderRadius: 14,
-                      border: active
-                        ? "2px solid #087F63"
-                        : "1.5px solid #D5E2DD",
-                      background: active ? "#E4F2EC" : "#fff",
-                      cursor: "pointer",
-                      textAlign: "center",
-                      transition: "all 0.15s",
+                      display: "grid",
+                      gridTemplateColumns: "repeat(4, 1fr)",
+                      gap: 6,
+                      marginBottom: 4,
                     }}
                   >
-                    <div
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m) => {
+                      const sel = customMonths === m;
+                      const disc = getMonthlyDiscount(m);
+                      return (
+                        <button
+                          key={m}
+                          type="button"
+                          onClick={() => setCustomMonths(m)}
+                          style={{
+                            padding: "6px 2px",
+                            borderRadius: 8,
+                            border: sel
+                              ? "2px solid #087F63"
+                              : "1.5px solid #D5E2DD",
+                            background: sel ? "#087F63" : "#F4FAF7",
+                            color: sel ? "#fff" : "#183B34",
+                            cursor: "pointer",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: 1,
+                          }}
+                        >
+                          <span style={{ fontSize: 11.5, fontWeight: 800 }}>
+                            {m} mo
+                          </span>
+                          <span
+                            style={{
+                              fontSize: 8.5,
+                              fontWeight: 700,
+                              color: sel
+                                ? "#D1FAE5"
+                                : disc > 0
+                                  ? "#16A34A"
+                                  : "#80918B",
+                            }}
+                          >
+                            {disc > 0 ? `-${disc * 100}%` : "0%"}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Product Pricing Breakdown Card (Matches Image 2) */}
+              <div
+                style={{
+                  background: "#FFFFFF",
+                  borderRadius: 16,
+                  border: "1.4px solid #D5E2DD",
+                  marginBottom: 12,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "8px 14px 6px",
+                    borderBottom: "1px solid #D5E2DD",
+                    fontSize: 10,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: "#B9822E",
+                    fontWeight: 700,
+                  }}
+                >
+                  SELECTED PRODUCTS (1 ITEMS)
+                </div>
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "8px 14px",
+                      borderBottom: "1px solid rgba(15,138,95,0.06)",
+                      fontSize: 12.5,
+                      color: "#52635F",
+                    }}
+                  >
+                    <span
                       style={{
-                        display: "flex",
+                        display: "inline-flex",
                         alignItems: "center",
-                        justifyContent: "center",
-                        height: 24,
-                        marginBottom: 4,
+                        gap: 8,
+                        fontWeight: 700,
+                        color: "#183B34",
                       }}
                     >
                       <img
-                        src={opt.iconSrc}
+                        src={iconSrc}
                         alt=""
                         style={{
                           width: 22,
@@ -29906,236 +29866,257 @@ function BillingScreen({
                           objectFit: "contain",
                         }}
                       />
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 11,
-                        fontWeight: 800,
-                        color: active ? "#087F63" : "#183B34",
-                        lineHeight: 1.2,
-                      }}
-                    >
-                      {opt.label}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 8.5,
-                        color: "#52635F",
-                        marginTop: 2,
-                      }}
-                    >
-                      {opt.sub}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Option 1: Mobile Wallet */}
-            {paymentType === "wallet" && (
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: 10 }}
-              >
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: "#52635F",
-                      textTransform: "uppercase",
-                      marginBottom: 6,
-                    }}
-                  >
-                    Select Wallet Provider
-                  </label>
+                      {tc(product)}
+                    </span>
+                    <span style={{ fontWeight: 600, color: "#183B34" }}>
+                      PKR {basePrice.toLocaleString()}/mo
+                    </span>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    borderTop: "1.5px solid rgba(15,138,95,0.1)",
+                    background: "#E4F2EC",
+                    padding: "10px 14px",
+                  }}
+                >
                   <div
                     style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(3, 1fr)",
-                      gap: 6,
-                      marginBottom: 8,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      fontSize: 12,
+                      color: "#52635F",
+                      marginBottom: 4,
                     }}
                   >
-                    {walletProviders.map((wp) => {
-                      const sel = walletProvider === wp.id;
-                      return (
-                        <button
-                          key={wp.id}
-                          type="button"
-                          onClick={() => setWalletProvider(wp.id as any)}
-                          style={{
-                            padding: "8px 4px",
-                            borderRadius: 10,
-                            border: sel
-                              ? `2px solid ${wp.color}`
-                              : "1.5px solid #D5E2DD",
-                            background: sel ? `${wp.color}15` : "#FFFFFF",
-                            cursor: "pointer",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: 3,
-                          }}
-                        >
-                          <img
-                            src={wp.iconSrc}
-                            alt=""
-                            style={{
-                              width: 22,
-                              height: 22,
-                              objectFit: "contain",
-                            }}
-                          />
-                          <span
-                            style={{
-                              fontSize: 10.5,
-                              fontWeight: 700,
-                              color: "#183B34",
-                            }}
-                          >
-                            {wp.label}
-                          </span>
-                        </button>
-                      );
-                    })}
+                    <span>
+                      Total/mo × {months} month{months > 1 ? "s" : ""}
+                    </span>
+                    <span>PKR {regularTotal.toLocaleString()}</span>
                   </div>
-                </div>
-
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: "#52635F",
-                      textTransform: "uppercase",
-                      marginBottom: 4,
-                    }}
-                  >
-                    Account Mobile Number
-                  </label>
-                  <input
-                    type="tel"
-                    inputMode="numeric"
-                    placeholder="03XX XXXXXXX"
-                    value={walletNumber}
-                    onChange={(e) =>
-                      setWalletNumber(formatPhoneInput(e.target.value))
-                    }
-                    style={{
-                      width: "100%",
-                      height: 42,
-                      padding: "0 12px",
-                      border: "1.5px solid #D5E2DD",
-                      borderRadius: 10,
-                      fontSize: 14,
-                      color: "#183B34",
-                      background: "#fff",
-                      outline: "none",
-                    }}
-                  />
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "8px 10px",
-                    background: "#E4F2EC",
-                    borderRadius: 8,
-                  }}
-                >
-                  <span style={{ fontSize: 13 }}>💡</span>
-                  <span style={{ fontSize: 11, color: "#52635F" }}>
-                    {lang === "ur"
-                      ? "ادائیگی کی تصدیق پر کلک کر کے اپنا MPIN درج کریں۔"
-                      : "Tap confirm to enter your 4-digit mobile wallet MPIN."}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Option 2: Card Payment */}
-            {paymentType === "card" && (
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: 10 }}
-              >
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: "#52635F",
-                      textTransform: "uppercase",
-                      marginBottom: 4,
-                    }}
-                  >
-                    Card Number
-                  </label>
-                  <input
-                    type="tel"
-                    inputMode="numeric"
-                    placeholder="XXXX XXXX XXXX XXXX"
-                    value={cardNumber}
-                    onChange={(e) =>
-                      setCardNumber(formatCardNumber(e.target.value))
-                    }
-                    style={{
-                      width: "100%",
-                      height: 42,
-                      padding: "0 12px",
-                      border: "1.5px solid #D5E2DD",
-                      borderRadius: 10,
-                      fontSize: 14,
-                      color: "#183B34",
-                      background: "#fff",
-                      outline: "none",
-                    }}
-                  />
-                </div>
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: 10,
-                  }}
-                >
-                  <div>
-                    <label
+                  {discount > 0 && (
+                    <div
                       style={{
-                        display: "block",
-                        fontSize: 11,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        fontSize: 12,
+                        color: "#16A34A",
                         fontWeight: 700,
-                        color: "#52635F",
-                        textTransform: "uppercase",
-                        marginBottom: 4,
+                        marginBottom: 6,
                       }}
                     >
-                      Expiry Date
-                    </label>
-                    <input
-                      type="tel"
-                      inputMode="numeric"
-                      placeholder="MM/YY"
-                      value={expiry}
-                      onChange={(e) => setExpiry(formatExpiry(e.target.value))}
+                      <span>Discount ({discount * 100}% off)</span>
+                      <span>− PKR {discountAmt.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      paddingTop: 6,
+                      borderTop: "1px solid rgba(15,138,95,0.1)",
+                    }}
+                  >
+                    <span
                       style={{
-                        width: "100%",
-                        height: 42,
-                        padding: "0 12px",
-                        border: "1.5px solid #D5E2DD",
-                        borderRadius: 10,
+                        fontWeight: 700,
                         fontSize: 13.5,
                         color: "#183B34",
-                        background: "#fff",
-                        outline: "none",
                       }}
-                    />
+                    >
+                      Your Total
+                    </span>
+                    <div style={{ textAlign: "right" }}>
+                      <div
+                        style={{
+                          fontSize: 17,
+                          fontWeight: 900,
+                          color: "#087F63",
+                        }}
+                      >
+                        PKR {finalTotal.toLocaleString()}
+                      </div>
+                      <div style={{ fontSize: 10.5, color: "#52635F" }}>
+                        PKR {Math.round(finalTotal / months).toLocaleString()}/mo
+                      </div>
+                    </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* STEP 2: PAYMENT SCREEN */
+            <div>
+              <div style={{ marginBottom: 14 }}>
+                <h2 style={{ fontSize: 16, fontWeight: 800, color: "#183B34" }}>
+                  {lang === "ur"
+                    ? "ادائیگی مکمل کریں"
+                    : "Complete Your Payment"}
+                </h2>
+              </div>
+
+              {/* 3 Payment Type Selector Buttons */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: 8,
+                  marginBottom: 14,
+                }}
+              >
+                {[
+                  {
+                    id: "wallet",
+                    iconSrc: "/src/icons/mobilewallet.png",
+                    label: "Mobile Wallet",
+                    sub: "JazzCash, EasyPaisa",
+                  },
+                  {
+                    id: "card",
+                    iconSrc: "/src/icons/cardpayment.png",
+                    label: "Card Payment",
+                    sub: "Debit / Credit",
+                  },
+                  {
+                    id: "direct",
+                    iconSrc: "/src/icons/directtransfer.png",
+                    label: "Direct Transfer",
+                    sub: "Bank IBFT",
+                  },
+                ].map((opt) => {
+                  const active = paymentType === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setPaymentType(opt.id as any)}
+                      style={{
+                        padding: "10px 4px",
+                        borderRadius: 14,
+                        border: active
+                          ? "2px solid #087F63"
+                          : "1.5px solid #D5E2DD",
+                        background: active ? "#E4F2EC" : "#fff",
+                        cursor: "pointer",
+                        textAlign: "center",
+                        transition: "all 0.15s",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          height: 24,
+                          marginBottom: 4,
+                        }}
+                      >
+                        <img
+                          src={opt.iconSrc}
+                          alt=""
+                          style={{
+                            width: 22,
+                            height: 22,
+                            objectFit: "contain",
+                          }}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 800,
+                          color: active ? "#087F63" : "#183B34",
+                          lineHeight: 1.2,
+                        }}
+                      >
+                        {opt.label}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 8.5,
+                          color: "#52635F",
+                          marginTop: 2,
+                        }}
+                      >
+                        {opt.sub}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Option 1: Mobile Wallet */}
+              {paymentType === "wallet" && (
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 10 }}
+                >
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#52635F",
+                        textTransform: "uppercase",
+                        marginBottom: 6,
+                      }}
+                    >
+                      Select Wallet Provider
+                    </label>
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(3, 1fr)",
+                        gap: 6,
+                        marginBottom: 8,
+                      }}
+                    >
+                      {walletProviders.map((wp) => {
+                        const sel = walletProvider === wp.id;
+                        return (
+                          <button
+                            key={wp.id}
+                            type="button"
+                            onClick={() => setWalletProvider(wp.id as any)}
+                            style={{
+                              padding: "8px 4px",
+                              borderRadius: 10,
+                              border: sel
+                                ? `2px solid ${wp.color}`
+                                : "1.5px solid #D5E2DD",
+                              background: sel ? `${wp.color}15` : "#FFFFFF",
+                              cursor: "pointer",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              gap: 3,
+                            }}
+                          >
+                            <img
+                              src={wp.iconSrc}
+                              alt=""
+                              style={{
+                                width: 22,
+                                height: 22,
+                                objectFit: "contain",
+                              }}
+                            />
+                            <span
+                              style={{
+                                fontSize: 10.5,
+                                fontWeight: 700,
+                                color: "#183B34",
+                              }}
+                            >
+                              {wp.label}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   <div>
                     <label
                       style={{
@@ -30147,16 +30128,15 @@ function BillingScreen({
                         marginBottom: 4,
                       }}
                     >
-                      Security Code
+                      Account Mobile Number
                     </label>
                     <input
                       type="tel"
                       inputMode="numeric"
-                      placeholder="CVV"
-                      maxLength={4}
-                      value={cvv}
+                      placeholder="03XX XXXXXXX"
+                      value={walletNumber}
                       onChange={(e) =>
-                        setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))
+                        setWalletNumber(formatPhoneInput(e.target.value))
                       }
                       style={{
                         width: "100%",
@@ -30164,6 +30144,174 @@ function BillingScreen({
                         padding: "0 12px",
                         border: "1.5px solid #D5E2DD",
                         borderRadius: 10,
+                        fontSize: 14,
+                        color: "#183B34",
+                        background: "#fff",
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      padding: "8px 10px",
+                      background: "#E4F2EC",
+                      borderRadius: 8,
+                    }}
+                  >
+                    <span style={{ fontSize: 13 }}>💡</span>
+                    <span style={{ fontSize: 11, color: "#52635F" }}>
+                      {lang === "ur"
+                        ? "ادائیگی کی تصدیق پر کلک کر کے اپنا MPIN درج کریں۔"
+                        : "Tap confirm to enter your 4-digit mobile wallet MPIN."}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Option 2: Card Payment */}
+              {paymentType === "card" && (
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 10 }}
+                >
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#52635F",
+                        textTransform: "uppercase",
+                        marginBottom: 4,
+                      }}
+                    >
+                      Card Number
+                    </label>
+                    <input
+                      type="tel"
+                      inputMode="numeric"
+                      placeholder="XXXX XXXX XXXX XXXX"
+                      value={cardNumber}
+                      onChange={(e) =>
+                        setCardNumber(formatCardNumber(e.target.value))
+                      }
+                      style={{
+                        width: "100%",
+                        height: 42,
+                        padding: "0 12px",
+                        border: "1.5px solid #D5E2DD",
+                        borderRadius: 10,
+                        fontSize: 14,
+                        color: "#183B34",
+                        background: "#fff",
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: 10,
+                    }}
+                  >
+                    <div>
+                      <label
+                        style={{
+                          display: "block",
+                          fontSize: 11,
+                          fontWeight: 700,
+                          color: "#52635F",
+                          textTransform: "uppercase",
+                          marginBottom: 4,
+                        }}
+                      >
+                        Expiry Date
+                      </label>
+                      <input
+                        type="tel"
+                        inputMode="numeric"
+                        placeholder="MM/YY"
+                        value={expiry}
+                        onChange={(e) => setExpiry(formatExpiry(e.target.value))}
+                        style={{
+                          width: "100%",
+                          height: 42,
+                          padding: "0 12px",
+                          border: "1.5px solid #D5E2DD",
+                          borderRadius: 10,
+                          fontSize: 13.5,
+                          color: "#183B34",
+                          background: "#fff",
+                          outline: "none",
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label
+                        style={{
+                          display: "block",
+                          fontSize: 11,
+                          fontWeight: 700,
+                          color: "#52635F",
+                          textTransform: "uppercase",
+                          marginBottom: 4,
+                        }}
+                      >
+                        Security Code
+                      </label>
+                      <input
+                        type="tel"
+                        inputMode="numeric"
+                        placeholder="CVV"
+                        maxLength={4}
+                        value={cvv}
+                        onChange={(e) =>
+                          setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))
+                        }
+                        style={{
+                          width: "100%",
+                          height: 42,
+                          padding: "0 12px",
+                          border: "1.5px solid #D5E2DD",
+                          borderRadius: 10,
+                          fontSize: 13.5,
+                          color: "#183B34",
+                          background: "#fff",
+                          outline: "none",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#52635F",
+                        textTransform: "uppercase",
+                        marginBottom: 4,
+                      }}
+                    >
+                      Cardholder Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Name on card"
+                      value={cardHolder}
+                      onChange={(e) => setCardHolder(e.target.value)}
+                      style={{
+                        width: "100%",
+                        height: 42,
+                        padding: "0 12px",
+                        border: "1.5px solid #D5E2DD",
+                        borderRadius: 10,
                         fontSize: 13.5,
                         color: "#183B34",
                         background: "#fff",
@@ -30171,277 +30319,244 @@ function BillingScreen({
                       }}
                     />
                   </div>
-                </div>
 
-                <div>
-                  <label
+                  <div
                     style={{
-                      display: "block",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      padding: "7px 10px",
+                      background: "#E4F2EC",
+                      borderRadius: 8,
+                    }}
+                  >
+                    <span style={{ fontSize: 12 }}>🔒</span>
+                    <span style={{ fontSize: 11, color: "#52635F" }}>
+                      Your card details are encrypted and never stored.
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Option 3: Direct Transfer */}
+              {paymentType === "direct" && (
+                <div>
+                  <div
+                    style={{
                       fontSize: 11,
                       fontWeight: 700,
                       color: "#52635F",
                       textTransform: "uppercase",
-                      marginBottom: 4,
-                    }}
-                  >
-                    Cardholder Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Name on card"
-                    value={cardHolder}
-                    onChange={(e) => setCardHolder(e.target.value)}
-                    style={{
-                      width: "100%",
-                      height: 42,
-                      padding: "0 12px",
-                      border: "1.5px solid #D5E2DD",
-                      borderRadius: 10,
-                      fontSize: 13.5,
-                      color: "#183B34",
-                      background: "#fff",
-                      outline: "none",
-                    }}
-                  />
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "7px 10px",
-                    background: "#E4F2EC",
-                    borderRadius: 8,
-                  }}
-                >
-                  <span style={{ fontSize: 12 }}>🔒</span>
-                  <span style={{ fontSize: 11, color: "#52635F" }}>
-                    Your card details are encrypted and never stored.
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Option 3: Direct Transfer */}
-            {paymentType === "direct" && (
-              <div>
-                <div
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: "#52635F",
-                    textTransform: "uppercase",
-                    marginBottom: 6,
-                  }}
-                >
-                  Choose Method
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 7,
-                    marginBottom: 10,
-                  }}
-                >
-                  {directMethods.map((m) => (
-                    <div
-                      key={m.id}
-                      onClick={() => setDirectMethod(m.id as any)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 10,
-                        padding: "8px 12px",
-                        borderRadius: 12,
-                        border:
-                          directMethod === m.id
-                            ? "2px solid #087F63"
-                            : "1.5px solid #D5E2DD",
-                        background:
-                          directMethod === m.id ? "#E4F2EC" : "#fff",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <div
-                        style={{
-                          background: `${m.color}18`,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          width: 36,
-                          height: 36,
-                          borderRadius: 10,
-                          flexShrink: 0,
-                        }}
-                      >
-                        <img
-                          src={m.iconSrc}
-                          alt={m.label}
-                          style={{
-                            width: 24,
-                            height: 24,
-                            objectFit: "contain",
-                          }}
-                        />
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <div
-                          style={{
-                            fontSize: 12.5,
-                            fontWeight: 700,
-                            color: "#183B34",
-                          }}
-                        >
-                          {m.label}
-                        </div>
-                        <div style={{ fontSize: 10.5, color: "#52635F" }}>
-                          {m.sub}
-                        </div>
-                      </div>
-                      {directMethod === m.id && (
-                        <span
-                          style={{
-                            color: "#087F63",
-                            fontWeight: 900,
-                            fontSize: 13,
-                          }}
-                        >
-                          ✓
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Direct Details Box */}
-                <div
-                  style={{
-                    background: "#fff",
-                    border: "1.5px solid #D5E2DD",
-                    borderRadius: 12,
-                    padding: "10px 12px",
-                    marginBottom: 10,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 10,
-                      textTransform: "uppercase",
-                      color: "#B9822E",
-                      fontWeight: 700,
                       marginBottom: 6,
                     }}
                   >
-                    Payment Details
+                    Choose Method
                   </div>
-                  {directDetails[directMethod]?.rows.map(([k, v]) => (
-                    <div
-                      key={k}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        fontSize: 11.5,
-                        padding: "3px 0",
-                        borderBottom: "1px solid #F1F7F4",
-                      }}
-                    >
-                      <span style={{ color: "#52635F" }}>{k}</span>
-                      <strong
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 7,
+                      marginBottom: 10,
+                    }}
+                  >
+                    {directMethods.map((m) => (
+                      <div
+                        key={m.id}
+                        onClick={() => setDirectMethod(m.id as any)}
                         style={{
-                          color: "#183B34",
-                          fontFamily:
-                            k === "IBAN" || k === "Account No."
-                              ? "monospace"
-                              : "inherit",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 10,
+                          padding: "8px 12px",
+                          borderRadius: 12,
+                          border:
+                            directMethod === m.id
+                              ? "2px solid #087F63"
+                              : "1.5px solid #D5E2DD",
+                          background:
+                            directMethod === m.id ? "#E4F2EC" : "#fff",
+                          cursor: "pointer",
                         }}
                       >
-                        {v}
-                      </strong>
+                        <div
+                          style={{
+                            background: `${m.color}18`,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: 36,
+                            height: 36,
+                            borderRadius: 10,
+                            flexShrink: 0,
+                          }}
+                        >
+                          <img
+                            src={m.iconSrc}
+                            alt={m.label}
+                            style={{
+                              width: 24,
+                              height: 24,
+                              objectFit: "contain",
+                            }}
+                          />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div
+                            style={{
+                              fontSize: 12.5,
+                              fontWeight: 700,
+                              color: "#183B34",
+                            }}
+                          >
+                            {m.label}
+                          </div>
+                          <div style={{ fontSize: 10.5, color: "#52635F" }}>
+                            {m.sub}
+                          </div>
+                        </div>
+                        {directMethod === m.id && (
+                          <span
+                            style={{
+                              color: "#087F63",
+                              fontWeight: 900,
+                              fontSize: 13,
+                            }}
+                          >
+                            ✓
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Direct Details Box */}
+                  <div
+                    style={{
+                      background: "#fff",
+                      border: "1.5px solid #D5E2DD",
+                      borderRadius: 12,
+                      padding: "10px 12px",
+                      marginBottom: 10,
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: 10,
+                        textTransform: "uppercase",
+                        color: "#B9822E",
+                        fontWeight: 700,
+                        marginBottom: 6,
+                      }}
+                    >
+                      Payment Details
                     </div>
-                  ))}
+                    {directDetails[directMethod]?.rows.map(([k, v]) => (
+                      <div
+                        key={k}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          fontSize: 11.5,
+                          padding: "3px 0",
+                          borderBottom: "1px solid #F1F7F4",
+                        }}
+                      >
+                        <span style={{ color: "#52635F" }}>{k}</span>
+                        <strong
+                          style={{
+                            color: "#183B34",
+                            fontFamily:
+                              k === "IBAN" || k === "Account No."
+                                ? "monospace"
+                                : "inherit",
+                          }}
+                        >
+                          {v}
+                        </strong>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Upload Screenshot */}
+                  <div
+                    onClick={() => setHasReceipt(!hasReceipt)}
+                    style={{
+                      padding: "10px",
+                      borderRadius: 12,
+                      border: "1.5px dashed #087F63",
+                      background: hasReceipt ? "#E4F2EC" : "#fff",
+                      textAlign: "center",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 8,
+                      fontSize: 11.5,
+                      fontWeight: 700,
+                      color: "#087F63",
+                    }}
+                  >
+                    <span>{hasReceipt ? "✅" : "📎"}</span>
+                    <span>
+                      {hasReceipt
+                        ? "Screenshot attached (Tap to change)"
+                        : "Tap to upload payment screenshot"}
+                    </span>
+                  </div>
                 </div>
-
-                {/* Upload Screenshot */}
-                <div
-                  onClick={() => setHasReceipt(!hasReceipt)}
-                  style={{
-                    padding: "10px",
-                    borderRadius: 12,
-                    border: "1.5px dashed #087F63",
-                    background: hasReceipt ? "#E4F2EC" : "#fff",
-                    textAlign: "center",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 8,
-                    fontSize: 11.5,
-                    fontWeight: 700,
-                    color: "#087F63",
-                  }}
-                >
-                  <span>{hasReceipt ? "✅" : "📎"}</span>
-                  <span>
-                    {hasReceipt
-                      ? "Screenshot attached (Tap to change)"
-                      : "Tap to upload payment screenshot"}
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Footer Actions Bar (Matches Image 2 & Complete Profile) */}
-      <div
-        className="px-5 pt-3 pb-5 flex-shrink-0"
-        style={{ borderTop: "1px solid #D5E2DD", background: "#F4FAF7" }}
-      >
-        <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={step === "pay" ? () => setStep("plan") : onBack}
-            className="tap-target py-3 px-5 rounded-2xl font-bold text-xs"
-            style={{ background: "#E8EFEC", color: "#183B34" }}
-          >
-            ← {lang === "ur" ? "پیچھے" : "Back"}
-          </button>
-
-          {step === "plan" ? (
-            <button
-              type="button"
-              onClick={() => setStep("pay")}
-              className="tap-target flex-1 py-3 rounded-2xl font-extrabold text-sm text-white"
-              style={{
-                background: "#087F63",
-                boxShadow: "0 4px 14px rgba(8,127,99,0.3)",
-              }}
-            >
-              {lang === "ur" ? "سبسکرائب" : "Subscribe"}
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handlePaymentConfirmClick}
-              className="tap-target flex-1 py-3 rounded-2xl font-extrabold text-sm text-white flex items-center justify-center gap-2"
-              style={{
-                background: "linear-gradient(135deg, #087F63, #064D40)",
-                boxShadow: "0 4px 16px rgba(8,127,99,0.4)",
-              }}
-            >
-              <span>
-                {lang === "ur"
-                  ? `ادائیگی کی تصدیق کریں — PKR ${finalTotal.toLocaleString()}`
-                  : `Confirm Payment — PKR ${finalTotal.toLocaleString()}`}
-              </span>
-            </button>
+              )}
+            </div>
           )}
         </div>
+
+        {/* Footer Actions Bar (Matches Image 2 & Complete Profile) */}
+        <div
+          className="px-5 pt-3 pb-5 flex-shrink-0"
+          style={{ borderTop: "1px solid #D5E2DD", background: "#F4FAF7" }}
+        >
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={step === "pay" ? () => setStep("plan") : onBack}
+              className="tap-target py-3 px-5 rounded-2xl font-bold text-xs"
+              style={{ background: "#E8EFEC", color: "#183B34" }}
+            >
+              ← {lang === "ur" ? "پیچھے" : "Back"}
+            </button>
+
+            {step === "plan" ? (
+              <button
+                type="button"
+                onClick={() => setStep("pay")}
+                className="tap-target flex-1 py-3 rounded-2xl font-extrabold text-sm text-white"
+                style={{
+                  background: "#087F63",
+                  boxShadow: "0 4px 14px rgba(8,127,99,0.3)",
+                }}
+              >
+                {lang === "ur" ? "سبسکرائب" : "Subscribe"}
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handlePaymentConfirmClick}
+                className="tap-target flex-1 py-3 rounded-2xl font-extrabold text-sm text-white flex items-center justify-center gap-2"
+                style={{
+                  background: "linear-gradient(135deg, #087F63, #064D40)",
+                  boxShadow: "0 4px 16px rgba(8,127,99,0.4)",
+                }}
+              >
+                <span>
+                  {lang === "ur"
+                    ? `ادائیگی کی تصدیق کریں — PKR ${finalTotal.toLocaleString()}`
+                    : `Confirm Payment — PKR ${finalTotal.toLocaleString()}`}
+                </span>
+              </button>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
 
       {/* MPIN Entry Modal for Mobile Wallet */}
       {mpinModalOpen && (
@@ -31245,7 +31360,7 @@ function AppInner({
     const doPop = () => setStack((p) => (p.length > 1 ? p.slice(0, -1) : p));
     if (voiceEnabled) {
       speakText(lang === "ur" ? "واپس" : "Back");
-      setTimeout(doPop, 450);
+      setTimeout(doPop, 850);
       return;
     }
     doPop();
@@ -31274,7 +31389,7 @@ function AppInner({
       else if (tab === "analytics") speech = lang === "ur" ? "تجزیات" : "Analytics";
       else if (tab === "news") speech = lang === "ur" ? "ویڈیوز" : "Videos";
       if (speech) speakText(speech);
-      setTimeout(doNav, 450);
+      setTimeout(doNav, 850);
       return;
     }
     doNav();

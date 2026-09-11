@@ -1244,3 +1244,148 @@ body {
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
+
+/* ── Animated Tab Bar (Glassmorphic Theme Design) ── */
+.svg-container {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@keyframes strok {
+  100% {
+    stroke-dashoffset: 400;
+  }
+}
+
+.menu {
+  display: flex;
+  position: relative;
+  user-select: none;
+  background: rgba(244, 250, 247, 0.68);
+  backdrop-filter: blur(28px) saturate(210%);
+  -webkit-backdrop-filter: blur(28px) saturate(210%);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 -8px 32px rgba(8, 127, 99, 0.12), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95);
+  border-radius: 28px 28px 0 0;
+  height: clamp(66px, 8.8vh, 76px);
+  padding: 0 8px;
+  padding-bottom: max(6px, env(safe-area-inset-bottom, 6px));
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  margin: 0;
+  list-style: none;
+  z-index: 50;
+}
+
+.menu__item {
+  all: unset;
+  flex: 1;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  position: relative;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.38s cubic-bezier(0.2, 1, 0.3, 1), color 0.25s ease;
+  height: 52px;
+  -webkit-tap-highlight-color: transparent;
+  color: #183B34;
+}
+
+.menu__item .menu__icon-box {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: transform 0.38s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.menu__item::before {
+  content: "";
+  z-index: -1;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  transform: scale(0);
+  transition: background-color 0.35s ease, transform 0.38s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.35s ease;
+  background-color: var(--bgColorItem, #087F63);
+  box-shadow: 0 6px 20px rgba(8, 127, 99, 0.38);
+}
+
+.menu__item.active {
+  transform: translateY(-22px);
+}
+
+.menu__item.active::before {
+  transform: scale(1);
+}
+
+.menu__item.active .menu__icon-box {
+  transform: scale(1.06);
+}
+
+.menu__item.active svg {
+  color: #ffffff !important;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.22));
+}
+
+.menu__item .menu__label {
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 1px;
+  transition: all 0.38s cubic-bezier(0.2, 1, 0.3, 1);
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.menu__border {
+  left: 0;
+  bottom: 98.2%;
+  width: 96px;
+  height: 22px;
+  position: absolute;
+  clip-path: url(#menu-clip-path);
+  -webkit-clip-path: url(#menu-clip-path);
+  background: rgba(244, 250, 247, 0.68);
+  backdrop-filter: blur(28px) saturate(210%);
+  -webkit-backdrop-filter: blur(28px) saturate(210%);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.85);
+  transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 55;
+}
+
+/* ── Rotating Beam Border Colors ── */
+.zm-beam-border-pink::after {
+  background: conic-gradient(
+    from var(--beam-angle, 0deg) at 50% 50%,
+    transparent 0deg,
+    transparent 250deg,
+    rgba(251, 113, 133, 0.3) 280deg,
+    rgba(244, 63, 94, 0.95) 330deg,
+    rgba(225, 29, 72, 1) 360deg
+  ) !important;
+  animation: zmAngleSpin 4s linear infinite;
+}
+
+.zm-beam-border-green::after {
+  background: conic-gradient(
+    from var(--beam-angle, 0deg) at 50% 50%,
+    transparent 0deg,
+    transparent 255deg,
+    rgba(16, 185, 129, 0.25) 285deg,
+    rgba(52, 211, 153, 0.95) 330deg,
+    rgba(16, 185, 129, 1) 360deg
+  ) !important;
+  animation: zmAngleSpin 4s linear infinite;
+}
