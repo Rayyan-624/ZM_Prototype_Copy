@@ -130,7 +130,9 @@ export const AnimatedTabBar: React.FC<AnimatedTabBarProps> = ({
                   style={{
                     color: isActive ? item.color : "#22423A",
                     fontWeight: isActive ? 800 : 700,
-                    transform: isActive ? "translateY(19px)" : "none",
+                    transform: isActive
+                      ? "translateX(-50%) translateY(22px)"
+                      : "translateX(-50%) translateY(0)",
                   }}
                 >
                   {item.label}

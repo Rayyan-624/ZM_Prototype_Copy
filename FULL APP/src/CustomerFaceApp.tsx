@@ -18,6 +18,9 @@ import homeBgMint from "./assets/home_bg_mint.jpg";
 import agriForegroundImg from "./assets/agri_foreground.png";
 import pakistanFlagImg from "./assets/pakistan_flag.png";
 import { AnimatedTabBar, type TabItem } from "./components/ui/animated-tab-bar";
+import ZaraiMandiMap from "./components/ZaraiMandiMap";
+import ExpandableMandiMapCard from "./components/ExpandableMandiMapCard";
+import { VoiceAssistant, VoiceButton, speakUrdu } from "./components/VoiceAssistant";
 
 import video1 from "./videos/video1.mp4";
 import video2 from "./videos/video2.mp4";
@@ -10171,7 +10174,7 @@ function ByProductCombinedScreen({
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <button
               onClick={onBack}
-              className="tap-target zm-beam-border w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 text-[#183B34] transition active:scale-95"
+              className="tap-target zm-beam-border w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0 text-[#183B34] transition active:scale-95"
               style={{
                 background: "rgba(255, 255, 255, 0.65)",
                 backdropFilter: "blur(12px)",
@@ -10960,34 +10963,50 @@ function MultiLocSheet({
   return (
     <div
       className="zm-sheet-overlay"
-      style={{ zIndex: 350 }}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-end",
+        alignItems: "center",
+        background: "rgba(5, 25, 18, 0.55)",
+        backdropFilter: "blur(6px)",
+        WebkitBackdropFilter: "blur(6px)",
+      }}
       onClick={onClose}
     >
       <div
         className="zm-sheet-high"
         style={{
           background: "#F4FAF7",
-          maxHeight: "90vh",
+          maxHeight: "72vh",
+          height: "auto",
+          width: "100%",
+          maxWidth: "448px",
           display: "flex",
           flexDirection: "column",
-          borderRadius: "28px 28px 0 0",
-          boxShadow: "0 -10px 40px rgba(6,77,64,0.22)",
+          borderRadius: "26px 26px 0 0",
+          boxShadow: "0 -10px 36px rgba(6,77,64,0.25)",
+          position: "relative",
+          zIndex: 10000,
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Handle + title */}
         <div
-          className="px-5 pt-4 pb-3 flex-shrink-0"
+          className="px-4 pt-3 pb-2 flex-shrink-0"
           style={{ borderBottom: "1px solid #D5E2DD" }}
         >
           <div
-            className="w-10 h-1 rounded-full mx-auto mb-3"
+            className="w-10 h-1 rounded-full mx-auto mb-2"
             style={{ background: "#C7D6D0" }}
           />
           <div className="flex items-center justify-between">
             <div>
               <p
-                className="font-extrabold text-lg"
+                className="font-extrabold text-[16px]"
                 style={{ color: "#183B34" }}
               >
                 {lang === "ur" ? "مقام کا فلٹر" : "Location Filter"}
@@ -10998,7 +11017,7 @@ function MultiLocSheet({
                 onClick={() => {
                   toggleWholeCountry();
                 }}
-                className="tap-target text-xs font-semibold px-2.5 py-1 rounded-full"
+                className="tap-target text-xs font-semibold px-2.5 py-0.5 rounded-full"
                 style={{ background: "#E8EFEC", color: "#087F63" }}
               >
                 {lang === "ur" ? "ری سیٹ" : "Reset"}
@@ -11008,17 +11027,17 @@ function MultiLocSheet({
         </div>
 
         {/* Scrollable Content Body */}
-        <div className="flex-1 overflow-y-auto px-5 py-4">
+        <div className="flex-1 overflow-y-auto px-4 py-3">
           {/* Universal Search Bar at TOP */}
-          <div style={{ marginBottom: 12 }}>
+          <div style={{ marginBottom: 10 }}>
             <label
               style={{
                 display: "block",
-                fontSize: 11,
+                fontSize: 10.5,
                 fontWeight: 700,
                 color: "#52635F",
                 textTransform: "uppercase",
-                marginBottom: 6,
+                marginBottom: 4,
               }}
             >
               {lang === "ur"
@@ -11033,11 +11052,11 @@ function MultiLocSheet({
                 background: "#fff",
                 border: "1.5px solid #D5E2DD",
                 borderRadius: 12,
-                padding: "9px 12px",
+                padding: "7px 10px",
                 boxShadow: "0 2px 6px rgba(0,0,0,0.02)",
               }}
             >
-              <span style={{ fontSize: 16, color: "#087F63" }}>⌕</span>
+              <span style={{ fontSize: 15, color: "#087F63" }}>⌕</span>
               <input
                 type="text"
                 placeholder={
@@ -11051,7 +11070,7 @@ function MultiLocSheet({
                   border: "none",
                   outline: "none",
                   width: "100%",
-                  fontSize: 13,
+                  fontSize: 12.5,
                   color: "#183B34",
                   background: "transparent",
                 }}
@@ -11075,13 +11094,13 @@ function MultiLocSheet({
           </div>
 
           {/* Quick Select: Whole Country (All Pakistan) Card with Cultural Flag */}
-          <div style={{ marginBottom: 12 }}>
+          <div style={{ marginBottom: 10 }}>
             <button
               type="button"
               onClick={toggleWholeCountry}
               className="tap-target relative overflow-hidden w-full text-left"
               style={{
-                padding: "13px 15px",
+                padding: "10px 12px",
                 borderRadius: 14,
                 border: isWholeCountrySelected
                   ? "2px solid #087F63"
@@ -11099,16 +11118,16 @@ function MultiLocSheet({
                 transition: "all 0.15s",
               }}
             >
-              <div className="relative z-10 flex items-center gap-3">
+              <div className="relative z-10 flex items-center gap-2.5">
                 <img
                   src={pakistanFlagImg}
                   alt="Pakistan Flag"
-                  className="w-7 h-5 rounded object-cover shadow-sm border border-white/40"
+                  className="w-6 h-4 rounded object-cover shadow-sm border border-white/40"
                 />
                 <div style={{ textAlign: "left" }}>
                   <div
                     style={{
-                      fontSize: 14,
+                      fontSize: 13.5,
                       fontWeight: 900,
                       color: isWholeCountrySelected ? "#FFFFFF" : "#183B34",
                       fontFamily:
@@ -11127,8 +11146,8 @@ function MultiLocSheet({
               <div
                 className="relative z-10"
                 style={{
-                  width: 22,
-                  height: 22,
+                  width: 20,
+                  height: 20,
                   borderRadius: "50%",
                   border: isWholeCountrySelected
                     ? "2px solid #FFFFFF"
@@ -11138,7 +11157,7 @@ function MultiLocSheet({
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#087F63",
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: 900,
                 }}
               >
@@ -11152,25 +11171,25 @@ function MultiLocSheet({
             style={{
               background: "#FFFFFF",
               border: "1.5px solid #D5E2DD",
-              borderRadius: 16,
-              padding: "14px",
+              borderRadius: 14,
+              padding: "10px",
               display: "flex",
               flexDirection: "column",
-              gap: 12,
-              boxShadow: "0 3px 12px rgba(6,77,64,0.04)",
-              marginBottom: 12,
+              gap: 10,
+              boxShadow: "0 2px 8px rgba(6,77,64,0.04)",
+              marginBottom: 10,
             }}
           >
-            {/* Province Cultural Selector Cards in 2x2 Grid (Clean background images, single checkmark) */}
+            {/* Province Cultural Selector Cards in 2x2 Grid */}
             <div>
               <div
                 style={{
-                  fontSize: 11,
+                  fontSize: 10.5,
                   fontWeight: 800,
                   color: "#52635F",
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
-                  marginBottom: 8,
+                  marginBottom: 6,
                 }}
               >
                 {lang === "ur" ? "صوبہ منتخب کریں" : "Select Province"}
@@ -11179,8 +11198,8 @@ function MultiLocSheet({
                 style={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr",
-                  gap: 8,
-                  marginBottom: 4,
+                  gap: 6,
+                  marginBottom: 2,
                 }}
               >
                 {provinces.map((p) => {
@@ -11219,14 +11238,14 @@ function MultiLocSheet({
                       key={p}
                       type="button"
                       onClick={() => toggleProvince(p)}
-                      className="tap-target relative overflow-hidden rounded-2xl p-3 flex flex-col justify-between text-left transition active:scale-[0.98] shadow-md"
+                      className="tap-target relative overflow-hidden rounded-xl p-2.5 flex flex-col justify-between text-left transition active:scale-[0.98] shadow-sm"
                       style={{
                         backgroundImage: `linear-gradient(${isSelectedInDraft ? "rgba(0,0,0,0.18), rgba(0,0,0,0.50)" : "rgba(0,0,0,0.22), rgba(0,0,0,0.52)"}), url(${cfg.cardBg})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
-                        border: isSelectedInDraft ? "2.5px solid #FFFFFF" : `1.5px solid ${cfg.borderColor}`,
-                        boxShadow: isSelectedInDraft ? `0 0 0 2px ${cfg.accentColor}, 0 4px 14px rgba(0,0,0,0.25)` : "0 2px 8px rgba(0,0,0,0.12)",
-                        minHeight: 68,
+                        border: isSelectedInDraft ? "2px solid #FFFFFF" : `1.2px solid ${cfg.borderColor}`,
+                        boxShadow: isSelectedInDraft ? `0 0 0 2px ${cfg.accentColor}, 0 4px 12px rgba(0,0,0,0.25)` : "0 2px 6px rgba(0,0,0,0.1)",
+                        minHeight: 56,
                         cursor: "pointer",
                       }}
                     >
@@ -11234,7 +11253,7 @@ function MultiLocSheet({
                       <div className="relative z-10 flex items-center justify-between w-full">
                         <span
                           style={{
-                            fontSize: 15,
+                            fontSize: 14,
                             fontWeight: 900,
                             color: "#FFFFFF",
                             textShadow: "0 1px 3px rgba(0,0,0,0.6)",
@@ -11250,8 +11269,8 @@ function MultiLocSheet({
                         {/* White Circular Checkbox: Ticked only if selected */}
                         <div
                           style={{
-                            width: 22,
-                            height: 22,
+                            width: 19,
+                            height: 19,
                             borderRadius: "50%",
                             background: "#FFFFFF",
                             display: "flex",
@@ -11259,7 +11278,7 @@ function MultiLocSheet({
                             justifyContent: "center",
                             boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
                             color: cfg.accentColor,
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: 900,
                           }}
                         >
@@ -11658,18 +11677,18 @@ function MultiLocSheet({
 
         {/* Footer Apply Button */}
         <div
-          className="px-4 pb-6 pt-3 flex-shrink-0"
+          className="px-4 pb-4 pt-2.5 flex-shrink-0"
           style={{ borderTop: "1px solid #D5E2DD" }}
         >
           <button
             onClick={() => onApply(draft)}
-            className="tap-target w-full rounded-2xl font-extrabold text-white"
+            className="tap-target w-full rounded-xl font-extrabold text-white transition active:scale-[0.98]"
             style={{
               background: "#087F63",
-              minHeight: 48,
-              padding: "13px 16px",
-              fontSize: 15,
-              boxShadow: "0 4px 14px rgba(8,127,99,0.3)",
+              minHeight: 44,
+              padding: "10px 14px",
+              fontSize: 14.5,
+              boxShadow: "0 3px 12px rgba(8,127,99,0.25)",
             }}
           >
             {isWholeCountrySelected
@@ -13713,6 +13732,7 @@ function ProductRatesScreen({
   const [tableDateFilter, setTableDateFilter] = useState<Date | null>(null);
   const [tableDateCalOpen, setTableDateCalOpen] = useState(false);
   const [isTableExpanded, setIsTableExpanded] = useState(false);
+  const [isMapExpanded, setIsMapExpanded] = useState(false);
   const [tableDateCalMonth, setTableDateCalMonth] = useState<Date>(
     new Date(2026, 7, 21),
   );
@@ -14232,342 +14252,6 @@ function ProductRatesScreen({
 
         {tab === "overview" && rows.length > 0 && (
           <>
-            {/* Overview header row: label + date flipper */}
-            <div className="flex items-center gap-2 mb-0.5">
-              <p
-                className="text-xs font-bold uppercase tracking-wide flex-1"
-                style={{
-                  color: "#52635F",
-                  letterSpacing: "0.05em",
-                  fontSize: lang === "ur" ? 16 : 11.5,
-                  fontFamily:
-                    lang === "ur"
-                      ? URDU_FONT
-                      : "inherit",
-                }}
-              >
-                {statDateFilter
-                  ? (() => {
-                    const mn = [
-                      "Jan",
-                      "Feb",
-                      "Mar",
-                      "Apr",
-                      "May",
-                      "Jun",
-                      "Jul",
-                      "Aug",
-                      "Sep",
-                      "Oct",
-                      "Nov",
-                      "Dec",
-                    ];
-                    const mnUr = [
-                      "جنوری",
-                      "فروری",
-                      "مارچ",
-                      "اپریل",
-                      "مئی",
-                      "جون",
-                      "جولائی",
-                      "اگست",
-                      "ستمبر",
-                      "اکتوبر",
-                      "نومبر",
-                      "دسمبر",
-                    ];
-                    return lang === "ur"
-                      ? `${statDateFilter.getDate()} ${mnUr[statDateFilter.getMonth()]} کا جائزہ`
-                      : `${statDateFilter.getDate()} ${mn[statDateFilter.getMonth()]} Overview`;
-                  })()
-                  : lang === "ur"
-                    ? "آج کا جائزہ"
-                    : "Today's Overview"}
-              </p>
-              {/* Date flipper button */}
-              {(() => {
-                const mn = [
-                  "Jan",
-                  "Feb",
-                  "Mar",
-                  "Apr",
-                  "May",
-                  "Jun",
-                  "Jul",
-                  "Aug",
-                  "Sep",
-                  "Oct",
-                  "Nov",
-                  "Dec",
-                ];
-                const mnUr = [
-                  "جنوری",
-                  "فروری",
-                  "مارچ",
-                  "اپریل",
-                  "مئی",
-                  "جون",
-                  "جولائی",
-                  "اگست",
-                  "ستمبر",
-                  "اکتوبر",
-                  "نومبر",
-                  "دسمبر",
-                ];
-                const sdYear = statDateCalMonth.getFullYear();
-                const sdMonthIdx = statDateCalMonth.getMonth();
-                const sdMonthName =
-                  lang === "ur"
-                    ? `${mnUr[sdMonthIdx]} ${sdYear}`
-                    : statDateCalMonth.toLocaleDateString("en-US", {
-                      month: "long",
-                      year: "numeric",
-                    });
-                const sdFirstDow = new Date(sdYear, sdMonthIdx, 1).getDay();
-                const sdDaysInMonth = new Date(
-                  sdYear,
-                  sdMonthIdx + 1,
-                  0,
-                ).getDate();
-                const sdCalDays: (number | null)[] = [
-                  ...Array(sdFirstDow).fill(null),
-                  ...Array.from({ length: sdDaysInMonth }, (_, i) => i + 1),
-                ];
-                while (sdCalDays.length % 7 !== 0) sdCalDays.push(null);
-                const sdIsSame = (a: Date, b: Date) =>
-                  a.getFullYear() === b.getFullYear() &&
-                  a.getMonth() === b.getMonth() &&
-                  a.getDate() === b.getDate();
-                const sdIsRef = (d: Date) => sdIsSame(d, new Date(2026, 7, 21));
-                return (
-                  <div className="relative">
-                    {/* Flip-calendar style button */}
-                    <button
-                      onClick={() => setStatDateCalOpen((o) => !o)}
-                      className="tap-target flex-shrink-0 overflow-hidden"
-                      style={{
-                        display: "flex",
-                        borderRadius: 7,
-                        boxShadow: "0 1px 6px rgba(0,0,0,0.12)",
-                        border: "1px solid #C7E8D8",
-                        padding: 0,
-                      }}
-                    >
-                      <div
-                        style={{
-                          background: "#087F63",
-                          padding: "4px 7px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <span
-                          style={{
-                            color: "#fff",
-                            fontSize: lang === "ur" ? 10.5 : 8.5,
-                            fontWeight: 800,
-                            letterSpacing: 0.5,
-                            fontFamily:
-                              lang === "ur"
-                                ? URDU_FONT
-                                : "inherit",
-                          }}
-                        >
-                          {statDateFilter
-                            ? lang === "ur"
-                              ? mnUr[statDateFilter.getMonth()]
-                              : mn[statDateFilter.getMonth()]
-                            : lang === "ur"
-                              ? mnUr[7]
-                              : mn[7]}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          background: "#F4FAF7",
-                          padding: "4px 7px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          borderLeft: "1px solid #D5E2DD",
-                        }}
-                      >
-                        <span
-                          style={{
-                            color: "#183B34",
-                            fontSize: 14,
-                            fontWeight: 900,
-                            lineHeight: 1,
-                          }}
-                        >
-                          {statDateFilter ? statDateFilter.getDate() : 21}
-                        </span>
-                      </div>
-                    </button>
-                    {/* Dropdown calendar */}
-                    {statDateCalOpen && (
-                      <div
-                        className="absolute right-0 z-[100] rounded-2xl overflow-hidden"
-                        style={{
-                          top: 42,
-                          width: 260,
-                          background: "#F4FAF7",
-                          boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
-                          border: "1px solid #D5E2DD",
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="px-4 pt-3 pb-2">
-                          <div className="flex items-center justify-between mb-2">
-                            <button
-                              onClick={() =>
-                                setStatDateCalMonth(
-                                  new Date(sdYear, sdMonthIdx - 1, 1),
-                                )
-                              }
-                              className="tap-target w-8 h-8 rounded-full flex items-center justify-center font-bold"
-                              style={{
-                                background: "#E8EFEC",
-                                color: "#2F4A43",
-                                fontSize: 16,
-                              }}
-                            >
-                              ‹
-                            </button>
-                            <p
-                              className="font-bold text-sm"
-                              style={{
-                                color: "#183B34",
-                                fontSize: lang === "ur" ? 16 : 14,
-                                fontFamily:
-                                  lang === "ur"
-                                    ? URDU_FONT
-                                    : "inherit",
-                              }}
-                            >
-                              {sdMonthName}
-                            </p>
-                            <button
-                              onClick={() =>
-                                setStatDateCalMonth(
-                                  new Date(sdYear, sdMonthIdx + 1, 1),
-                                )
-                              }
-                              className="tap-target w-8 h-8 rounded-full flex items-center justify-center font-bold"
-                              style={{
-                                background: "#E8EFEC",
-                                color: "#2F4A43",
-                                fontSize: 16,
-                              }}
-                            >
-                              ›
-                            </button>
-                          </div>
-                          {statDateFilter && (
-                            <div className="flex justify-end mb-1">
-                              <button
-                                onClick={() => {
-                                  setStatDateFilter(null);
-                                  setStatDateCalOpen(false);
-                                }}
-                                className="font-bold px-2 py-0.5 rounded-full"
-                                style={{
-                                  background: "#F9E1DE",
-                                  color: "#A83B37",
-                                  fontSize: lang === "ur" ? 12 : 10,
-                                  fontFamily:
-                                    lang === "ur"
-                                      ? URDU_FONT
-                                      : "inherit",
-                                }}
-                              >
-                                {lang === "ur"
-                                  ? "ہٹائیں (آج)"
-                                  : "Clear (Today)"}
-                              </button>
-                            </div>
-                          )}
-                          <div
-                            style={{
-                              display: "grid",
-                              gridTemplateColumns: "repeat(7,1fr)",
-                              marginBottom: 4,
-                            }}
-                          >
-                            {(lang === "ur"
-                              ? ["ات", "پی", "من", "بد", "جم", "جم", "ہف"]
-                              : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
-                            ).map((d) => (
-                              <div
-                                key={d}
-                                className="text-center font-bold text-[10px]"
-                                style={{
-                                  color: "#80918B",
-                                  paddingBottom: 2,
-                                  fontFamily:
-                                    lang === "ur"
-                                      ? URDU_FONT
-                                      : "inherit",
-                                }}
-                              >
-                                {d}
-                              </div>
-                            ))}
-                          </div>
-                          <div
-                            style={{
-                              display: "grid",
-                              gridTemplateColumns: "repeat(7,1fr)",
-                              gap: 2,
-                            }}
-                          >
-                            {sdCalDays.map((day, idx) => {
-                              if (!day) return <div key={idx} />;
-                              const d = new Date(sdYear, sdMonthIdx, day);
-                              const selected = statDateFilter
-                                ? sdIsSame(d, statDateFilter)
-                                : false;
-                              const isRef = sdIsRef(d);
-                              return (
-                                <button
-                                  key={idx}
-                                  onClick={() => {
-                                    setStatDateFilter(d);
-                                    setStatDateCalOpen(false);
-                                  }}
-                                  className="tap-target flex items-center justify-center rounded-full font-semibold text-xs mx-auto"
-                                  style={{
-                                    width: 30,
-                                    height: 30,
-                                    background: selected
-                                      ? "#087F63"
-                                      : isRef
-                                        ? "#E4F2EC"
-                                        : "transparent",
-                                    color: selected
-                                      ? "#fff"
-                                      : isRef
-                                        ? "#075E4F"
-                                        : "#2F4A43",
-                                    border:
-                                      isRef && !selected
-                                        ? "1.5px solid #087F63"
-                                        : "none",
-                                  }}
-                                >
-                                  {day}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })()}
-            </div>
 
             {/* Dismiss stat date calendar on outside click */}
             {statDateCalOpen && (
@@ -14577,6 +14261,7 @@ function ProductRatesScreen({
               />
             )}
 
+            {/* 4-Sided Continuous Racetrack Border Card (Rounded Corners & Compact) */}
             {/* 4-Sided Continuous Racetrack Border Card (Rounded Corners & Compact) */}
             {(() => {
               const activeMandiLabel =
@@ -14906,46 +14591,101 @@ function ProductRatesScreen({
 
                       {/* RIGHT: Location Dropdown + 3 Metrics (Max, Min, Arrival) */}
                       <div className="flex-1 min-w-0 flex flex-col justify-between py-0">
-                        {/* Location dropdown header (Clean: Mandi Name only, no province subtitle) */}
-                        <button
-                          onClick={() => {
-                            setLocSheet(true);
-                            if (voiceEnabled) {
-                              speakText(lang === "ur" ? "مقام کا انتخاب" : "Select location");
-                            }
-                          }}
-                          className="tap-target flex items-center gap-1.5 text-left mb-1 group w-full"
-                          style={{ background: "none", border: "none", padding: 0 }}
-                        >
-                          <div
-                            className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
-                            style={{ background: "#E8F5EE", color: "#087F63" }}
+                        {/* Location dropdown header + date chip row */}
+                        <div className="flex items-center gap-2 mb-1">
+                          <button
+                            onClick={() => {
+                              setLocSheet(true);
+                              if (voiceEnabled) {
+                                speakText(lang === "ur" ? "مقام کا انتخاب" : "Select location");
+                              }
+                            }}
+                            className="tap-target flex items-center gap-1.5 text-left group flex-1 min-w-0"
+                            style={{ background: "none", border: "none", padding: 0 }}
                           >
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M3 21h18" />
-                              <path d="M5 21V7l7-4 7 4v14" />
-                              <path d="M9 10a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v11H9V10z" />
-                            </svg>
-                          </div>
-                          <div className="flex items-center gap-1 min-w-0 flex-1">
-                            <span
-                              className="font-extrabold truncate text-[13.5px] leading-tight text-[#183B34] group-hover:text-[#087F63] transition-colors"
+                            <div
+                              className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
+                              style={{ background: "#E8F5EE", color: "#087F63" }}
+                            >
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 21h18" />
+                                <path d="M5 21V7l7-4 7 4v14" />
+                                <path d="M9 10a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v11H9V10z" />
+                              </svg>
+                            </div>
+                            <div className="flex items-center gap-1 min-w-0 flex-1">
+                              <span
+                                className="font-extrabold truncate text-[13.5px] leading-tight text-[#183B34] group-hover:text-[#087F63] transition-colors"
+                                style={{
+                                  fontFamily:
+                                    lang === "ur"
+                                      ? URDU_FONT
+                                      : "inherit",
+                                }}
+                              >
+                                {cleanMandiName}
+                              </span>
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                                <polyline points="6 9 12 15 18 9" />
+                              </svg>
+                            </div>
+                          </button>
+
+                          {/* Compact date chip — opens calendar (fixed overlay, below) */}
+                          <button
+                            onClick={() => setStatDateCalOpen((o) => !o)}
+                            className="tap-target flex-shrink-0 overflow-hidden"
+                            style={{
+                              display: "flex",
+                              borderRadius: 6,
+                              boxShadow: "0 1px 6px rgba(0,0,0,0.12)",
+                              border: "1px solid #C7E8D8",
+                              padding: 0,
+                            }}
+                          >
+                            <div
                               style={{
-                                fontFamily:
-                                  lang === "ur"
-                                    ? URDU_FONT
-                                    : "inherit",
+                                background: "#087F63",
+                                padding: "3px 6px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
                               }}
                             >
-                              {cleanMandiName}
-                            </span>
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#087F63" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                              <polyline points="6 9 12 15 18 9" />
-                            </svg>
-                          </div>
-                        </button>
+                              <span
+                                style={{
+                                  color: "#fff",
+                                  fontSize: lang === "ur" ? 9 : 8,
+                                  fontWeight: 800,
+                                  letterSpacing: 0.5,
+                                  fontFamily: lang === "ur" ? URDU_FONT : "inherit",
+                                }}
+                              >
+                                {statDateFilter
+                                  ? (lang === "ur"
+                                    ? ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"][statDateFilter.getMonth()]
+                                    : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][statDateFilter.getMonth()])
+                                  : (lang === "ur" ? "اگست" : "Aug")}
+                              </span>
+                            </div>
+                            <div
+                              style={{
+                                background: "#F4FAF7",
+                                padding: "3px 7px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                borderLeft: "1px solid #D5E2DD",
+                              }}
+                            >
+                              <span style={{ color: "#183B34", fontSize: 13, fontWeight: 900, lineHeight: 1 }}>
+                                {statDateFilter ? statDateFilter.getDate() : 21}
+                              </span>
+                            </div>
+                          </button>
+                        </div>
 
-                        {/* 3 Price & Arrival Metrics */}
+
                         <div
                           className="grid grid-cols-3 gap-1 pt-1 mt-0.5"
                           style={{ borderTop: "1px solid #EEF3F0" }}
@@ -15330,6 +15070,113 @@ function ProductRatesScreen({
                     </div>
                   </div>
                 </div>
+              );
+            })()}
+
+            {/* Date Calendar Popup (fixed overlay) */}
+            {statDateCalOpen && (() => {
+              const mn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+              const mnUr = ["\u062c\u0646\u0648\u0631\u06cc", "\u0641\u0631\u0648\u0631\u06cc", "\u0645\u0627\u0631\u0686", "\u0627\u067e\u0631\u06cc\u0644", "\u0645\u0626\u06cc", "\u062c\u0648\u0646", "\u062c\u0648\u0644\u0627\u0626\u06cc", "\u0627\u06af\u0633\u062a", "\u0633\u062a\u0645\u0628\u0631", "\u0627\u06a9\u062a\u0648\u0628\u0631", "\u0646\u0648\u0645\u0628\u0631", "\u062f\u0633\u0645\u0628\u0631"];
+              const sdYear = statDateCalMonth.getFullYear();
+              const sdMonthIdx = statDateCalMonth.getMonth();
+              const sdMonthName = lang === "ur"
+                ? `${mnUr[sdMonthIdx]} ${sdYear}`
+                : statDateCalMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+              const sdFirstDow = new Date(sdYear, sdMonthIdx, 1).getDay();
+              const sdDaysInMonth = new Date(sdYear, sdMonthIdx + 1, 0).getDate();
+              const sdCalDays: (number | null)[] = [
+                ...Array(sdFirstDow).fill(null),
+                ...Array.from({ length: sdDaysInMonth }, (_, i) => i + 1),
+              ];
+              while (sdCalDays.length % 7 !== 0) sdCalDays.push(null);
+              const sdIsSame = (a: Date, b: Date) =>
+                a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+              const sdIsRef = (d: Date) => sdIsSame(d, new Date(2026, 7, 21));
+              return (
+                <div className="fixed z-[120] rounded-2xl overflow-hidden shadow-2xl" style={{ top: "22%", right: 16, width: 260, background: "#F4FAF7", border: "1px solid #D5E2DD" }} onClick={(e) => e.stopPropagation()}>
+                  <div className="px-4 pt-3 pb-2">
+                    <div className="flex items-center justify-between mb-2">
+                      <button onClick={() => setStatDateCalMonth(new Date(sdYear, sdMonthIdx - 1, 1))} className="tap-target w-8 h-8 rounded-full flex items-center justify-center font-bold" style={{ background: "#E8EFEC", color: "#2F4A43", fontSize: 16 }}>&#8249;</button>
+                      <p className="font-bold" style={{ color: "#183B34", fontSize: lang === "ur" ? 16 : 14, fontFamily: lang === "ur" ? URDU_FONT : "inherit" }}>{sdMonthName}</p>
+                      <button onClick={() => setStatDateCalMonth(new Date(sdYear, sdMonthIdx + 1, 1))} className="tap-target w-8 h-8 rounded-full flex items-center justify-center font-bold" style={{ background: "#E8EFEC", color: "#2F4A43", fontSize: 16 }}>&#8250;</button>
+                    </div>
+                    {statDateFilter && (
+                      <div className="flex justify-end mb-1">
+                        <button onClick={() => { setStatDateFilter(null); setStatDateCalOpen(false); }} className="font-bold px-2 py-0.5 rounded-full" style={{ background: "#F9E1DE", color: "#A83B37", fontSize: lang === "ur" ? 12 : 10, fontFamily: lang === "ur" ? URDU_FONT : "inherit" }}>
+                          {lang === "ur" ? "\u06c1\u0679\u0627\u0626\u06cc\u06ba (\u0622\u062c)" : "Clear (Today)"}
+                        </button>
+                      </div>
+                    )}
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", marginBottom: 4 }}>
+                      {(lang === "ur" ? ["\u0627\u062a", "\u067e\u06cc", "\u0645\u0646", "\u0628\u062f", "\u062c\u0645", "\u062c\u0645", "\u06c1\u0641"] : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]).map((d) => (
+                        <div key={d} className="text-center font-bold text-[10px]" style={{ color: "#80918B", paddingBottom: 2, fontFamily: lang === "ur" ? URDU_FONT : "inherit" }}>{d}</div>
+                      ))}
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: 2 }}>
+                      {sdCalDays.map((day, idx) => {
+                        if (!day) return <div key={idx} />;
+                        const d = new Date(sdYear, sdMonthIdx, day);
+                        const selected = statDateFilter ? sdIsSame(d, statDateFilter) : false;
+                        const isRef = sdIsRef(d);
+                        return (
+                          <button key={idx} onClick={() => { setStatDateFilter(d); setStatDateCalOpen(false); }} className="tap-target flex items-center justify-center rounded-full font-semibold text-xs mx-auto" style={{ width: 30, height: 30, background: selected ? "#087F63" : isRef ? "#E4F2EC" : "transparent", color: selected ? "#fff" : isRef ? "#075E4F" : "#2F4A43", border: isRef && !selected ? "1.5px solid #087F63" : "none" }}>{day}</button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Pakistan Map Interactive Expandable Card (378x76 with 3D Tilt & Spring Expansion) */}
+            {(() => {
+              const aml = locScope.kind === "mandi" ? locScope.label : initialMandi || "Pakpattan Mandi";
+              const ao = INITIAL_MANDIS.find((m) => m.name.toLowerCase() === aml.toLowerCase() || m.city.toLowerCase() === aml.toLowerCase() || aml.toLowerCase().includes(m.name.toLowerCase()) || aml.toLowerCase().includes(m.city.toLowerCase()));
+              const em = ao ? ao.name : aml.replace(" منڈی", " Mandi");
+              const cmn = lang === "ur"
+                ? (tm(em).includes("منڈی") ? tm(em) : tm(em) + " منڈی")
+                : (em.includes("Mandi") ? em : em + " Mandi");
+              const prov = locScope.kind === "province" ? locScope.label : ao?.province || "Punjab";
+              const currentCommodity = product || byproduct || "Wheat";
+
+              const activeRow = allRows.find((r) =>
+                r.mandiName.toLowerCase().includes(em.toLowerCase().replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "")) ||
+                em.toLowerCase().replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "").includes(r.mandiName.toLowerCase().replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, ""))
+              );
+              const rowCanon = activeRow ? getMandiCanonicalAttrs(activeRow.mandiName) : getMandiCanonicalAttrs(em);
+              const rowAttrMult = computeAttrMult(
+                rowCanon.variety,
+                rowCanon.color,
+                rowCanon.newOld,
+                rowCanon.spec,
+                rowCanon.condition,
+              );
+              const effMult = rowAttrMult;
+
+              return (
+                <ExpandableMandiMapCard
+                  mandiName={cmn}
+                  provinceName={prov}
+                  commodityName={currentCommodity}
+                  rateInfo={{
+                    cropName: currentCommodity,
+                    mandiName: cmn,
+                    minPrice: activeRow ? Math.round(activeRow.min * effMult) : 5503,
+                    maxPrice: activeRow ? Math.round(activeRow.max * effMult) : 5938,
+                    rateType: activeRow?.rateType || "Retail",
+                    trend: (activeRow?.trend as any) || "up",
+                    trendPct: activeRow?.trendPct !== undefined ? activeRow.trendPct : 0.9,
+                    arrival: activeRow?.arrival || "5,600",
+                    quality: rowCanon.newOld || "New",
+                    variety: rowCanon.variety,
+                    color: rowCanon.color,
+                    condition: rowCanon.condition,
+                    spec: rowCanon.spec,
+                  }}
+                  lang={lang}
+                  urduFont={URDU_FONT}
+                  onSpeak={speakText}
+                />
               );
             })()}
 
@@ -21123,40 +20970,47 @@ function ZaraiReelsScreen({
     }
   };
 
-  // Play active video with sound, pause others
+  // Play active video with sound, pause others (automatic playback on tab switch)
   useEffect(() => {
-    videoRefs.current.forEach((v, idx) => {
-      if (!v) return;
-      v.muted = isMuted;
-      v.volume = 1.0;
-      if (idx === activeIndex) {
-        v.currentTime = 0;
-        const playPromise = v.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              setIsPlayingMap((prev) => ({
-                ...prev,
-                [displayedReels[idx]?.id || ""]: true,
-              }));
-            })
-            .catch(() => {
-              v.muted = true;
-              v.play().catch(() => { });
-              setIsPlayingMap((prev) => ({
-                ...prev,
-                [displayedReels[idx]?.id || ""]: true,
-              }));
-            });
+    const timer = setTimeout(() => {
+      videoRefs.current.forEach((v, idx) => {
+        if (!v) return;
+        v.muted = isMuted;
+        v.volume = 1.0;
+        if (idx === activeIndex) {
+          const playPromise = v.play();
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                setIsPlayingMap((prev) => ({
+                  ...prev,
+                  [displayedReels[idx]?.id || ""]: true,
+                }));
+              })
+              .catch(() => {
+                // If browser blocks unmuted autoplay, fallback immediately to muted autoplay
+                v.muted = true;
+                v.play()
+                  .then(() => {
+                    setIsPlayingMap((prev) => ({
+                      ...prev,
+                      [displayedReels[idx]?.id || ""]: true,
+                    }));
+                  })
+                  .catch(() => { });
+              });
+          }
+        } else {
+          v.pause();
+          setIsPlayingMap((prev) => ({
+            ...prev,
+            [displayedReels[idx]?.id || ""]: false,
+          }));
         }
-      } else {
-        v.pause();
-        setIsPlayingMap((prev) => ({
-          ...prev,
-          [displayedReels[idx]?.id || ""]: false,
-        }));
-      }
-    });
+      });
+    }, 60);
+
+    return () => clearTimeout(timer);
   }, [activeIndex, displayedReels, isMuted]);
 
   const togglePlayPause = (reelId: string, idx: number) => {
@@ -21552,12 +21406,29 @@ function ZaraiReelsScreen({
                   }}
                 >
                   <video
-                    ref={(el) => (videoRefs.current[idx] = el)}
+                    ref={(el) => {
+                      videoRefs.current[idx] = el;
+                      if (el && idx === activeIndex && el.paused) {
+                        el.play().catch(() => {
+                          el.muted = true;
+                          el.play().catch(() => { });
+                        });
+                      }
+                    }}
                     src={reel.videoPath}
                     playsInline
+                    autoPlay={idx === activeIndex}
                     loop
-                    preload="metadata"
+                    preload="auto"
                     className="w-full h-full object-cover"
+                    onLoadedData={(e) => {
+                      if (idx === activeIndex) {
+                        e.currentTarget.play().catch(() => {
+                          e.currentTarget.muted = true;
+                          e.currentTarget.play().catch(() => { });
+                        });
+                      }
+                    }}
                     onError={() => {
                       setVideoErrors((prev) => ({ ...prev, [reel.id]: true }));
                     }}
@@ -24547,7 +24418,7 @@ function HomeScreen({
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                   </svg>
-                  <span>{lang === "ur" ? "ترمیم" : "Edit"}</span>
+
                 </button>
               </div>
 
@@ -27841,31 +27712,107 @@ function translateVoiceUrdu(text: string): string {
     "Dry-Fruits": "خشک میوہ جات",
     Herbals: "جڑی بوٹیاں",
     "Edible Oil": "خوردنی تیل",
+    "Voice On": "آواز فعال ہے",
+    "Voice Off": "آواز بند ہے",
+    "Voice": "آواز",
+    "English": "انگریزی",
+    "Urdu": "اردو",
+    "Notifications": "اطلاعات اور پیغامات",
+    "Profile": "پروفائل",
+    "Edit Profile": "پروفائل میں ترمیم",
+    "Select location": "مقام منتخب کریں",
+    "Select Mandi": "منڈی کا انتخاب کریں",
+    "All Pakistan": "پورا پاکستان",
+    "All Pakistan selected.": "پورا پاکستان منتخب کیا گیا۔",
+    "All Pakistan prices": "پورے پاکستان کی قیمتیں",
+    "Prices of my country shown.": "پورے ملک کے ریٹس دکھائے جا رہے ہیں۔",
     "All products selected. All prices are shown.":
       "تمام مصنوعات منتخب ہیں۔ تمام قیمتیں دکھائی جا رہی ہیں۔",
     "All byproducts shown.": "تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔",
     "All byproducts": "تمام ضمنی مصنوعات",
     "All price types are shown.": "تمام ریٹس دکھائے جا رہے ہیں۔",
-    "Prices of my country shown.": "پورے ملک کی قیمتیں دکھائی جا رہی ہیں۔",
-    "All Pakistan prices": "پورے پاکستان کی قیمتیں",
-    "All Pakistan": "پورا پاکستان",
-    "Select location": "مقام منتخب کریں",
     "Search. Find any product or byproduct by name to see its prices.":
-      "تلاش۔ کسی بھی اجناس یا ضمنی مصنوع کا نام بول کر یا لکھ کر قیمت دیکھیں۔",
+      "تلاش۔ کسی بھی فصل یا ضمنی پیداوار کا نام بول کر ریٹ معلوم کریں۔",
     "Product. Select a crop or product to discover its byproduct prices.":
-      "مصنوعات۔ اپنی فصل منتخب کریں اور اس کی تمام ضمنی مصنوعات کے ریٹ دیکھیں۔",
+      "اجناس۔ اپنی پسندیدہ فصل منتخب کریں اور تمام منڈیوں کے تازہ ریٹس دیکھیں۔",
     "Live Market. See real-time prices from active mandis across Pakistan.":
-      "لائیو مارکیٹ۔ پاکستان کی تمام فعال منڈیوں کے تازہ ترین براہ راست ریٹس دیکھیں۔",
+      "لائیو مارکیٹ۔ پاکستان کی تمام منڈیوں کے تازہ ترین لائیو ریٹس دیکھیں۔",
     "Mandi. Browse all markets across Pakistan and see today's rates.":
-      "منڈی۔ پاکستان کی منڈیاں دیکھیں اور آج کے تازہ ریٹس جانیں۔",
+      "منڈیاں۔ پاکستان بھر کی منڈیوں کی فہرست اور آج کے ریٹس دیکھیں۔",
     "Notification bell. All market updates and alerts are shown here.":
-      "اطلاعات۔ تمام مارکیٹ اپڈیٹس اور اہم اعلانات یہاں ملیں گے۔",
+      "اطلاعات۔ تمام اہم مارکیٹ اپڈیٹس اور خبریں یہاں ملیں گی۔",
     "Your Picks. Your favourite byproducts are shown here on your homescreen.":
-      "آپ کی پسند۔ آپ کی پسندیدہ ضمنی مصنوعات یہاں دکھائی دیتی ہیں۔",
+      "آپ کی پسند۔ آپ کی پسندیدہ اجناس کے ریٹس یہاں ملیں گے۔",
     "This product is locked. Please upgrade to access it.":
-      "یہ مصنوع مقفل ہے۔ رسائی کے لیے اکاؤنٹ اپگریڈ کریں۔",
+      "یہ مصنوع مقفل ہے۔ مکمل معلومات کے لیے اکاؤنٹ اپگریڈ کریں۔",
     "This product is locked": "یہ مصنوع مقفل ہے",
+    "Mandi Map": "منڈی کا نقشہ",
+    "Map View": "نقشہ دیکھیں",
+    "Map View clicked": "نقشہ کھولا گیا",
+    "Filter Mandis": "منڈیاں فلٹر کریں",
+    "Show Nearby": "قریبی منڈیاں دیکھیں",
+    "Today's Overview": "آج کا جائزہ",
+    "Daily Rates": "روزانہ ریٹس",
+    "Price Trend": "قیمتوں کا رجحان",
+    "Arrival Trend": "آمد کا رجحان",
+    "Overview": "جائزہ",
+    "Crops & Markets": "فصلیں اور منڈیاں",
+    "Operating Hours": "کاروباری اوقات",
+    "Active Listings": "فعال لاٹس",
+    "Market Status": "مارکیٹ کی صورتحال",
+    "Open Now": "مارکیٹ کھلی ہے",
+    "Closed": "مارکیٹ بند ہے",
+    "Variety": "ورائٹی",
+    "New/Old": "نئی پرانی فصل",
+    "Color": "رنگت",
+    "Spec": "گریڈ اور معیار",
+    "Condition": "حالت",
+    "Rate Type": "ریٹ کی قسم",
+    "Retail Rate": "ریٹیل ریٹ",
+    "Wholesale Rate": "ہول سیل ریٹ",
+    "Mill Rate": "مل ریٹ",
+    "Delivery Rate": "ڈیلیوری ریٹ",
+    "Retail": "ریٹیل",
+    "Wholesale": "ہول سیل",
+    "Mill": "مل",
+    "Delivery": "ڈیلیوری",
+    "Dry": "خشک",
+    "Moist": "نمی دار",
+    "New": "نیا مال",
+    "Old": "پرانا مال",
+    "Saved": "محفوظ شدہ",
+    "Save": "محفوظ کریں",
+    "Directions": "راستہ معلوم کریں",
+    "Share": "شیئر کریں",
+    "Back": "واپس",
+    "Clear all": "تمام فلٹرز صاف کریں",
+    "Clear (Today)": "آج کی تاریخ",
+    "24 Hours": "چوبیس گھنٹے",
+    "72 Hours": "بہتر گھنٹے",
+    "Weekly": "ہفتہ وار",
+    "Monthly": "ماہانہ",
+    "Punjab": "پنجاب",
+    "Sindh": "سندھ",
+    "KPK": "خیبر پختونخوا",
+    "Khyber Pakhtunkhwa": "خیبر پختونخوا",
+    "Balochistan": "بلوچستان",
+    "Pakpattan": "پاکپتن",
+    "Okara": "اوکاڑہ",
+    "Sahiwal": "ساہیوال",
+    "Faisalabad": "فیصل آباد",
+    "Multan": "ملتان",
+    "Lahore": "لاہور",
+    "Bahawalpur": "بہاولپور",
+    "Rahim Yar Khan": "رحیم یار خان",
+    "Ghotki": "گھوٹکی",
+    "Sukkur": "سکھر",
+    "Nawabshah": "نوابشاہ",
+    "Hyderabad": "حیدرآباد",
+    "Karachi": "کراچی",
+    "Peshawar": "پشاور",
+    "Quetta": "کوئٹہ",
   };
+
   if (PHRASES[trimmed]) return PHRASES[trimmed];
   if (AUTO_URDU_DICT[trimmed]) return AUTO_URDU_DICT[trimmed];
 
@@ -27873,16 +27820,10 @@ function translateVoiceUrdu(text: string): string {
   if (/[\u0600-\u06FF]/.test(text)) return text;
 
   // Dynamic patterns
-  let m = trimmed.match(/^All (.*?) byproduct prices are shown\.$/i);
+  let m = trimmed.match(/^Prices of (.*?) district are shown\.$/i);
   if (m) {
-    const c = AUTO_URDU_DICT[m[1]] || m[1];
-    return `${c} کی تمام ضمنی مصنوعات کے ریٹس دکھائے جا رہے ہیں۔`;
-  }
-
-  m = trimmed.match(/^All byproducts of (.*?) shown\.$/i);
-  if (m) {
-    const c = AUTO_URDU_DICT[m[1]] || m[1];
-    return `${c} کی تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔`;
+    const d = AUTO_URDU_DICT[m[1]] || m[1];
+    return `ضلع ${d} کی قیمتیں دکھائی جا رہی ہیں۔`;
   }
 
   m = trimmed.match(/^Prices of (.*?) are shown\.$/i);
@@ -27897,21 +27838,63 @@ function translateVoiceUrdu(text: string): string {
     return `${item} کی قیمتیں دکھائی جا رہی ہیں۔`;
   }
 
+  m = trimmed.match(/^All (.*?) byproduct prices are shown\.$/i);
+  if (m) {
+    const c = AUTO_URDU_DICT[m[1]] || m[1];
+    return `${c} کی تمام ضمنی مصنوعات کے ریٹس دکھائے جا رہے ہیں۔`;
+  }
+
+  m = trimmed.match(/^All byproducts of (.*?) shown\.$/i);
+  if (m) {
+    const c = AUTO_URDU_DICT[m[1]] || m[1];
+    return `${c} کی تمام ضمنی مصنوعات دکھائی جا رہی ہیں۔`;
+  }
+
   m = trimmed.match(/^All (.*?) rates are shown\.$/i);
   if (m) {
     const rt = AUTO_URDU_DICT[m[1]] || m[1];
     return `تمام ${rt} دکھائے جا رہے ہیں۔`;
   }
 
-  m = trimmed.match(/^Prices of (.*?) district are shown\.$/i);
-  if (m) {
-    const d = AUTO_URDU_DICT[m[1]] || m[1];
-    return `ضلع ${d} کی قیمتیں دکھائی جا رہی ہیں۔`;
-  }
-
   m = trimmed.match(/^Prices of (\d+) locations are shown\.$/i);
   if (m) {
     return `${m[1]} مقامات کی قیمتیں دکھائی جا رہی ہیں۔`;
+  }
+
+  m = trimmed.match(/^(.*?) Province selected$/i);
+  if (m) {
+    const p = AUTO_URDU_DICT[m[1]] || m[1];
+    return `صوبہ ${p} منتخب کیا گیا۔`;
+  }
+
+  m = trimmed.match(/^(.*?) District$/i);
+  if (m) {
+    const d = AUTO_URDU_DICT[m[1]] || m[1];
+    return `ضلع ${d}`;
+  }
+
+  m = trimmed.match(/^(.*?) Mandi unselected$/i);
+  if (m) {
+    const mName = AUTO_URDU_DICT[m[1]] || m[1];
+    return `${mName} منڈی ہٹا دی گئی۔`;
+  }
+
+  m = trimmed.match(/^(.*?) Mandi$/i);
+  if (m) {
+    const mName = AUTO_URDU_DICT[m[1]] || m[1];
+    return `${mName} منڈی`;
+  }
+
+  m = trimmed.match(/^Mandis in (.*?) unselected$/i);
+  if (m) {
+    const d = AUTO_URDU_DICT[m[1]] || m[1];
+    return `ضلع ${d} کی تمام منڈیاں غیر منتخب ہو گئیں۔`;
+  }
+
+  m = trimmed.match(/^All mandis in (.*?) selected$/i);
+  if (m) {
+    const d = AUTO_URDU_DICT[m[1]] || m[1];
+    return `ضلع ${d} کی تمام منڈیاں منتخب ہو گئیں۔`;
   }
 
   m = trimmed.match(/^(.*?), (.*?)\. Min rate (.*?), Max rate (.*?) rupees\.$/i);
@@ -27921,45 +27904,61 @@ function translateVoiceUrdu(text: string): string {
     return `${crop}، ${mandi}۔ کم سے کم ریٹ ${m[3]}، زیادہ سے زیادہ ${m[4]} روپے`;
   }
 
+  m = trimmed.match(/^(.*?) Mandi, (.*?) rate, (.*?) to (.*?) rupees$/i);
+  if (m) {
+    const mandi = AUTO_URDU_DICT[m[1]] || m[1];
+    const rt = AUTO_URDU_DICT[m[2]] || m[2];
+    return `${mandi} منڈی، ${rt} ریٹ، ${m[3]} سے ${m[4]} روپے`;
+  }
+
+  m = trimmed.match(/^Opened (.*?) map for (.*?)$/i);
+  if (m) {
+    const crop = AUTO_URDU_DICT[m[1]] || m[1];
+    const mandi = AUTO_URDU_DICT[m[2]] || m[2];
+    return `${mandi} میں ${crop} کا نقشہ کھل گیا۔`;
+  }
+
   return AUTO_URDU_DICT[trimmed] || trimmed;
 }
 
+let activeGlobalAudio: HTMLAudioElement | null = null;
+
 function stopSpeaking() {
+  if (activeGlobalAudio) {
+    activeGlobalAudio.pause();
+    activeGlobalAudio.currentTime = 0;
+    activeGlobalAudio = null;
+  }
   if (typeof window !== "undefined" && "speechSynthesis" in window) {
     window.speechSynthesis.cancel();
   }
 }
 
 function speakText(text: string) {
-  if (typeof window !== "undefined" && "speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
+  stopSpeaking();
 
-    let textToSpeak = text;
-    if (appLang === "ur") {
-      textToSpeak = translateVoiceUrdu(text);
-    }
-
-    // Clean text of non-pronounceable glyphs
-    textToSpeak = textToSpeak
-      .replace(/<[^>]+>/g, " ")
-      .replace(/[•★✓›‹→←▲▼]/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
-
-    if (!textToSpeak) return;
-
-    const u = new SpeechSynthesisUtterance(textToSpeak);
-    u.lang = appLang === "ur" ? "ur-PK" : "en-US";
-    u.rate = appLang === "ur" ? 0.84 : 0.95;
-    u.pitch = 1.0;
-
-    const voice = getBestVoice(appLang === "ur");
-    if (voice) {
-      u.voice = voice;
-    }
-
-    window.speechSynthesis.speak(u);
+  let textToSpeak = text;
+  if (appLang === "ur") {
+    textToSpeak = translateVoiceUrdu(text);
   }
+
+  // Clean text of non-pronounceable glyphs
+  textToSpeak = textToSpeak
+    .replace(/<[^>]+>/g, " ")
+    .replace(/[•★✓›‹→←▲▼🌾·]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!textToSpeak) return;
+
+  const isUrdu = appLang === "ur";
+  speakUrdu(textToSpeak, { lang: isUrdu ? "ur-PK" : "en-US" })
+    .then((audio) => {
+      activeGlobalAudio = audio;
+    })
+    .catch((err) => {
+      console.warn("speakText error:", err);
+    });
 }
 
 function VoiceOrientationOverlay({ onClose }: { onClose: () => void }) {
@@ -28450,7 +28449,14 @@ function BottomNav({
       label: t("nav.voice"),
       color: voiceActive ? "#C94A43" : "#087F63",
       icon: (
-        <MicSVG size={22} color={currentActiveIndex === 3 ? "#ffffff" : "#183B34"} />
+        <div
+          className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 ${voiceActive
+              ? "bg-[#FEE2E2] border-2 border-[#EF4444] scale-110 shadow-md animate-pulse"
+              : "bg-[#E4F4EC] border border-[#86EFAC] shadow-sm"
+            }`}
+        >
+          <MicSVG size={20} color={voiceActive ? "#DC2626" : "#087F63"} />
+        </div>
       ),
       onPointerDown: handleVoiceDown,
       onPointerUp: handleVoiceUp,
