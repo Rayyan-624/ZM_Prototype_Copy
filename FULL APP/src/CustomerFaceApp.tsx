@@ -1461,6 +1461,7 @@ const PRODUCT_ID_TO_NAME: Record<string, string> = {
   cotton: "Cotton",
   maize: "Maize",
   sugar: "Sugar",
+  sugarcane: "Sugar",
   pulses: "Pulses",
   mustard: "Mustard",
   sesame: "Sesame",
@@ -1469,15 +1470,21 @@ const PRODUCT_ID_TO_NAME: Record<string, string> = {
   dates: "Dates",
   spices: "Spices",
   dryfruit: "Dry Fruit",
+  "dry fruit": "Dry Fruit",
   livemarket: "Live Market",
+  "live market": "Live Market",
   fruits: "Fruits",
+  fruit: "Fruits",
   vegetables: "Vegetable",
   vegetable: "Vegetable",
   livestock: "Livestock",
   fertilizer: "Fertilizer",
+  fertilizers: "Fertilizer",
   edibleoil: "Edible Oil",
+  "edible oil": "Edible Oil",
   kiryana: "Kiryana",
   herbs: "Herbs",
+  herbals: "Herbs",
 };
 
 const PRODUCT_DIVISIONS: ProdDiv[] = [
@@ -23704,6 +23711,8 @@ function HomeScreen({
   profileSetupData: parentProfileSetupData,
   updateProfileSetupData: parentUpdateProfileSetupData,
   onCompleteProfileSubmit: parentOnCompleteProfileSubmit,
+  userSubscribedList: parentUserSubscribedList,
+  setUserSubscribedList: parentSetUserSubscribedList,
 }: {
   push: (s: Screen) => void;
   setFeedOpen: (v: boolean) => void;
@@ -23729,6 +23738,8 @@ function HomeScreen({
     selected: string[],
     locationData?: { province: string; district: string; city: string },
   ) => void;
+  userSubscribedList?: string[];
+  setUserSubscribedList?: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   const {
     lang,
@@ -23937,13 +23948,16 @@ function HomeScreen({
   // PRODUCT HELPERS & SUBSCRIPTION LOCKING
   // ---------------------------------------------------------
 
-  const [userSubscribedList, setUserSubscribedList] = useState<string[]>(() => {
+  const [localUserSubscribedList, setLocalUserSubscribedList] = useState<string[]>(() => {
     const raw = initialUserData?.products;
     if (raw && raw.length > 0) {
       return raw.map((p) => PRODUCT_ID_TO_NAME[p.toLowerCase()] || p);
     }
     return ["Wheat"];
   });
+
+  const userSubscribedList = parentUserSubscribedList ?? localUserSubscribedList;
+  const setUserSubscribedList = parentSetUserSubscribedList || setLocalUserSubscribedList;
 
   const getVerticalForProduct = (productName: string) => {
     return (
@@ -23957,11 +23971,7 @@ function HomeScreen({
     if (profileCompleted) {
       return userSubscribedList.includes(name);
     }
-    return (
-      SUBSCRIBED_PRODUCTS.has(name) ||
-      TODAY_ONLY_PRODUCTS.has(name) ||
-      todayOnlyUnlocked.includes(name)
-    );
+    return true; // All accessible during Free Trial
   };
 
   const isTodayOnly = (name: string) => {
@@ -23978,27 +23988,21 @@ function HomeScreen({
   );
 
   const handleLockedProductClick = (divName: string, verticalFor: string) => {
-    if (divName === "Maize" && !profileCompleted) {
-      TODAY_ONLY_PRODUCTS.add("Maize");
-      setTodayOnlyUnlocked((prev) => [...prev, "Maize"]);
-      push({
-        id: "byproduct-combined",
-        products: [{ vertical: verticalFor, product: "Maize" }],
-        active: 0,
-      });
-    } else {
-      push({
-        id: "billing",
-        product: divName,
-        vertical: verticalFor,
-      });
-    }
+    push({
+      id: "billing",
+      product: divName,
+      vertical: verticalFor,
+    });
   };
 
   const handleCompleteProfileSubmit = (
     selected: string[],
     locationData?: { province: string; district: string; city: string },
   ) => {
+    if (parentOnCompleteProfileSubmit) {
+      parentOnCompleteProfileSubmit(selected, locationData);
+      return;
+    }
     const mapped = selected.map((p) => PRODUCT_ID_TO_NAME[p.toLowerCase()] || p);
     const finalSelected = mapped.length > 0 ? mapped : ["Wheat"];
     SUBSCRIBED_PRODUCTS.clear();
@@ -29180,11 +29184,13 @@ function BillingScreen({
   vertical,
   onBack,
   push,
+  onSubscribeSuccess,
 }: {
   product: string;
   vertical?: string;
   onBack: () => void;
   push: (s: Screen) => void;
+  onSubscribeSuccess?: (productName: string) => void;
 }) {
   const { lang, tc, tm } = useLang();
   const [step, setStep] = useState<"plan" | "pay">("plan");
@@ -29200,21 +29206,26 @@ function BillingScreen({
     "jazzcash" | "easypaisa" | "sadapay" | "nayapay" | "upaisa"
   >("jazzcash");
   const [walletNumber, setWalletNumber] = useState("0300 1234567");
-  const [walletCnic, setWalletCnic] = useState("");
-  const [walletPromptSent, setWalletPromptSent] = useState(false);
-  const [walletPromptSending, setWalletPromptSending] = useState(false);
-
-  const [directMethod, setDirectMethod] = useState<
-    "jazzcash" | "easypaisa" | "bank"
-  >("jazzcash");
-  const [hasReceipt, setHasReceipt] = useState(false);
-  const [subscribedModal, setSubscribedModal] = useState(false);
 
   // Card fields
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
   const [cardHolder, setCardHolder] = useState("Muhammad Arif");
+
+  // Direct Method fields
+  const [directMethod, setDirectMethod] = useState<
+    "jazzcash" | "easypaisa" | "bank"
+  >("jazzcash");
+  const [hasReceipt, setHasReceipt] = useState(false);
+
+  // MPIN Dialog State for Mobile Wallet
+  const [mpinModalOpen, setMpinModalOpen] = useState(false);
+  const [mpin, setMpin] = useState(["", "", "", ""]);
+  const [mpinError, setMpinError] = useState("");
+  const [isProcessingMpin, setIsProcessingMpin] = useState(false);
+  const [mpinSuccess, setMpinSuccess] = useState(false);
+  const [subscribedModal, setSubscribedModal] = useState(false);
 
   const v = vertical || getVerticalForProduct(product) || "Grains";
   const iconSrc = getproductIconSrc(product, v);
@@ -29254,14 +29265,14 @@ function BillingScreen({
       label: "JazzCash",
       color: "#E83D2B",
       iconSrc: "/src/icons/jazz.png",
-      sub: "Instant mobile prompt",
+      sub: "Instant mobile MPIN prompt",
     },
     {
       id: "easypaisa",
       label: "EasyPaisa",
       color: "#4CAF50",
       iconSrc: "/src/icons/easypaisa.png",
-      sub: "Instant approval OTP",
+      sub: "Instant approval MPIN",
     },
     {
       id: "sadapay",
@@ -29292,21 +29303,21 @@ function BillingScreen({
       label: "JazzCash Manual",
       color: "#E83D2B",
       iconSrc: "/src/icons/jazz.png",
-      sub: "Send via JazzCash mobile wallet",
+      sub: "Send to Till / Account",
     },
     {
       id: "easypaisa",
       label: "EasyPaisa Manual",
       color: "#4CAF50",
       iconSrc: "/src/icons/easypaisa.png",
-      sub: "Send via EasyPaisa mobile wallet",
+      sub: "Send to EasyPaisa Account",
     },
     {
       id: "bank",
       label: "Bank Transfer",
       color: "#1565C0",
       iconSrc: "/src/icons/banktransfer.png",
-      sub: "Direct bank / IBFT transfer",
+      sub: "Direct IBFT transfer",
     },
   ] as const;
 
@@ -29355,92 +29366,115 @@ function BillingScreen({
     return digits.slice(0, 4) + " " + digits.slice(4);
   }
 
-  const handleActivate = () => {
-    SUBSCRIBED_PRODUCTS.add(product);
-    const mapped = PRODUCT_ID_TO_NAME[product.toLowerCase()] || product;
-    SUBSCRIBED_PRODUCTS.add(mapped);
+  const handleFinish = () => {
+    onSubscribeSuccess?.(product);
     setSubscribedModal(true);
   };
+
+  const handlePaymentConfirmClick = () => {
+    if (paymentType === "wallet") {
+      setMpin(["", "", "", ""]);
+      setMpinError("");
+      setMpinSuccess(false);
+      setMpinModalOpen(true);
+    } else {
+      handleFinish();
+    }
+  };
+
+  const handleMpinSubmit = () => {
+    const pinStr = mpin.join("");
+    if (pinStr.length < 4) {
+      setMpinError("Please enter complete 4-digit MPIN");
+      return;
+    }
+    setMpinError("");
+    setIsProcessingMpin(true);
+    setTimeout(() => {
+      setIsProcessingMpin(false);
+      setMpinSuccess(true);
+      setTimeout(() => {
+        setMpinModalOpen(false);
+        handleFinish();
+      }, 700);
+    }, 800);
+  };
+
+  const selectedWp =
+    walletProviders.find((wp) => wp.id === walletProvider) ||
+    walletProviders[0];
 
   return (
     <div
       className="flex flex-col h-full screen-enter"
       style={{
-        background: "#F8FAF8",
-        overflowY: "auto",
+        background: "#F4FAF7",
         fontFamily:
           lang === "ur"
-            ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', sans-serif"
-            : "'Inter', sans-serif",
+            ? URDU_FONT
+            : "'Inter', 'Poppins', sans-serif",
       }}
     >
       {/* Top Header */}
       <header
-        className="px-4 pb-3 flex-shrink-0 flex items-center gap-3 sticky top-0 z-20"
+        className="px-4 py-3 flex-shrink-0 flex items-center justify-between sticky top-0 z-20"
         style={{
-          background: "rgba(255,255,255,0.95)",
-          backdropFilter: "blur(10px)",
-          borderBottom: "1px solid #E5E7EB",
-          paddingTop: "max(12px, env(safe-area-inset-top, 12px))",
+          background: "#F4FAF7",
+          borderBottom: "1px solid #D5E2DD",
         }}
       >
-        <button
-          onClick={step === "pay" ? () => setStep("plan") : onBack}
-          className="tap-target w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: "#EAF8F2", border: "1px solid #B8DCCF" }}
-        >
-          <span style={{ fontSize: 18, color: "#0A5E43", fontWeight: "bold" }}>
-            {lang === "ur" ? "→" : "←"}
-          </span>
-        </button>
-        <div className="flex-1 min-w-0">
-          <h1
-            className="font-extrabold text-base truncate"
-            style={{ color: "#0A5E43" }}
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={step === "pay" ? () => setStep("plan") : onBack}
+            className="tap-target w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: "#E8EFEC", color: "#183B34" }}
           >
-            {lang === "ur"
-              ? tc(product) + " سبسکرپشن"
-              : product + " Subscription"}
-          </h1>
-          <p className="text-[11px] truncate" style={{ color: "#6B7280" }}>
-            {lang === "ur"
-              ? "تمام منڈی ریٹس اور تجزیات تک رسائی حاصل کریں"
-              : "Unlock Live Mandi Rates & Analytics"}
-          </p>
+            <span style={{ fontSize: 18, fontWeight: "bold" }}>
+              {lang === "ur" ? "→" : "←"}
+            </span>
+          </button>
+          <div>
+            <h1
+              className="font-extrabold text-base leading-tight"
+              style={{ color: "#183B34" }}
+            >
+              {step === "plan"
+                ? lang === "ur"
+                  ? "پلان کا انتخاب"
+                  : "Choose Plan"
+                : lang === "ur"
+                  ? "ادائیگی کی تفصیلات"
+                  : "Payment Details"}
+            </h1>
+            <p className="text-[11px] font-semibold" style={{ color: "#52635F" }}>
+              {lang === "ur"
+                ? `${tc(product)} کی سبسکرپشن`
+                : `${product} Subscription`}
+            </p>
+          </div>
         </div>
+        <button
+          onClick={onBack}
+          className="tap-target text-sm font-semibold px-2.5 py-1 rounded-full"
+          style={{ background: "#E8EFEC", color: "#52635F" }}
+          title="Close"
+        >
+          ✕
+        </button>
       </header>
 
-      {/* Main Card Content */}
-      <div className="p-4 flex-1 flex flex-col items-center justify-start max-w-md mx-auto w-full">
+      {/* Scrollable Content Body */}
+      <div className="flex-1 overflow-y-auto px-5 py-4">
         {step === "plan" ? (
-          <div
-            className="w-full bg-white rounded-3xl p-5 shadow-sm border border-[#E5E7EB]"
-            style={{ animation: "screenEnter 0.25s ease-out" }}
-          >
-            <div
-              style={{
-                fontSize: 10.5,
-                fontWeight: 700,
-                color: "#0F8A5F",
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                marginBottom: 4,
-              }}
-            >
-              {lang === "ur" ? "پلان منتخب کریں" : "Step 1 of 2"}
+          <div>
+            <div style={{ marginBottom: 14 }}>
+              <h2 style={{ fontSize: 16, fontWeight: 800, color: "#183B34" }}>
+                {lang === "ur"
+                  ? "اپنا سبسکرپشن پلان منتخب کریں"
+                  : "Choose Your ZM Plan"}
+              </h2>
             </div>
-            <div
-              style={{
-                fontSize: lang === "ur" ? 22 : 19,
-                fontWeight: 800,
-                color: "#0A5E43",
-                marginBottom: 4,
-              }}
-            >
-              {lang === "ur"
-                ? "زرعی منڈی سبسکرپشن پلان"
-                : "Choose your ZM plan"}
-            </div>
+
             {/* Standard Duration Tabs */}
             <div
               style={{
@@ -29543,14 +29577,14 @@ function BillingScreen({
               </span>
             </button>
 
-            {/* Custom 1-12 Month Picker */}
+            {/* Custom Duration Fluid Month Picker */}
             {customMode && (
               <div
                 style={{
                   border: "1.5px solid #087F63",
                   borderRadius: 16,
                   padding: "14px",
-                  marginBottom: 14,
+                  marginBottom: 12,
                   background: "#fff",
                   boxShadow: "0 2px 10px rgba(8,127,99,0.06)",
                 }}
@@ -29588,11 +29622,13 @@ function BillingScreen({
                   </span>
                 </div>
 
+                {/* 12 Months Grid Chips */}
                 <div
                   style={{
                     display: "grid",
                     gridTemplateColumns: "repeat(4, 1fr)",
                     gap: 6,
+                    marginBottom: 4,
                   }}
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m) => {
@@ -29641,123 +29677,100 @@ function BillingScreen({
               </div>
             )}
 
-            {/* Pricing Breakdown Card */}
+            {/* Product Pricing Breakdown Card (Matches Image 2) */}
             <div
               style={{
                 background: "#FFFFFF",
-                borderRadius: 18,
-                border: "1.5px solid #E5E7EB",
-                marginBottom: 16,
+                borderRadius: 16,
+                border: "1.4px solid #D5E2DD",
+                marginBottom: 12,
                 overflow: "hidden",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
               }}
             >
               <div
                 style={{
-                  padding: "10px 16px 8px",
-                  borderBottom: "1px solid #E5E7EB",
-                  background: "#F8FAF8",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
+                  padding: "8px 14px 6px",
+                  borderBottom: "1px solid #D5E2DD",
+                  fontSize: 10,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: "#B9822E",
+                  fontWeight: 700,
                 }}
               >
-                <span
-                  style={{
-                    fontSize: 10,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "#0F8A5F",
-                    fontWeight: 800,
-                  }}
-                >
-                  {lang === "ur" ? "پروڈکٹ کی تفصیل" : "Product Pricing"}
-                </span>
-                <span
-                  className="px-2 py-0.5 rounded-full text-[9px] font-extrabold"
-                  style={{ background: "#EAF8F2", color: "#0F8A5F" }}
-                >
-                  PRO ACCESS
-                </span>
+                SELECTED PRODUCTS (1 ITEMS)
               </div>
-
-              {/* product Row */}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "12px 16px",
-                  fontSize: 13,
-                  color: "#1F2937",
-                }}
-              >
-                <span
+              <div>
+                <div
                   style={{
-                    display: "inline-flex",
+                    display: "flex",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    gap: 10,
-                    fontWeight: 700,
+                    padding: "8px 14px",
+                    borderBottom: "1px solid rgba(15,138,95,0.06)",
+                    fontSize: 12.5,
+                    color: "#52635F",
                   }}
                 >
-                  <img
-                    src={iconSrc}
-                    alt=""
-                    style={{ width: 28, height: 28, objectFit: "contain" }}
-                  />
-                  {tc(product)}
-                </span>
-                <span style={{ fontWeight: 800, color: "#0A5E43" }}>
-                  PKR {basePrice.toLocaleString()}/mo
-                </span>
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                      fontWeight: 700,
+                      color: "#183B34",
+                    }}
+                  >
+                    <img
+                      src={iconSrc}
+                      alt=""
+                      style={{
+                        width: 22,
+                        height: 22,
+                        objectFit: "contain",
+                      }}
+                    />
+                    {tc(product)}
+                  </span>
+                  <span style={{ fontWeight: 600, color: "#183B34" }}>
+                    PKR {basePrice.toLocaleString()}/mo
+                  </span>
+                </div>
               </div>
-
-              {/* Calculations Box */}
               <div
                 style={{
                   borderTop: "1.5px solid rgba(15,138,95,0.1)",
-                  background: "#EAF8F2",
+                  background: "#E4F2EC",
+                  padding: "10px 14px",
                 }}
               >
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    padding: "8px 16px",
                     fontSize: 12,
                     color: "#52635F",
+                    marginBottom: 4,
                   }}
                 >
                   <span>
-                    {lang === "ur"
-                      ? "کل رقم (" + months + " ماہ)"
-                      : "Total/mo × " +
-                      months +
-                      " month" +
-                      (months > 1 ? "s" : "")}
+                    Total/mo × {months} month{months > 1 ? "s" : ""}
                   </span>
-                  <span style={{ fontWeight: 600 }}>
-                    PKR {regularTotal.toLocaleString()}
-                  </span>
+                  <span>PKR {regularTotal.toLocaleString()}</span>
                 </div>
                 {discount > 0 && (
                   <div
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
-                      padding: "6px 16px",
                       fontSize: 12,
                       color: "#16A34A",
+                      fontWeight: 700,
+                      marginBottom: 6,
                     }}
                   >
-                    <span style={{ fontWeight: 700 }}>
-                      {lang === "ur"
-                        ? "ڈسکاؤنٹ (" + discount * 100 + "% بچت)"
-                        : "Discount (" + discount * 100 + "% off)"}
-                    </span>
-                    <span style={{ fontWeight: 800 }}>
-                      − PKR {discountAmt.toLocaleString()}
-                    </span>
+                    <span>Discount ({discount * 100}% off)</span>
+                    <span>− PKR {discountAmt.toLocaleString()}</span>
                   </div>
                 )}
                 <div
@@ -29765,103 +29778,46 @@ function BillingScreen({
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    padding: "12px 16px",
-                    borderTop: "1px solid rgba(15,138,95,0.15)",
+                    paddingTop: 6,
+                    borderTop: "1px solid rgba(15,138,95,0.1)",
                   }}
                 >
                   <span
                     style={{
-                      fontWeight: 800,
-                      fontSize: 14,
-                      color: "#0A5E43",
+                      fontWeight: 700,
+                      fontSize: 13.5,
+                      color: "#183B34",
                     }}
                   >
-                    {lang === "ur" ? "آپ کی قیمت" : "Your Price"}
+                    Your Total
                   </span>
                   <div style={{ textAlign: "right" }}>
                     <div
                       style={{
-                        fontFamily: "'Poppins', sans-serif",
-                        fontSize: 22,
+                        fontSize: 17,
                         fontWeight: 900,
-                        color: "#0A5E43",
+                        color: "#087F63",
                       }}
                     >
                       PKR {finalTotal.toLocaleString()}
                     </div>
-                    <div
-                      style={{
-                        fontSize: 11,
-                        color: "#52635F",
-                        fontWeight: 600,
-                      }}
-                    >
+                    <div style={{ fontSize: 10.5, color: "#52635F" }}>
                       PKR {Math.round(finalTotal / months).toLocaleString()}/mo
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            {/* Action Buttons */}
-            <button
-              onClick={() => setStep("pay")}
-              className="tap-target w-full py-3.5 rounded-2xl font-extrabold text-sm mb-2 flex items-center justify-center gap-2"
-              style={{
-                background: "#0A5E43",
-                color: "#FFFFFF",
-                boxShadow: "0 4px 14px rgba(10,94,67,0.3)",
-              }}
-            >
-              {lang === "ur"
-                ? "ادائیگی کی طرف جائیں — PKR " + finalTotal.toLocaleString()
-                : "Proceed to Payment — PKR " + finalTotal.toLocaleString()}
-            </button>
           </div>
         ) : (
-          /* Step 2: Payment Confirmation (Mobile Wallet, Card, Direct Transfer) */
-          <div
-            className="w-full bg-white rounded-3xl p-5 shadow-sm border border-[#E5E7EB]"
-            style={{ animation: "screenEnter 0.25s ease-out" }}
-          >
-            <div
-              style={{
-                fontSize: 10.5,
-                fontWeight: 700,
-                color: "#0F8A5F",
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                marginBottom: 4,
-              }}
-            >
-              {lang === "ur" ? "ادائیگی کی تصدیق" : "Step 2 of 2"}
-            </div>
-            <div
-              style={{
-                fontSize: lang === "ur" ? 22 : 19,
-                fontWeight: 800,
-                color: "#0A5E43",
-                marginBottom: 4,
-              }}
-            >
-              {lang === "ur" ? "ادائیگی مکمل کریں" : "Complete your payment"}
-            </div>
-            <div
-              style={{
-                fontSize: 12,
-                color: "#6B7280",
-                marginBottom: 16,
-              }}
-            >
-              Pay{" "}
-              <strong style={{ color: "#0A5E43" }}>
-                PKR {finalTotal.toLocaleString()}
-              </strong>{" "}
-              for the{" "}
-              <strong style={{ color: "#0A5E43" }}>
-                {months} Month{months > 1 ? "s" : ""}
-              </strong>{" "}
-              plan.
+          /* STEP 2: PAYMENT SCREEN */
+          <div>
+            <div style={{ marginBottom: 14 }}>
+              <h2 style={{ fontSize: 16, fontWeight: 800, color: "#183B34" }}>
+                {lang === "ur"
+                  ? "ادائیگی مکمل کریں"
+                  : "Complete Your Payment"}
+              </h2>
             </div>
 
             {/* 3 Payment Type Selector Buttons */}
@@ -29884,13 +29840,13 @@ function BillingScreen({
                   id: "card",
                   iconSrc: "/src/icons/cardpayment.png",
                   label: "Card Payment",
-                  sub: "Debit or credit",
+                  sub: "Debit / Credit",
                 },
                 {
                   id: "direct",
                   iconSrc: "/src/icons/directtransfer.png",
                   label: "Direct Transfer",
-                  sub: "IBFT / Manual",
+                  sub: "Bank IBFT",
                 },
               ].map((opt) => {
                 const active = paymentType === opt.id;
@@ -29900,7 +29856,7 @@ function BillingScreen({
                     type="button"
                     onClick={() => setPaymentType(opt.id as any)}
                     style={{
-                      padding: "10px 6px",
+                      padding: "10px 4px",
                       borderRadius: 14,
                       border: active
                         ? "2px solid #087F63"
@@ -29986,10 +29942,7 @@ function BillingScreen({
                         <button
                           key={wp.id}
                           type="button"
-                          onClick={() => {
-                            setWalletProvider(wp.id as any);
-                            setWalletPromptSent(false);
-                          }}
+                          onClick={() => setWalletProvider(wp.id as any)}
                           style={{
                             padding: "8px 4px",
                             borderRadius: 10,
@@ -29998,31 +29951,30 @@ function BillingScreen({
                               : "1.5px solid #D5E2DD",
                             background: sel ? `${wp.color}15` : "#FFFFFF",
                             cursor: "pointer",
-                            textAlign: "center",
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
-                            gap: 2,
+                            gap: 3,
                           }}
                         >
                           <img
                             src={wp.iconSrc}
                             alt=""
                             style={{
-                              width: 20,
-                              height: 20,
+                              width: 22,
+                              height: 22,
                               objectFit: "contain",
                             }}
                           />
-                          <div
+                          <span
                             style={{
                               fontSize: 10.5,
-                              fontWeight: 800,
-                              color: sel ? wp.color : "#183B34",
+                              fontWeight: 700,
+                              color: "#183B34",
                             }}
                           >
                             {wp.label}
-                          </div>
+                          </span>
                         </button>
                       );
                     })}
@@ -30040,12 +29992,12 @@ function BillingScreen({
                       marginBottom: 4,
                     }}
                   >
-                    Mobile Wallet Number *
+                    Account Mobile Number
                   </label>
                   <input
                     type="tel"
                     inputMode="numeric"
-                    placeholder="0300 1234567"
+                    placeholder="03XX XXXXXXX"
                     value={walletNumber}
                     onChange={(e) =>
                       setWalletNumber(formatPhoneInput(e.target.value))
@@ -30056,7 +30008,7 @@ function BillingScreen({
                       padding: "0 12px",
                       border: "1.5px solid #D5E2DD",
                       borderRadius: 10,
-                      fontSize: 13.5,
+                      fontSize: 14,
                       color: "#183B34",
                       background: "#fff",
                       outline: "none",
@@ -30064,88 +30016,23 @@ function BillingScreen({
                   />
                 </div>
 
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: "#52635F",
-                      textTransform: "uppercase",
-                      marginBottom: 4,
-                    }}
-                  >
-                    Account Holder Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Muhammad Arif / 123456"
-                    value={walletCnic}
-                    onChange={(e) => setWalletCnic(e.target.value)}
-                    style={{
-                      width: "100%",
-                      height: 42,
-                      padding: "0 12px",
-                      border: "1.5px solid #D5E2DD",
-                      borderRadius: 10,
-                      fontSize: 13.5,
-                      color: "#183B34",
-                      background: "#fff",
-                      outline: "none",
-                    }}
-                  />
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "8px 10px",
+                    background: "#E4F2EC",
+                    borderRadius: 8,
+                  }}
+                >
+                  <span style={{ fontSize: 13 }}>💡</span>
+                  <span style={{ fontSize: 11, color: "#52635F" }}>
+                    {lang === "ur"
+                      ? "ادائیگی کی تصدیق پر کلک کر کے اپنا MPIN درج کریں۔"
+                      : "Tap confirm to enter your 4-digit mobile wallet MPIN."}
+                  </span>
                 </div>
-
-                {!walletPromptSent ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setWalletPromptSending(true);
-                      setTimeout(() => {
-                        setWalletPromptSending(false);
-                        setWalletPromptSent(true);
-                      }, 800);
-                    }}
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      background: "#087F63",
-                      color: "#fff",
-                      borderRadius: 10,
-                      border: "none",
-                      fontWeight: 700,
-                      fontSize: 12.5,
-                      cursor: "pointer",
-                    }}
-                  >
-                    {walletPromptSending
-                      ? "Sending Authorization Request..."
-                      : "Send Approval Prompt to Mobile Phone"}
-                  </button>
-                ) : (
-                  <div
-                    style={{
-                      background: "#E8F5E9",
-                      border: "1.5px solid #81C784",
-                      borderRadius: 10,
-                      padding: "10px 12px",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 11.5,
-                        color: "#1B5E20",
-                        fontWeight: 700,
-                      }}
-                    >
-                      Approval prompt sent to {walletNumber}. Please enter your
-                      MPIN in your wallet app to complete.
-                    </span>
-                  </div>
-                )}
               </div>
             )}
 
@@ -30170,18 +30057,18 @@ function BillingScreen({
                   <input
                     type="tel"
                     inputMode="numeric"
-                    placeholder="1234 5678 9012 3456"
+                    placeholder="XXXX XXXX XXXX XXXX"
                     value={cardNumber}
                     onChange={(e) =>
                       setCardNumber(formatCardNumber(e.target.value))
                     }
                     style={{
                       width: "100%",
-                      height: 44,
+                      height: 42,
                       padding: "0 12px",
                       border: "1.5px solid #D5E2DD",
                       borderRadius: 10,
-                      fontSize: 13.5,
+                      fontSize: 14,
                       color: "#183B34",
                       background: "#fff",
                       outline: "none",
@@ -30217,7 +30104,7 @@ function BillingScreen({
                       onChange={(e) => setExpiry(formatExpiry(e.target.value))}
                       style={{
                         width: "100%",
-                        height: 44,
+                        height: 42,
                         padding: "0 12px",
                         border: "1.5px solid #D5E2DD",
                         borderRadius: 10,
@@ -30252,7 +30139,7 @@ function BillingScreen({
                       }
                       style={{
                         width: "100%",
-                        height: 44,
+                        height: 42,
                         padding: "0 12px",
                         border: "1.5px solid #D5E2DD",
                         borderRadius: 10,
@@ -30285,7 +30172,7 @@ function BillingScreen({
                     onChange={(e) => setCardHolder(e.target.value)}
                     style={{
                       width: "100%",
-                      height: 44,
+                      height: 42,
                       padding: "0 12px",
                       border: "1.5px solid #D5E2DD",
                       borderRadius: 10,
@@ -30302,12 +30189,12 @@ function BillingScreen({
                     display: "flex",
                     alignItems: "center",
                     gap: 6,
-                    padding: "8px 10px",
+                    padding: "7px 10px",
                     background: "#E4F2EC",
                     borderRadius: 8,
                   }}
                 >
-                  <span style={{ fontSize: 13 }}>🔒</span>
+                  <span style={{ fontSize: 12 }}>🔒</span>
                   <span style={{ fontSize: 11, color: "#52635F" }}>
                     Your card details are encrypted and never stored.
                   </span>
@@ -30324,7 +30211,7 @@ function BillingScreen({
                     fontWeight: 700,
                     color: "#52635F",
                     textTransform: "uppercase",
-                    marginBottom: 8,
+                    marginBottom: 6,
                   }}
                 >
                   Choose Method
@@ -30333,8 +30220,8 @@ function BillingScreen({
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: 8,
-                    marginBottom: 12,
+                    gap: 7,
+                    marginBottom: 10,
                   }}
                 >
                   {directMethods.map((m) => (
@@ -30345,13 +30232,14 @@ function BillingScreen({
                         display: "flex",
                         alignItems: "center",
                         gap: 10,
-                        padding: "10px 12px",
+                        padding: "8px 12px",
                         borderRadius: 12,
                         border:
                           directMethod === m.id
                             ? "2px solid #087F63"
                             : "1.5px solid #D5E2DD",
-                        background: directMethod === m.id ? "#E4F2EC" : "#fff",
+                        background:
+                          directMethod === m.id ? "#E4F2EC" : "#fff",
                         cursor: "pointer",
                       }}
                     >
@@ -30361,8 +30249,8 @@ function BillingScreen({
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          width: 40,
-                          height: 40,
+                          width: 36,
+                          height: 36,
                           borderRadius: 10,
                           flexShrink: 0,
                         }}
@@ -30371,8 +30259,8 @@ function BillingScreen({
                           src={m.iconSrc}
                           alt={m.label}
                           style={{
-                            width: 26,
-                            height: 26,
+                            width: 24,
+                            height: 24,
                             objectFit: "contain",
                           }}
                         />
@@ -30380,14 +30268,14 @@ function BillingScreen({
                       <div style={{ flex: 1 }}>
                         <div
                           style={{
-                            fontSize: 13,
+                            fontSize: 12.5,
                             fontWeight: 700,
                             color: "#183B34",
                           }}
                         >
                           {m.label}
                         </div>
-                        <div style={{ fontSize: 11, color: "#52635F" }}>
+                        <div style={{ fontSize: 10.5, color: "#52635F" }}>
                           {m.sub}
                         </div>
                       </div>
@@ -30396,7 +30284,7 @@ function BillingScreen({
                           style={{
                             color: "#087F63",
                             fontWeight: 900,
-                            fontSize: 14,
+                            fontSize: 13,
                           }}
                         >
                           ✓
@@ -30412,17 +30300,17 @@ function BillingScreen({
                     background: "#fff",
                     border: "1.5px solid #D5E2DD",
                     borderRadius: 12,
-                    padding: "12px",
-                    marginBottom: 12,
+                    padding: "10px 12px",
+                    marginBottom: 10,
                   }}
                 >
                   <div
                     style={{
-                      fontSize: 10.5,
+                      fontSize: 10,
                       textTransform: "uppercase",
                       color: "#B9822E",
                       fontWeight: 700,
-                      marginBottom: 8,
+                      marginBottom: 6,
                     }}
                   >
                     Payment Details
@@ -30433,8 +30321,8 @@ function BillingScreen({
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        fontSize: 12,
-                        padding: "4px 0",
+                        fontSize: 11.5,
+                        padding: "3px 0",
                         borderBottom: "1px solid #F1F7F4",
                       }}
                     >
@@ -30458,7 +30346,7 @@ function BillingScreen({
                 <div
                   onClick={() => setHasReceipt(!hasReceipt)}
                   style={{
-                    padding: "12px",
+                    padding: "10px",
                     borderRadius: 12,
                     border: "1.5px dashed #087F63",
                     background: hasReceipt ? "#E4F2EC" : "#fff",
@@ -30468,7 +30356,7 @@ function BillingScreen({
                     alignItems: "center",
                     justifyContent: "center",
                     gap: 8,
-                    fontSize: 12,
+                    fontSize: 11.5,
                     fontWeight: 700,
                     color: "#087F63",
                   }}
@@ -30482,69 +30370,303 @@ function BillingScreen({
                 </div>
               </div>
             )}
-
-            {/* Confirm Payment Button */}
-            <button
-              onClick={handleActivate}
-              className="tap-target w-full py-3.5 rounded-2xl text-white font-extrabold text-sm mt-4 mb-2.5 shadow-lg flex items-center justify-center gap-2"
-              style={{
-                background: "#0F8A5F",
-                boxShadow: "0 4px 14px rgba(15,138,95,0.35)",
-              }}
-            >
-              {lang === "ur"
-                ? `ادائیگی کی تصدیق اور ایکٹیویشن (PKR ${finalTotal.toLocaleString()}) ✓`
-                : `Confirm Payment & Activate (PKR ${finalTotal.toLocaleString()}) ✓`}
-            </button>
-
-            <button
-              onClick={() => setStep("plan")}
-              className="tap-target w-full py-2.5 text-xs font-bold text-[#6B7280] hover:text-[#0A5E43]"
-            >
-              {lang === "ur" ? "← پلان تبدیل کریں" : "← Change Plan"}
-            </button>
           </div>
         )}
       </div>
+
+      {/* Footer Actions Bar (Matches Image 2 & Complete Profile) */}
+      <div
+        className="px-5 pt-3 pb-5 flex-shrink-0"
+        style={{ borderTop: "1px solid #D5E2DD", background: "#F4FAF7" }}
+      >
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={step === "pay" ? () => setStep("plan") : onBack}
+            className="tap-target py-3 px-5 rounded-2xl font-bold text-xs"
+            style={{ background: "#E8EFEC", color: "#183B34" }}
+          >
+            ← {lang === "ur" ? "پیچھے" : "Back"}
+          </button>
+
+          {step === "plan" ? (
+            <button
+              type="button"
+              onClick={() => setStep("pay")}
+              className="tap-target flex-1 py-3 rounded-2xl font-extrabold text-sm text-white"
+              style={{
+                background: "#087F63",
+                boxShadow: "0 4px 14px rgba(8,127,99,0.3)",
+              }}
+            >
+              {lang === "ur" ? "سبسکرائب" : "Subscribe"}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handlePaymentConfirmClick}
+              className="tap-target flex-1 py-3 rounded-2xl font-extrabold text-sm text-white flex items-center justify-center gap-2"
+              style={{
+                background: "linear-gradient(135deg, #087F63, #064D40)",
+                boxShadow: "0 4px 16px rgba(8,127,99,0.4)",
+              }}
+            >
+              <span>
+                {lang === "ur"
+                  ? `ادائیگی کی تصدیق کریں — PKR ${finalTotal.toLocaleString()}`
+                  : `Confirm Payment — PKR ${finalTotal.toLocaleString()}`}
+              </span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* MPIN Entry Modal for Mobile Wallet */}
+      {mpinModalOpen && (
+        <div
+          className="zm-sheet-overlay"
+          style={{
+            zIndex: 400,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 16,
+            background: "rgba(6, 45, 36, 0.75)",
+            backdropFilter: "blur(6px)",
+          }}
+          onClick={() => {
+            if (!isProcessingMpin) setMpinModalOpen(false);
+          }}
+        >
+          <div
+            className="screen-enter"
+            style={{
+              width: "100%",
+              maxWidth: 360,
+              background: "#FFFFFF",
+              borderRadius: 24,
+              padding: "24px 20px",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+              textAlign: "center",
+              position: "relative",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Wallet Icon Badge */}
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: "50%",
+                background: `${selectedWp.color}15`,
+                border: `2px solid ${selectedWp.color}`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 12px",
+              }}
+            >
+              <img
+                src={selectedWp.iconSrc}
+                alt=""
+                style={{ width: 34, height: 34, objectFit: "contain" }}
+              />
+            </div>
+
+            <h3
+              style={{
+                fontSize: 17,
+                fontWeight: 800,
+                color: "#183B34",
+                marginBottom: 4,
+              }}
+            >
+              {lang === "ur"
+                ? `${selectedWp.label} کا MPIN درج کریں`
+                : `Enter ${selectedWp.label} MPIN`}
+            </h3>
+            <p
+              style={{
+                fontSize: 12,
+                color: "#52635F",
+                marginBottom: 16,
+                lineHeight: 1.4,
+              }}
+            >
+              Authorize payment of{" "}
+              <strong style={{ color: "#087F63" }}>
+                PKR {finalTotal.toLocaleString()}
+              </strong>{" "}
+              for Zarai Mandi {product} subscription.
+            </p>
+
+            {/* 4 Digit PIN Inputs */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 12,
+                marginBottom: 14,
+              }}
+            >
+              {[0, 1, 2, 3].map((idx) => (
+                <input
+                  key={idx}
+                  id={`billing-mpin-box-${idx}`}
+                  type="password"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={mpin[idx]}
+                  autoFocus={idx === 0}
+                  disabled={isProcessingMpin || mpinSuccess}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "");
+                    const updated = [...mpin];
+                    updated[idx] = val ? val.slice(-1) : "";
+                    setMpin(updated);
+                    setMpinError("");
+                    if (val && idx < 3) {
+                      const nextInput = document.getElementById(
+                        `billing-mpin-box-${idx + 1}`,
+                      );
+                      nextInput?.focus();
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Backspace" && !mpin[idx] && idx > 0) {
+                      const prevInput = document.getElementById(
+                        `billing-mpin-box-${idx - 1}`,
+                      );
+                      prevInput?.focus();
+                    }
+                  }}
+                  style={{
+                    width: 48,
+                    height: 52,
+                    textAlign: "center",
+                    fontSize: 24,
+                    fontWeight: 900,
+                    color: "#183B34",
+                    border: mpin[idx]
+                      ? "2px solid #087F63"
+                      : "1.5px solid #D5E2DD",
+                    borderRadius: 12,
+                    background: mpin[idx] ? "#E4F2EC" : "#FAFCFB",
+                    outline: "none",
+                    boxShadow: mpin[idx]
+                      ? "0 2px 8px rgba(8,127,99,0.15)"
+                      : "none",
+                  }}
+                />
+              ))}
+            </div>
+
+            {mpinError && (
+              <div
+                style={{
+                  fontSize: 11.5,
+                  color: "#D95A51",
+                  fontWeight: 700,
+                  marginBottom: 12,
+                }}
+              >
+                {mpinError}
+              </div>
+            )}
+
+            {mpinSuccess ? (
+              <div
+                style={{
+                  background: "#E8F5E9",
+                  border: "1.5px solid #81C784",
+                  borderRadius: 14,
+                  padding: "12px",
+                  color: "#1B5E20",
+                  fontWeight: 800,
+                  fontSize: 13,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                }}
+              >
+                <span>✅</span>
+                <span>Payment Authorized Successfully!</span>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <button
+                  type="button"
+                  onClick={handleMpinSubmit}
+                  disabled={isProcessingMpin}
+                  className="tap-target w-full py-3 rounded-xl font-bold text-sm text-white"
+                  style={{
+                    background: isProcessingMpin ? "#52635F" : "#087F63",
+                    cursor: isProcessingMpin ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {isProcessingMpin
+                    ? "Authorizing Payment..."
+                    : "Authorize & Confirm"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMpinModalOpen(false)}
+                  disabled={isProcessingMpin}
+                  className="tap-target w-full py-2 text-xs font-semibold text-[#52635F]"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Subscription Success Modal */}
       {subscribedModal && (
         <div
           className="zm-sheet-overlay"
           style={{
-            zIndex: 300,
+            zIndex: 500,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             padding: 16,
+            background: "rgba(6, 45, 36, 0.75)",
+            backdropFilter: "blur(6px)",
+          }}
+          onClick={() => {
+            setSubscribedModal(false);
+            onBack();
           }}
         >
           <div
-            className="w-full max-w-sm bg-white rounded-3xl p-6 text-center shadow-2xl border border-[#E5E7EB]"
-            style={{ animation: "screenEnter 0.25s ease-out" }}
+            className="w-full max-w-sm bg-white rounded-3xl p-6 text-center shadow-2xl border border-[#E5E7EB] screen-enter"
+            onClick={(e) => e.stopPropagation()}
           >
             <div
               style={{
-                width: 64,
-                height: 64,
+                width: 60,
+                height: 60,
                 borderRadius: "50%",
-                background: "#EAF8F2",
-                color: "#0F8A5F",
+                background: "#E4F2EC",
+                color: "#087F63",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 32,
+                fontSize: 28,
                 fontWeight: 900,
-                margin: "0 auto 16px",
+                margin: "0 auto 14px",
               }}
             >
               ✓
             </div>
             <h2
               style={{
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: 900,
-                color: "#0A5E43",
+                color: "#183B34",
                 marginBottom: 6,
               }}
             >
@@ -30552,24 +30674,27 @@ function BillingScreen({
                 ? "سبسکرپشن فعال ہو گئی!"
                 : "Subscription Activated!"}
             </h2>
-            <p style={{ fontSize: 12.5, color: "#52635F", marginBottom: 20 }}>
+            <p
+              style={{
+                fontSize: 12,
+                color: "#52635F",
+                marginBottom: 18,
+                lineHeight: 1.4,
+              }}
+            >
               {lang === "ur"
-                ? "آپ کے پاس اب " +
-                tc(product) +
-                " کے تمام منڈی ریٹس اور تجزیات تک مکمل رسائی ہے۔"
-                : "You now have full active access to " +
-                product +
-                " live rates, analytics & market alerts."}
+                ? `آپ کے پاس اب ${tc(product)} کے تمام منڈی ریٹس اور تجزیات تک مکمل رسائی ہے۔`
+                : `You now have full active access to ${product} live rates, analytics & market alerts.`}
             </p>
             <button
               onClick={() => {
                 setSubscribedModal(false);
                 onBack();
               }}
-              className="tap-target w-full py-3.5 rounded-2xl text-white font-extrabold text-sm"
+              className="tap-target w-full py-3 rounded-2xl text-white font-extrabold text-sm"
               style={{
-                background: "#0F8A5F",
-                boxShadow: "0 4px 14px rgba(15,138,95,0.35)",
+                background: "#087F63",
+                boxShadow: "0 4px 14px rgba(8,127,99,0.3)",
               }}
             >
               {lang === "ur"
@@ -30965,6 +31090,14 @@ function AppInner({
   // Lifted Profile & Subscription state shared across screens
   const [profileCompleted, setProfileCompleted] = useState(false);
   const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
+  const [userSubscribedList, setUserSubscribedList] = useState<string[]>(() => {
+    const raw = initialUserData?.products;
+    if (raw && raw.length > 0) {
+      return raw.map((p) => PRODUCT_ID_TO_NAME[p.toLowerCase()] || p);
+    }
+    return ["Wheat"];
+  });
+
   const [profileSetupData, setProfileSetupData] = useState<ProfileSetupData>(
     () => ({
       step: 1,
@@ -31000,11 +31133,16 @@ function AppInner({
     selected: string[],
     locationData?: { province: string; district: string; city: string },
   ) => {
-    selected.forEach((p) => {
-      const mapped = PRODUCT_ID_TO_NAME[p.toLowerCase()] || p;
-      SUBSCRIBED_PRODUCTS.add(mapped);
-      TODAY_ONLY_PRODUCTS.add(mapped);
+    const mapped = selected.map((p) => PRODUCT_ID_TO_NAME[p.toLowerCase()] || p);
+    const finalSelected = mapped.length > 0 ? mapped : ["Wheat"];
+    SUBSCRIBED_PRODUCTS.clear();
+    TODAY_ONLY_PRODUCTS.clear();
+    finalSelected.forEach((p) => {
+      SUBSCRIBED_PRODUCTS.add(p);
+      TODAY_ONLY_PRODUCTS.add(p);
     });
+    setUserSubscribedList(finalSelected);
+    updateProfileSetupData({ selectedProds: finalSelected });
     if (locationData && initialUserData) {
       initialUserData.province = locationData.province;
       initialUserData.district = locationData.district;
@@ -31012,6 +31150,20 @@ function AppInner({
     }
     setProfileCompleted(true);
     setCompleteProfileOpen(false);
+  };
+
+  const handleSubscribeProduct = (productName: string) => {
+    const mapped = PRODUCT_ID_TO_NAME[productName.toLowerCase()] || productName;
+    SUBSCRIBED_PRODUCTS.add(mapped);
+    TODAY_ONLY_PRODUCTS.add(mapped);
+    setUserSubscribedList((prev) => {
+      if (prev.includes(mapped)) return prev;
+      return [...prev, mapped];
+    });
+    updateProfileSetupData({
+      selectedProds: Array.from(new Set([...profileSetupData.selectedProds, mapped])),
+    });
+    setProfileCompleted(true);
   };
 
   // Your Picks — user-favourited byproducts, shared app-wide
@@ -31203,6 +31355,8 @@ function AppInner({
                 profileSetupData={profileSetupData}
                 updateProfileSetupData={updateProfileSetupData}
                 onCompleteProfileSubmit={handleCompleteProfileSubmit}
+                userSubscribedList={userSubscribedList}
+                setUserSubscribedList={setUserSubscribedList}
               />
             )
           )}
@@ -31288,6 +31442,7 @@ function AppInner({
               vertical={(current as BillingScr).vertical}
               onBack={pop}
               push={push}
+              onSubscribeSuccess={handleSubscribeProduct}
             />
           )}
         </div>
