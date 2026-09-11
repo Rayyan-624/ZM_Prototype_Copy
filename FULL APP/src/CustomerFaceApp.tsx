@@ -23987,12 +23987,14 @@ function HomeScreen({
     (d) => !isAccessible(d.name),
   );
 
-  const handleLockedProductClick = (divName: string, verticalFor: string) => {
-    push({
-      id: "billing",
-      product: divName,
-      vertical: verticalFor,
+  const handleLockedProductClick = (divName: string, _verticalFor?: string) => {
+    const mapped = PRODUCT_ID_TO_NAME[divName.toLowerCase()] || divName;
+    updateProfileSetupData({
+      selectedProds: [mapped],
+      step: 2,
+      furthestStep: Math.max(profileSetupData.furthestStep || 1, 2),
     });
+    setCompleteProfileOpen(true);
   };
 
   const handleCompleteProfileSubmit = (
@@ -24004,13 +24006,15 @@ function HomeScreen({
       return;
     }
     const mapped = selected.map((p) => PRODUCT_ID_TO_NAME[p.toLowerCase()] || p);
-    const finalSelected = mapped.length > 0 ? mapped : ["Wheat"];
-    SUBSCRIBED_PRODUCTS.clear();
-    TODAY_ONLY_PRODUCTS.clear();
-    finalSelected.forEach((p) => {
+    const incoming = mapped.length > 0 ? mapped : ["Wheat"];
+    const merged = profileCompleted
+      ? Array.from(new Set([...userSubscribedList, ...incoming]))
+      : incoming;
+    merged.forEach((p) => {
       SUBSCRIBED_PRODUCTS.add(p);
+      TODAY_ONLY_PRODUCTS.add(p);
     });
-    setUserSubscribedList(finalSelected);
+    setUserSubscribedList(merged);
     if (locationData && initialUserData) {
       initialUserData.province = locationData.province;
       initialUserData.district = locationData.district;
@@ -24978,11 +24982,7 @@ function HomeScreen({
                   <button
                     key={div.name}
                     onClick={() =>
-                      push({
-                        id: "billing",
-                        product: div.name,
-                        vertical: verticalFor,
-                      })
+                      handleLockedProductClick(div.name, verticalFor)
                     }
                     className="flex-shrink-0 flex flex-col items-center tap-target"
                     style={{
@@ -29406,62 +29406,83 @@ function BillingScreen({
 
   return (
     <div
-      className="flex flex-col h-full screen-enter"
+      className="zm-sheet-overlay"
       style={{
-        background: "#F4FAF7",
-        fontFamily:
-          lang === "ur"
-            ? URDU_FONT
-            : "'Inter', 'Poppins', sans-serif",
+        zIndex: 350,
+        display: "flex",
+        alignItems: "flex-end",
+        justifyContent: "center",
       }}
+      onClick={onBack}
     >
-      {/* Top Header */}
-      <header
-        className="px-4 py-3 flex-shrink-0 flex items-center justify-between sticky top-0 z-20"
+      <div
+        className="zm-sheet-high"
         style={{
           background: "#F4FAF7",
-          borderBottom: "1px solid #D5E2DD",
+          maxHeight: "92vh",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: "28px 28px 0 0",
+          boxShadow: "0 -10px 40px rgba(6,77,64,0.22)",
         }}
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center gap-2.5">
-          <button
-            onClick={step === "pay" ? () => setStep("plan") : onBack}
-            className="tap-target w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: "#E8EFEC", color: "#183B34" }}
-          >
-            <span style={{ fontSize: 18, fontWeight: "bold" }}>
-              {lang === "ur" ? "→" : "←"}
-            </span>
-          </button>
-          <div>
-            <h1
-              className="font-extrabold text-base leading-tight"
-              style={{ color: "#183B34" }}
+        {/* Header */}
+        <div
+          className="px-5 pt-4 pb-3 flex-shrink-0"
+          style={{ borderBottom: "1px solid #D5E2DD" }}
+        >
+          <div
+            className="w-10 h-1 rounded-full mx-auto mb-3"
+            style={{ background: "#C7D6D0" }}
+          />
+          <div className="flex items-center justify-between">
+            <div>
+              <p
+                className="font-extrabold text-lg"
+                style={{ color: "#183B34" }}
+              >
+                {lang === "ur"
+                  ? "پروفائل سیٹ اپ مکمل کریں"
+                  : "Complete Your Profile"}
+              </p>
+              <p className="text-xs font-semibold" style={{ color: "#52635F" }}>
+                {lang === "ur"
+                  ? `مرحلہ ${step === "plan" ? 2 : 3} از 3: ${
+                      step === "plan" ? "سبسکرپشن پلان" : "ادائیگی کی تفصیلات"
+                    }`
+                  : `Step ${step === "plan" ? 2 : 3} of 3: ${
+                      step === "plan" ? "Subscription Plan" : "Card & Payment"
+                    }`}
+              </p>
+            </div>
+            <button
+              onClick={onBack}
+              className="tap-target text-sm font-semibold px-3 py-1 rounded-full"
+              style={{ background: "#E8EFEC", color: "#52635F" }}
+              title="Close & Explore"
             >
-              {step === "plan"
-                ? lang === "ur"
-                  ? "پلان کا انتخاب"
-                  : "Choose Plan"
-                : lang === "ur"
-                  ? "ادائیگی کی تفصیلات"
-                  : "Payment Details"}
-            </h1>
-            <p className="text-[11px] font-semibold" style={{ color: "#52635F" }}>
-              {lang === "ur"
-                ? `${tc(product)} کی سبسکرپشن`
-                : `${product} Subscription`}
-            </p>
+              ✕
+            </button>
+          </div>
+
+          {/* Stepper Dots */}
+          <div className="flex gap-2 mt-3">
+            {[1, 2, 3].map((s) => (
+              <div
+                key={s}
+                style={{
+                  flex: 1,
+                  height: 4,
+                  borderRadius: 999,
+                  background:
+                    s <= (step === "plan" ? 2 : 3) ? "#087F63" : "#D5E2DD",
+                  transition: "background 0.3s",
+                }}
+              />
+            ))}
           </div>
         </div>
-        <button
-          onClick={onBack}
-          className="tap-target text-sm font-semibold px-2.5 py-1 rounded-full"
-          style={{ background: "#E8EFEC", color: "#52635F" }}
-          title="Close"
-        >
-          ✕
-        </button>
-      </header>
 
       {/* Scrollable Content Body */}
       <div className="flex-1 overflow-y-auto px-5 py-4">
@@ -30420,6 +30441,7 @@ function BillingScreen({
           )}
         </div>
       </div>
+    </div>
 
       {/* MPIN Entry Modal for Mobile Wallet */}
       {mpinModalOpen && (
@@ -31134,15 +31156,16 @@ function AppInner({
     locationData?: { province: string; district: string; city: string },
   ) => {
     const mapped = selected.map((p) => PRODUCT_ID_TO_NAME[p.toLowerCase()] || p);
-    const finalSelected = mapped.length > 0 ? mapped : ["Wheat"];
-    SUBSCRIBED_PRODUCTS.clear();
-    TODAY_ONLY_PRODUCTS.clear();
-    finalSelected.forEach((p) => {
+    const incoming = mapped.length > 0 ? mapped : ["Wheat"];
+    const merged = profileCompleted
+      ? Array.from(new Set([...userSubscribedList, ...incoming]))
+      : incoming;
+    merged.forEach((p) => {
       SUBSCRIBED_PRODUCTS.add(p);
       TODAY_ONLY_PRODUCTS.add(p);
     });
-    setUserSubscribedList(finalSelected);
-    updateProfileSetupData({ selectedProds: finalSelected });
+    setUserSubscribedList(merged);
+    updateProfileSetupData({ selectedProds: merged });
     if (locationData && initialUserData) {
       initialUserData.province = locationData.province;
       initialUserData.district = locationData.district;
