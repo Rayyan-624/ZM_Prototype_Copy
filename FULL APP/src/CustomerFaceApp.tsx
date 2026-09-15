@@ -21,6 +21,13 @@ import { AnimatedTabBar, type TabItem } from "./components/ui/animated-tab-bar";
 import ZaraiMandiMap from "./components/ZaraiMandiMap";
 import ExpandableMandiMapCard from "./components/ExpandableMandiMapCard";
 import { VoiceAssistant, VoiceButton, speakUrdu } from "./components/VoiceAssistant";
+import {
+  REAL_MANDI_ROWS,
+  REAL_FEED_MESSAGES,
+  REAL_COMMODITY_TIMELINES,
+  REAL_ARRIVAL_TIMELINES,
+  REAL_DATES_TIMELINE,
+} from "./data/realCommodityData";
 
 import video1 from "./videos/video1.mp4";
 import video2 from "./videos/video2.mp4";
@@ -214,6 +221,55 @@ export const URDU_FONT = "'Noto Sans Arabic', 'Noto Nastaliq Urdu', 'Jameel Noor
 export function toUrduDigits(n: number | string): string {
   const urduDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
   return String(n).replace(/[0-9]/g, (w) => urduDigits[+w]);
+}
+
+// ─── Agricultural Commodity Matchers (Global) ───────────────────
+export function isMatchProduct(excelProd: string, targetProds: string | string[]): boolean {
+  if (!excelProd) return false;
+  if (!targetProds) return true;
+  const targetList = Array.isArray(targetProds) ? targetProds : [targetProds];
+  if (targetList.length === 0) return true;
+  const ep = excelProd.toLowerCase().trim();
+  return targetList.some((tp) => {
+    if (!tp) return false;
+    const t = tp.toLowerCase().trim();
+    if (ep === t || ep.includes(t) || t.includes(ep)) return true;
+    if (t === "wheat" && ep.includes("wheat")) return true;
+    if (t === "maize" && (ep.includes("maize") || ep.includes("corn"))) return true;
+    if (t === "cotton" && (ep.includes("cotton") || ep.includes("phutti") || ep.includes("lint"))) return true;
+    if (t === "paddy" && (ep === "rice" || ep.includes("paddy"))) return true;
+    if (t === "rice" && (ep === "milled rice" || ep.includes("rice") || ep.includes("basmati") || ep.includes("irri"))) return true;
+    if (t === "mustard" && (ep === "edible oil" || ep.includes("mustard") || ep.includes("sarson") || ep.includes("raya") || ep.includes("canola"))) return true;
+    if (t === "canola" && (ep === "edible oil" || ep.includes("canola"))) return true;
+    if (t === "sunflower" && (ep === "edible oil" || ep.includes("sunflower"))) return true;
+    if (t === "soybean" && (ep === "edible oil" || ep.includes("soybean"))) return true;
+    if (t === "sesame" && (ep.includes("sesame") || ep.includes("til"))) return true;
+    if (t === "vegetables" && (ep === "vegetable" || ep.includes("vegetable"))) return true;
+    if (t === "dry fruits" && (ep === "dry-fruits" || ep.includes("dry"))) return true;
+    if (t === "spices" && (ep === "spices" || ep === "chillies" || ep.includes("spice") || ep.includes("chilli"))) return true;
+    if (t === "sugar" && (ep === "sugar" || ep.includes("sugar") || ep.includes("gur") || ep.includes("shakar"))) return true;
+    if (t === "pulses" && (ep.includes("gram") || ep.includes("dal") || ep.includes("daal") || ep.includes("moong") || ep.includes("mash") || ep.includes("masoor"))) return true;
+    return false;
+  });
+}
+
+export function isMatchByproduct(excelBp: string, targetBp: string): boolean {
+  if (!targetBp || !excelBp) return true;
+  const e = excelBp.toLowerCase().replace(/[-_()]/g, " ").replace(/\s+/g, " ").trim();
+  const t = targetBp.toLowerCase().replace(/[-_()]/g, " ").replace(/\s+/g, " ").trim();
+  if (e === t || e.includes(t) || t.includes(e)) return true;
+
+  // Agricultural synonyms
+  if ((t.includes("flour") || t.includes("atta")) && (e.includes("flour") || e.includes("atta"))) return true;
+  if ((t.includes("bran") || t.includes("choker")) && (e.includes("bran") || e.includes("choker"))) return true;
+  if ((t.includes("straw") || t.includes("bhoosa")) && (e.includes("straw") || e.includes("bhoosa"))) return true;
+  if ((t.includes("sooji") || t.includes("semolina")) && (e.includes("sooji") || e.includes("semolina"))) return true;
+  if ((t.includes("maida") || t.includes("fine flour")) && (e.includes("maida") || e.includes("fine flour") || e.includes("refined flour"))) return true;
+  if (t.includes("grade a") && e.includes("grade a")) return true;
+  if (t.includes("grade b") && e.includes("grade b")) return true;
+  if (t.includes("grade c") && e.includes("grade c")) return true;
+  if (t.includes("raw") && (e.includes("raw") || e === "wheat" || e === "maize" || e === "paddy" || e === "rice")) return true;
+  return false;
 }
 
 // ─── COMPREHENSIVE URDU DICTIONARY & TRANSLATION SYSTEM ────────────────────────
@@ -1990,1576 +2046,7 @@ function getProvinceFromLoc(loc?: { kind: LocationScope["kind"]; label: string }
 
 //  FEED MESSAGES
 
-const FEED_MESSAGES: FeedMsg[] = [
-  {
-    id: 1,
-    time: "7:15 AM",
-    vertical: "Grains",
-    productUrdu: "گندم",
-    product: "Wheat",
-    byproduct: "Wheat",
-    stationUrdu: "پاکپتن",
-    station: "Pakpattan Mandi",
-    province: "Punjab",
-    priceMin: 2750,
-    priceMax: 2950,
-    unit: "40 kg",
-    arrivalCount: "12,400",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سنہری",
-    color: "Golden",
-    rateType: "Mill Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "ملنگی کوالٹی",
-    qualityType: "Malangi Quality",
-    trend: "up",
-    trendPct: 1.8,
-  },
-  {
-    id: 2,
-    time: "7:30 AM",
-    vertical: "Grains",
-    productUrdu: "گندم",
-    product: "Wheat",
-    byproduct: "Fine Flour",
-    stationUrdu: "لاہور",
-    station: "Lahore Mandi",
-    province: "Punjab",
-    priceMin: 4300,
-    priceMax: 4500,
-    unit: "40 kg",
-    arrivalCount: "9,800",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Mill Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "فلور کوالٹی",
-    qualityType: "Flour Quality",
-    trend: "up",
-    trendPct: 1.2,
-  },
-  {
-    id: 3,
-    time: "7:45 AM",
-    vertical: "Grains",
-    productUrdu: "گندم",
-    product: "Wheat",
-    byproduct: "Bran",
-    stationUrdu: "فیصل آباد",
-    station: "Faisalabad Mandi",
-    province: "Punjab",
-    priceMin: 1400,
-    priceMax: 1600,
-    unit: "40 kg",
-    arrivalCount: "5,200",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "بھورا",
-    color: "Brown",
-    rateType: "Wholesale Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "عام",
-    quality: "Standard",
-    qualityTypeUrdu: "چوکر کوالٹی",
-    qualityType: "Bran Quality",
-    trend: "stable",
-    trendPct: 0.3,
-  },
-  {
-    id: 4,
-    time: "8:00 AM",
-    vertical: "Grains",
-    productUrdu: "گندم",
-    product: "Wheat",
-    byproduct: "Wheat",
-    stationUrdu: "ملتان",
-    station: "Multan Mandi",
-    province: "Punjab",
-    priceMin: 2770,
-    priceMax: 2960,
-    unit: "40 kg",
-    arrivalCount: "7,100",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سنہری",
-    color: "Golden",
-    rateType: "Farm Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "پرانی",
-    quality: "Old",
-    qualityTypeUrdu: "اے کوالٹی",
-    qualityType: "A Quality",
-    trend: "up",
-    trendPct: 1.6,
-  },
-  {
-    id: 5,
-    time: "8:10 AM",
-    vertical: "Grains",
-    productUrdu: "گندم",
-    product: "Wheat",
-    byproduct: "Wheat",
-    stationUrdu: "ساہیوال",
-    station: "Sahiwal Mandi",
-    province: "Punjab",
-    priceMin: 2700,
-    priceMax: 2900,
-    unit: "40 kg",
-    arrivalCount: "8,800",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سنہری",
-    color: "Golden",
-    rateType: "Mill Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "بی کوالٹی",
-    qualityType: "B Quality",
-    trend: "stable",
-    trendPct: 0.2,
-  },
-  {
-    id: 6,
-    time: "8:20 AM",
-    vertical: "Grains",
-    productUrdu: "گندم",
-    product: "Wheat",
-    byproduct: "Wheat",
-    stationUrdu: "بہاولپور",
-    station: "Bahawalpur Mandi",
-    province: "Punjab",
-    priceMin: 2720,
-    priceMax: 2880,
-    unit: "40 kg",
-    arrivalCount: "6,300",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سنہری",
-    color: "Golden",
-    rateType: "Mandi Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "سی کوالٹی",
-    qualityType: "C Quality",
-    trend: "up",
-    trendPct: 0.9,
-  },
-  {
-    id: 7,
-    time: "8:30 AM",
-    vertical: "Grains",
-    productUrdu: "گندم",
-    product: "Wheat",
-    byproduct: "Wheat",
-    stationUrdu: "سرگودھا",
-    station: "Sargodha Mandi",
-    province: "Punjab",
-    priceMin: 2800,
-    priceMax: 2980,
-    unit: "40 kg",
-    arrivalCount: "11,400",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سنہری",
-    color: "Golden",
-    rateType: "Mill Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "اے کوالٹی",
-    qualityType: "A Quality",
-    trend: "up",
-    trendPct: 1.9,
-  },
-  {
-    id: 8,
-    time: "8:40 AM",
-    vertical: "Grains",
-    productUrdu: "گندم",
-    product: "Wheat",
-    byproduct: "Wheat",
-    stationUrdu: "کوئٹہ",
-    station: "Quetta Mandi",
-    province: "Balochistan",
-    priceMin: 2900,
-    priceMax: 3100,
-    unit: "40 kg",
-    arrivalCount: "3,200",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سنہری",
-    color: "Golden",
-    rateType: "Mandi Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "پرانی",
-    quality: "Old",
-    qualityTypeUrdu: "درآمد کوالٹی",
-    qualityType: "Import Quality",
-    trend: "up",
-    trendPct: 2.1,
-  },
-  {
-    id: 9,
-    time: "8:50 AM",
-    vertical: "Grains",
-    productUrdu: "باسمتی چاول",
-    product: "Rice",
-    byproduct: "1121 Basmati-1",
-    stationUrdu: "سیرانوالی",
-    station: "Siranwali Mandi",
-    province: "Punjab",
-    priceMin: 5100,
-    priceMax: 5500,
-    unit: "40 kg",
-    arrivalCount: "18,400",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Mill Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "پرانی",
-    quality: "Old",
-    qualityTypeUrdu: "ایکسپورٹ کوالٹی",
-    qualityType: "Export Quality",
-    trend: "up",
-    trendPct: 3.2,
-  },
-  {
-    id: 10,
-    time: "9:00 AM",
-    vertical: "Grains",
-    productUrdu: "چاول",
-    product: "Rice",
-    byproduct: "Irri 6",
-    stationUrdu: "لاہور",
-    station: "Lahore Mandi",
-    province: "Punjab",
-    priceMin: 2100,
-    priceMax: 2400,
-    unit: "40 kg",
-    arrivalCount: "5,800",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Mandi Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "عام کوالٹی",
-    qualityType: "Standard Quality",
-    trend: "stable",
-    trendPct: 0.4,
-  },
-  {
-    id: 11,
-    time: "9:10 AM",
-    vertical: "Grains",
-    productUrdu: "چاول",
-    product: "Rice",
-    byproduct: "Sella 1121-1",
-    stationUrdu: "فیصل آباد",
-    station: "Faisalabad Mandi",
-    province: "Punjab",
-    priceMin: 4950,
-    priceMax: 5350,
-    unit: "40 kg",
-    arrivalCount: "8,800",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Export Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "ایکسپورٹ",
-    quality: "Export",
-    qualityTypeUrdu: "ایکسپورٹ کوالٹی",
-    qualityType: "Export Quality",
-    trend: "up",
-    trendPct: 2.4,
-  },
-  {
-    id: 12,
-    time: "9:20 AM",
-    vertical: "Grains",
-    productUrdu: "چاول",
-    product: "Rice",
-    byproduct: "1509 Steam",
-    stationUrdu: "سکھر",
-    station: "Sukkur Mandi",
-    province: "Sindh",
-    priceMin: 4200,
-    priceMax: 4600,
-    unit: "40 kg",
-    arrivalCount: "6,400",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Mill Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "مل کوالٹی",
-    qualityType: "Mill Quality",
-    trend: "up",
-    trendPct: 1.8,
-  },
-  {
-    id: 13,
-    time: "9:30 AM",
-    vertical: "Grains",
-    productUrdu: "پھٹی",
-    product: "Paddy",
-    byproduct: "Paddy Irri 6",
-    stationUrdu: "سیرانوالی",
-    station: "Siranwali Mandi",
-    province: "Punjab",
-    priceMin: 1800,
-    priceMax: 2000,
-    unit: "40 kg",
-    arrivalCount: "14,200",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سبز",
-    color: "Green",
-    rateType: "Farm Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "فارم کوالٹی",
-    qualityType: "Farm Quality",
-    trend: "down",
-    trendPct: 0.8,
-  },
-  {
-    id: 14,
-    time: "9:40 AM",
-    vertical: "Grains",
-    productUrdu: "پھٹی",
-    product: "Paddy",
-    byproduct: "Paddy Kainat-1121",
-    stationUrdu: "حافظ آباد",
-    station: "Hafizabad Mandi",
-    province: "Punjab",
-    priceMin: 3200,
-    priceMax: 3600,
-    unit: "40 kg",
-    arrivalCount: "9,100",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سنہری",
-    color: "Golden",
-    rateType: "Mandi Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "پرانی",
-    quality: "Old",
-    qualityTypeUrdu: "اے کوالٹی",
-    qualityType: "A Quality",
-    trend: "up",
-    trendPct: 2.6,
-  },
-  {
-    id: 15,
-    time: "9:50 AM",
-    vertical: "Grains",
-    productUrdu: "کپاس",
-    product: "Cotton",
-    byproduct: "Cotton Grade A",
-    stationUrdu: "ملتان",
-    station: "Multan Mandi",
-    province: "Punjab",
-    priceMin: 8300,
-    priceMax: 8700,
-    unit: "40 kg",
-    arrivalCount: "7,800",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Mill Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "اے کوالٹی",
-    qualityType: "A Quality",
-    trend: "up",
-    trendPct: 1.5,
-  },
-  {
-    id: 16,
-    time: "10:00 AM",
-    vertical: "Grains",
-    productUrdu: "کپاس",
-    product: "Cotton",
-    byproduct: "Cotton Seed",
-    stationUrdu: "بہاولپور",
-    station: "Bahawalpur Mandi",
-    province: "Punjab",
-    priceMin: 1800,
-    priceMax: 2100,
-    unit: "40 kg",
-    arrivalCount: "3,400",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سبز",
-    color: "Green",
-    rateType: "Mill Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "مل کوالٹی",
-    qualityType: "Mill Quality",
-    trend: "stable",
-    trendPct: 0.5,
-  },
-  {
-    id: 17,
-    time: "10:10 AM",
-    vertical: "Grains",
-    productUrdu: "کپاس",
-    product: "Cotton",
-    byproduct: "Cotton Grade A",
-    stationUrdu: "نوابشاہ",
-    station: "Nawabshah Mandi",
-    province: "Sindh",
-    priceMin: 8100,
-    priceMax: 8500,
-    unit: "40 kg",
-    arrivalCount: "4,200",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Farm Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "فارم کوالٹی",
-    qualityType: "Farm Quality",
-    trend: "up",
-    trendPct: 1.2,
-  },
-  {
-    id: 18,
-    time: "10:20 AM",
-    vertical: "Grains",
-    productUrdu: "گنا",
-    product: "Sugar",
-    byproduct: "Sugarcane",
-    stationUrdu: "رحیم یار خان",
-    station: "Rahim Yar Khan Mandi",
-    province: "Punjab",
-    priceMin: 420,
-    priceMax: 480,
-    unit: "40 kg",
-    arrivalCount: "22,000",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سبز",
-    color: "Green",
-    rateType: "Mill Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "مل کوالٹی",
-    qualityType: "Mill Quality",
-    trend: "stable",
-    trendPct: 0.5,
-  },
-  {
-    id: 19,
-    time: "10:30 AM",
-    vertical: "Grains",
-    productUrdu: "چینی",
-    product: "Sugar",
-    byproduct: "Sugar (Mill)",
-    stationUrdu: "ملتان",
-    station: "Multan Mandi",
-    province: "Punjab",
-    priceMin: 8500,
-    priceMax: 8800,
-    unit: "50 kg",
-    arrivalCount: "6,200",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Wholesale Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "معیاری",
-    quality: "Standard",
-    qualityTypeUrdu: "ہول سیل کوالٹی",
-    qualityType: "Wholesale Quality",
-    trend: "up",
-    trendPct: 0.7,
-  },
-  {
-    id: 20,
-    time: "10:40 AM",
-    vertical: "Grains",
-    productUrdu: "مکئی",
-    product: "Maize",
-    byproduct: "Maize Grade A",
-    stationUrdu: "فیصل آباد",
-    station: "Faisalabad Mandi",
-    province: "Punjab",
-    priceMin: 2100,
-    priceMax: 2300,
-    unit: "40 kg",
-    arrivalCount: "11,000",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "پیلا",
-    color: "Yellow",
-    rateType: "Mandi Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "فیڈ کوالٹی",
-    qualityType: "Feed Quality",
-    trend: "down",
-    trendPct: 0.9,
-  },
-  {
-    id: 21,
-    time: "10:50 AM",
-    vertical: "Grains",
-    productUrdu: "مکئی",
-    product: "Maize",
-    byproduct: "Maize Grade A",
-    stationUrdu: "پشاور",
-    station: "Peshawar Mandi",
-    province: "KPK",
-    priceMin: 2200,
-    priceMax: 2450,
-    unit: "40 kg",
-    arrivalCount: "8,400",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "پیلا",
-    color: "Yellow",
-    rateType: "Farm Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "فیڈ کوالٹی",
-    qualityType: "Feed Quality",
-    trend: "up",
-    trendPct: 1.3,
-  },
-  {
-    id: 22,
-    time: "11:00 AM",
-    vertical: "Grains",
-    productUrdu: "سرسوں",
-    product: "Mustard",
-    byproduct: "Mustard Seed",
-    stationUrdu: "چیچہ وطنی",
-    station: "Chichawatni Mandi",
-    province: "Punjab",
-    priceMin: 5800,
-    priceMax: 6100,
-    unit: "40 kg",
-    arrivalCount: "3,400",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سیاہ",
-    color: "Black",
-    rateType: "Mill Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "پرانی",
-    quality: "Old",
-    qualityTypeUrdu: "تیل کوالٹی",
-    qualityType: "Oil Quality",
-    trend: "up",
-    trendPct: 1.1,
-  },
-  {
-    id: 23,
-    time: "11:10 AM",
-    vertical: "Grains",
-    productUrdu: "کینولا",
-    product: "Canola",
-    byproduct: "Canola Seed",
-    stationUrdu: "ساہیوال",
-    station: "Sahiwal Mandi",
-    province: "Punjab",
-    priceMin: 5200,
-    priceMax: 5600,
-    unit: "40 kg",
-    arrivalCount: "2,100",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "پیلا",
-    color: "Yellow",
-    rateType: "Farm Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "فارم کوالٹی",
-    qualityType: "Farm Quality",
-    trend: "up",
-    trendPct: 0.8,
-  },
-  {
-    id: 24,
-    time: "11:20 AM",
-    vertical: "Grains",
-    productUrdu: "باجرہ",
-    product: "Millet",
-    byproduct: "Millet Grade A",
-    stationUrdu: "بہاولپور",
-    station: "Bahawalpur Mandi",
-    province: "Punjab",
-    priceMin: 1800,
-    priceMax: 1950,
-    unit: "40 kg",
-    arrivalCount: "2,100",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سنہری",
-    color: "Golden",
-    rateType: "Mandi Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "فیڈ کوالٹی",
-    qualityType: "Feed Quality",
-    trend: "down",
-    trendPct: 0.7,
-  },
-  {
-    id: 25,
-    time: "11:30 AM",
-    vertical: "Grains",
-    productUrdu: "دال",
-    product: "Pulses",
-    byproduct: "Red Lentil",
-    stationUrdu: "لاہور",
-    station: "Lahore Mandi",
-    province: "Punjab",
-    priceMin: 3800,
-    priceMax: 4200,
-    unit: "40 kg",
-    arrivalCount: "4,100",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سرخ",
-    color: "Red",
-    rateType: "Wholesale Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "درآمد",
-    quality: "Imported",
-    qualityTypeUrdu: "کینیڈین کوالٹی",
-    qualityType: "Canadian Quality",
-    trend: "stable",
-    trendPct: 0.3,
-  },
-  {
-    id: 26,
-    time: "11:40 AM",
-    vertical: "Grains",
-    productUrdu: "لال مرچ",
-    product: "Spices",
-    byproduct: "Red Chilli",
-    stationUrdu: "کراچی",
-    station: "Karachi Mandi",
-    province: "Sindh",
-    priceMin: 16000,
-    priceMax: 18000,
-    unit: "40 kg",
-    arrivalCount: "2,800",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سرخ",
-    color: "Red",
-    rateType: "Wholesale Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "پرانی",
-    quality: "Old",
-    qualityTypeUrdu: "درآمد کوالٹی",
-    qualityType: "Import Quality",
-    trend: "down",
-    trendPct: 2.1,
-  },
-  {
-    id: 27,
-    time: "11:50 AM",
-    vertical: "Vegetables",
-    productUrdu: "ٹماٹر",
-    product: "Tomato",
-    byproduct: "Tomato (Grade A)",
-    stationUrdu: "لاہور",
-    station: "Lahore Mandi",
-    province: "Punjab",
-    priceMin: 800,
-    priceMax: 900,
-    unit: "40 kg",
-    arrivalCount: "12,000",
-    arrivalUnit: "Crates",
-    arrivalUnitUrdu: "کریٹ",
-    colorUrdu: "سرخ",
-    color: "Red",
-    rateType: "Mandi Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "منڈی کوالٹی",
-    qualityType: "Mandi Quality",
-    trend: "up",
-    trendPct: 4.2,
-  },
-  {
-    id: 28,
-    time: "12:00 PM",
-    vertical: "Vegetables",
-    productUrdu: "پیاز",
-    product: "Onion",
-    byproduct: "Onion (Grade A)",
-    stationUrdu: "کراچی",
-    station: "Karachi Mandi",
-    province: "Sindh",
-    priceMin: 620,
-    priceMax: 720,
-    unit: "40 kg",
-    arrivalCount: "8,400",
-    arrivalUnit: "Crates",
-    arrivalUnitUrdu: "کریٹ",
-    colorUrdu: "سرخ",
-    color: "Red",
-    rateType: "Wholesale Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "منڈی کوالٹی",
-    qualityType: "Mandi Quality",
-    trend: "down",
-    trendPct: 1.5,
-  },
-  {
-    id: 29,
-    time: "12:10 PM",
-    vertical: "Vegetables",
-    productUrdu: "آلو",
-    product: "Potato",
-    byproduct: "Potato (Mozika)",
-    stationUrdu: "اوکاڑہ",
-    station: "Okara Mandi",
-    province: "Punjab",
-    priceMin: 500,
-    priceMax: 600,
-    unit: "40 kg",
-    arrivalCount: "9,100",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "پیلا",
-    color: "Yellow",
-    rateType: "Mandi Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "ذخیرہ کوالٹی",
-    qualityType: "Storage Quality",
-    trend: "stable",
-    trendPct: 0.6,
-  },
-  {
-    id: 30,
-    time: "12:20 PM",
-    vertical: "Vegetables",
-    productUrdu: "لہسن",
-    product: "Garlic",
-    byproduct: "Garlic Desi",
-    stationUrdu: "لاہور",
-    station: "Lahore Mandi",
-    province: "Punjab",
-    priceMin: 9000,
-    priceMax: 11000,
-    unit: "40 kg",
-    arrivalCount: "3,200",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Mandi Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "دیسی",
-    quality: "Desi",
-    qualityTypeUrdu: "منڈی کوالٹی",
-    qualityType: "Mandi Quality",
-    trend: "down",
-    trendPct: 2.8,
-  },
-  {
-    id: 31,
-    time: "12:30 PM",
-    vertical: "Vegetables",
-    productUrdu: "مرچ",
-    product: "Chilli",
-    byproduct: "Green Chilli - Large",
-    stationUrdu: "پشاور",
-    station: "Peshawar Mandi",
-    province: "KPK",
-    priceMin: 1200,
-    priceMax: 1600,
-    unit: "40 kg",
-    arrivalCount: "4,100",
-    arrivalUnit: "Crates",
-    arrivalUnitUrdu: "کریٹ",
-    colorUrdu: "سبز",
-    color: "Green",
-    rateType: "Mandi Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "منڈی کوالٹی",
-    qualityType: "Mandi Quality",
-    trend: "up",
-    trendPct: 3.1,
-  },
-  {
-    id: 32,
-    time: "12:40 PM",
-    vertical: "Vegetables",
-    productUrdu: "گوبھی",
-    product: "Cauliflower",
-    byproduct: "Cauliflower",
-    stationUrdu: "لاہور",
-    station: "Lahore Mandi",
-    province: "Punjab",
-    priceMin: 400,
-    priceMax: 600,
-    unit: "40 kg",
-    arrivalCount: "6,800",
-    arrivalUnit: "Crates",
-    arrivalUnitUrdu: "کریٹ",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Mandi Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "منڈی کوالٹی",
-    qualityType: "Mandi Quality",
-    trend: "down",
-    trendPct: 1.4,
-  },
-  {
-    id: 33,
-    time: "12:50 PM",
-    vertical: "Vegetables",
-    productUrdu: "آلو",
-    product: "Potato",
-    byproduct: "Potato (Red)",
-    stationUrdu: "حیدرآباد",
-    station: "Hyderabad Mandi",
-    province: "Sindh",
-    priceMin: 480,
-    priceMax: 580,
-    unit: "40 kg",
-    arrivalCount: "7,200",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سرخ",
-    color: "Red",
-    rateType: "Mandi Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "ذخیرہ کوالٹی",
-    qualityType: "Storage Quality",
-    trend: "stable",
-    trendPct: 0.4,
-  },
-  {
-    id: 34,
-    time: "1:00 PM",
-    vertical: "Fruits",
-    productUrdu: "آم",
-    product: "Mango",
-    byproduct: "Mango Sindhri",
-    stationUrdu: "ملتان",
-    station: "Multan Mandi",
-    province: "Punjab",
-    priceMin: 1050,
-    priceMax: 1350,
-    unit: "40 kg",
-    arrivalCount: "15,000",
-    arrivalUnit: "Crates",
-    arrivalUnitUrdu: "کریٹ",
-    colorUrdu: "زرد",
-    color: "Yellow",
-    rateType: "Export Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "برآمد کوالٹی",
-    qualityType: "Export Quality",
-    trend: "down",
-    trendPct: 2.3,
-  },
-  {
-    id: 35,
-    time: "1:10 PM",
-    vertical: "Fruits",
-    productUrdu: "آم",
-    product: "Mango",
-    byproduct: "Mango Anwer Ratul",
-    stationUrdu: "لاہور",
-    station: "Lahore Mandi",
-    province: "Punjab",
-    priceMin: 1200,
-    priceMax: 1600,
-    unit: "40 kg",
-    arrivalCount: "9,200",
-    arrivalUnit: "Crates",
-    arrivalUnitUrdu: "کریٹ",
-    colorUrdu: "زرد",
-    color: "Yellow",
-    rateType: "Mandi Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "منڈی کوالٹی",
-    qualityType: "Mandi Quality",
-    trend: "down",
-    trendPct: 1.8,
-  },
-  {
-    id: 36,
-    time: "1:20 PM",
-    vertical: "Fruits",
-    productUrdu: "کیلا",
-    product: "Banana",
-    byproduct: "Banana",
-    stationUrdu: "کراچی",
-    station: "Karachi Mandi",
-    province: "Sindh",
-    priceMin: 900,
-    priceMax: 1100,
-    unit: "40 kg",
-    arrivalCount: "3,200",
-    arrivalUnit: "Crates",
-    arrivalUnitUrdu: "کریٹ",
-    colorUrdu: "زرد",
-    color: "Yellow",
-    rateType: "Wholesale Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "درآمد کوالٹی",
-    qualityType: "Import Quality",
-    trend: "stable",
-    trendPct: 0.4,
-  },
-  {
-    id: 37,
-    time: "1:30 PM",
-    vertical: "Fruits",
-    productUrdu: "کینو",
-    product: "Citrus",
-    byproduct: "Orange",
-    stationUrdu: "سرگودھا",
-    station: "Sargodha Mandi",
-    province: "Punjab",
-    priceMin: 1800,
-    priceMax: 2200,
-    unit: "40 kg",
-    arrivalCount: "8,600",
-    arrivalUnit: "Crates",
-    arrivalUnitUrdu: "کریٹ",
-    colorUrdu: "نارنجی",
-    color: "Orange",
-    rateType: "Farm Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "فارم کوالٹی",
-    qualityType: "Farm Quality",
-    trend: "stable",
-    trendPct: 0.2,
-  },
-  {
-    id: 38,
-    time: "1:40 PM",
-    vertical: "Fruits",
-    productUrdu: "سیب",
-    product: "Apple",
-    byproduct: "Apple Kala Kullu",
-    stationUrdu: "پشاور",
-    station: "Peshawar Mandi",
-    province: "KPK",
-    priceMin: 3200,
-    priceMax: 4000,
-    unit: "40 kg",
-    arrivalCount: "5,400",
-    arrivalUnit: "Crates",
-    arrivalUnitUrdu: "کریٹ",
-    colorUrdu: "سرخ",
-    color: "Red",
-    rateType: "Mandi Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "منڈی کوالٹی",
-    qualityType: "Mandi Quality",
-    trend: "up",
-    trendPct: 2.4,
-  },
-  {
-    id: 39,
-    time: "1:50 PM",
-    vertical: "Livestock",
-    productUrdu: "مرغی",
-    product: "Poultry",
-    byproduct: "Broiler",
-    stationUrdu: "لاہور",
-    station: "Lahore Mandi",
-    province: "Punjab",
-    priceMin: 480,
-    priceMax: 520,
-    unit: "Per KG",
-    arrivalCount: "8,200",
-    arrivalUnit: "Birds",
-    arrivalUnitUrdu: "پرندے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Farm Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "فارم کوالٹی",
-    qualityType: "Farm Quality",
-    trend: "up",
-    trendPct: 2.1,
-  },
-  {
-    id: 40,
-    time: "2:00 PM",
-    vertical: "Livestock",
-    productUrdu: "بھینس",
-    product: "Cattle Market",
-    byproduct: "Buffalo",
-    stationUrdu: "بہاولپور",
-    station: "Bahawalpur Mandi",
-    province: "Punjab",
-    priceMin: 180000,
-    priceMax: 320000,
-    unit: "Per Head",
-    arrivalCount: "420",
-    arrivalUnit: "Heads",
-    arrivalUnitUrdu: "سر",
-    colorUrdu: "کالا",
-    color: "Black",
-    rateType: "Mandi Rate",
-    specUrdu: "تازہ",
-    spec: "Live",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "منڈی کوالٹی",
-    qualityType: "Mandi Quality",
-    trend: "up",
-    trendPct: 1.6,
-  },
-  {
-    id: 41,
-    time: "2:10 PM",
-    vertical: "Livestock",
-    productUrdu: "دودھ",
-    product: "Dairy",
-    byproduct: "Milk",
-    stationUrdu: "فیصل آباد",
-    station: "Faisalabad Mandi",
-    province: "Punjab",
-    priceMin: 140,
-    priceMax: 160,
-    unit: "Per Litre",
-    arrivalCount: "12,000",
-    arrivalUnit: "Litres",
-    arrivalUnitUrdu: "لیٹر",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Farm Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "فارم کوالٹی",
-    qualityType: "Farm Quality",
-    trend: "stable",
-    trendPct: 0.5,
-  },
-  {
-    id: 42,
-    time: "2:20 PM",
-    vertical: "Agri Inputs",
-    productUrdu: "یوریا",
-    product: "Fertilizer",
-    byproduct: "Urea",
-    stationUrdu: "پاکپتن",
-    station: "Pakpattan Mandi",
-    province: "Punjab",
-    priceMin: 3100,
-    priceMax: 3300,
-    unit: "50 kg",
-    arrivalCount: "2,800",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Dealer Rate",
-    specUrdu: "گرینولر",
-    spec: "Granular",
-    qualityUrdu: "پاک عرب",
-    quality: "Pak Arab",
-    qualityTypeUrdu: "معیاری",
-    qualityType: "Standard",
-    trend: "stable",
-    trendPct: 0.2,
-  },
-  {
-    id: 43,
-    time: "2:30 PM",
-    vertical: "Agri Inputs",
-    productUrdu: "ڈی اے پی",
-    product: "Fertilizer",
-    byproduct: "DAP",
-    stationUrdu: "ملتان",
-    station: "Multan Mandi",
-    province: "Punjab",
-    priceMin: 7800,
-    priceMax: 8200,
-    unit: "50 kg",
-    arrivalCount: "1,200",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سیاہ",
-    color: "Dark",
-    rateType: "Dealer Rate",
-    specUrdu: "دانے دار",
-    spec: "Granular",
-    qualityUrdu: "فینگ ڈی اے پی",
-    quality: "Fung DAP",
-    qualityTypeUrdu: "معیاری",
-    qualityType: "Standard",
-    trend: "stable",
-    trendPct: 0.2,
-  },
-  {
-    id: 44,
-    time: "2:40 PM",
-    vertical: "Agri Inputs",
-    productUrdu: "این پی",
-    product: "Fertilizer",
-    byproduct: "NP",
-    stationUrdu: "ساہیوال",
-    station: "Sahiwal Mandi",
-    province: "Punjab",
-    priceMin: 4200,
-    priceMax: 4600,
-    unit: "50 kg",
-    arrivalCount: "980",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سبز",
-    color: "Green",
-    rateType: "Dealer Rate",
-    specUrdu: "دانے دار",
-    spec: "Granular",
-    qualityUrdu: "معیاری",
-    quality: "Standard",
-    qualityTypeUrdu: "معیاری",
-    qualityType: "Standard",
-    trend: "up",
-    trendPct: 0.6,
-  },
-  {
-    id: 45,
-    time: "2:50 PM",
-    vertical: "Dry Fruits",
-    productUrdu: "بادام",
-    product: "Almonds",
-    byproduct: "Almond (American)",
-    stationUrdu: "کراچی",
-    station: "Karachi Mandi",
-    province: "Sindh",
-    priceMin: 3200,
-    priceMax: 3800,
-    unit: "Per KG",
-    arrivalCount: "1,400",
-    arrivalUnit: "KG",
-    arrivalUnitUrdu: "کلو",
-    colorUrdu: "بھورا",
-    color: "Brown",
-    rateType: "Wholesale Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "درآمد کوالٹی",
-    qualityType: "Import Quality",
-    trend: "stable",
-    trendPct: 0.3,
-  },
-  {
-    id: 46,
-    time: "3:00 PM",
-    vertical: "Dry Fruits",
-    productUrdu: "اخروٹ",
-    product: "Walnut",
-    byproduct: "Walnut",
-    stationUrdu: "پشاور",
-    station: "Peshawar Mandi",
-    province: "KPK",
-    priceMin: 2800,
-    priceMax: 3400,
-    unit: "Per KG",
-    arrivalCount: "800",
-    arrivalUnit: "KG",
-    arrivalUnitUrdu: "کلو",
-    colorUrdu: "بھورا",
-    color: "Brown",
-    rateType: "Wholesale Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "دیسی",
-    quality: "Local",
-    qualityTypeUrdu: "کے پی کے کوالٹی",
-    qualityType: "KPK Quality",
-    trend: "up",
-    trendPct: 1.2,
-  },
-  {
-    id: 47,
-    time: "3:10 PM",
-    vertical: "Herbals",
-    productUrdu: "شہد",
-    product: "Honey",
-    byproduct: "Honey",
-    stationUrdu: "پشاور",
-    station: "Peshawar Mandi",
-    province: "KPK",
-    priceMin: 2200,
-    priceMax: 3000,
-    unit: "Per KG",
-    arrivalCount: "360",
-    arrivalUnit: "KG",
-    arrivalUnitUrdu: "کلو",
-    colorUrdu: "سنہری",
-    color: "Golden",
-    rateType: "Retail Rate",
-    specUrdu: "خالص",
-    spec: "Pure",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "پہاڑی کوالٹی",
-    qualityType: "Mountain Quality",
-    trend: "up",
-    trendPct: 3.2,
-  },
-  {
-    id: 48,
-    time: "3:20 PM",
-    vertical: "Herbals",
-    productUrdu: "کلونجی",
-    product: "Black Seed",
-    byproduct: "Black Seed",
-    stationUrdu: "کراچی",
-    station: "Karachi Mandi",
-    province: "Sindh",
-    priceMin: 1200,
-    priceMax: 1600,
-    unit: "Per KG",
-    arrivalCount: "480",
-    arrivalUnit: "KG",
-    arrivalUnitUrdu: "کلو",
-    colorUrdu: "سیاہ",
-    color: "Black",
-    rateType: "Wholesale Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "ایتھوپیا",
-    quality: "Ethiopian",
-    qualityTypeUrdu: "درآمد کوالٹی",
-    qualityType: "Import Quality",
-    trend: "stable",
-    trendPct: 0.4,
-  },
-  {
-    id: 49,
-    time: "3:30 PM",
-    vertical: "Kiryana",
-    productUrdu: "باسمتی چاول",
-    product: "Rice",
-    byproduct: "1121 Basmati-1",
-    stationUrdu: "لاہور",
-    station: "Lahore Mandi",
-    province: "Punjab",
-    priceMin: 7200,
-    priceMax: 7800,
-    unit: "40 kg",
-    arrivalCount: "4,200",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Retail Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "اے گریڈ",
-    quality: "A Grade",
-    qualityTypeUrdu: "خوردہ کوالٹی",
-    qualityType: "Retail Quality",
-    trend: "stable",
-    trendPct: 0.1,
-  },
-  {
-    id: 50,
-    time: "3:40 PM",
-    vertical: "Kiryana",
-    productUrdu: "چینی",
-    product: "Sugar",
-    byproduct: "Sugar",
-    stationUrdu: "ملتان",
-    station: "Multan Mandi",
-    province: "Punjab",
-    priceMin: 9200,
-    priceMax: 9600,
-    unit: "50 kg",
-    arrivalCount: "3,800",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Retail Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "معیاری",
-    quality: "Standard",
-    qualityTypeUrdu: "خوردہ کوالٹی",
-    qualityType: "Retail Quality",
-    trend: "up",
-    trendPct: 0.5,
-  },
-  {
-    id: 51,
-    time: "3:50 PM",
-    vertical: "Kiryana",
-    productUrdu: "لال مرچ",
-    product: "Spices",
-    byproduct: "Red Chilli",
-    stationUrdu: "کراچی",
-    station: "Karachi Mandi",
-    province: "Sindh",
-    priceMin: 18000,
-    priceMax: 21000,
-    unit: "40 kg",
-    arrivalCount: "1,600",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سرخ",
-    color: "Red",
-    rateType: "Wholesale Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "پرانی",
-    quality: "Old",
-    qualityTypeUrdu: "منڈی کوالٹی",
-    qualityType: "Mandi Quality",
-    trend: "down",
-    trendPct: 1.8,
-  },
-  {
-    id: 52,
-    time: "4:00 PM",
-    vertical: "Grains",
-    productUrdu: "کپاس",
-    product: "Cotton",
-    byproduct: "Cotton Grade A",
-    stationUrdu: "گھوٹکی",
-    station: "Ghotki Mandi",
-    province: "Sindh",
-    priceMin: 8200,
-    priceMax: 8650,
-    unit: "40 kg",
-    arrivalCount: "5,400",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Farm Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "فارم کوالٹی",
-    qualityType: "Farm Quality",
-    trend: "up",
-    trendPct: 1.0,
-  },
-  {
-    id: 53,
-    time: "4:10 PM",
-    vertical: "Grains",
-    productUrdu: "پھٹی",
-    product: "Paddy",
-    byproduct: "Paddy Irri 6",
-    stationUrdu: "حیدرآباد",
-    station: "Hyderabad Mandi",
-    province: "Sindh",
-    priceMin: 1750,
-    priceMax: 1950,
-    unit: "40 kg",
-    arrivalCount: "10,200",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سبز",
-    color: "Green",
-    rateType: "Mandi Rate",
-    specUrdu: "تازہ",
-    spec: "Fresh",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "مل کوالٹی",
-    qualityType: "Mill Quality",
-    trend: "stable",
-    trendPct: 0.6,
-  },
-  {
-    id: 54,
-    time: "4:20 PM",
-    vertical: "Grains",
-    productUrdu: "چاول",
-    product: "Rice",
-    byproduct: "Super Kernel",
-    stationUrdu: "سکھر",
-    station: "Sukkur Mandi",
-    province: "Sindh",
-    priceMin: 5600,
-    priceMax: 6100,
-    unit: "40 kg",
-    arrivalCount: "7,800",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سفید",
-    color: "White",
-    rateType: "Export Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "ایکسپورٹ",
-    quality: "Export",
-    qualityTypeUrdu: "برآمد کوالٹی",
-    qualityType: "Export Quality",
-    trend: "up",
-    trendPct: 2.8,
-  },
-  {
-    id: 55,
-    time: "4:30 PM",
-    vertical: "Grains",
-    productUrdu: "گندم",
-    product: "Wheat",
-    byproduct: "Wheat",
-    stationUrdu: "دیرہ اسماعیل خان",
-    station: "Dera Ismail Khan Mandi",
-    province: "KPK",
-    priceMin: 2850,
-    priceMax: 3050,
-    unit: "40 kg",
-    arrivalCount: "4,100",
-    arrivalUnit: "Bags",
-    arrivalUnitUrdu: "تھیلے",
-    colorUrdu: "سنہری",
-    color: "Golden",
-    rateType: "Mill Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "نئی",
-    quality: "New",
-    qualityTypeUrdu: "اے کوالٹی",
-    qualityType: "A Quality",
-    trend: "up",
-    trendPct: 1.4,
-  },
-  {
-    id: 56,
-    time: "4:40 PM",
-    vertical: "Vegetables",
-    productUrdu: "پیاز",
-    product: "Onion",
-    byproduct: "Onion (Grade B)",
-    stationUrdu: "سکھر",
-    station: "Sukkur Mandi",
-    province: "Sindh",
-    priceMin: 580,
-    priceMax: 680,
-    unit: "40 kg",
-    arrivalCount: "6,200",
-    arrivalUnit: "Crates",
-    arrivalUnitUrdu: "کریٹ",
-    colorUrdu: "سرخ",
-    color: "Red",
-    rateType: "Mandi Rate",
-    specUrdu: "خشک",
-    spec: "Dry",
-    qualityUrdu: "بی گریڈ",
-    quality: "B Grade",
-    qualityTypeUrdu: "منڈی کوالٹی",
-    qualityType: "Mandi Quality",
-    trend: "down",
-    trendPct: 0.9,
-  },
-];
+const FEED_MESSAGES: FeedMsg[] = REAL_FEED_MESSAGES as FeedMsg[];
 
 //  INITIAL MANDIS
 
@@ -3729,2264 +2216,8 @@ const INITIAL_MANDIS = [
 ];
 type MandiItem = (typeof INITIAL_MANDIS)[0];
 
-const MANDI_ROWS: Record<
-  string,
-  {
-    product: string;
-    byproduct: string;
-    emoji: string;
-    rateType: string;
-    arrival: string;
-    min: number;
-    max: number;
-    trend: "up" | "down" | "stable";
-    trendPct: number;
-  }[]
-> = {
-  pakpattan: [
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "12,400 Bags",
-      min: 2750,
-      max: 2950,
-      trend: "up",
-      trendPct: 1.8,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "8,200 Bags",
-      min: 4200,
-      max: 4340,
-      trend: "up",
-      trendPct: 1.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "3,100 Bags",
-      min: 1400,
-      max: 1600,
-      trend: "stable",
-      trendPct: 0.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "5,600 Bags",
-      min: 3800,
-      max: 4100,
-      trend: "up",
-      trendPct: 0.9,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "1,200 Bags",
-      min: 5200,
-      max: 5600,
-      trend: "up",
-      trendPct: 1.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Straw",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "7,800 Bags",
-      min: 420,
-      max: 520,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Special Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "2,400 Bags",
-      min: 4800,
-      max: 5200,
-      trend: "up",
-      trendPct: 0.7,
-    },
-    {
-      product: "Rice",
-      byproduct: "1121 Basmati-1",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "6,200 Bags",
-      min: 5000,
-      max: 5400,
-      trend: "up",
-      trendPct: 3.2,
-    },
-    {
-      product: "Maize",
-      byproduct: "Maize Grade A",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "4,800 Bags",
-      min: 2050,
-      max: 2250,
-      trend: "down",
-      trendPct: 0.9,
-    },
-    {
-      product: "Cotton",
-      byproduct: "Cotton Grade A",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "3,400 Bags",
-      min: 8200,
-      max: 8600,
-      trend: "up",
-      trendPct: 1.5,
-    },
-    {
-      product: "Fertilizer",
-      byproduct: "Urea",
-      emoji: "",
-      rateType: "Dealer Rate",
-      arrival: "2,800 Bags",
-      min: 3100,
-      max: 3300,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-    {
-      product: "Onion",
-      byproduct: "Onion (Grade A)",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "7,200 Crates",
-      min: 600,
-      max: 700,
-      trend: "down",
-      trendPct: 1.5,
-    },
-    {
-      product: "Tomato",
-      byproduct: "Tomato (Grade A)",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "5,400 Crates",
-      min: 750,
-      max: 850,
-      trend: "up",
-      trendPct: 4.2,
-    },
-    {
-      product: "Potato",
-      byproduct: "Potato (Mozika)",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "9,100 Bags",
-      min: 500,
-      max: 600,
-      trend: "stable",
-      trendPct: 0.6,
-    },
-    {
-      product: "Mustard",
-      byproduct: "Mustard Seed",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "2,100 Bags",
-      min: 5700,
-      max: 6000,
-      trend: "up",
-      trendPct: 1.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Sorghum",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,800 Bags",
-      min: 2200,
-      max: 2450,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Barley",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,400 Bags",
-      min: 1900,
-      max: 2100,
-      trend: "up",
-      trendPct: 0.8,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Oat",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "600 Bags",
-      min: 1600,
-      max: 1850,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Broker Rate",
-      arrival: "8,700 Bags",
-      min: 2620,
-      max: 2800,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Stock Rate",
-      arrival: "11,200 Bags",
-      min: 2900,
-      max: 3100,
-      trend: "up",
-      trendPct: 2.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Export Rate",
-      arrival: "4,100 Bags",
-      min: 4600,
-      max: 4900,
-      trend: "up",
-      trendPct: 3.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Broker Rate",
-      arrival: "2,800 Bags",
-      min: 1320,
-      max: 1520,
-      trend: "down",
-      trendPct: 0.8,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Stock Rate",
-      arrival: "3,900 Bags",
-      min: 3900,
-      max: 4200,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Broker Rate",
-      arrival: "1,700 Bags",
-      min: 5200,
-      max: 5600,
-      trend: "up",
-      trendPct: 1.5,
-    },
-  ],
-  sahiwal: [
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "9,200 Bags",
-      min: 2700,
-      max: 2900,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-    {
-      product: "Rice",
-      byproduct: "1121 Basmati-1",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "4,400 Bags",
-      min: 4900,
-      max: 5300,
-      trend: "up",
-      trendPct: 2.8,
-    },
-    {
-      product: "Cotton",
-      byproduct: "Cotton Grade A",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "2,800 Bags",
-      min: 8100,
-      max: 8500,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Canola",
-      byproduct: "Canola Seed",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "2,100 Bags",
-      min: 5200,
-      max: 5600,
-      trend: "up",
-      trendPct: 0.8,
-    },
-    {
-      product: "Fertilizer",
-      byproduct: "NP",
-      emoji: "",
-      rateType: "Dealer Rate",
-      arrival: "980 Bags",
-      min: 4200,
-      max: 4600,
-      trend: "up",
-      trendPct: 0.6,
-    },
-  ],
-  lahore: [
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "28,000 Bags",
-      min: 2820,
-      max: 3000,
-      trend: "up",
-      trendPct: 2.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "14,500 Bags",
-      min: 2480,
-      max: 2640,
-      trend: "up",
-      trendPct: 1.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Broker Rate",
-      arrival: "9,200 Bags",
-      min: 2680,
-      max: 2850,
-      trend: "stable",
-      trendPct: 0.6,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "12,000 Bags",
-      min: 4300,
-      max: 4500,
-      trend: "up",
-      trendPct: 1.8,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "7,800 Bags",
-      min: 4380,
-      max: 4580,
-      trend: "up",
-      trendPct: 1.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "6,100 Bags",
-      min: 3900,
-      max: 4200,
-      trend: "up",
-      trendPct: 0.8,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "4,400 Bags",
-      min: 1350,
-      max: 1550,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Dealer Rate",
-      arrival: "1,800 Bags",
-      min: 5100,
-      max: 5500,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Straw",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "9,600 Bags",
-      min: 400,
-      max: 490,
-      trend: "stable",
-      trendPct: 0.1,
-    },
-    {
-      product: "Tomato",
-      byproduct: "Tomato (Grade A)",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "12,000 Crates",
-      min: 800,
-      max: 900,
-      trend: "up",
-      trendPct: 3.8,
-    },
-    {
-      product: "Onion",
-      byproduct: "Onion (Grade A)",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "8,400 Crates",
-      min: 620,
-      max: 720,
-      trend: "down",
-      trendPct: 2.1,
-    },
-    {
-      product: "Potato",
-      byproduct: "Potato (Mozika)",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "9,100 Bags",
-      min: 500,
-      max: 600,
-      trend: "stable",
-      trendPct: 0.6,
-    },
-    {
-      product: "Poultry",
-      byproduct: "Broiler",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "8,200 Birds",
-      min: 480,
-      max: 520,
-      trend: "up",
-      trendPct: 2.1,
-    },
-    {
-      product: "Rice",
-      byproduct: "Irri 6",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "5,800 Bags",
-      min: 2100,
-      max: 2400,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Mango",
-      byproduct: "Mango Sindhri",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "6,000 Crates",
-      min: 1100,
-      max: 1300,
-      trend: "down",
-      trendPct: 1.8,
-    },
-    {
-      product: "Garlic",
-      byproduct: "Garlic Desi",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "3,200 Bags",
-      min: 9000,
-      max: 11000,
-      trend: "down",
-      trendPct: 2.8,
-    },
-    {
-      product: "Pulses",
-      byproduct: "Red Lentil",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "4,100 Bags",
-      min: 3800,
-      max: 4200,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Sorghum",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "2,200 Bags",
-      min: 2280,
-      max: 2520,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Barley",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,800 Bags",
-      min: 1980,
-      max: 2180,
-      trend: "stable",
-      trendPct: 0.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Oat",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "880 Bags",
-      min: 1700,
-      max: 1920,
-      trend: "up",
-      trendPct: 0.6,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Stock Rate",
-      arrival: "14,300 Bags",
-      min: 2950,
-      max: 3150,
-      trend: "up",
-      trendPct: 1.9,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Broker Rate",
-      arrival: "6,200 Bags",
-      min: 4350,
-      max: 4600,
-      trend: "up",
-      trendPct: 1.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Export Rate",
-      arrival: "3,400 Bags",
-      min: 1500,
-      max: 1720,
-      trend: "up",
-      trendPct: 2.0,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Broker Rate",
-      arrival: "5,100 Bags",
-      min: 4050,
-      max: 4380,
-      trend: "stable",
-      trendPct: 0.5,
-    },
-  ],
-  multan: [
-    {
-      product: "Cotton",
-      byproduct: "Cotton Grade A",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "7,800 Bags",
-      min: 8300,
-      max: 8700,
-      trend: "up",
-      trendPct: 1.2,
-    },
-    {
-      product: "Cotton",
-      byproduct: "Cotton Seed",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "3,200 Bags",
-      min: 1800,
-      max: 2100,
-      trend: "stable",
-      trendPct: 0.5,
-    },
-    {
-      product: "Mango",
-      byproduct: "Mango Sindhri",
-      emoji: "",
-      rateType: "Export Rate",
-      arrival: "15,000 Crates",
-      min: 1050,
-      max: 1350,
-      trend: "down",
-      trendPct: 3.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "7,100 Bags",
-      min: 2770,
-      max: 2950,
-      trend: "up",
-      trendPct: 1.6,
-    },
-    {
-      product: "Fertilizer",
-      byproduct: "DAP",
-      emoji: "",
-      rateType: "Dealer Rate",
-      arrival: "1,200 Bags",
-      min: 7800,
-      max: 8200,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-    {
-      product: "Sugar",
-      byproduct: "Sugar (Mill)",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "6,200 Bags",
-      min: 8500,
-      max: 8800,
-      trend: "up",
-      trendPct: 0.7,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "6,800 Bags",
-      min: 4220,
-      max: 4460,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "4,400 Bags",
-      min: 3840,
-      max: 4120,
-      trend: "up",
-      trendPct: 0.7,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "2,800 Bags",
-      min: 1410,
-      max: 1610,
-      trend: "stable",
-      trendPct: 0.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Dealer Rate",
-      arrival: "1,100 Bags",
-      min: 5120,
-      max: 5520,
-      trend: "up",
-      trendPct: 1.0,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Straw",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "6,200 Bags",
-      min: 415,
-      max: 515,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Special Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "2,200 Bags",
-      min: 4780,
-      max: 5240,
-      trend: "up",
-      trendPct: 0.6,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Sorghum",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,000 Bags",
-      min: 2190,
-      max: 2430,
-      trend: "stable",
-      trendPct: 0.5,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Barley",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "800 Bags",
-      min: 1930,
-      max: 2130,
-      trend: "up",
-      trendPct: 0.6,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Oat",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "480 Bags",
-      min: 1640,
-      max: 1860,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Export Rate",
-      arrival: "9,800 Bags",
-      min: 2880,
-      max: 3060,
-      trend: "up",
-      trendPct: 2.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Stock Rate",
-      arrival: "2,300 Bags",
-      min: 5400,
-      max: 5800,
-      trend: "up",
-      trendPct: 1.8,
-    },
-  ],
-  faisalabad: [
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "15,200 Bags",
-      min: 2800,
-      max: 2980,
-      trend: "up",
-      trendPct: 1.9,
-    },
-    {
-      product: "Rice",
-      byproduct: "1121 Basmati-1",
-      emoji: "",
-      rateType: "Export Rate",
-      arrival: "8,800 Bags",
-      min: 4950,
-      max: 5350,
-      trend: "up",
-      trendPct: 2.4,
-    },
-    {
-      product: "Maize",
-      byproduct: "Maize Grade A",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "5,600 Bags",
-      min: 2100,
-      max: 2300,
-      trend: "down",
-      trendPct: 0.7,
-    },
-    {
-      product: "Mustard",
-      byproduct: "Mustard Seed",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "2,100 Bags",
-      min: 5700,
-      max: 6000,
-      trend: "up",
-      trendPct: 1.4,
-    },
-    {
-      product: "Dairy",
-      byproduct: "Milk",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "12,000 L",
-      min: 140,
-      max: 160,
-      trend: "stable",
-      trendPct: 0.5,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "10,400 Bags",
-      min: 4300,
-      max: 4500,
-      trend: "up",
-      trendPct: 1.8,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "7,200 Bags",
-      min: 3900,
-      max: 4200,
-      trend: "up",
-      trendPct: 0.8,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "4,800 Bags",
-      min: 1400,
-      max: 1600,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Dealer Rate",
-      arrival: "2,200 Bags",
-      min: 5100,
-      max: 5500,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Straw",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "9,600 Bags",
-      min: 400,
-      max: 490,
-      trend: "stable",
-      trendPct: 0.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Special Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "3,400 Bags",
-      min: 4850,
-      max: 5320,
-      trend: "up",
-      trendPct: 0.9,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Sorghum",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,800 Bags",
-      min: 2240,
-      max: 2480,
-      trend: "up",
-      trendPct: 1.0,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Barley",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,600 Bags",
-      min: 1990,
-      max: 2190,
-      trend: "stable",
-      trendPct: 0.6,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Oat",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "820 Bags",
-      min: 1680,
-      max: 1900,
-      trend: "up",
-      trendPct: 0.8,
-    },
-  ],
-  okara: [
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "6,400 Bags",
-      min: 2720,
-      max: 2900,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Potato",
-      byproduct: "Potato (Mozika)",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "9,100 Bags",
-      min: 500,
-      max: 600,
-      trend: "stable",
-      trendPct: 0.6,
-    },
-    {
-      product: "Maize",
-      byproduct: "Maize Grade A",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "3,800 Bags",
-      min: 2080,
-      max: 2260,
-      trend: "down",
-      trendPct: 0.5,
-    },
-  ],
-  ryk: [
-    {
-      product: "Sugar",
-      byproduct: "Sugarcane",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "22,000 Bags",
-      min: 420,
-      max: 480,
-      trend: "stable",
-      trendPct: 0.5,
-    },
-    {
-      product: "Cotton",
-      byproduct: "Cotton Grade A",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "4,200 Bags",
-      min: 8200,
-      max: 8600,
-      trend: "up",
-      trendPct: 1.0,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "5,100 Bags",
-      min: 2740,
-      max: 2920,
-      trend: "up",
-      trendPct: 1.4,
-    },
-    {
-      product: "Millet",
-      byproduct: "Millet Grade A",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,800 Bags",
-      min: 1780,
-      max: 1940,
-      trend: "down",
-      trendPct: 0.6,
-    },
-    {
-      product: "Fertilizer",
-      byproduct: "Urea",
-      emoji: "",
-      rateType: "Dealer Rate",
-      arrival: "1,600 Bags",
-      min: 3100,
-      max: 3300,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-  ],
-  bahawalpur: [
-    {
-      product: "Cotton",
-      byproduct: "Cotton Grade A",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "6,100 Bags",
-      min: 8100,
-      max: 8600,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Cotton",
-      byproduct: "Cotton Seed",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "2,400 Bags",
-      min: 1800,
-      max: 2050,
-      trend: "stable",
-      trendPct: 0.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "6,300 Bags",
-      min: 2720,
-      max: 2880,
-      trend: "up",
-      trendPct: 0.9,
-    },
-    {
-      product: "Millet",
-      byproduct: "Millet Grade A",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,400 Bags",
-      min: 1800,
-      max: 1950,
-      trend: "down",
-      trendPct: 0.7,
-    },
-    {
-      product: "Cattle Market",
-      byproduct: "Buffalo",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "420 Heads",
-      min: 180000,
-      max: 320000,
-      trend: "up",
-      trendPct: 1.6,
-    },
-  ],
-  chichawatni: [
-    {
-      product: "Mustard",
-      byproduct: "Mustard Seed",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "3,400 Bags",
-      min: 5800,
-      max: 6100,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "8,200 Bags",
-      min: 2710,
-      max: 2880,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Rice",
-      byproduct: "1121 Basmati-1",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "3,800 Bags",
-      min: 4800,
-      max: 5200,
-      trend: "up",
-      trendPct: 2.1,
-    },
-    {
-      product: "Fertilizer",
-      byproduct: "Urea",
-      emoji: "",
-      rateType: "Dealer Rate",
-      arrival: "1,100 Bags",
-      min: 3100,
-      max: 3300,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-  ],
-  karachi: [
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "18,400 Bags",
-      min: 2920,
-      max: 3100,
-      trend: "up",
-      trendPct: 1.6,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "14,200 Bags",
-      min: 4450,
-      max: 4700,
-      trend: "up",
-      trendPct: 1.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "9,800 Bags",
-      min: 4000,
-      max: 4300,
-      trend: "up",
-      trendPct: 0.9,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "6,400 Bags",
-      min: 1500,
-      max: 1750,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "3,200 Bags",
-      min: 5300,
-      max: 5800,
-      trend: "up",
-      trendPct: 1.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Straw",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "4,100 Bags",
-      min: 480,
-      max: 580,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Sorghum",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "2,600 Bags",
-      min: 2350,
-      max: 2600,
-      trend: "up",
-      trendPct: 0.8,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Barley",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,900 Bags",
-      min: 2100,
-      max: 2300,
-      trend: "stable",
-      trendPct: 0.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Oat",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "1,100 Bags",
-      min: 1750,
-      max: 1980,
-      trend: "up",
-      trendPct: 0.7,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Special Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "4,800 Bags",
-      min: 5100,
-      max: 5600,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Spices",
-      byproduct: "Red Chilli",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "2,800 Bags",
-      min: 16000,
-      max: 18000,
-      trend: "down",
-      trendPct: 2.1,
-    },
-    {
-      product: "Spices",
-      byproduct: "White Cumin",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "1,200 Bags",
-      min: 22000,
-      max: 26000,
-      trend: "stable",
-      trendPct: 0.5,
-    },
-    {
-      product: "Spices",
-      byproduct: "Turmeric",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "1,800 Bags",
-      min: 8500,
-      max: 9500,
-      trend: "down",
-      trendPct: 1.4,
-    },
-    {
-      product: "Spices",
-      byproduct: "Black Pepper",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "800 Bags",
-      min: 35000,
-      max: 42000,
-      trend: "up",
-      trendPct: 2.8,
-    },
-    {
-      product: "Almonds",
-      byproduct: "Almond (American)",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "1,400 KG",
-      min: 3200,
-      max: 3800,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Onion",
-      byproduct: "Onion (Grade A)",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "8,400 Crates",
-      min: 620,
-      max: 720,
-      trend: "down",
-      trendPct: 1.5,
-    },
-    {
-      product: "Garlic",
-      byproduct: "Garlic Chinese",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "3,200 Bags",
-      min: 7000,
-      max: 9000,
-      trend: "down",
-      trendPct: 3.2,
-    },
-    {
-      product: "Sugar",
-      byproduct: "Sugar (Wholesale)",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "12,000 Bags",
-      min: 8800,
-      max: 9200,
-      trend: "up",
-      trendPct: 0.6,
-    },
-  ],
-  sukkur: [
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "8,200 Bags",
-      min: 2880,
-      max: 3060,
-      trend: "up",
-      trendPct: 1.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "5,400 Bags",
-      min: 4320,
-      max: 4560,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "3,800 Bags",
-      min: 3950,
-      max: 4200,
-      trend: "stable",
-      trendPct: 0.5,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "2,600 Bags",
-      min: 1420,
-      max: 1620,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "1,100 Bags",
-      min: 5100,
-      max: 5500,
-      trend: "up",
-      trendPct: 1.0,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Straw",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "3,200 Bags",
-      min: 440,
-      max: 540,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Sorghum",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,400 Bags",
-      min: 2180,
-      max: 2420,
-      trend: "stable",
-      trendPct: 0.6,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Special Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "2,100 Bags",
-      min: 4900,
-      max: 5400,
-      trend: "up",
-      trendPct: 0.8,
-    },
-    {
-      product: "Rice",
-      byproduct: "1509 Steam",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "6,400 Bags",
-      min: 4200,
-      max: 4600,
-      trend: "up",
-      trendPct: 1.8,
-    },
-    {
-      product: "Rice",
-      byproduct: "Super Kernel",
-      emoji: "",
-      rateType: "Export Rate",
-      arrival: "7,800 Bags",
-      min: 5600,
-      max: 6100,
-      trend: "up",
-      trendPct: 2.8,
-    },
-    {
-      product: "Paddy",
-      byproduct: "Paddy Irri 6",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "9,200 Bags",
-      min: 1750,
-      max: 1950,
-      trend: "stable",
-      trendPct: 0.6,
-    },
-    {
-      product: "Onion",
-      byproduct: "Onion (Grade B)",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "6,200 Crates",
-      min: 580,
-      max: 680,
-      trend: "down",
-      trendPct: 0.9,
-    },
-    {
-      product: "Tomato",
-      byproduct: "Tomato (Grade A)",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "4,800 Crates",
-      min: 750,
-      max: 880,
-      trend: "up",
-      trendPct: 3.2,
-    },
-    {
-      product: "Sugar",
-      byproduct: "Sugarcane",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "18,000 Bags",
-      min: 440,
-      max: 500,
-      trend: "stable",
-      trendPct: 0.4,
-    },
-  ],
-  hyderabad: [
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "6,800 Bags",
-      min: 2860,
-      max: 3040,
-      trend: "up",
-      trendPct: 1.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "4,200 Bags",
-      min: 4280,
-      max: 4520,
-      trend: "up",
-      trendPct: 1.0,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "2,900 Bags",
-      min: 3920,
-      max: 4180,
-      trend: "up",
-      trendPct: 0.7,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,800 Bags",
-      min: 1380,
-      max: 1580,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Dealer Rate",
-      arrival: "900 Bags",
-      min: 5050,
-      max: 5450,
-      trend: "up",
-      trendPct: 0.9,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Straw",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "2,400 Bags",
-      min: 430,
-      max: 530,
-      trend: "stable",
-      trendPct: 0.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Special Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "1,600 Bags",
-      min: 4850,
-      max: 5320,
-      trend: "up",
-      trendPct: 0.6,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Sorghum",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,100 Bags",
-      min: 2150,
-      max: 2380,
-      trend: "stable",
-      trendPct: 0.5,
-    },
-    {
-      product: "Paddy",
-      byproduct: "Paddy Irri 6",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "10,200 Bags",
-      min: 1750,
-      max: 1950,
-      trend: "stable",
-      trendPct: 0.6,
-    },
-    {
-      product: "Tomato",
-      byproduct: "Tomato (Grade A)",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "6,800 Crates",
-      min: 820,
-      max: 960,
-      trend: "up",
-      trendPct: 2.8,
-    },
-    {
-      product: "Onion",
-      byproduct: "Onion (Grade A)",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "5,400 Crates",
-      min: 640,
-      max: 740,
-      trend: "down",
-      trendPct: 1.2,
-    },
-    {
-      product: "Cotton",
-      byproduct: "Cotton Grade A",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "5,400 Bags",
-      min: 8100,
-      max: 8500,
-      trend: "up",
-      trendPct: 1.2,
-    },
-  ],
-  peshawar: [
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "9,600 Bags",
-      min: 2880,
-      max: 3080,
-      trend: "up",
-      trendPct: 1.5,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "6,200 Bags",
-      min: 4380,
-      max: 4620,
-      trend: "up",
-      trendPct: 1.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "4,100 Bags",
-      min: 3980,
-      max: 4240,
-      trend: "up",
-      trendPct: 0.8,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "2,800 Bags",
-      min: 1460,
-      max: 1660,
-      trend: "stable",
-      trendPct: 0.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Dealer Rate",
-      arrival: "1,400 Bags",
-      min: 5180,
-      max: 5580,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Straw",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "5,200 Bags",
-      min: 460,
-      max: 560,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Sorghum",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,800 Bags",
-      min: 2240,
-      max: 2480,
-      trend: "stable",
-      trendPct: 0.7,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Barley",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "2,200 Bags",
-      min: 2050,
-      max: 2250,
-      trend: "up",
-      trendPct: 0.9,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Oat",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "1,400 Bags",
-      min: 1780,
-      max: 2020,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Special Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "2,800 Bags",
-      min: 4950,
-      max: 5450,
-      trend: "up",
-      trendPct: 0.9,
-    },
-    {
-      product: "Maize",
-      byproduct: "Maize Grade A",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "8,400 Bags",
-      min: 2200,
-      max: 2450,
-      trend: "up",
-      trendPct: 1.3,
-    },
-    {
-      product: "Apple",
-      byproduct: "Apple Kala Kullu",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "5,400 Crates",
-      min: 3200,
-      max: 4000,
-      trend: "up",
-      trendPct: 2.4,
-    },
-    {
-      product: "Walnut",
-      byproduct: "Walnut",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "800 KG",
-      min: 2800,
-      max: 3400,
-      trend: "up",
-      trendPct: 1.2,
-    },
-    {
-      product: "Honey",
-      byproduct: "Honey",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "360 KG",
-      min: 2200,
-      max: 3000,
-      trend: "up",
-      trendPct: 3.2,
-    },
-    {
-      product: "Dairy",
-      byproduct: "Milk",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "8,500 L",
-      min: 150,
-      max: 170,
-      trend: "stable",
-      trendPct: 0.4,
-    },
-    {
-      product: "Poultry",
-      byproduct: "Broiler",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "6,200 Birds",
-      min: 490,
-      max: 530,
-      trend: "up",
-      trendPct: 1.8,
-    },
-  ],
-  quetta: [
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "3,200 Bags",
-      min: 2900,
-      max: 3100,
-      trend: "up",
-      trendPct: 2.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "2,400 Bags",
-      min: 4500,
-      max: 4800,
-      trend: "up",
-      trendPct: 1.8,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "1,600 Bags",
-      min: 4100,
-      max: 4400,
-      trend: "up",
-      trendPct: 1.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,100 Bags",
-      min: 1500,
-      max: 1700,
-      trend: "stable",
-      trendPct: 0.5,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Dealer Rate",
-      arrival: "600 Bags",
-      min: 5400,
-      max: 5900,
-      trend: "up",
-      trendPct: 1.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Straw",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "2,100 Bags",
-      min: 500,
-      max: 620,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Special Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "1,200 Bags",
-      min: 5200,
-      max: 5800,
-      trend: "up",
-      trendPct: 1.1,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Barley",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "900 Bags",
-      min: 2200,
-      max: 2450,
-      trend: "up",
-      trendPct: 1.0,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Sorghum",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "700 Bags",
-      min: 2400,
-      max: 2680,
-      trend: "up",
-      trendPct: 1.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Oat",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "650 Bags",
-      min: 1850,
-      max: 2100,
-      trend: "up",
-      trendPct: 0.9,
-    },
-    {
-      product: "Dates",
-      byproduct: "Ajwa Dates",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "480 Bags",
-      min: 4500,
-      max: 6000,
-      trend: "stable",
-      trendPct: 0.4,
-    },
-    {
-      product: "Dates",
-      byproduct: "Aseel Dates",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "1,200 Bags",
-      min: 1800,
-      max: 2400,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Almonds",
-      byproduct: "Almond (Desi)",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "600 KG",
-      min: 2800,
-      max: 3400,
-      trend: "up",
-      trendPct: 1.5,
-    },
-    {
-      product: "Pistachio",
-      byproduct: "Pistachio",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "420 KG",
-      min: 6500,
-      max: 8000,
-      trend: "stable",
-      trendPct: 0.6,
-    },
-  ],
-  siranwali: [
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "14,200 Bags",
-      min: 2780,
-      max: 2960,
-      trend: "up",
-      trendPct: 1.7,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "9,400 Bags",
-      min: 4240,
-      max: 4460,
-      trend: "up",
-      trendPct: 1.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "6,600 Bags",
-      min: 3860,
-      max: 4140,
-      trend: "up",
-      trendPct: 0.8,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "4,200 Bags",
-      min: 1430,
-      max: 1630,
-      trend: "stable",
-      trendPct: 0.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "1,600 Bags",
-      min: 5150,
-      max: 5550,
-      trend: "up",
-      trendPct: 1.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Straw",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "8,400 Bags",
-      min: 430,
-      max: 530,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Special Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "2,800 Bags",
-      min: 4820,
-      max: 5280,
-      trend: "up",
-      trendPct: 0.7,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Sorghum",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,200 Bags",
-      min: 2210,
-      max: 2450,
-      trend: "stable",
-      trendPct: 0.6,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Barley",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,400 Bags",
-      min: 1950,
-      max: 2150,
-      trend: "up",
-      trendPct: 0.7,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Oat",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "720 Bags",
-      min: 1650,
-      max: 1880,
-      trend: "stable",
-      trendPct: 0.4,
-    },
-    {
-      product: "Rice",
-      byproduct: "1121 Basmati-1",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "18,400 Bags",
-      min: 5100,
-      max: 5500,
-      trend: "up",
-      trendPct: 3.2,
-    },
-    {
-      product: "Paddy",
-      byproduct: "Paddy Irri 6",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "14,200 Bags",
-      min: 1800,
-      max: 2000,
-      trend: "down",
-      trendPct: 0.8,
-    },
-    {
-      product: "Paddy",
-      byproduct: "Paddy Kainat-1121",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "9,100 Bags",
-      min: 3200,
-      max: 3600,
-      trend: "up",
-      trendPct: 2.6,
-    },
-  ],
-  sargodha: [
-    {
-      product: "Wheat",
-      byproduct: "Wheat",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "11,400 Bags",
-      min: 2800,
-      max: 2980,
-      trend: "up",
-      trendPct: 1.9,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Fine Flour",
-      emoji: "",
-      rateType: "Wholesale Rate",
-      arrival: "7,200 Bags",
-      min: 4260,
-      max: 4480,
-      trend: "up",
-      trendPct: 1.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "5,100 Bags",
-      min: 3880,
-      max: 4160,
-      trend: "up",
-      trendPct: 0.9,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Bran",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "3,400 Bags",
-      min: 1440,
-      max: 1640,
-      trend: "stable",
-      trendPct: 0.4,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Semolina",
-      emoji: "",
-      rateType: "Dealer Rate",
-      arrival: "1,300 Bags",
-      min: 5160,
-      max: 5560,
-      trend: "up",
-      trendPct: 1.3,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Straw",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "7,200 Bags",
-      min: 425,
-      max: 525,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Special Flour",
-      emoji: "",
-      rateType: "Retail Rate",
-      arrival: "2,600 Bags",
-      min: 4840,
-      max: 5300,
-      trend: "up",
-      trendPct: 0.8,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Sorghum",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,600 Bags",
-      min: 2230,
-      max: 2470,
-      trend: "up",
-      trendPct: 0.9,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Barley",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "1,200 Bags",
-      min: 1960,
-      max: 2160,
-      trend: "stable",
-      trendPct: 0.5,
-    },
-    {
-      product: "Wheat",
-      byproduct: "Oat",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "600 Bags",
-      min: 1660,
-      max: 1890,
-      trend: "up",
-      trendPct: 0.6,
-    },
-    {
-      product: "Citrus",
-      byproduct: "Orange",
-      emoji: "",
-      rateType: "Farm Rate",
-      arrival: "8,600 Crates",
-      min: 1800,
-      max: 2200,
-      trend: "stable",
-      trendPct: 0.2,
-    },
-    {
-      product: "Citrus",
-      byproduct: "Musambi",
-      emoji: "",
-      rateType: "Mandi Rate",
-      arrival: "4,200 Crates",
-      min: 2200,
-      max: 2800,
-      trend: "up",
-      trendPct: 1.6,
-    },
-    {
-      product: "Canola",
-      byproduct: "Canola Seed",
-      emoji: "",
-      rateType: "Mill Rate",
-      arrival: "2,400 Bags",
-      min: 5300,
-      max: 5700,
-      trend: "up",
-      trendPct: 1.0,
-    },
-  ],
-};
+const MANDI_ROWS: Record<string, any[]> = REAL_MANDI_ROWS;
+
 
 //  UTILITY
 
@@ -9721,8 +5952,8 @@ function ByProductCombinedScreen({
   // Date scroll system - restricted to 2 days (Today & Yesterday) for non-subscribers
   const { voiceEnabled, lang, t: tL, tc: tcL, tm: tmL, tr: trL } = useLang();
 
-  const BASE_DATE = new Date(2026, 7, 21); // Aug 21 2026 = today
-  const NUM_DAYS = profileCompleted ? 7 : 2;
+  const BASE_DATE = new Date(2026, 8, 14); // Sep 14 2026 = today
+  const NUM_DAYS = 31; // Full 31-day authentic dataset from Aug 15 to Sep 14, 2026
 
   const dateForOffset = (offset: number) => {
     const d = new Date(BASE_DATE);
@@ -9946,6 +6177,46 @@ function ByProductCombinedScreen({
     });
   };
 
+  // Robust agricultural matcher between App Verticals and 40k Excel records
+  const isMatchProduct = (excelProd: string, targetProds: string[]): boolean => {
+    if (!excelProd || targetProds.length === 0) return true;
+    const ep = excelProd.toLowerCase().trim();
+    return targetProds.some((tp) => {
+      const t = tp.toLowerCase().trim();
+      if (ep === t || ep.includes(t) || t.includes(ep)) return true;
+      if (t === "cotton" && ep.includes("cotton")) return true;
+      if (t === "paddy" && (ep === "rice" || ep.includes("paddy"))) return true;
+      if (t === "rice" && (ep === "milled rice" || ep.includes("rice"))) return true;
+      if (t === "mustard" && (ep === "edible oil" || ep.includes("mustard"))) return true;
+      if (t === "canola" && (ep === "edible oil" || ep.includes("canola"))) return true;
+      if (t === "sunflower" && (ep === "edible oil" || ep.includes("sunflower"))) return true;
+      if (t === "soybean" && (ep === "edible oil" || ep.includes("soybean"))) return true;
+      if (t === "vegetables" && (ep === "vegetable" || ep.includes("vegetable"))) return true;
+      if (t === "dry fruits" && (ep === "dry-fruits" || ep.includes("dry"))) return true;
+      if (t === "spices" && (ep === "spices" || ep === "chillies" || ep.includes("spice") || ep.includes("chilli"))) return true;
+      if (t === "sugar" && (ep === "sugar" || ep.includes("sugar"))) return true;
+      return false;
+    });
+  };
+
+  const isMatchByproduct = (excelBp: string, targetBp: string): boolean => {
+    if (!targetBp || !excelBp) return true;
+    const e = excelBp.toLowerCase().replace(/[-_()]/g, " ").replace(/\s+/g, " ").trim();
+    const t = targetBp.toLowerCase().replace(/[-_()]/g, " ").replace(/\s+/g, " ").trim();
+    if (e === t || e.includes(t) || t.includes(e)) return true;
+
+    // Agricultural synonyms
+    if ((t.includes("flour") || t.includes("atta")) && (e.includes("flour") || e.includes("atta"))) return true;
+    if ((t.includes("bran") || t.includes("choker")) && (e.includes("bran") || e.includes("choker"))) return true;
+    if ((t.includes("straw") || t.includes("bhoosa")) && (e.includes("straw") || e.includes("bhoosa"))) return true;
+    if ((t.includes("sooji") || t.includes("semolina")) && (e.includes("sooji") || e.includes("semolina"))) return true;
+    if ((t.includes("maida") || t.includes("fine flour")) && (e.includes("maida") || e.includes("fine flour") || e.includes("refined flour"))) return true;
+    if (t.includes("grade a") && e.includes("grade a")) return true;
+    if (t.includes("grade b") && e.includes("grade b")) return true;
+    if (t.includes("grade c") && e.includes("grade c")) return true;
+    return false;
+  };
+
   // Build best representative rate row for a byproduct — returns null if no real data
   const buildRepRow = (bp: string, bpIndex: number = 0): { row: RichRow; hasData: boolean } => {
     const noData: RichRow = {
@@ -9966,25 +6237,28 @@ function ByProductCombinedScreen({
 
     const fromMandi = Object.entries(MANDI_ROWS).flatMap(([mandiId, rows]) => {
       const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
-      if (!mandi) return [];
-      if (!inLocScope(mandi.name, mandi.city, mandi.province)) return [];
+      const mName = mandi?.name || rows[0]?.mandiName || mandiId;
+      const mCity = mandi?.city || rows[0]?.mandiCity || mandiId;
+      const mProv = mandi?.province || rows[0]?.province || "Punjab";
+
+      if (!inLocScope(mName, mCity, mProv)) return [];
       return rows
         .filter(
           (r) =>
-            activeproducts.includes(r.product) &&
-            (!bp || r.byproduct === bp) &&
+            isMatchProduct(r.product, activeproducts) &&
+            (!bp || isMatchByproduct(r.byproduct, bp)) &&
             (selectedRateTypes.length === 0 ||
               selectedRateTypes.includes(r.rateType)),
         )
         .map((r) => {
           const vEntry = showAllProducts
-            ? products.find((p) => p.product === r.product)
+            ? products.find((p) => isMatchProduct(r.product, [p.product]))
             : null;
           return enrichRowWithAttrs({
             ...r,
-            mandiName: mandi.name,
-            mandiCity: mandi.city,
-            province: mandi.province,
+            mandiName: mName,
+            mandiCity: mCity,
+            province: mProv,
             vertical: vEntry?.vertical || activeProduct?.vertical || "Grains",
           });
         });
@@ -10039,18 +6313,21 @@ function ByProductCombinedScreen({
     const seen = new Set<string>(); // deduplicate by mandi+rateType
     Object.entries(MANDI_ROWS).forEach(([mandiId, mandiRows]) => {
       const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
-      if (!mandi) return;
-      if (!inLocScope(mandi.name, mandi.city, mandi.province)) return;
+      const mName = mandi?.name || mandiRows[0]?.mandiName || mandiId;
+      const mCity = mandi?.city || mandiRows[0]?.mandiCity || mandiId;
+      const mProv = mandi?.province || mandiRows[0]?.province || "Punjab";
+
+      if (!inLocScope(mName, mCity, mProv)) return;
       mandiRows
         .filter(
           (r) =>
-            activeproducts.includes(r.product) &&
-            (!bp || r.byproduct === bp) &&
+            isMatchProduct(r.product, activeproducts) &&
+            (!bp || isMatchByproduct(r.byproduct, bp)) &&
             (selectedRateTypes.length === 0 ||
               selectedRateTypes.includes(r.rateType)),
         )
         .forEach((r) => {
-          const key = `${mandi.name}|${r.rateType}`;
+          const key = `${mName}|${r.rateType}`;
           if (seen.has(key)) return;
           seen.add(key);
           const vEntry = showAllProducts
@@ -10059,9 +6336,9 @@ function ByProductCombinedScreen({
           rows.push(
             enrichRowWithAttrs({
               ...r,
-              mandiName: mandi.name,
-              mandiCity: mandi.city,
-              province: mandi.province,
+              mandiName: mName,
+              mandiCity: mCity,
+              province: mProv,
               vertical: vEntry?.vertical || activeProduct?.vertical || "Grains",
             }),
           );
@@ -12013,7 +8290,7 @@ function getIslamicDate(
   // Tabular Islamic calendar approximation
   const jd = Math.floor(
     (gregorianDate.getTime() / 86400000) + 2440587.5,
-  );
+  ) + 1;
   const epoch = 1948440;
   const z = jd - epoch;
   const cycle = Math.floor(z / 10631);
@@ -12466,15 +8743,17 @@ function RatesResultScreen({
   const baseRows: RichRow[] = Object.entries(MANDI_ROWS).flatMap(
     ([mandiId, rows]) => {
       const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
-      if (!mandi) return [];
-      if (selectedMandis.length > 0 && !selectedMandis.includes(mandi.name))
+      const mName = mandi?.name || rows[0]?.mandiName || mandiId;
+      const mCity = mandi?.city || rows[0]?.mandiCity || mandiId;
+      const mProv = mandi?.province || rows[0]?.province || "Punjab";
+      if (selectedMandis.length > 0 && !selectedMandis.includes(mName))
         return [];
       return rows
         .filter((r) => {
           const matchItem = items.some(
             (item) =>
-              r.product === item.product &&
-              (item.byproduct === "" || r.byproduct === item.byproduct),
+              isMatchProduct(r.product, item.product) &&
+              (item.byproduct === "" || isMatchByproduct(r.byproduct, item.byproduct)),
           );
           const matchRate =
             selectedRateTypes.length === 0 ||
@@ -12483,10 +8762,10 @@ function RatesResultScreen({
         })
         .map((r) => ({
           ...r,
-          mandiName: mandi.name,
-          mandiCity: mandi.city,
-          province: mandi.province,
-          vertical: items.find((i) => i.product === r.product)?.vertical || "",
+          mandiName: mName,
+          mandiCity: mCity,
+          province: mProv,
+          vertical: items.find((i) => isMatchProduct(i.product, r.product))?.vertical || "",
         }));
     },
   );
@@ -13719,11 +9998,11 @@ function ProductRatesScreen({
   >(null);
   // Overview stat date filter — pre-filled when navigating from a historical card
   const [statDateFilter, setStatDateFilter] = useState<Date | null>(
-    initialStatDate ? new Date(initialStatDate) : null,
+    initialStatDate ? new Date(initialStatDate) : new Date(2026, 8, 14),
   );
   const [statDateCalOpen, setStatDateCalOpen] = useState(false);
   const [statDateCalMonth, setStatDateCalMonth] = useState<Date>(
-    initialStatDate ? new Date(initialStatDate) : new Date(2026, 7, 21),
+    initialStatDate ? new Date(initialStatDate) : new Date(2026, 8, 14),
   );
   // Mandi table province + date filter
   const [tableProvinceFilter, setTableProvinceFilter] = useState<string | null>(
@@ -13790,17 +10069,20 @@ function ProductRatesScreen({
     () =>
       Object.entries(MANDI_ROWS).flatMap(([mandiId, rows]) => {
         const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
+        const mName = mandi?.name || rows[0]?.mandiName || mandiId;
+        const mCity = mandi?.city || rows[0]?.mandiCity || mandiId;
+        const mProv = mandi?.province || rows[0]?.province || "Punjab";
         return rows
           .filter(
             (r) =>
-              r.product === product &&
-              (!byproduct || r.byproduct === byproduct),
+              isMatchProduct(r.product, product) &&
+              (!byproduct || isMatchByproduct(r.byproduct, byproduct)),
           )
           .map((r) => ({
             ...r,
-            mandiName: mandi?.name || mandiId,
-            mandiCity: mandi?.city || mandiId,
-            province: mandi?.province || "Punjab",
+            mandiName: mName,
+            mandiCity: mCity,
+            province: mProv,
           }));
       }),
     [product, byproduct],
@@ -13840,7 +10122,7 @@ function ProductRatesScreen({
   );
 
   // Date variation for overview stats
-  const STAT_BASE_DATE = new Date(2026, 7, 21);
+  const STAT_BASE_DATE = new Date(2026, 8, 14);
   const statDateVariation = statDateFilter
     ? Math.max(
       0.88,
@@ -13957,72 +10239,184 @@ function ProductRatesScreen({
     };
   };
 
-  // Chart data
+  // Chart data (Binance / TradingView financial engine)
   const len = range === "week" ? 7 : range === "month" ? 30 : 90;
   const base = rows[0]?.min || allRows[0]?.min || 2850;
+  const realKey = `${product}|${byproduct}`;
+  const matchedKey = Object.keys(REAL_COMMODITY_TIMELINES).find(
+    (k) =>
+      k === realKey ||
+      k.toLowerCase().includes(byproduct.toLowerCase()) ||
+      k.toLowerCase().includes(product.toLowerCase()),
+  );
+  const realTimeline = matchedKey ? REAL_COMMODITY_TIMELINES[matchedKey] : null;
+
+  const normInitial = useMemo(() => {
+    const raw = (initialRateType || "").trim();
+    if (!raw) return "Mandi Rate";
+    const match = ALL_RATE_TYPES.find(
+      (t) => t.toLowerCase() === raw.toLowerCase() || t.toLowerCase().startsWith(raw.toLowerCase())
+    );
+    return match || ALL_RATE_TYPES[0];
+  }, [initialRateType]);
+
+  const orderedRateTypes = useMemo(() => {
+    return [normInitial, ...ALL_RATE_TYPES.filter((t) => t !== normInitial)];
+  }, [normInitial]);
+
+  const [focusedType, setFocusedType] = useState<string>(() => normInitial);
+  const [compareMode, setCompareMode] = useState<boolean>(false);
+
+  useEffect(() => {
+    setFocusedType(normInitial);
+    if (!activeTypes.includes(normInitial)) {
+      setActiveTypes([normInitial]);
+    }
+  }, [normInitial]);
+
   const priceSeries = useMemo(
     () =>
-      ALL_RATE_TYPES.map((rt) => ({
-        label: rt,
-        color: RATE_COLORS[rt],
-        data: genPts(base * (RATE_MULTS[rt] || 1), len, 0.025),
-      })),
-    [base, len, product, byproduct, locScope.label],
+      ALL_RATE_TYPES.map((rt) => {
+        // Natural realistic variations for secondary benchmarks without identical artificial gaps
+        const mult = RATE_MULTS[rt] || 1;
+        let data: number[];
+        if (realTimeline && realTimeline.length > 0) {
+          if (range === "week") {
+            data = realTimeline.slice(-7).map((v) => Math.round(v * mult));
+          } else if (range === "month") {
+            data = realTimeline.slice(-30).map((v) => Math.round(v * mult));
+          } else {
+            const extended = [
+              ...realTimeline,
+              ...realTimeline,
+              ...realTimeline,
+            ].slice(-90);
+            data = extended.map((v, i) =>
+              Math.round(v * mult * (1 + Math.sin(i / 6) * 0.008)),
+            );
+          }
+        } else {
+          data = genPts(base * mult, len, 0.02);
+        }
+        return {
+          label: rt,
+          color: RATE_COLORS[rt] || "#087F63",
+          data,
+        };
+      }),
+    [base, len, product, byproduct, locScope.label, range, realTimeline],
   );
-  const arrivalBase = Math.max(statArrival / Math.max(statMandis, 1), 400);
-  const arrivalData = useMemo(
-    () => genPts(arrivalBase, len, 0.06),
-    [arrivalBase, len, product, byproduct, locScope.label],
-  );
-  const shownSeries = priceSeries.filter((s) => activeTypes.includes(s.label));
-  const toggleType = (tKey: string) =>
-    setActiveTypes((p) =>
-      p.includes(tKey) ? p.filter((x) => x !== tKey) : [...p, tKey],
-    );
 
-  // X-axis date labels
-  const today = new Date(2026, 7, 17); // Aug 17 2026
-  const xLabels = useMemo(() => {
-    const labels: string[] = [];
-    const urDays = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"];
-    const enDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const realArrivalTimeline = matchedKey ? REAL_ARRIVAL_TIMELINES[matchedKey] : null;
+  const arrivalBase = Math.max(statArrival / Math.max(statMandis, 1), 450);
+  const arrivalData = useMemo(() => {
+    if (realArrivalTimeline && realArrivalTimeline.length > 0) {
+      if (range === "week") {
+        return realArrivalTimeline.slice(-7);
+      } else if (range === "month") {
+        return realArrivalTimeline.slice(-30);
+      } else {
+        const ext = [...realArrivalTimeline, ...realArrivalTimeline, ...realArrivalTimeline].slice(-90);
+        return ext;
+      }
+    }
+    return genPts(arrivalBase, len, 0.05);
+  }, [realArrivalTimeline, arrivalBase, len, product, byproduct, locScope.label, range]);
+
+  const activeSeries = useMemo(() => {
+    const fallbackSeries = priceSeries[0] || { label: focusedType || "Retail", data: Array(len).fill(0), color: "#087F63" };
+    if (!compareMode) {
+      const main = priceSeries.find((s) => s.label === focusedType) || fallbackSeries;
+      return [main];
+    }
+    const sel = priceSeries.filter((s) => activeTypes.includes(s.label));
+    return sel.length > 0 ? sel : [fallbackSeries];
+  }, [priceSeries, focusedType, compareMode, activeTypes, len]);
+
+  const toggleType = (tKey: string) => {
+    setFocusedType(tKey);
+    setActiveTypes((p) => {
+      if (!p.includes(tKey)) return [...p, tKey];
+      if (p.length > 1) return p.filter((x) => x !== tKey);
+      return p;
+    });
+  };
+
+  // X-axis dates
+  const today = new Date(2026, 8, 14); // Sept 14 2026
+  const urMonthsShort = ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"];
+  const enMonthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const urDays = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"];
+  const enDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  const fullDateLabels = useMemo(() => {
+    const list: { tickLabel: string; fullDate: string; dayName: string }[] = [];
     for (let i = len - 1; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
-      if (range === "week")
-        labels.push(lang === "ur" ? urDays[d.getDay()] : enDays[d.getDay()]);
-      else if (range === "month")
-        labels.push(i % 7 === 0 ? `${d.getDate()}/${d.getMonth() + 1}` : "");
-      else
-        labels.push(i % 15 === 0 ? `${d.getDate()}/${d.getMonth() + 1}` : "");
+      const dayNum = d.getDate();
+      const mIdx = d.getMonth();
+      const dIdx = d.getDay();
+
+      const dayStr = lang === "ur" ? toUrduDigits(dayNum) : String(dayNum);
+      const mName = lang === "ur" ? urMonthsShort[mIdx] : enMonthsShort[mIdx];
+      const dayName = lang === "ur" ? urDays[dIdx] : enDays[dIdx];
+
+      let tickLabel = "";
+      if (range === "week") {
+        tickLabel = lang === "ur" ? `${dayName} ${dayStr}` : `${enDays[dIdx]} ${dayNum}`;
+      } else if (range === "month") {
+        tickLabel = i % 7 === 0 || i === 0 ? `${dayStr} ${mName}` : "";
+      } else {
+        tickLabel = i % 18 === 0 || i === 0 ? `${dayStr} ${mName}` : "";
+      }
+
+      const fullDate = lang === "ur"
+        ? `${dayStr} ${mName} ۲۰۲۶ (${dayName})`
+        : `${dayNum} ${enMonthsShort[mIdx]} 2026 (${enDays[dIdx]})`;
+
+      list.push({ tickLabel, fullDate, dayName });
     }
-    return labels;
+    return list;
   }, [len, range, lang]);
 
-  // Chart SVG helpers
-  const CH = 300,
-    CW = 320,
-    PL = 54,
-    PR = 12,
-    PT = 20,
-    PB = 44;
+  const xLabels = useMemo(() => fullDateLabels.map((f) => f.tickLabel), [fullDateLabels]);
+
+  // Chart SVG helpers (TradingView & Binance style)
+  const CH = 260,
+    CW = 350,
+    PL = 48,
+    PR = 14,
+    PT = 18,
+    PB = 32;
   const chartW = CW - PL - PR;
   const chartH = CH - PT - PB;
 
-  const xOf = (i: number, total: number) => PL + (i / (total - 1)) * chartW;
+  const xOf = (i: number, total: number) => PL + (i / Math.max(total - 1, 1)) * chartW;
   const yOf = (v: number, mn: number, mx: number) =>
-    PT + ((mx - v) / (mx - mn || 1)) * chartH;
+    PT + ((mx - v) / Math.max(mx - mn, 1)) * chartH;
 
-  const priceFlat = shownSeries.flatMap((s) => s.data);
-  const pMin = priceFlat.length ? Math.min(...priceFlat) : 0;
-  const pMax = priceFlat.length ? Math.max(...priceFlat) : 1;
-  const aMin = Math.min(...arrivalData);
-  const aMax = Math.max(...arrivalData);
+  const priceFlat = activeSeries.flatMap((s) => s.data);
+  const rawPMin = priceFlat.length ? Math.min(...priceFlat) : 2500;
+  const rawPMax = priceFlat.length ? Math.max(...priceFlat) : 3500;
 
-  const yPriceTicks = [pMin, (pMin + pMax) / 2, pMax].map((v) => Math.round(v));
-  const yArrivalTicks = [aMin, (aMin + aMax) / 2, aMax].map((v) =>
-    Math.round(v),
-  );
+  // Nice rounded ticks for Y-axis
+  const pPadding = Math.max((rawPMax - rawPMin) * 0.08, 60);
+  const pMin = Math.floor((rawPMin - pPadding) / 50) * 50;
+  const pMax = Math.ceil((rawPMax + pPadding) / 50) * 50;
+
+  const aMin = Math.floor(Math.min(...arrivalData) * 0.9);
+  const aMax = Math.ceil(Math.max(...arrivalData) * 1.1);
+
+  const yPriceTicks = useMemo(() => {
+    const step = (pMax - pMin) / 4;
+    return [pMin, pMin + step, pMin + step * 2, pMin + step * 3, pMax].map((v) => Math.round(v));
+  }, [pMin, pMax]);
+
+  const yArrivalTicks = useMemo(() => {
+    const step = (aMax - aMin) / 4;
+    return [aMin, aMin + step, aMin + step * 2, aMin + step * 3, aMax].map((v) => Math.round(v));
+  }, [aMin, aMax]);
 
   return (
     <div
@@ -14665,7 +11059,7 @@ function ProductRatesScreen({
                                   ? (lang === "ur"
                                     ? ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"][statDateFilter.getMonth()]
                                     : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][statDateFilter.getMonth()])
-                                  : (lang === "ur" ? "اگست" : "Aug")}
+                                  : (lang === "ur" ? "ستمبر" : "Sep")}
                               </span>
                             </div>
                             <div
@@ -14679,7 +11073,7 @@ function ProductRatesScreen({
                               }}
                             >
                               <span style={{ color: "#183B34", fontSize: 13, fontWeight: 900, lineHeight: 1 }}>
-                                {statDateFilter ? statDateFilter.getDate() : 21}
+                                {statDateFilter ? statDateFilter.getDate() : 14}
                               </span>
                             </div>
                           </button>
@@ -15091,7 +11485,7 @@ function ProductRatesScreen({
               while (sdCalDays.length % 7 !== 0) sdCalDays.push(null);
               const sdIsSame = (a: Date, b: Date) =>
                 a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-              const sdIsRef = (d: Date) => sdIsSame(d, new Date(2026, 7, 21));
+              const sdIsRef = (d: Date) => sdIsSame(d, new Date(2026, 8, 14));
               return (
                 <div className="fixed z-[120] rounded-2xl overflow-hidden shadow-2xl" style={{ top: "22%", right: 16, width: 260, background: "#F4FAF7", border: "1px solid #D5E2DD" }} onClick={(e) => e.stopPropagation()}>
                   <div className="px-4 pt-3 pb-2">
@@ -15191,8 +11585,8 @@ function ProductRatesScreen({
                 (r) =>
                   !tableProvinceFilter || r.province === tableProvinceFilter,
               );
-              const BASE_DATE = new Date(2026, 7, 21);
-              const USER_SIGNUP_DATE = new Date(2026, 7, 19); // Sign up reference date
+              const BASE_DATE = new Date(2026, 8, 14);
+              const USER_SIGNUP_DATE = new Date(2026, 8, 10); // Sign up reference date
               const tableDateVariation = tableDateFilter
                 ? (() => {
                   const diffMs =
@@ -15262,7 +11656,7 @@ function ProductRatesScreen({
                 a.getMonth() === b.getMonth() &&
                 a.getDate() === b.getDate();
               const tcIsToday = (d: Date) =>
-                tcIsSameDay(d, new Date(2026, 7, 21));
+                tcIsSameDay(d, new Date(2026, 8, 14));
               return (
                 <>
                   {/* Backdrop overlay when expanded to 85% from bottom */}
@@ -17157,17 +13551,18 @@ function ProductRatesScreen({
                 const allTableRows = Object.entries(MANDI_ROWS).flatMap(
                   ([mandiId, mrows]) => {
                     const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
-                    if (!mandi) return [];
+                    const mName = mandi?.name || mrows[0]?.mandiName || mandiId;
+                    const mProv = mandi?.province || mrows[0]?.province || "Punjab";
                     return mrows
                       .filter(
                         (r) =>
-                          r.product === product &&
-                          (!byproduct || r.byproduct === byproduct),
+                          isMatchProduct(r.product, product) &&
+                          (!byproduct || isMatchByproduct(r.byproduct, byproduct)),
                       )
                       .map((r) => ({
                         ...r,
-                        mandiName: mandi.name,
-                        province: mandi.province,
+                        mandiName: mName,
+                        province: mProv,
                       }));
                   },
                 );
@@ -18146,553 +14541,635 @@ function ProductRatesScreen({
 
             {trendMode === "price" ? (
               <>
-                {/* Interactive price chart */}
+                {/* Binance / TradingView Style Financial Trend Card */}
                 <div
-                  className="rounded-2xl px-3 pt-3 pb-2"
+                  className="rounded-2xl p-3.5 flex flex-col gap-2.5 shadow-sm"
                   style={{
-                    background: "#F4FAF7",
+                    background: "#FFFFFF",
                     border: "1px solid #D5E2DD",
                   }}
                 >
-                  {/* Hover tooltip */}
-                  {hoverIdx !== null && shownSeries.length > 0 && (
-                    <div
-                      className="rounded-xl px-3 py-2 mb-2 flex flex-wrap gap-2"
-                      style={{
-                        background: "#F1F7F4",
-                        border: "1px solid #D5E2DD",
+                  {/* Top Financial HUD Header */}
+                  {(() => {
+                    const mainSeries = activeSeries.find((s) => s.label === focusedType) || activeSeries[0] || priceSeries[0];
+                    const currentIdx = hoverIdx !== null ? hoverIdx : len - 1;
+                    const displayPrice = mainSeries?.data[currentIdx] || 0;
+                    const startPrice = mainSeries?.data[0] || displayPrice || 1;
+                    const changeAmt = displayPrice - startPrice;
+                    const changePct = ((changeAmt / startPrice) * 100).toFixed(1);
+                    const isPositive = changeAmt >= 0;
+                    const seriesMax = mainSeries ? Math.max(...mainSeries.data) : displayPrice;
+                    const seriesMin = mainSeries ? Math.min(...mainSeries.data) : displayPrice;
+                    const seriesAvg = mainSeries ? Math.round(mainSeries.data.reduce((a, b) => a + b, 0) / mainSeries.data.length) : displayPrice;
+
+                    return (
+                      <div className="flex flex-col gap-2 border-b border-[#E8EFEC] pb-2.5">
+                        {/* Top Row: Rate Type Badge & Compare Toggle */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5">
+                            <span
+                              className="w-2.5 h-2.5 rounded-full"
+                              style={{ background: mainSeries?.color || "#087F63" }}
+                            />
+                            <span
+                              className="text-xs font-bold text-[#143B33]"
+                              style={{
+                                fontFamily: lang === "ur" ? URDU_FONT : "inherit",
+                                fontSize: lang === "ur" ? 15 : 12,
+                              }}
+                            >
+                              {tr(focusedType)}
+                            </span>
+                            <span className="text-[10px] font-semibold text-[#52635F] bg-[#F1F7F4] px-1.5 py-0.5 rounded-md border border-[#D5E2DD]">
+                              {lang === "ur" ? "روپے فی ۴۰ کلو" : "PKR / 40kg"}
+                            </span>
+                          </div>
+
+                          {/* Compare Mode Toggle */}
+                          <button
+                            onClick={() => setCompareMode((prev) => !prev)}
+                            className="tap-target flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-95"
+                            style={{
+                              background: compareMode ? "#087F63" : "#F1F7F4",
+                              color: compareMode ? "#FFFFFF" : "#52635F",
+                              border: `1px solid ${compareMode ? "#087F63" : "#D5E2DD"}`,
+                              fontFamily: lang === "ur" ? URDU_FONT : "inherit",
+                            }}
+                          >
+                            <span>{compareMode ? (lang === "ur" ? "اکیلا دیکھیں" : "Focus View") : (lang === "ur" ? "موازنہ کریں" : "Compare Rates")}</span>
+                          </button>
+                        </div>
+
+                        {/* Price & Change Display */}
+                        <div className="flex items-baseline justify-between flex-wrap gap-2">
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-2xl font-black text-[#143B33] tracking-tight">
+                              {lang === "ur" ? `روپے ${toUrduDigits(displayPrice.toLocaleString())}` : `Rs. ${displayPrice.toLocaleString()}`}
+                            </span>
+                            <span
+                              className="text-xs font-bold px-2 py-0.5 rounded-md flex items-center gap-0.5"
+                              style={{
+                                background: isPositive ? "#DCFCE7" : "#FEE2E2",
+                                color: isPositive ? "#15803D" : "#B91C1C",
+                                border: `1px solid ${isPositive ? "#86EFAC" : "#FCA5A5"}`,
+                              }}
+                            >
+                              <span>{isPositive ? "▲" : "▼"}</span>
+                              <span>{isPositive ? `+${changePct}%` : `${changePct}%`}</span>
+                              <span className="opacity-75 text-[10px]">
+                                ({isPositive ? `+${changeAmt}` : changeAmt})
+                              </span>
+                            </span>
+                          </div>
+
+                          {/* Date / Scrub Indicator */}
+                          <div className="text-[11px] font-semibold text-[#52635F]">
+                            {fullDateLabels[currentIdx]?.fullDate}
+                          </div>
+                        </div>
+
+                        {/* Stat Summary Bar (High, Low, Avg) */}
+                        <div className="grid grid-cols-3 gap-2 pt-1 text-[10px]">
+                          <div className="bg-[#F8FBFA] p-1.5 rounded-lg border border-[#E8EFEC] flex flex-col">
+                            <span className="text-[#80918B] font-semibold">
+                              {lang === "ur" ? "بلند ترین (High)" : "Period High"}
+                            </span>
+                            <span className="font-bold text-[#143B33] text-xs">
+                              {lang === "ur" ? `روپے ${toUrduDigits(seriesMax)}` : `Rs. ${seriesMax.toLocaleString()}`}
+                            </span>
+                          </div>
+                          <div className="bg-[#F8FBFA] p-1.5 rounded-lg border border-[#E8EFEC] flex flex-col">
+                            <span className="text-[#80918B] font-semibold">
+                              {lang === "ur" ? "کم ترین (Low)" : "Period Low"}
+                            </span>
+                            <span className="font-bold text-[#143B33] text-xs">
+                              {lang === "ur" ? `روپے ${toUrduDigits(seriesMin)}` : `Rs. ${seriesMin.toLocaleString()}`}
+                            </span>
+                          </div>
+                          <div className="bg-[#F8FBFA] p-1.5 rounded-lg border border-[#E8EFEC] flex flex-col">
+                            <span className="text-[#80918B] font-semibold">
+                              {lang === "ur" ? "اوسط (Avg)" : "Period Avg"}
+                            </span>
+                            <span className="font-bold text-[#087F63] text-xs">
+                              {lang === "ur" ? `روپے ${toUrduDigits(seriesAvg)}` : `Rs. ${seriesAvg.toLocaleString()}`}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* SVG Chart Canvas */}
+                  <div className="relative w-full select-none">
+                    <svg
+                      viewBox={`0 0 ${CW} ${CH}`}
+                      className="w-full"
+                      style={{ height: CH, display: "block" }}
+                      onMouseMove={(e) => {
+                        const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
+                        const relX = ((e.clientX - rect.left) / rect.width) * CW - PL;
+                        const i = Math.round((relX / chartW) * (len - 1));
+                        setHoverIdx(Math.max(0, Math.min(len - 1, i)));
                       }}
+                      onMouseLeave={() => setHoverIdx(null)}
+                      onTouchMove={(e) => {
+                        const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
+                        const touch = e.touches[0];
+                        const relX = ((touch.clientX - rect.left) / rect.width) * CW - PL;
+                        const i = Math.round((relX / chartW) * (len - 1));
+                        setHoverIdx(Math.max(0, Math.min(len - 1, i)));
+                      }}
+                      onTouchEnd={() => setHoverIdx(null)}
                     >
+                      <defs>
+                        {activeSeries.map((s) => (
+                          <linearGradient
+                            key={`grad-${s.label}`}
+                            id={`areaGrad-${s.label.replace(/\s+/g, "_")}`}
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                          >
+                            <stop offset="0%" stopColor={s.color} stopOpacity="0.28" />
+                            <stop offset="85%" stopColor={s.color} stopOpacity="0.02" />
+                            <stop offset="100%" stopColor={s.color} stopOpacity="0.00" />
+                          </linearGradient>
+                        ))}
+                      </defs>
+
+                      {/* Horizontal Subtle Gridlines + Y-Axis Clean Price Labels */}
+                      {yPriceTicks.map((tick, ti) => {
+                        const y = yOf(tick, pMin, pMax);
+                        return (
+                          <g key={`yTick-${ti}`}>
+                            <line
+                              x1={PL}
+                              y1={y}
+                              x2={CW - PR}
+                              y2={y}
+                              stroke="#E5EAE8"
+                              strokeWidth="1"
+                              strokeDasharray="4 4"
+                            />
+                            <text
+                              x={PL - 6}
+                              y={y + 3.5}
+                              textAnchor="end"
+                              fontSize="9.5"
+                              fontWeight="600"
+                              fill="#80918B"
+                              fontFamily="inherit"
+                            >
+                              {tick >= 1000 ? `${(tick / 1000).toFixed(1)}k` : tick}
+                            </text>
+                          </g>
+                        );
+                      })}
+
+                      {/* X-Axis Baseline */}
+                      <line
+                        x1={PL}
+                        y1={CH - PB}
+                        x2={CW - PR}
+                        y2={CH - PB}
+                        stroke="#D5E2DD"
+                        strokeWidth="1.2"
+                      />
+
+                      {/* X-Axis Date Labels with Zero Overlap */}
+                      {xLabels.map((lbl, i) =>
+                        lbl ? (
+                          <text
+                            key={`xTick-${i}`}
+                            x={xOf(i, len)}
+                            y={CH - 10}
+                            textAnchor="middle"
+                            fontSize="9"
+                            fontWeight="600"
+                            fill="#80918B"
+                            fontFamily={lang === "ur" ? URDU_FONT : "inherit"}
+                          >
+                            {lbl}
+                          </text>
+                        ) : null,
+                      )}
+
+                      {/* Secondary Comparison Lines (if in compare mode) */}
+                      {compareMode &&
+                        activeSeries
+                          .filter((s) => s.label !== focusedType)
+                          .map((s) => {
+                            const pts = s.data
+                              .map(
+                                (v, i) =>
+                                  `${i === 0 ? "M" : "L"}${xOf(i, len).toFixed(1)},${yOf(v, pMin, pMax).toFixed(1)}`,
+                              )
+                              .join(" ");
+                            return (
+                              <path
+                                key={`sec-${s.label}`}
+                                d={pts}
+                                stroke={s.color}
+                                strokeWidth="1.6"
+                                strokeDasharray="3 2"
+                                fill="none"
+                                strokeLinecap="round"
+                                opacity="0.75"
+                              />
+                            );
+                          })}
+
+                      {/* Primary Focused Rate Type Line & Area Gradient Glow */}
+                      {(() => {
+                        const s = activeSeries.find((ser) => ser.label === focusedType) || activeSeries[0];
+                        if (!s) return null;
+                        const pts = s.data
+                          .map(
+                            (v, i) =>
+                              `${i === 0 ? "M" : "L"}${xOf(i, len).toFixed(1)},${yOf(v, pMin, pMax).toFixed(1)}`,
+                          )
+                          .join(" ");
+                        const areaPath = `${pts} L${xOf(len - 1, len).toFixed(1)},${CH - PB} L${PL},${CH - PB} Z`;
+
+                        const latestVal = s.data[len - 1];
+                        const latestY = yOf(latestVal, pMin, pMax);
+
+                        return (
+                          <g key={`main-${s.label}`}>
+                            {/* Area fill with smooth luminous gradient */}
+                            <path
+                              d={areaPath}
+                              fill={`url(#areaGrad-${s.label.replace(/\s+/g, "_")})`}
+                            />
+                            {/* Main Stroke */}
+                            <path
+                              d={pts}
+                              stroke={s.color}
+                              strokeWidth="2.8"
+                              fill="none"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            {/* Latest Price Tag Guideline */}
+                            <line
+                              x1={PL}
+                              y1={latestY}
+                              x2={CW - PR}
+                              y2={latestY}
+                              stroke={s.color}
+                              strokeWidth="0.8"
+                              strokeDasharray="2 2"
+                              opacity="0.5"
+                            />
+                            {/* Live Pulse Dot on Latest Value */}
+                            <circle
+                              cx={xOf(len - 1, len)}
+                              cy={latestY}
+                              r="4"
+                              fill={s.color}
+                              stroke="#FFFFFF"
+                              strokeWidth="2"
+                            />
+                          </g>
+                        );
+                      })()}
+
+                      {/* Interactive Hover Crosshair & Scrubbing Markers */}
+                      {hoverIdx !== null && (
+                        <g>
+                          {/* Vertical Guide Line */}
+                          <line
+                            x1={xOf(hoverIdx, len)}
+                            y1={PT}
+                            x2={xOf(hoverIdx, len)}
+                            y2={CH - PB}
+                            stroke="#143B33"
+                            strokeWidth="1.2"
+                            strokeDasharray="3 3"
+                          />
+                          {activeSeries.map((s) => (
+                            <g key={`hoverDot-${s.label}`}>
+                              <circle
+                                cx={xOf(hoverIdx!, len)}
+                                cy={yOf(s.data[hoverIdx!], pMin, pMax)}
+                                r="5.5"
+                                fill={s.color}
+                                stroke="#FFFFFF"
+                                strokeWidth="2.5"
+                              />
+                            </g>
+                          ))}
+                        </g>
+                      )}
+                    </svg>
+                  </div>
+
+                  {/* Binance-Style Rate Type Selector Bar */}
+                  <div className="flex flex-col gap-1.5 pt-1">
+                    <div className="flex items-center justify-between">
                       <span
-                        className="text-[11px] font-bold"
+                        className="text-[11px] font-bold text-[#52635F]"
+                        style={{ fontFamily: lang === "ur" ? URDU_FONT : "inherit" }}
+                      >
+                        {lang === "ur" ? "نرخ منتخب کریں (بنیادی ریٹ)" : "Select Primary Rate Type"}
+                      </span>
+                      {compareMode && (
+                        <span className="text-[10px] font-semibold text-[#087F63] bg-[#E8F8F4] px-1.5 py-0.5 rounded">
+                          {activeSeries.length} {lang === "ur" ? "اقسام فعال ہیں" : "Active Types"}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap gap-1.5 items-center w-full" style={{ direction: "ltr" }}>
+                      {orderedRateTypes.map((tRt, idx) => {
+                        const isFocused = focusedType === tRt;
+                        const isCompared = activeTypes.includes(tRt);
+                        const isSelected = compareMode ? isCompared : isFocused;
+
+                        return (
+                          <button
+                            key={tRt}
+                            onClick={() => {
+                              if (compareMode) {
+                                toggleType(tRt);
+                              } else {
+                                setFocusedType(tRt);
+                              }
+                            }}
+                            className="tap-target flex items-center gap-1.5 rounded-full font-bold transition-all active:scale-95 shadow-sm"
+                            style={{
+                              fontSize: lang === "ur" ? 13 : 10.5,
+                              padding: "4px 10px",
+                              background: isSelected ? RATE_COLORS[tRt] || "#087F63" : "#F4FAF7",
+                              border: `1.5px solid ${isSelected ? RATE_COLORS[tRt] || "#087F63" : "#D5E2DD"}`,
+                              color: isSelected ? "#FFFFFF" : "#52635F",
+                              fontFamily: lang === "ur" ? URDU_FONT : "inherit",
+                            }}
+                          >
+                            <span
+                              className="rounded-full flex-shrink-0"
+                              style={{
+                                width: 6,
+                                height: 6,
+                                background: isSelected ? "#FFFFFF" : RATE_COLORS[tRt] || "#087F63",
+                              }}
+                            />
+                            <span>{tr(tRt).replace(" ریٹ", "").replace(" Rate", "")}</span>
+                          </button>
+                        );
+                      })}
+
+                      {/* All / تمام نرخ Button at the Very End */}
+                      <button
+                        onClick={() => {
+                          if (compareMode && activeTypes.length === ALL_RATE_TYPES.length) {
+                            setCompareMode(false);
+                            setActiveTypes([focusedType]);
+                          } else {
+                            setCompareMode(true);
+                            setActiveTypes([...ALL_RATE_TYPES]);
+                          }
+                        }}
+                        className="tap-target flex items-center gap-1.5 rounded-full font-bold transition-all active:scale-95 shadow-sm"
                         style={{
-                          color: "#2F4A43",
-                          fontSize: lang === "ur" ? 14 : 11,
-                          fontFamily:
-                            lang === "ur"
-                              ? URDU_FONT
-                              : "inherit",
+                          fontSize: lang === "ur" ? 13 : 11,
+                          padding: "4px 12px",
+                          background:
+                            compareMode && activeTypes.length === ALL_RATE_TYPES.length
+                              ? "#087F63"
+                              : "#E8EFEC",
+                          border: `1.5px solid ${compareMode && activeTypes.length === ALL_RATE_TYPES.length
+                            ? "#087F63"
+                            : "#D5E2DD"
+                            }`,
+                          color:
+                            compareMode && activeTypes.length === ALL_RATE_TYPES.length
+                              ? "#FFFFFF"
+                              : "#183B34",
+                          fontFamily: lang === "ur" ? URDU_FONT : "inherit",
                         }}
                       >
-                        {xLabels[hoverIdx] ||
-                          (lang === "ur"
-                            ? `دن ${hoverIdx + 1}`
-                            : `Day ${hoverIdx + 1}`)}
-                      </span>
-                      {shownSeries.map((s) => (
-                        <span
-                          key={s.label}
-                          className="text-[11px] font-semibold"
-                          style={{
-                            color: s.color,
-                            fontSize: lang === "ur" ? 13 : 11,
-                            fontFamily:
-                              lang === "ur"
-                                ? URDU_FONT
-                                : "inherit",
-                          }}
-                        >
-                          {tr(s.label)
-                            .replace(" ریٹ", "")
-                            .replace(" Rate", "")}{" "}
-                          {lang === "ur" ? "روپے" : "Rs."}{" "}
-                          {Math.round(s.data[hoverIdx]).toLocaleString()}
-                        </span>
-                      ))}
+                        <span>{lang === "ur" ? "سب (All)" : "All Rates"}</span>
+                      </button>
                     </div>
-                  )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* Interactive Arrival Volume Trend Card */
+              <div
+                className="rounded-2xl p-3.5 flex flex-col gap-2.5 shadow-sm"
+                style={{ background: "#FFFFFF", border: "1px solid #D5E2DD" }}
+              >
+                {/* Arrival Header HUD */}
+                {(() => {
+                  const currentIdx = arrivalHoverIdx !== null ? arrivalHoverIdx : len - 1;
+                  const displayArr = arrivalData[currentIdx] || 0;
+                  const totalArrival = arrivalData.reduce((a, b) => a + b, 0);
+                  const peakArrival = Math.max(...arrivalData);
+                  const avgArrival = Math.round(totalArrival / arrivalData.length);
+
+                  return (
+                    <div className="flex flex-col gap-2 border-b border-[#E8EFEC] pb-2.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#D97706]" />
+                          <span
+                            className="text-xs font-bold text-[#143B33]"
+                            style={{
+                              fontFamily: lang === "ur" ? URDU_FONT : "inherit",
+                              fontSize: lang === "ur" ? 15 : 12,
+                            }}
+                          >
+                            {lang === "ur" ? "آمد کی مقدار (مارکیٹ رسد)" : "Arrival Volume Trend"}
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-semibold text-[#92400E] bg-[#FEF3C7] px-2 py-0.5 rounded-md border border-[#FDE68A]">
+                          {lang === "ur" ? "میٹرک ٹن / تھیلے" : "MT / Bags"}
+                        </span>
+                      </div>
+
+                      <div className="flex items-baseline justify-between flex-wrap gap-2">
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-2xl font-black text-[#92400E]">
+                            {lang === "ur" ? `${toUrduDigits(displayArr.toLocaleString())} میٹرک ٹن` : `${displayArr.toLocaleString()} MT`}
+                          </span>
+                        </div>
+                        <div className="text-[11px] font-semibold text-[#52635F]">
+                          {fullDateLabels[currentIdx]?.fullDate}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2 pt-1 text-[10px]">
+                        <div className="bg-[#FFFDF5] p-1.5 rounded-lg border border-[#FDE68A] flex flex-col">
+                          <span className="text-[#92400E] font-semibold">
+                            {lang === "ur" ? "کل آمد" : "Total Period"}
+                          </span>
+                          <span className="font-bold text-[#78350F] text-xs">
+                            {totalArrival.toLocaleString()} MT
+                          </span>
+                        </div>
+                        <div className="bg-[#FFFDF5] p-1.5 rounded-lg border border-[#FDE68A] flex flex-col">
+                          <span className="text-[#92400E] font-semibold">
+                            {lang === "ur" ? "سب سے زیادہ" : "Peak Day"}
+                          </span>
+                          <span className="font-bold text-[#78350F] text-xs">
+                            {peakArrival.toLocaleString()} MT
+                          </span>
+                        </div>
+                        <div className="bg-[#FFFDF5] p-1.5 rounded-lg border border-[#FDE68A] flex flex-col">
+                          <span className="text-[#92400E] font-semibold">
+                            {lang === "ur" ? "روزانہ اوسط" : "Daily Avg"}
+                          </span>
+                          <span className="font-bold text-[#92400E] text-xs">
+                            {avgArrival.toLocaleString()} MT
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* SVG Arrival Canvas */}
+                <div className="relative w-full select-none">
                   <svg
                     viewBox={`0 0 ${CW} ${CH}`}
                     className="w-full"
                     style={{ height: CH, display: "block" }}
                     onMouseMove={(e) => {
-                      const rect = (
-                        e.currentTarget as SVGSVGElement
-                      ).getBoundingClientRect();
-                      const relX =
-                        ((e.clientX - rect.left) / rect.width) * CW - PL;
+                      const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
+                      const relX = ((e.clientX - rect.left) / rect.width) * CW - PL;
                       const i = Math.round((relX / chartW) * (len - 1));
-                      setHoverIdx(Math.max(0, Math.min(len - 1, i)));
+                      setArrivalHoverIdx(Math.max(0, Math.min(len - 1, i)));
                     }}
-                    onMouseLeave={() => setHoverIdx(null)}
+                    onMouseLeave={() => setArrivalHoverIdx(null)}
                     onTouchMove={(e) => {
-                      const rect = (
-                        e.currentTarget as SVGSVGElement
-                      ).getBoundingClientRect();
+                      const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
                       const touch = e.touches[0];
-                      const relX =
-                        ((touch.clientX - rect.left) / rect.width) * CW - PL;
+                      const relX = ((touch.clientX - rect.left) / rect.width) * CW - PL;
                       const i = Math.round((relX / chartW) * (len - 1));
-                      setHoverIdx(Math.max(0, Math.min(len - 1, i)));
+                      setArrivalHoverIdx(Math.max(0, Math.min(len - 1, i)));
                     }}
-                    onTouchEnd={() => setHoverIdx(null)}
+                    onTouchEnd={() => setArrivalHoverIdx(null)}
                   >
-                    {/* Y-axis gridlines + labels */}
-                    {yPriceTicks.map((tick, ti) => {
-                      const y = yOf(tick, pMin, pMax);
+                    <defs>
+                      <linearGradient id="arrivalGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#D97706" stopOpacity="0.32" />
+                        <stop offset="85%" stopColor="#D97706" stopOpacity="0.04" />
+                        <stop offset="100%" stopColor="#D97706" stopOpacity="0.00" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Horizontal Dashed Gridlines + Y Ticks */}
+                    {yArrivalTicks.map((tick, ti) => {
+                      const y = yOf(tick, aMin, aMax);
                       return (
-                        <g key={ti}>
+                        <g key={`yArrTick-${ti}`}>
                           <line
                             x1={PL}
                             y1={y}
                             x2={CW - PR}
                             y2={y}
-                            stroke="#E8EFEC"
+                            stroke="#E5EAE8"
                             strokeWidth="1"
+                            strokeDasharray="4 4"
                           />
                           <text
-                            x={PL - 4}
-                            y={y + 4}
+                            x={PL - 6}
+                            y={y + 3.5}
                             textAnchor="end"
-                            fontSize="9"
+                            fontSize="9.5"
+                            fontWeight="600"
                             fill="#80918B"
                           >
-                            {tick >= 1000
-                              ? (tick / 1000).toFixed(1) + "k"
-                              : tick}
+                            {tick >= 1000 ? `${(tick / 1000).toFixed(1)}k` : tick}
                           </text>
                         </g>
                       );
                     })}
-                    {/* X-axis labels */}
-                    {xLabels.map((lbl, i) =>
-                      lbl ? (
-                        <text
-                          key={i}
-                          x={xOf(i, len)}
-                          y={CH - 4}
-                          textAnchor="middle"
-                          fontSize={lang === "ur" ? "10" : "9"}
-                          fill="#80918B"
-                          fontFamily={
-                            lang === "ur"
-                              ? URDU_FONT
-                              : "inherit"
-                          }
-                        >
-                          {lbl}
-                        </text>
-                      ) : null,
-                    )}
-                    {/* Lines */}
-                    {shownSeries.map((s) => {
-                      const pts = s.data
-                        .map(
-                          (v, i) =>
-                            `${i === 0 ? "M" : "L"
-                            }${xOf(i, len).toFixed(1)},${yOf(v, pMin, pMax).toFixed(1)}`,
-                        )
-                        .join(" ");
-                      return (
-                        <path
-                          key={s.label}
-                          d={pts}
-                          stroke={s.color}
-                          strokeWidth="2"
-                          fill="none"
-                          strokeLinecap="round"
-                        />
-                      );
-                    })}
-                    {/* Hover crosshair */}
-                    {hoverIdx !== null && (
-                      <>
-                        <line
-                          x1={xOf(hoverIdx, len)}
-                          y1={PT}
-                          x2={xOf(hoverIdx, len)}
-                          y2={CH - PB}
-                          stroke="#2F4A43"
-                          strokeWidth="1"
-                          strokeDasharray="3 3"
-                        />
-                        {shownSeries.map((s) => (
-                          <circle
-                            key={s.label}
-                            cx={xOf(hoverIdx!, len)}
-                            cy={yOf(s.data[hoverIdx!], pMin, pMax)}
-                            r="4"
-                            fill={s.color}
-                            stroke="#fff"
-                            strokeWidth="1.5"
-                          />
-                        ))}
-                      </>
-                    )}
-                    {/* Axes */}
-                    <line
-                      x1={PL}
-                      y1={PT}
-                      x2={PL}
-                      y2={CH - PB}
-                      stroke="#C7D6D0"
-                      strokeWidth="1"
-                    />
+
+                    {/* X-Axis Baseline */}
                     <line
                       x1={PL}
                       y1={CH - PB}
                       x2={CW - PR}
                       y2={CH - PB}
-                      stroke="#C7D6D0"
-                      strokeWidth="1"
+                      stroke="#D5E2DD"
+                      strokeWidth="1.2"
                     />
-                    {/* X-axis label */}
-                    <text
-                      x={(PL + CW - PR) / 2}
-                      y={CH - 4}
-                      textAnchor="middle"
-                      fontSize="10"
-                      fontWeight="600"
-                      fill="#52635F"
-                      fontFamily={
-                        lang === "ur"
-                          ? URDU_FONT
-                          : "inherit"
-                      }
-                    >
-                      {lang === "ur" ? "دن" : "Days"}
-                    </text>
-                    {/* Y-axis label */}
-                    <text
-                      x={12}
-                      y={(PT + CH - PB) / 2}
-                      textAnchor="middle"
-                      fontSize="10"
-                      fontWeight="600"
-                      fill="#52635F"
-                      transform={`rotate(-90, 12, ${(PT + CH - PB) / 2})`}
-                      fontFamily={
-                        lang === "ur"
-                          ? URDU_FONT
-                          : "inherit"
-                      }
-                    >
-                      {lang === "ur"
-                        ? "قیمت (روپے/۴۰ کلو)"
-                        : "Price (Rs/40kg)"}
-                    </text>
+
+                    {/* X-Axis Dates */}
+                    {xLabels.map((lbl, i) =>
+                      lbl ? (
+                        <text
+                          key={`xArrTick-${i}`}
+                          x={xOf(i, len)}
+                          y={CH - 10}
+                          textAnchor="middle"
+                          fontSize="9"
+                          fontWeight="600"
+                          fill="#80918B"
+                          fontFamily={lang === "ur" ? URDU_FONT : "inherit"}
+                        >
+                          {lbl}
+                        </text>
+                      ) : null,
+                    )}
+
+                    {/* Area Fill */}
+                    <path
+                      d={[
+                        ...arrivalData.map(
+                          (v, i) =>
+                            `${i === 0 ? "M" : "L"}${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
+                        ),
+                        `L${xOf(len - 1, len).toFixed(1)},${CH - PB}`,
+                        `L${PL},${CH - PB}`,
+                        "Z",
+                      ].join(" ")}
+                      fill="url(#arrivalGrad)"
+                    />
+
+                    {/* Main Line */}
+                    <path
+                      d={arrivalData
+                        .map(
+                          (v, i) =>
+                            `${i === 0 ? "M" : "L"}${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
+                        )
+                        .join(" ")}
+                      stroke="#D97706"
+                      strokeWidth="2.8"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+
+                    {/* Hover Guide and Marker */}
+                    {arrivalHoverIdx !== null && (
+                      <g>
+                        <line
+                          x1={xOf(arrivalHoverIdx, len)}
+                          y1={PT}
+                          x2={xOf(arrivalHoverIdx, len)}
+                          y2={CH - PB}
+                          stroke="#92400E"
+                          strokeWidth="1.2"
+                          strokeDasharray="3 3"
+                        />
+                        <circle
+                          cx={xOf(arrivalHoverIdx, len)}
+                          cy={yOf(arrivalData[arrivalHoverIdx], aMin, aMax)}
+                          r="5.5"
+                          fill="#D97706"
+                          stroke="#FFFFFF"
+                          strokeWidth="2.5"
+                        />
+                      </g>
+                    )}
                   </svg>
                 </div>
-                <div className="flex flex-col items-start text-left w-full">
-                  <p
-                    className="text-xs font-bold uppercase tracking-wide text-left self-start"
-                    style={{
-                      color: "#52635F",
-                      letterSpacing: "0.05em",
-                      fontSize: lang === "ur" ? 15 : 12,
-                      fontFamily:
-                        lang === "ur"
-                          ? URDU_FONT
-                          : "inherit",
-                      textAlign: "left",
-                    }}
-                  >
-                    {lang === "ur" ? "نرخ کی اقسام" : "Price Types"}
-                  </p>
-                  {(() => {
-                    const primaryType =
-                      initialRateType ||
-                      (ALL_RATE_TYPES.includes("Mill") ? "Mill" : ALL_RATE_TYPES[0]);
-                    const orderedRateTypes = [
-                      primaryType,
-                      ...ALL_RATE_TYPES.filter((t) => t !== primaryType),
-                    ];
-                    return (
-                      <div
-                        className="flex flex-wrap gap-2 justify-start items-center w-full mt-1"
-                        style={{ direction: "ltr" }}
-                      >
-                        {orderedRateTypes.map((tRt) => {
-                          const on = activeTypes.includes(tRt);
-                          return (
-                            <button
-                              key={tRt}
-                              onClick={() => toggleType(tRt)}
-                              className="tap-target flex items-center gap-1 rounded-full font-semibold"
-                              style={{
-                                fontSize: lang === "ur" ? 14 : 10,
-                                padding: "4px 8px",
-                                background: on ? "#fff" : "#E8EFEC",
-                                border: `1.5px solid ${on ? RATE_COLORS[tRt] : "#D5E2DD"
-                                  }`,
-                                color: on ? "#183B34" : "#80918B",
-                                fontFamily:
-                                  lang === "ur"
-                                    ? URDU_FONT
-                                    : "inherit",
-                              }}
-                            >
-                              <span
-                                className="rounded-full flex-shrink-0"
-                                style={{
-                                  width: 7,
-                                  height: 7,
-                                  background: on ? RATE_COLORS[tRt] : "#C7D6D0",
-                                }}
-                              />
-                              {on ? " " : ""}
-                              {tr(tRt).replace(" ریٹ", "").replace(" Rate", "")}
-                            </button>
-                          );
-                        })}
-
-                        {/* All / سب Button at the end */}
-                        <button
-                          onClick={() => {
-                            if (activeTypes.length === ALL_RATE_TYPES.length) {
-                              setActiveTypes([primaryType]);
-                            } else {
-                              setActiveTypes([...ALL_RATE_TYPES]);
-                            }
-                          }}
-                          className="tap-target flex items-center gap-1 rounded-full font-bold"
-                          style={{
-                            fontSize: lang === "ur" ? 14 : 11,
-                            padding: "4px 10px",
-                            background:
-                              activeTypes.length === ALL_RATE_TYPES.length
-                                ? "#087F63"
-                                : "#E8EFEC",
-                            border:
-                              "1.5px solid " +
-                              (activeTypes.length === ALL_RATE_TYPES.length
-                                ? "#087F63"
-                                : "#D5E2DD"),
-                            color:
-                              activeTypes.length === ALL_RATE_TYPES.length
-                                ? "#fff"
-                                : "#52635F",
-                            fontFamily:
-                              lang === "ur"
-                                ? URDU_FONT
-                                : "inherit",
-                          }}
-                        >
-                          {lang === "ur" ? "سب" : "All"}
-                        </button>
-                      </div>
-                    );
-                  })()}
-                </div>
-              </>
-            ) : (
-              /* Interactive arrival chart */
-              <div
-                className="rounded-2xl px-3 pt-3 pb-2"
-                style={{ background: "#F4FAF7", border: "1px solid #D5E2DD" }}
-              >
-                {arrivalHoverIdx !== null && (
-                  <div
-                    className="rounded-xl px-3 py-2 mb-2"
-                    style={{
-                      background: "#FFF0C7",
-                      border: "1px solid #F2D58A",
-                    }}
-                  >
-                    <span
-                      className="text-[11px] font-bold"
-                      style={{
-                        color: "#9A6817",
-                        fontSize: lang === "ur" ? 14 : 11,
-                        fontFamily:
-                          lang === "ur"
-                            ? URDU_FONT
-                            : "inherit",
-                      }}
-                    >
-                      {xLabels[arrivalHoverIdx] ||
-                        (lang === "ur"
-                          ? `دن ${arrivalHoverIdx + 1}`
-                          : `Day ${arrivalHoverIdx + 1}`)}
-                    </span>
-                    <span
-                      className="text-[11px] font-semibold ml-2"
-                      style={{
-                        color: "#9A6817",
-                        fontSize: lang === "ur" ? 14 : 11,
-                        fontFamily:
-                          lang === "ur"
-                            ? URDU_FONT
-                            : "inherit",
-                      }}
-                    >
-                      {Math.round(
-                        arrivalData[arrivalHoverIdx],
-                      ).toLocaleString()}{" "}
-                      {lang === "ur" ? "میٹرک ٹن" : "MT"}
-                    </span>
-                  </div>
-                )}
-                <svg
-                  viewBox={`0 0 ${CW} ${CH}`}
-                  className="w-full"
-                  style={{ height: CH, display: "block" }}
-                  onMouseMove={(e) => {
-                    const rect = (
-                      e.currentTarget as SVGSVGElement
-                    ).getBoundingClientRect();
-                    const relX =
-                      ((e.clientX - rect.left) / rect.width) * CW - PL;
-                    const i = Math.round((relX / chartW) * (len - 1));
-                    setArrivalHoverIdx(Math.max(0, Math.min(len - 1, i)));
-                  }}
-                  onMouseLeave={() => setArrivalHoverIdx(null)}
-                  onTouchMove={(e) => {
-                    const rect = (
-                      e.currentTarget as SVGSVGElement
-                    ).getBoundingClientRect();
-                    const touch = e.touches[0];
-                    const relX =
-                      ((touch.clientX - rect.left) / rect.width) * CW - PL;
-                    const i = Math.round((relX / chartW) * (len - 1));
-                    setArrivalHoverIdx(Math.max(0, Math.min(len - 1, i)));
-                  }}
-                  onPointerLeave={() => setArrivalHoverIdx(null)}
-                >
-                  {yArrivalTicks.map((tick, ti) => {
-                    const y = yOf(tick, aMin, aMax);
-                    return (
-                      <g key={ti}>
-                        <line
-                          x1={PL}
-                          y1={y}
-                          x2={CW - PR}
-                          y2={y}
-                          stroke="#E8EFEC"
-                          strokeWidth="1"
-                        />
-                        <text
-                          x={PL - 4}
-                          y={y + 4}
-                          textAnchor="end"
-                          fontSize="9"
-                          fill="#80918B"
-                        >
-                          {tick >= 1000
-                            ? (tick / 1000).toFixed(1) + "k"
-                            : Math.round(tick)}
-                        </text>
-                      </g>
-                    );
-                  })}
-                  {xLabels.map((lbl, i) =>
-                    lbl ? (
-                      <text
-                        key={i}
-                        x={xOf(i, len)}
-                        y={CH - 4}
-                        textAnchor="middle"
-                        fontSize={lang === "ur" ? "10" : "9"}
-                        fill="#80918B"
-                        fontFamily={
-                          lang === "ur"
-                            ? URDU_FONT
-                            : "inherit"
-                        }
-                      >
-                        {lbl}
-                      </text>
-                    ) : null,
-                  )}
-                  {/* Area fill */}
-                  <path
-                    d={[
-                      ...arrivalData.map(
-                        (v, i) =>
-                          `${i === 0 ? "M" : "L"
-                          }${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
-                      ),
-                      `L${xOf(len - 1, len)},${CH - PB}`,
-                      `L${PL},${CH - PB}`,
-                      "Z",
-                    ].join(" ")}
-                    fill="#B9822E"
-                    fillOpacity="0.12"
-                  />
-                  <path
-                    d={arrivalData
-                      .map(
-                        (v, i) =>
-                          `${i === 0 ? "M" : "L"
-                          }${xOf(i, len).toFixed(1)},${yOf(v, aMin, aMax).toFixed(1)}`,
-                      )
-                      .join(" ")}
-                    stroke="#B9822E"
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                  />
-                  {arrivalHoverIdx !== null && (
-                    <>
-                      <line
-                        x1={xOf(arrivalHoverIdx, len)}
-                        y1={PT}
-                        x2={xOf(arrivalHoverIdx, len)}
-                        y2={CH - PB}
-                        stroke="#9A6817"
-                        strokeWidth="1"
-                        strokeDasharray="3 3"
-                      />
-                      <circle
-                        cx={xOf(arrivalHoverIdx, len)}
-                        cy={yOf(arrivalData[arrivalHoverIdx], aMin, aMax)}
-                        r="4.5"
-                        fill="#B9822E"
-                        stroke="#fff"
-                        strokeWidth="1.5"
-                      />
-                    </>
-                  )}
-                  <line
-                    x1={PL}
-                    y1={PT}
-                    x2={PL}
-                    y2={CH - PB}
-                    stroke="#C7D6D0"
-                    strokeWidth="1"
-                  />
-                  <line
-                    x1={PL}
-                    y1={CH - PB}
-                    x2={CW - PR}
-                    y2={CH - PB}
-                    stroke="#C7D6D0"
-                    strokeWidth="1"
-                  />
-                  {/* X-axis label */}
-                  <text
-                    x={(PL + CW - PR) / 2}
-                    y={CH - 4}
-                    textAnchor="middle"
-                    fontSize="10"
-                    fontWeight="600"
-                    fill="#52635F"
-                    fontFamily={
-                      lang === "ur"
-                        ? URDU_FONT
-                        : "inherit"
-                    }
-                  >
-                    {lang === "ur" ? "دن" : "Days"}
-                  </text>
-                  {/* Y-axis label */}
-                  <text
-                    x={12}
-                    y={(PT + CH - PB) / 2}
-                    textAnchor="middle"
-                    fontSize="10"
-                    fontWeight="600"
-                    fill="#52635F"
-                    transform={`rotate(-90, 12, ${(PT + CH - PB) / 2})`}
-                    fontFamily={
-                      lang === "ur"
-                        ? URDU_FONT
-                        : "inherit"
-                    }
-                  >
-                    {lang === "ur" ? "آمد (میٹرک ٹن)" : "Arrivals (MT)"}
-                  </text>
-                </svg>
               </div>
             )}
 
@@ -18916,7 +15393,7 @@ function ProductRatesScreen({
                   dateLabel:
                     lang === "ur"
                       ? "۱۷ اگست ۲۰۲۶ · منگل"
-                      : "17 Aug 2026 · Tuesday",
+                      : "14 Sep 2026 · Monday",
                   sub:
                     lang === "ur"
                       ? "تازہ ترین دستیاب نرخ"
@@ -18929,7 +15406,7 @@ function ProductRatesScreen({
                   dateLabel:
                     lang === "ur"
                       ? "۱۶ اگست ۲۰۲۶ · پیر"
-                      : "16 Aug 2026 · Monday",
+                      : "13 Sep 2026 · Sunday",
                   sub: lang === "ur" ? "پچھلے دن کے نرخ" : "Previous day rates",
                   icon: "",
                 },
@@ -18937,7 +15414,7 @@ function ProductRatesScreen({
                   id: "range" as const,
                   label: lang === "ur" ? "اس ہفتے" : "This Week",
                   dateLabel:
-                    lang === "ur" ? "۱۱ تا ۱۷ اگست ۲۰۲۶" : "11 – 17 Aug 2026",
+                    lang === "ur" ? "۰۸ تا ۱۴ ستمبر ۲۰۲۶" : "08 – 14 Sep 2026",
                   sub:
                     lang === "ur"
                       ? "متعدد دنوں کا موازنہ"
@@ -19229,7 +15706,12 @@ function MandiDetailScreen({
   onBack: () => void;
   push: (s: Screen) => void;
 }) {
-  const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId)!;
+  const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId) || {
+    id: mandiId,
+    name: MANDI_ROWS[mandiId]?.[0]?.mandiName || mandiId,
+    city: MANDI_ROWS[mandiId]?.[0]?.mandiCity || mandiId,
+    province: MANDI_ROWS[mandiId]?.[0]?.province || "Punjab",
+  };
   const rows = MANDI_ROWS[mandiId] || [];
   const [rateFilter, setRateFilter] = useState("");
   const [rateSheet, setRateSheet] = useState(false);
@@ -26505,7 +22987,7 @@ function HomeScreen({
                                 {tc(p)}
                               </p>
                               <div className="flex items-center gap-2 mt-0.5 text-[10.5px] text-[#52635F]">
-                                <span>{lang === "ur" ? "رجسٹریشن:" : "Reg:"} 21 Aug 2026</span>
+                                <span>{lang === "ur" ? "رجسٹریشن:" : "Reg:"} 14 Sep 2026</span>
                                 <span>•</span>
                                 <span className="text-[#087F63] font-semibold">
                                   {lang === "ur" ? "تجدید:" : "Expires:"} 21 Sep 2026
@@ -28451,8 +24933,8 @@ function BottomNav({
       icon: (
         <div
           className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 ${voiceActive
-              ? "bg-[#FEE2E2] border-2 border-[#EF4444] scale-110 shadow-md animate-pulse"
-              : "bg-[#E4F4EC] border border-[#86EFAC] shadow-sm"
+            ? "bg-[#FEE2E2] border-2 border-[#EF4444] scale-110 shadow-md animate-pulse"
+            : "bg-[#E4F4EC] border border-[#86EFAC] shadow-sm"
             }`}
         >
           <MicSVG size={20} color={voiceActive ? "#DC2626" : "#087F63"} />
@@ -31093,7 +27575,7 @@ function RepDashboardScreen({
             <h3 className="text-sm font-black text-[#2FAE68]">
               {lang === "ur" ? "آج فعال ہے" : "Active Today"}
             </h3>
-            <span className="text-[10px] text-[#52635F] font-semibold">21 Aug 2026</span>
+            <span className="text-[10px] text-[#52635F] font-semibold">14 Sep 2026</span>
           </div>
         </div>
 
@@ -31149,7 +27631,7 @@ function RepDashboardScreen({
             <h4 className="text-xs font-extrabold text-[#183B34] uppercase tracking-wider">
               {lang === "ur" ? "حالیہ تصدیق شدہ ریٹس" : "Recent Rate Submissions"}
             </h4>
-            <span className="text-[10px] text-[#087F63] font-extrabold">21 Aug 2026</span>
+            <span className="text-[10px] text-[#087F63] font-extrabold">14 Sep 2026</span>
           </div>
           <div className="space-y-2">
             {[
