@@ -2218,6 +2218,64 @@ type MandiItem = (typeof INITIAL_MANDIS)[0];
 
 const MANDI_ROWS: Record<string, any[]> = REAL_MANDI_ROWS;
 
+// ─── HIGH PERFORMANCE PRE-INDEXED COMMODITY DATA (0ms Instant Lookups) ───
+export const FLAT_ALL_MANDI_ROWS: RichRow[] = (() => {
+  const list: RichRow[] = [];
+  const entries = Object.entries(REAL_MANDI_ROWS);
+  for (let i = 0; i < entries.length; i++) {
+    const [mandiId, rows] = entries[i];
+    const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
+    const mName = mandi?.name || rows[0]?.mandiName || mandiId;
+    const mCity = mandi?.city || rows[0]?.mandiCity || mandiId;
+    const mProv = mandi?.province || rows[0]?.province || "Punjab";
+    for (let j = 0; j < rows.length; j++) {
+      const r = rows[j];
+      const vert = Object.entries(VERTICALS).find(([, vd]) => vd.products[r.product])?.[0] || "Grains";
+      list.push(enrichRowWithAttrs({
+        ...r,
+        mandiName: mName,
+        mandiCity: mCity,
+        province: mProv,
+        vertical: vert,
+      }));
+    }
+  }
+  return list;
+})();
+
+export const COMMODITY_ROWS_INDEX: Record<string, RichRow[]> = (() => {
+  const index: Record<string, RichRow[]> = {};
+  for (let i = 0; i < FLAT_ALL_MANDI_ROWS.length; i++) {
+    const r = FLAT_ALL_MANDI_ROWS[i];
+    const p = r.product.toLowerCase().trim();
+    if (!index[p]) index[p] = [];
+    index[p].push(r);
+  }
+  return index;
+})();
+
+export function getRowsForProducts(productNames: string[]): RichRow[] {
+  if (!productNames || productNames.length === 0) return FLAT_ALL_MANDI_ROWS;
+  const result: RichRow[] = [];
+  const seen = new Set<string>();
+  for (let i = 0; i < productNames.length; i++) {
+    const target = productNames[i];
+    if (!target) continue;
+    const targetNorm = target.toLowerCase().trim();
+    for (const [prodKey, rows] of Object.entries(COMMODITY_ROWS_INDEX)) {
+      if (isMatchProduct(prodKey, [targetNorm])) {
+        if (!seen.has(prodKey)) {
+          seen.add(prodKey);
+          for (let j = 0; j < rows.length; j++) {
+            result.push(rows[j]);
+          }
+        }
+      }
+    }
+  }
+  return result.length > 0 ? result : FLAT_ALL_MANDI_ROWS;
+}
+
 
 //  UTILITY
 
@@ -6217,7 +6275,12 @@ function ByProductCombinedScreen({
     return false;
   };
 
-  // Build best representative rate row for a byproduct — returns null if no real data
+  // Fast indexed rows for active product(s) — computed in 0ms!
+  const activeProductRows = useMemo(() => {
+    return getRowsForProducts(activeproducts);
+  }, [activeproducts]);
+
+  // Build best representative rate row for a byproduct — instant 0ms lookup
   const buildRepRow = (bp: string, bpIndex: number = 0): { row: RichRow; hasData: boolean } => {
     const noData: RichRow = {
       product: activeProduct?.product || "",
@@ -6235,33 +6298,11 @@ function ByProductCombinedScreen({
       vertical: activeProduct?.vertical || "Grains",
     };
 
-    const fromMandi = Object.entries(MANDI_ROWS).flatMap(([mandiId, rows]) => {
-      const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
-      const mName = mandi?.name || rows[0]?.mandiName || mandiId;
-      const mCity = mandi?.city || rows[0]?.mandiCity || mandiId;
-      const mProv = mandi?.province || rows[0]?.province || "Punjab";
-
-      if (!inLocScope(mName, mCity, mProv)) return [];
-      return rows
-        .filter(
-          (r) =>
-            isMatchProduct(r.product, activeproducts) &&
-            (!bp || isMatchByproduct(r.byproduct, bp)) &&
-            (selectedRateTypes.length === 0 ||
-              selectedRateTypes.includes(r.rateType)),
-        )
-        .map((r) => {
-          const vEntry = showAllProducts
-            ? products.find((p) => isMatchProduct(r.product, [p.product]))
-            : null;
-          return enrichRowWithAttrs({
-            ...r,
-            mandiName: mName,
-            mandiCity: mCity,
-            province: mProv,
-            vertical: vEntry?.vertical || activeProduct?.vertical || "Grains",
-          });
-        });
+    const fromMandi = activeProductRows.filter((r) => {
+      if (!inLocScope(r.mandiName, r.mandiCity, r.province)) return false;
+      if (bp && !isMatchByproduct(r.byproduct, bp)) return false;
+      if (selectedRateTypes.length > 0 && !selectedRateTypes.includes(r.rateType)) return false;
+      return true;
     });
 
     if (fromMandi.length > 0) {
@@ -6311,39 +6352,18 @@ function ByProductCombinedScreen({
   const buildAllRows = (bp: string): RichRow[] => {
     const rows: RichRow[] = [];
     const seen = new Set<string>(); // deduplicate by mandi+rateType
-    Object.entries(MANDI_ROWS).forEach(([mandiId, mandiRows]) => {
-      const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
-      const mName = mandi?.name || mandiRows[0]?.mandiName || mandiId;
-      const mCity = mandi?.city || mandiRows[0]?.mandiCity || mandiId;
-      const mProv = mandi?.province || mandiRows[0]?.province || "Punjab";
+    for (let i = 0; i < activeProductRows.length; i++) {
+      const r = activeProductRows[i];
+      if (!inLocScope(r.mandiName, r.mandiCity, r.province)) continue;
+      if (bp && !isMatchByproduct(r.byproduct, bp)) continue;
+      if (selectedRateTypes.length > 0 && !selectedRateTypes.includes(r.rateType)) continue;
 
-      if (!inLocScope(mName, mCity, mProv)) return;
-      mandiRows
-        .filter(
-          (r) =>
-            isMatchProduct(r.product, activeproducts) &&
-            (!bp || isMatchByproduct(r.byproduct, bp)) &&
-            (selectedRateTypes.length === 0 ||
-              selectedRateTypes.includes(r.rateType)),
-        )
-        .forEach((r) => {
-          const key = `${mName}|${r.rateType}`;
-          if (seen.has(key)) return;
-          seen.add(key);
-          const vEntry = showAllProducts
-            ? products.find((p) => p.product === r.product)
-            : null;
-          rows.push(
-            enrichRowWithAttrs({
-              ...r,
-              mandiName: mName,
-              mandiCity: mCity,
-              province: mProv,
-              vertical: vEntry?.vertical || activeProduct?.vertical || "Grains",
-            }),
-          );
-        });
-    });
+      const key = `${r.mandiName}|${r.rateType}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      rows.push(r);
+    }
 
     if (isAllPakistan) {
       const byProv: Record<string, RichRow[]> = {};
@@ -8740,35 +8760,22 @@ function RatesResultScreen({
       ? selectedMandis
       : INITIAL_MANDIS.map((m) => m.name);
 
-  const baseRows: RichRow[] = Object.entries(MANDI_ROWS).flatMap(
-    ([mandiId, rows]) => {
-      const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
-      const mName = mandi?.name || rows[0]?.mandiName || mandiId;
-      const mCity = mandi?.city || rows[0]?.mandiCity || mandiId;
-      const mProv = mandi?.province || rows[0]?.province || "Punjab";
-      if (selectedMandis.length > 0 && !selectedMandis.includes(mName))
-        return [];
-      return rows
-        .filter((r) => {
-          const matchItem = items.some(
-            (item) =>
-              isMatchProduct(r.product, item.product) &&
-              (item.byproduct === "" || isMatchByproduct(r.byproduct, item.byproduct)),
-          );
-          const matchRate =
-            selectedRateTypes.length === 0 ||
-            selectedRateTypes.includes(r.rateType);
-          return matchItem && matchRate;
-        })
-        .map((r) => ({
-          ...r,
-          mandiName: mName,
-          mandiCity: mCity,
-          province: mProv,
-          vertical: items.find((i) => isMatchProduct(i.product, r.product))?.vertical || "",
-        }));
-    },
-  );
+  const baseRows: RichRow[] = useMemo(() => {
+    const pNames = items.map((it) => it.product);
+    const pRows = getRowsForProducts(pNames);
+    return pRows.filter((r) => {
+      const matchItem = items.some(
+        (it) =>
+          isMatchProduct(r.product, it.product) &&
+          (it.byproduct === "" || isMatchByproduct(r.byproduct, it.byproduct)),
+      );
+      const matchRate =
+        selectedRateTypes.length === 0 || selectedRateTypes.includes(r.rateType);
+      const matchMandi =
+        selectedMandis.length === 0 || selectedMandis.includes(r.mandiName);
+      return matchItem && matchRate && matchMandi;
+    });
+  }, [items, selectedRateTypes, selectedMandis]);
 
   const feedAsFallback: RichRow[] = FEED_MESSAGES.filter((m) => {
     const matchItem = items.some(
@@ -10065,28 +10072,12 @@ function ProductRatesScreen({
   };
   const picked = isPickedBP(pickItem);
 
-  const allRows = useMemo(
-    () =>
-      Object.entries(MANDI_ROWS).flatMap(([mandiId, rows]) => {
-        const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
-        const mName = mandi?.name || rows[0]?.mandiName || mandiId;
-        const mCity = mandi?.city || rows[0]?.mandiCity || mandiId;
-        const mProv = mandi?.province || rows[0]?.province || "Punjab";
-        return rows
-          .filter(
-            (r) =>
-              isMatchProduct(r.product, product) &&
-              (!byproduct || isMatchByproduct(r.byproduct, byproduct)),
-          )
-          .map((r) => ({
-            ...r,
-            mandiName: mName,
-            mandiCity: mCity,
-            province: mProv,
-          }));
-      }),
-    [product, byproduct],
-  );
+  const allRows = useMemo(() => {
+    const pRows = getRowsForProducts([product]);
+    return pRows.filter(
+      (r) => !byproduct || isMatchByproduct(r.byproduct, byproduct),
+    );
+  }, [product, byproduct]);
 
   const inLocScope = (r: (typeof allRows)[0]) => {
     switch (locScope.kind) {
@@ -13548,23 +13539,8 @@ function ProductRatesScreen({
             {/* Date table sheet */}
             {dateTableOpen &&
               (() => {
-                const allTableRows = Object.entries(MANDI_ROWS).flatMap(
-                  ([mandiId, mrows]) => {
-                    const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
-                    const mName = mandi?.name || mrows[0]?.mandiName || mandiId;
-                    const mProv = mandi?.province || mrows[0]?.province || "Punjab";
-                    return mrows
-                      .filter(
-                        (r) =>
-                          isMatchProduct(r.product, product) &&
-                          (!byproduct || isMatchByproduct(r.byproduct, byproduct)),
-                      )
-                      .map((r) => ({
-                        ...r,
-                        mandiName: mName,
-                        province: mProv,
-                      }));
-                  },
+                const allTableRows = getRowsForProducts([product]).filter(
+                  (r) => !byproduct || isMatchByproduct(r.byproduct, byproduct),
                 );
 
                 // Apply column filters
@@ -20371,25 +20347,7 @@ function HomeScreen({
   // MANDI DATA FOR NOTIFICATIONS
   // ---------------------------------------------------------
 
-  const allMandiRows: RichRow[] = Object.entries(MANDI_ROWS).flatMap(
-    ([mandiId, rows]) => {
-      const mandi = INITIAL_MANDIS.find((m) => m.id === mandiId);
-      const mandiName = mandi?.name || mandiId;
-
-      return rows.map((r) =>
-        enrichRowWithAttrs({
-          ...r,
-          vertical:
-            Object.entries(VERTICALS).find(
-              ([, vd]) => vd.products[r.product],
-            )?.[0] || "Grains",
-          mandiName,
-          mandiCity: mandi?.city || "",
-          province: mandi?.province || "",
-        }),
-      );
-    },
-  );
+  const allMandiRows: RichRow[] = FLAT_ALL_MANDI_ROWS;
 
   // ---------------------------------------------------------
   // PRODUCT HELPERS & SUBSCRIPTION LOCKING
