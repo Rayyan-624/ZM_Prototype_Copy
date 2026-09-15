@@ -1,240 +1,9 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
-import { Volume2, VolumeX, Loader2 } from "lucide-react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Loader2, Volume2, VolumeX } from "lucide-react";
 
 export interface SpeakOptions {
-  voice?: string;
   lang?: "ur-PK" | "en-US" | "ur" | "en";
-}
-
-let activeAudioElement: HTMLAudioElement | null = null;
-
-// Comprehensive Urdu phonetic transliteration map for 100% reliable browser speech
-const URDU_TO_ROMAN_MAP: Record<string, string> = {
-  "گندم": "Gandum",
-  "پھٹی": "Phutti",
-  "کپاس": "Kapaas",
-  "چاول": "Chaawal",
-  "مکئی": "Makai",
-  "تل": "Till",
-  "سرسوں": "Sarson",
-  "باجرہ": "Baajra",
-  "گنا": "Ganna",
-  "چینی": "Cheeni",
-  "کریانہ": "Kiryana",
-  "مویشی": "Maweshi",
-  "کھاد": "Khaad",
-  "سبزیاں": "Sabziyaan",
-  "پھل": "Phall",
-  "خشک میوہ جات": "Khushk Mewa Jaat",
-  "جڑی بوٹیاں": "Jari Bootiyaan",
-  "خوردنی تیل": "Khordani Tail",
-  "پورا پاکستان": "Poora Pakistan",
-  "پورے پاکستان کی قیمتیں": "Pooray Pakistan ki qeematein",
-  "پورے ملک کے ریٹس دکھائے جا رہے ہیں۔": "Pooray mulk kay rates dikhaye ja rahe hain",
-  "مقام منتخب کریں": "Maqaam muntakhib karein",
-  "مقام کا انتخاب": "Maqaam ka intikhaab",
-  "آواز فعال ہے": "Awaaz on hai",
-  "آواز آن": "Awaaz on",
-  "آواز بند": "Awaaz band",
-  "اردو": "Urdu",
-  "English": "English",
-  "تمام مصنوعات": "Tamaam masnooaat",
-  "تمام ریٹس دکھائے جا رہے ہیں۔": "Tamaam rates dikhaye ja rahe hain",
-  "تمام ضمنی مصنوعات": "Tamaam zimni masnooaat",
-  "اطلاعات اور پیغامات": "Ittilaat aur paighamaat",
-  "اطلاعات": "Ittilaat",
-  "پروفائل": "Profile",
-  "پروفائل میں ترمیم": "Profile mein tarmeem",
-  "منڈی کا نقشہ": "Mandi ka naqsha",
-  "نقشہ دیکھیں": "Naqsha dekhein",
-  "نقشہ کھولا گیا": "Naqsha khola gaya",
-  "قریبی منڈیاں دیکھیں": "Qareebi mandiyaan dekhein",
-  "آج کا جائزہ": "Aaj ka jaiza",
-  "روزانہ ریٹس": "Rozana rates",
-  "قیمتوں کا رجحان": "Qeemton ka rujhaan",
-  "آمد کا رجحان": "Aamad ka rujhaan",
-  "جائزہ": "Jaiza",
-  "فصلیں اور منڈیاں": "Faslein aur mandiyaan",
-  "کاروباری اوقات": "Karobari auqaat",
-  "فعال لاٹس": "Fa-aal lots",
-  "مارکیٹ کی صورتحال": "Market ki soorathal",
-  "مارکیٹ کھلی ہے": "Market khuli hai",
-  "مارکیٹ بند ہے": "Market band hai",
-  "ورائٹی": "Variety",
-  "نئی پرانی فصل": "Nayi puraani fasal",
-  "رنگت": "Rangat",
-  "گریڈ اور معیار": "Grade aur mayaar",
-  "حالت": "Haalat",
-  "ریٹ کی قسم": "Rate ki qisam",
-  "ریٹیل ریٹ": "Retail rate",
-  "ہول سیل ریٹ": "Wholesale rate",
-  "مل ریٹ": "Mill rate",
-  "ڈیلیوری ریٹ": "Delivery rate",
-  "خشک": "Khushk",
-  "نمی دار": "Nami daar",
-  "نیا مال": "Naya maal",
-  "پرانا مال": "Puraana maal",
-  "محفوظ شدہ": "Mehfooz shuda",
-  "محفوظ کریں": "Mehfooz karein",
-  "راستہ معلوم کریں": "Raasta maaloom karein",
-  "شیئر کریں": "Share karein",
-  "واپس": "Wapas",
-  "تمام فلٹرز صاف کریں": "Tamaam filters saaf karein",
-  "آج کی تاریخ": "Aaj ki tareekh",
-  "چوبیس گھنٹے": "Chaubees ghantay",
-  "بہتر گھنٹے": "Bahattar ghantay",
-  "ہفتہ وار": "Hafta waar",
-  "ماہانہ": "Maahana",
-  "پنجاب": "Punjab",
-  "سندھ": "Sindh",
-  "خیبر پختونخوا": "Khyber Pakhtunkhwa",
-  "بلوچستان": "Balochistan",
-  "پاکپتن": "Pakpattan",
-  "اوکاڑہ": "Okara",
-  "ساہیوال": "Sahiwal",
-  "فیصل آباد": "Faisalabad",
-  "ملتان": "Multan",
-  "لاہور": "Lahore",
-  "بہاولپور": "Bahawalpur",
-  "رحیم یار خان": "Rahim Yar Khan",
-  "گھوٹکی": "Ghotki",
-  "سکھر": "Sukkur",
-  "نوابشاہ": "Nawabshah",
-  "حیدرآباد": "Hyderabad",
-  "کراچی": "Karachi",
-  "پشاور": "Peshawar",
-  "کوئٹہ": "Quetta",
-  "منڈی": "Mandi",
-  "کم سے کم": "Kam se kam",
-  "زیادہ سے زیادہ": "Zyaada se zyaada",
-  "روپے": "Rupay",
-  "روپیہ": "Rupiya",
-  "نقشہ": "Naqsha",
-  "صوبہ": "Sooba",
-  "ضلع": "Zila",
-  "کی قیمتیں دکھائی جا رہی ہیں": "ki qeematein dikhayi ja rahi hain",
-  "منتخب کیا گیا": "muntakhib kiya gaya",
-  "منتخب ہیں": "muntakhib hain",
-  "ہٹا دی گئی": "hata di gayi",
-};
-
-/**
- * Transliterate Urdu text to romanized phonetic text for native speech engines
- */
-export function getRomanUrdu(urduText: string): string {
-  let res = urduText;
-  for (const [k, v] of Object.entries(URDU_TO_ROMAN_MAP)) {
-    res = res.split(k).join(v);
-  }
-  return res;
-}
-
-/**
- * Clean text of non-pronounceable glyphs
- */
-export function cleanSpokenText(text: string): string {
-  return text
-    .replace(/<[^>]+>/g, " ")
-    .replace(/[•★✓›‹→←▲▼🌾·۔]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-/**
- * High-performance Universal Urdu & English Text-to-Speech Engine
- * Automatically plays real audio voice-overs for every interaction.
- */
-export async function speakUrdu(
-  text: string,
-  options: SpeakOptions = {}
-): Promise<HTMLAudioElement> {
-  // Stop existing playback
-  if (activeAudioElement) {
-    try {
-      activeAudioElement.pause();
-      activeAudioElement.currentTime = 0;
-    } catch {}
-    activeAudioElement = null;
-  }
-  if (typeof window !== "undefined" && "speechSynthesis" in window) {
-    try {
-      window.speechSynthesis.cancel();
-    } catch {}
-  }
-
-  const cleaned = cleanSpokenText(text);
-  if (!cleaned) return new Audio();
-
-  const isUrdu = options.lang !== "en-US" && options.lang !== "en";
-
-  // 1. Direct Online Native Audio Stream
-  try {
-    const encoded = encodeURIComponent(cleaned);
-    const streamUrl = isUrdu
-      ? `https://translate.google.com/translate_tts?ie=UTF-8&tl=ur&client=tw-ob&q=${encoded}`
-      : `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encoded}`;
-
-    const audio = new Audio(streamUrl);
-    audio.volume = 1.0;
-    activeAudioElement = audio;
-
-    let played = false;
-    const playPromise = audio.play();
-
-    if (playPromise !== undefined) {
-      await playPromise
-        .then(() => {
-          played = true;
-        })
-        .catch(() => {
-          played = false;
-        });
-    }
-
-    if (played) {
-      audio.onended = () => {
-        if (activeAudioElement === audio) activeAudioElement = null;
-      };
-      return audio;
-    }
-  } catch (e) {}
-
-  // 2. Universal Browser SpeechSynthesis Engine with Subcontinent / Native Voice
-  if (typeof window !== "undefined" && "speechSynthesis" in window) {
-    const speechText = isUrdu ? getRomanUrdu(cleaned) : cleaned;
-    const utterance = new SpeechSynthesisUtterance(speechText);
-
-    utterance.rate = isUrdu ? 0.90 : 0.95;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-
-    const voices = window.speechSynthesis.getVoices();
-    if (voices && voices.length > 0) {
-      if (isUrdu) {
-        const targetVoice =
-          voices.find((v) => v.lang.toLowerCase().includes("ur")) ||
-          voices.find((v) => v.name.toLowerCase().includes("uzma")) ||
-          voices.find((v) => v.lang.toLowerCase().includes("hi") || v.name.toLowerCase().includes("swara") || v.name.toLowerCase().includes("madhur") || v.name.toLowerCase().includes("lekh")) ||
-          voices.find((v) => v.lang.toLowerCase() === "en-in" || v.name.toLowerCase().includes("india") || v.name.toLowerCase().includes("rishi") || v.name.toLowerCase().includes("sangeeta")) ||
-          voices.find((v) => v.lang.toLowerCase().startsWith("ar")) ||
-          voices.find((v) => v.lang.toLowerCase().startsWith("en"));
-
-        if (targetVoice) {
-          utterance.voice = targetVoice;
-          utterance.lang = targetVoice.lang;
-        } else {
-          utterance.lang = "en-US";
-        }
-      } else {
-        const enVoice = voices.find((v) => v.lang.toLowerCase().startsWith("en"));
-        if (enVoice) utterance.voice = enVoice;
-      }
-    }
-
-    window.speechSynthesis.speak(utterance);
-  }
-
-  return new Audio();
+  signal?: AbortSignal;
 }
 
 export interface VoiceAssistantProps {
@@ -247,64 +16,165 @@ export interface VoiceAssistantProps {
   color?: string;
 }
 
+const TTS_API_URL =
+  (import.meta.env.VITE_TTS_API_URL as string | undefined)?.replace(/\/$/, "") ||
+  "/api/tts";
+
+let activeAudio: HTMLAudioElement | null = null;
+let activeObjectUrl: string | null = null;
+let activeRequest: AbortController | null = null;
+
+export function cleanSpokenText(text: string): string {
+  return text.replace(/<[^>]+>/g, " ").replace(/[•★✓›‹→←▲▼🌾·]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function releaseActiveAudio(): void {
+  activeRequest?.abort();
+  activeRequest = null;
+  if (activeAudio) {
+    activeAudio.pause();
+    activeAudio.removeAttribute("src");
+    activeAudio.load();
+    activeAudio = null;
+  }
+  if (activeObjectUrl) {
+    URL.revokeObjectURL(activeObjectUrl);
+    activeObjectUrl = null;
+  }
+  if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
+}
+
+export function stopUrduSpeech(): void {
+  releaseActiveAudio();
+}
+
+function speakWithBrowser(text: string, lang: "ur-PK" | "en-US"): HTMLAudioElement {
+  const placeholder = new Audio();
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+    throw new Error("Speech synthesis is unavailable in this browser.");
+  }
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = lang;
+  utterance.rate = lang === "ur-PK" ? 0.9 : 0.95;
+  const voices = window.speechSynthesis.getVoices();
+  const voice = voices.find((v) => v.lang.toLowerCase() === lang.toLowerCase()) ||
+    voices.find((v) => v.lang.toLowerCase().startsWith(lang.slice(0, 2).toLowerCase()));
+  if (voice) utterance.voice = voice;
+  utterance.onend = () => placeholder.dispatchEvent(new Event("ended"));
+  utterance.onerror = () => placeholder.dispatchEvent(new Event("error"));
+  window.speechSynthesis.speak(utterance);
+  return placeholder;
+}
+
+/** Uses the backend's facebook/mms-tts-urd model and keeps the existing API. */
+export async function speakUrdu(text: string, options: SpeakOptions = {}): Promise<HTMLAudioElement> {
+  releaseActiveAudio();
+  const cleaned = cleanSpokenText(text);
+  if (!cleaned) throw new Error("There is no text to speak.");
+
+  const isUrdu = options.lang !== "en" && options.lang !== "en-US";
+  if (!isUrdu) return speakWithBrowser(cleaned, "en-US");
+
+  const controller = new AbortController();
+  activeRequest = controller;
+  if (options.signal) {
+    if (options.signal.aborted) controller.abort();
+    else options.signal.addEventListener("abort", () => controller.abort(), { once: true });
+  }
+
+  try {
+    const response = await fetch(TTS_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: cleaned, language: "ur" }),
+      signal: controller.signal,
+    });
+    activeRequest = null;
+    if (!response.ok) {
+      const message = await response.text().catch(() => "");
+      throw new Error(message || `Urdu TTS failed (${response.status}).`);
+    }
+
+    const blob = await response.blob();
+    if (!blob.size) throw new Error("The TTS server returned empty audio.");
+    const objectUrl = URL.createObjectURL(blob);
+    const audio = new Audio(objectUrl);
+    audio.preload = "auto";
+    activeAudio = audio;
+    activeObjectUrl = objectUrl;
+
+    const cleanup = () => {
+      if (activeAudio === audio) activeAudio = null;
+      if (activeObjectUrl === objectUrl) activeObjectUrl = null;
+      URL.revokeObjectURL(objectUrl);
+    };
+    audio.addEventListener("ended", cleanup, { once: true });
+    audio.addEventListener("error", cleanup, { once: true });
+    await audio.play();
+    return audio;
+  } catch (err) {
+    activeRequest = null;
+    if (err instanceof DOMException && err.name === "AbortError") {
+      throw err;
+    }
+    console.warn("Urdu TTS backend unreachable or error, falling back to browser synthesis:", err);
+    return speakWithBrowser(cleaned, "ur-PK");
+  }
+}
+
 export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
-  text,
-  urduText,
-  englishText,
-  currentLang = "ur",
-  className = "",
-  size = 18,
-  color = "#166534",
+  text, urduText, englishText, currentLang = "ur", className = "", size = 18, color = "#166534",
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const mounted = useRef(true);
 
-  const handleSpeak = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
-    e.stopPropagation();
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
 
-    const textToSpeak = currentLang === "ur" ? urduText || text || "" : englishText || text || "";
-    if (!textToSpeak.trim()) return;
+  const handleSpeak = useCallback(async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (isPlaying) {
+      stopUrduSpeech();
+      setIsPlaying(false);
+      return;
+    }
+    const value = currentLang === "ur" ? urduText || text : englishText || text;
+    if (!value?.trim()) return;
 
     setLoading(true);
-    setIsPlaying(true);
-
     try {
-      const audio = await speakUrdu(textToSpeak, {
-        lang: currentLang === "ur" ? "ur-PK" : "en-US",
-      });
-
-      audio.onended = () => setIsPlaying(false);
-      audio.onerror = () => setIsPlaying(false);
-    } catch (err) {
-      console.warn("TTS Error:", err);
-      setIsPlaying(false);
+      const audio = await speakUrdu(value, { lang: currentLang === "ur" ? "ur-PK" : "en-US" });
+      if (!mounted.current) return;
+      setIsPlaying(true);
+      const finish = () => mounted.current && setIsPlaying(false);
+      audio.addEventListener("ended", finish, { once: true });
+      audio.addEventListener("error", finish, { once: true });
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === "AbortError")) console.warn("TTS error:", error);
+      if (mounted.current) setIsPlaying(false);
     } finally {
-      setLoading(false);
+      if (mounted.current) setLoading(false);
     }
-  };
+  }, [currentLang, englishText, isPlaying, text, urduText]);
+
+  const label = currentLang === "ur"
+    ? (isPlaying ? "آواز بند کریں" : "آواز سنیں")
+    : (isPlaying ? "Stop audio" : "Listen to audio");
 
   return (
-    <button
-      type="button"
-      onClick={handleSpeak}
-      disabled={loading}
+    <button type="button" onClick={handleSpeak} disabled={loading} aria-label={label} title={label}
       className={`tap-target inline-flex items-center justify-center rounded-full p-1.5 transition-colors ${className}`}
-      style={{
-        background: isPlaying ? "#DCFCE7" : "rgba(240, 253, 244, 0.9)",
-        border: `1px solid ${isPlaying ? "#16A34A" : "#D5E2DD"}`,
-        cursor: loading ? "wait" : "pointer",
-      }}
-      title={currentLang === "ur" ? "آواز سنیں" : "Listen to audio"}
-    >
-      {loading ? (
-        <Loader2 size={size} className="animate-spin text-green-700" color={color} />
-      ) : isPlaying ? (
-        <VolumeX size={size} color="#166534" />
-      ) : (
-        <Volume2 size={size} color={color} />
-      )}
+      style={{ background: isPlaying ? "#DCFCE7" : "rgba(240, 253, 244, 0.9)", border: `1px solid ${isPlaying ? "#16A34A" : "#D5E2DD"}`, cursor: loading ? "wait" : "pointer" }}>
+      {loading ? <Loader2 size={size} className="animate-spin" color={color} />
+        : isPlaying ? <VolumeX size={size} color="#166534" />
+        : <Volume2 size={size} color={color} />}
     </button>
   );
 };
 
+// CustomerFaceApp.tsx currently imports this name.
+export const VoiceButton = VoiceAssistant;
 export default VoiceAssistant;

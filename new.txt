@@ -1,0 +1,20 @@
+Work Items Priority
+Mention mandi name along with the by-product name (screen 2) 1 DONE
+Show Min/Max price within the card view (screen 2) 1 DONE
+Put a banner around upper half (screen 3) 1 DONE
+Minimize filters (screen 2) 1 DONE
+Maximize the table in deeper view (View More via double-arrow icon) 2 DONE
+Add hover animations to product cards (maximize product icon) 2
+Add Islamic / Lunar calendar 2 DONE
+Align navigation with EasyPaisa, Telenor, Ufone apps 2
+Add back button in the center for quicker navigation 2 
+Add speaker icon on the products card 2 DONE
+Add location wise focus / color in the mandi selection filter 3 DONE
+Overlay the trends graph on the table 3
+Add local/traditional visuals (Pakistan flag for All Pakistan selection) 3 DONE
+Map view of locations (nearby mandis) 3
+Add products button in videos section for related product videos 3 DONE
+Minimize video screen while videos auto-scroll 3 DONE
+Add agricultural events videos (crop harvesting, live rep videos) 3 DONE
+Location statistics view (distance in km, customers, population) 4 
+Add eye tracker 4

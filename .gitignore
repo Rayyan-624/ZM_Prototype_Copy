@@ -1,3 +1,38 @@
+# Dependencies
 node_modules/
-.vercel
+**/node_modules/
+
+# Python Virtual Environments & Cache
+.venv/
+**/.venv/
+venv/
+**/venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables & tokens (Security & Cleanliness)
 .env*
+**/.env*
+!.env.example
+!**/.env.example
+
+# Audio synthesis artifacts & test files
+*.wav
+**/*.wav
+*.mp3
+**/*.mp3
+
+# Deployment & IDE files
+.vercel/
+**/.vercel/
+.vscode/
+**/.vscode/
+.idea/
+**/.idea/
+
+# OS and Log files
+.DS_Store
+Thumbs.db
+*.log
