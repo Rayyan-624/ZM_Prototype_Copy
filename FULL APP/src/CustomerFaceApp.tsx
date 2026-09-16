@@ -27,6 +27,9 @@ import {
   REAL_COMMODITY_TIMELINES,
   REAL_ARRIVAL_TIMELINES,
   REAL_DATES_TIMELINE,
+  EXCEL_COMMODITY_ROWS,
+  getExcelTimeline,
+  type TimelineResult,
 } from "./data/realCommodityData";
 
 import video1 from "./videos/video1.mp4";
@@ -1670,15 +1673,15 @@ const PRODUCT_DIVISIONS: ProdDiv[] = [
 ];
 
 const ALL_RATE_TYPES = [
-  "Farm Rate",
-  "Broker Rate",
-  "Mill Rate",
-  "Stock Rate",
-  "Dealer Rate",
   "Mandi Rate",
-  "Export Rate",
-  "Retail Rate",
   "Wholesale Rate",
+  "Retail Rate",
+  "Stock Rate",
+  "Broker Rate",
+  "Dealer Rate",
+  "Farm Rate",
+  "Mill Rate",
+  "Export Rate",
 ];
 const RATE_TYPE_URDU: Record<string, string> = {
   "Farm Rate": "فارم ریٹ",
@@ -1812,7 +1815,7 @@ const MANDI_ATTR_AVAILABLE: Record<
   },
 };
 
-// Attribute price multiplier — shared by cards and the deeper view
+// Attribute price multiplier — preserved at 1 to maintain 100% exact Excel rates
 function computeAttrMult(
   variety?: string | null,
   color?: string | null,
@@ -1820,29 +1823,10 @@ function computeAttrMult(
   spec?: string | null,
   condition?: string | null,
 ): number {
-  let m = 1;
-  if (variety)
-    m *=
-      {
-        "Sona Moti": 1.06,
-        "TD-1": 1.0,
-        SurSabz: 0.97,
-        Akbar: 1.02,
-        Anaj: 0.99,
-        Ujala: 1.04,
-        Galaxy: 1.03,
-        Dilkush: 0.98,
-        Arooj: 1.05,
-        Subham: 1.01,
-      }[variety] || 1;
-  if (color) m *= { Golden: 1.08, White: 1.0, Yellow: 0.95 }[color] || 1;
-  if (newOld) m *= { New: 1.1, Old: 0.95 }[newOld] || 1;
-  if (spec) m *= { "Seed Quality": 1.15, Retail: 1.0, Damage: 0.8 }[spec] || 1;
-  if (condition) m *= { Wet: 0.92, Dry: 1.0, Mix: 0.96 }[condition] || 1;
-  return m;
+  return 1;
 }
 
-// Deterministic canonical attributes for any mandi — known mandis use explicit data, others use name hash
+// Canonical attributes helper — returns genuine row attributes without synthetic fillers
 function getMandiCanonicalAttrs(mandiName: string): {
   variety: string;
   color: string;
@@ -1850,46 +1834,16 @@ function getMandiCanonicalAttrs(mandiName: string): {
   spec: string;
   condition: string;
 } {
-  const ma = MANDI_ATTR_AVAILABLE[mandiName];
-  if (ma)
-    return {
-      variety: ma.variety[0],
-      color: ma.color[0],
-      newOld: ma.newold[0],
-      spec: ma.spec[0],
-      condition: ma.condition[0],
-    };
-  // Hash mandi name to pick consistent attributes for every other mandi
-  const h = mandiName
-    .split("")
-    .reduce((acc, c) => (acc * 31 + c.charCodeAt(0)) | 0, 0);
-  const abs = Math.abs(h);
-  const varieties = [
-    "Sona Moti",
-    "TD-1",
-    "SurSabz",
-    "Akbar",
-    "Anaj",
-    "Ujala",
-    "Galaxy",
-    "Dilkush",
-    "Arooj",
-    "Subham",
-  ];
-  const colors = ["Golden", "White", "Yellow"];
-  const newOlds = ["New", "Old"];
-  const specs = ["Seed Quality", "Retail", "Damage"];
-  const conditions = ["Dry", "Mix", "Wet"];
   return {
-    variety: varieties[abs % varieties.length],
-    color: colors[(abs >> 3) % colors.length],
-    newOld: newOlds[(abs >> 5) % newOlds.length],
-    spec: specs[(abs >> 2) % specs.length],
-    condition: conditions[(abs >> 4) % conditions.length],
+    variety: "",
+    color: "",
+    newOld: "",
+    spec: "",
+    condition: "",
   };
 }
 
-// Attach canonical attributes for a mandi and bake their price effect into min/max
+// Attach canonical attributes for a mandi preserving exact real min/max and Excel fields
 function enrichRowWithAttrs(row: {
   product: string;
   byproduct: string;
@@ -1904,20 +1858,30 @@ function enrichRowWithAttrs(row: {
   mandiCity: string;
   province: string;
   vertical?: string;
+  variety?: string;
+  color?: string;
+  spec?: string;
+  condition?: string;
+  newOld?: string;
+  moisture?: string;
+  origin?: string;
+  area?: string;
+  date?: string;
+  quality?: string;
 }): RichRow {
-  const { variety, color, newOld, spec, condition } = getMandiCanonicalAttrs(
-    row.mandiName,
-  );
-  const mult = computeAttrMult(variety, color, newOld, spec, condition);
   return {
     ...row,
-    variety,
-    color,
-    newOld,
-    spec,
-    condition,
-    min: Math.round(row.min * mult),
-    max: Math.round(row.max * mult),
+    variety: row.variety || "",
+    color: row.color || "",
+    newOld: row.newOld || "",
+    spec: row.spec || "",
+    condition: row.condition || "",
+    quality: row.quality || "",
+    moisture: row.moisture || "",
+    origin: row.origin || "",
+    area: row.area || "",
+    min: row.min,
+    max: row.max,
   };
 }
 
@@ -6334,7 +6298,7 @@ function ByProductCombinedScreen({
           byproduct: m.byproduct,
           emoji: "",
           rateType: m.rateType,
-          arrival: `${m.arrivalCount} ${m.arrivalUnit}`,
+          arrival: m.arrivalCount || "",
           min: m.priceMin,
           max: m.priceMax,
           trend: (m.trend || "stable") as "up" | "down" | "stable",
@@ -8791,7 +8755,7 @@ function RatesResultScreen({
     byproduct: m.byproduct,
     emoji: getVerticalIcon(m.vertical),
     rateType: m.rateType,
-    arrival: `${m.arrivalCount} ${m.arrivalUnit}`,
+    arrival: m.arrivalCount || "",
     min: m.priceMin,
     max: m.priceMax,
     trend: m.trend || "stable",
@@ -9857,9 +9821,12 @@ function getMandiArrivalModalGraphData(
   timeframe: "24h" | "72h" | "7d" | "30d",
   lang: string,
 ) {
-  const baseArrival = typeof arrivalCountStr === "number"
-    ? arrivalCountStr
-    : parseInt(String(arrivalCountStr || "8400").replace(/[^0-9]/g, ""), 10) || 8400;
+  const baseArrival = (() => {
+    if (typeof arrivalCountStr === "number") return arrivalCountStr;
+    if (!arrivalCountStr) return 8400;
+    const match = String(arrivalCountStr).trim().match(/^([0-9,]+)/);
+    return match ? parseInt(match[1].replace(/,/g, ""), 10) || 8400 : 8400;
+  })();
 
   const minVal = Math.round(baseArrival * 0.55);
   const maxVal = Math.round(baseArrival * 1.35);
@@ -9961,7 +9928,7 @@ function ProductRatesScreen({
   const [tab, setTab] = useState<"overview" | "trends">("overview");
   const [msgModal, setMsgModal] = useState<FeedMsg | null>(null);
   const [activeTypes, setActiveTypes] = useState<string[]>(
-    initialRateType ? [initialRateType] : ["Retail"],
+    initialRateType ? [initialRateType] : ["Mandi Rate"],
   );
   const [trendMode, setTrendMode] = useState<"price" | "arrival">("price");
   const [range, setRange] = useState<"week" | "month" | "quarter">("week");
@@ -10100,39 +10067,18 @@ function ProductRatesScreen({
     (r) => !attrRateType || r.rateType === attrRateType,
   );
 
-  const parseArrival = (a: string) =>
-    parseInt(String(a).replace(/[^0-9]/g, "")) || 0;
-
-  // Attribute adjustment multipliers applied to min/max display
-  const attrMultiplier = computeAttrMult(
-    attrVariety,
-    attrColor,
-    attrNewOld,
-    attrSpec,
-    attrCondition,
-  );
-
-  // Date variation for overview stats
-  const STAT_BASE_DATE = new Date(2026, 8, 14);
-  const statDateVariation = statDateFilter
-    ? Math.max(
-      0.88,
-      1 -
-      Math.round(
-        Math.abs(STAT_BASE_DATE.getTime() - statDateFilter.getTime()) /
-        86400000,
-      ) *
-      0.012,
-    )
-    : 1;
+  const parseArrival = (a: any) => {
+    if (typeof a === "number") return a;
+    if (!a) return 0;
+    const match = String(a).trim().match(/^([0-9,]+)/);
+    return match ? parseInt(match[1].replace(/,/g, ""), 10) || 0 : 0;
+  };
 
   const baseMax = rows.length ? Math.max(...rows.map((r) => r.max)) : 0;
   const baseMin = rows.length ? Math.min(...rows.map((r) => r.min)) : 0;
-  const statMax = Math.round(baseMax * attrMultiplier * statDateVariation);
-  const statMin = Math.round(baseMin * attrMultiplier * statDateVariation);
-  const statArrival = Math.round(
-    rows.reduce((s, r) => s + parseArrival(r.arrival), 0) * statDateVariation,
-  );
+  const statMax = baseMax;
+  const statMin = baseMin;
+  const statArrival = rows.reduce((s, r) => s + parseArrival(r.arrival), 0);
   const statMandis = new Set(rows.map((r) => r.mandiName)).size;
 
   // Build comparison rows by geoView
@@ -10142,15 +10088,16 @@ function ProductRatesScreen({
       tableRateTypes.length > 0
         ? rows.filter((r) => tableRateTypes.includes(r.rateType))
         : rows;
-    const agg = (grp: R[]) => ({
-      min: Math.min(...grp.map((r) => r.min)),
-      max: Math.max(...grp.map((r) => r.max)),
-      arrival:
-        grp.reduce((s, r) => s + parseArrival(r.arrival), 0).toLocaleString() +
-        " MT",
-      trend: grp[0].trend,
-      trendPct: grp[0].trendPct,
-    });
+    const agg = (grp: R[]) => {
+      const arrSum = grp.reduce((s, r) => s + parseArrival(r.arrival), 0);
+      return {
+        min: Math.min(...grp.map((r) => r.min)),
+        max: Math.max(...grp.map((r) => r.max)),
+        arrival: arrSum > 0 ? arrSum.toLocaleString() : "—",
+        trend: grp[0].trend,
+        trendPct: grp[0].trendPct,
+      };
+    };
     const groupBy = (arr: R[], keyFn: (r: R) => string) => {
       const map = new Map<string, R[]>();
       arr.forEach((r) => {
@@ -10230,17 +10177,23 @@ function ProductRatesScreen({
     };
   };
 
-  // Chart data (Binance / TradingView financial engine)
-  const len = range === "week" ? 7 : range === "month" ? 30 : 90;
-  const base = rows[0]?.min || allRows[0]?.min || 2850;
-  const realKey = `${product}|${byproduct}`;
-  const matchedKey = Object.keys(REAL_COMMODITY_TIMELINES).find(
-    (k) =>
-      k === realKey ||
-      k.toLowerCase().includes(byproduct.toLowerCase()) ||
-      k.toLowerCase().includes(product.toLowerCase()),
-  );
-  const realTimeline = matchedKey ? REAL_COMMODITY_TIMELINES[matchedKey] : null;
+  // Chart data (100% Real Excel Timeline Engine)
+  const len = range === "week" ? 7 : range === "month" ? 30 : 31;
+
+  const excelTimelineMap = useMemo(() => {
+    const map: Record<string, TimelineResult> = {};
+    for (const rt of ALL_RATE_TYPES) {
+      map[rt] = getExcelTimeline({
+        product,
+        byproduct,
+        locationLabel: locScope.label,
+        locationKind: locScope.kind,
+        rateType: rt,
+        range,
+      });
+    }
+    return map;
+  }, [product, byproduct, locScope.label, locScope.kind, range]);
 
   const normInitial = useMemo(() => {
     const raw = (initialRateType || "").trim();
@@ -10248,7 +10201,7 @@ function ProductRatesScreen({
     const match = ALL_RATE_TYPES.find(
       (t) => t.toLowerCase() === raw.toLowerCase() || t.toLowerCase().startsWith(raw.toLowerCase())
     );
-    return match || ALL_RATE_TYPES[0];
+    return match || "Mandi Rate";
   }, [initialRateType]);
 
   const orderedRateTypes = useMemo(() => {
@@ -10268,61 +10221,43 @@ function ProductRatesScreen({
   const priceSeries = useMemo(
     () =>
       ALL_RATE_TYPES.map((rt) => {
-        // Natural realistic variations for secondary benchmarks without identical artificial gaps
-        const mult = RATE_MULTS[rt] || 1;
-        let data: number[];
-        if (realTimeline && realTimeline.length > 0) {
-          if (range === "week") {
-            data = realTimeline.slice(-7).map((v) => Math.round(v * mult));
-          } else if (range === "month") {
-            data = realTimeline.slice(-30).map((v) => Math.round(v * mult));
-          } else {
-            const extended = [
-              ...realTimeline,
-              ...realTimeline,
-              ...realTimeline,
-            ].slice(-90);
-            data = extended.map((v, i) =>
-              Math.round(v * mult * (1 + Math.sin(i / 6) * 0.008)),
-            );
-          }
-        } else {
-          data = genPts(base * mult, len, 0.02);
-        }
+        const tResult = excelTimelineMap[rt];
         return {
           label: rt,
           color: RATE_COLORS[rt] || "#087F63",
-          data,
+          data: tResult.prices,
+          mins: tResult.mins,
+          maxs: tResult.maxs,
+          latestMin: tResult.latestMin,
+          latestMax: tResult.latestMax,
+          trend: tResult.trend,
+          trendPct: tResult.trendPct,
         };
       }),
-    [base, len, product, byproduct, locScope.label, range, realTimeline],
+    [excelTimelineMap],
   );
 
-  const realArrivalTimeline = matchedKey ? REAL_ARRIVAL_TIMELINES[matchedKey] : null;
-  const arrivalBase = Math.max(statArrival / Math.max(statMandis, 1), 450);
-  const arrivalData = useMemo(() => {
-    if (realArrivalTimeline && realArrivalTimeline.length > 0) {
-      if (range === "week") {
-        return realArrivalTimeline.slice(-7);
-      } else if (range === "month") {
-        return realArrivalTimeline.slice(-30);
-      } else {
-        const ext = [...realArrivalTimeline, ...realArrivalTimeline, ...realArrivalTimeline].slice(-90);
-        return ext;
-      }
-    }
-    return genPts(arrivalBase, len, 0.05);
-  }, [realArrivalTimeline, arrivalBase, len, product, byproduct, locScope.label, range]);
+  const activeArrivalResult = useMemo(() => {
+    return getExcelTimeline({
+      product,
+      byproduct,
+      locationLabel: locScope.label,
+      locationKind: locScope.kind,
+      range,
+    });
+  }, [product, byproduct, locScope.label, locScope.kind, range]);
+
+  const arrivalData = activeArrivalResult.arrivals;
 
   const activeSeries = useMemo(() => {
-    const fallbackSeries = priceSeries[0] || { label: focusedType || "Retail", data: Array(len).fill(0), color: "#087F63" };
+    const fallbackSeries = priceSeries.find((s) => s.label === normInitial) || priceSeries[0];
     if (!compareMode) {
       const main = priceSeries.find((s) => s.label === focusedType) || fallbackSeries;
       return [main];
     }
     const sel = priceSeries.filter((s) => activeTypes.includes(s.label));
     return sel.length > 0 ? sel : [fallbackSeries];
-  }, [priceSeries, focusedType, compareMode, activeTypes, len]);
+  }, [priceSeries, focusedType, compareMode, activeTypes, normInitial]);
 
   const toggleType = (tKey: string) => {
     setFocusedType(tKey);
@@ -10391,13 +10326,21 @@ function ProductRatesScreen({
   const rawPMin = priceFlat.length ? Math.min(...priceFlat) : 2500;
   const rawPMax = priceFlat.length ? Math.max(...priceFlat) : 3500;
 
-  // Nice rounded ticks for Y-axis
-  const pPadding = Math.max((rawPMax - rawPMin) * 0.08, 60);
-  const pMin = Math.floor((rawPMin - pPadding) / 50) * 50;
-  const pMax = Math.ceil((rawPMax + pPadding) / 50) * 50;
+  // Nice rounded ticks for Y-axis with dynamic adaptive spread
+  const pSpread = rawPMax - rawPMin;
+  const minSpread = Math.max(Math.round(rawPMax * 0.04), 80);
+  const pPadding = Math.max(pSpread * 0.15, 30);
+  const pMin = Math.max(
+    0,
+    Math.floor((rawPMin - (pSpread < minSpread ? (minSpread - pSpread) / 2 : pPadding)) / 25) * 25,
+  );
+  const pMax = Math.ceil((rawPMax + (pSpread < minSpread ? (minSpread - pSpread) / 2 : pPadding)) / 25) * 25;
 
-  const aMin = Math.floor(Math.min(...arrivalData) * 0.9);
-  const aMax = Math.ceil(Math.max(...arrivalData) * 1.1);
+  const rawAMin = arrivalData.length ? Math.min(...arrivalData) : 0;
+  const rawAMax = arrivalData.length ? Math.max(...arrivalData) : 1000;
+  const aSpread = Math.max(rawAMax - rawAMin, 500);
+  const aMin = Math.max(0, Math.floor((rawAMin - aSpread * 0.1) / 100) * 100);
+  const aMax = Math.ceil((rawAMax + aSpread * 0.15) / 100) * 100;
 
   const yPriceTicks = useMemo(() => {
     const step = (pMax - pMin) / 4;
@@ -12446,16 +12389,7 @@ function ProductRatesScreen({
                                   (locScope.label === r.mandiName ||
                                     locScope.label.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "") ===
                                     r.mandiName.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "")));
-                              // Each row uses ITS OWN canonical attrs
-                              const rowCanon = getMandiCanonicalAttrs(r.mandiName);
-                              const rowAttrMult = computeAttrMult(
-                                rowCanon.variety,
-                                rowCanon.color,
-                                rowCanon.newOld,
-                                rowCanon.spec,
-                                rowCanon.condition,
-                              );
-                              const effMult = rowAttrMult * tableDateVariation;
+                              // Each row uses its exact real attributes directly from Excel
                               const intervalPct =
                                 tableTrendInterval === "72h"
                                   ? Math.round(r.trendPct * 2.2 * 10) / 10
@@ -12485,8 +12419,8 @@ function ProductRatesScreen({
                                         return {
                                           mandiName: r.mandiName,
                                           rateType: r.rateType,
-                                          min: Math.round(r.min * effMult),
-                                          max: Math.round(r.max * effMult),
+                                          min: r.min,
+                                          max: r.max,
                                           trend: r.trend as any,
                                           trendPct: intervalPct,
                                         };
@@ -12494,8 +12428,8 @@ function ProductRatesScreen({
 
                                       if (voiceEnabled) {
                                         const cleanMandi = r.mandiName.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "");
-                                        const minVal = Math.round(r.min * effMult).toLocaleString("en-PK");
-                                        const maxVal = Math.round(r.max * effMult).toLocaleString("en-PK");
+                                        const minVal = r.min.toLocaleString("en-PK");
+                                        const maxVal = r.max.toLocaleString("en-PK");
                                         const rtUr = tr(r.rateType).replace(" ریٹ", "").replace(" Rate", "");
                                         const spoken = lang === "ur"
                                           ? `${tm(cleanMandi)} منڈی، ${rtUr}، ریٹ ${minVal} سے ${maxVal} روپے`
@@ -12545,7 +12479,7 @@ function ProductRatesScreen({
                                         fontSize: lang === "ur" ? 12.5 : 11,
                                       }}
                                     >
-                                      {fmt(Math.round(r.min * effMult))} – {fmt(Math.round(r.max * effMult))}
+                                      {fmt(r.min)} – {fmt(r.max)}
                                     </td>
 
                                     {/* 3. Price Type */}
@@ -12601,8 +12535,8 @@ function ProductRatesScreen({
                                       <span
                                         className="px-2 py-0.5 rounded-md font-bold text-[10px]"
                                         style={{
-                                          background: rowCanon.newOld === "New" ? "#E4F4EC" : "#FFF4E6",
-                                          color: rowCanon.newOld === "New" ? "#0A7F5A" : "#B45309",
+                                          background: (r.newOld || r.quality) === "New" ? "#E4F4EC" : "#FFF4E6",
+                                          color: (r.newOld || r.quality) === "New" ? "#0A7F5A" : "#B45309",
                                           fontFamily:
                                             lang === "ur"
                                               ? URDU_FONT
@@ -12610,10 +12544,10 @@ function ProductRatesScreen({
                                         }}
                                       >
                                         {lang === "ur"
-                                          ? rowCanon.newOld === "New"
+                                          ? (r.newOld || r.quality) === "New"
                                             ? "نیا"
-                                            : "پرانا"
-                                          : rowCanon.newOld}
+                                            : (r.newOld || r.quality)
+                                          : (r.newOld || r.quality || "—")}
                                       </span>
                                     </td>
 
@@ -12632,7 +12566,7 @@ function ProductRatesScreen({
                                             : "inherit",
                                       }}
                                     >
-                                      {r.arrival || "450 Bags"}
+                                      {r.arrival || "—"}
                                     </td>
 
                                     {/* 7. Color */}
@@ -12651,8 +12585,8 @@ function ProductRatesScreen({
                                       }}
                                     >
                                       {lang === "ur"
-                                        ? t(rowCanon.color) || rowCanon.color
-                                        : rowCanon.color}
+                                        ? t(r.color) || r.color || "—"
+                                        : r.color || "—"}
                                     </td>
 
                                     {/* 8. Variety */}
@@ -12671,8 +12605,8 @@ function ProductRatesScreen({
                                       }}
                                     >
                                       {lang === "ur"
-                                        ? t(rowCanon.variety) || rowCanon.variety
-                                        : rowCanon.variety}
+                                        ? t(r.variety) || r.variety || "—"
+                                        : r.variety || "—"}
                                     </td>
 
                                     {/* 9. Condition */}
@@ -12691,8 +12625,8 @@ function ProductRatesScreen({
                                       }}
                                     >
                                       {lang === "ur"
-                                        ? t(rowCanon.condition) || rowCanon.condition
-                                        : rowCanon.condition}
+                                        ? t(r.condition || r.quality) || r.condition || r.quality || "—"
+                                        : r.condition || r.quality || "—"}
                                     </td>
 
                                     {/* 10. Specification */}
@@ -12711,8 +12645,8 @@ function ProductRatesScreen({
                                       }}
                                     >
                                       {lang === "ur"
-                                        ? t(rowCanon.spec) || rowCanon.spec
-                                        : rowCanon.spec}
+                                        ? t(r.spec) || r.spec || "—"
+                                        : r.spec || "—"}
                                     </td>
                                   </tr>
 
@@ -14142,12 +14076,11 @@ function ProductRatesScreen({
                                     : r.trend === "down"
                                       ? "#C94A43"
                                       : "#80918B";
-                                const rowCanon = getMandiCanonicalAttrs(r.mandiName);
                                 const rowQuality =
-                                  dtQuality || attrNewOld || rowCanon.newOld || "New";
-                                const rowSpec = dtSpec || attrSpec || rowCanon.spec || "Retail";
+                                  r.newOld || r.quality || dtQuality || attrNewOld || "—";
+                                const rowSpec = r.spec || dtSpec || attrSpec || "—";
                                 const rowCond =
-                                  dtCondition || attrCondition || rowCanon.condition || "Dry";
+                                  r.condition || r.quality || dtCondition || attrCondition || "—";
                                 const rtColor = RATE_COLORS[r.rateType] || "#075E4F";
                                 const rowBg = i % 2 === 0 ? "#fff" : "#F1F7F4";
 
@@ -14286,7 +14219,7 @@ function ProductRatesScreen({
                                         fontSize: lang === "ur" ? 13 : 10.5,
                                       }}
                                     >
-                                      {r.arrival || "450 Bags"}
+                                      {r.arrival || "—"}
                                     </td>
 
                                     {/* 7. Color */}
@@ -14303,8 +14236,8 @@ function ProductRatesScreen({
                                       }}
                                     >
                                       {lang === "ur"
-                                        ? t(rowCanon.color) || rowCanon.color
-                                        : rowCanon.color}
+                                        ? t(r.color) || r.color || "—"
+                                        : r.color || "—"}
                                     </td>
 
                                     {/* 8. Variety */}
@@ -14322,8 +14255,8 @@ function ProductRatesScreen({
                                       }}
                                     >
                                       {lang === "ur"
-                                        ? t(rowCanon.variety) || rowCanon.variety
-                                        : rowCanon.variety}
+                                        ? t(r.variety) || r.variety || "—"
+                                        : r.variety || "—"}
                                     </td>
 
                                     {/* 9. Condition */}
@@ -14340,8 +14273,8 @@ function ProductRatesScreen({
                                       }}
                                     >
                                       {lang === "ur"
-                                        ? t(rowCond) || rowCond
-                                        : rowCond}
+                                        ? t(rowCond) || rowCond || "—"
+                                        : rowCond || "—"}
                                     </td>
 
                                     {/* 10. Specification */}
@@ -14358,8 +14291,8 @@ function ProductRatesScreen({
                                       }}
                                     >
                                       {lang === "ur"
-                                        ? t(rowSpec) || rowSpec
-                                        : rowSpec}
+                                        ? t(rowSpec) || rowSpec || "—"
+                                        : rowSpec || "—"}
                                     </td>
                                   </tr>
                                 );
@@ -16117,82 +16050,74 @@ function AnalyticsScreen() {
     string[]
   >([]);
 
-  const BASE: Record<string, number> = {
-    Wheat: 2850,
-    Cotton: 8400,
-    Rice: 5200,
-    Maize: 2150,
-    Mustard: 5900,
-    Sugar: 460,
-  };
-  const base = BASE[product] || 2850;
-  const LEN: Record<TimeRange, number> = {
-    day: 24,
-    week: 7,
-    month: 30,
-    year: 12,
-  };
-  const XL: Record<TimeRange, string[]> = {
-    day: Array.from({ length: 24 }, (_, i) => `${i}h`),
-    week: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    month: Array.from({ length: 30 }, (_, i) => `${i + 1}`),
-    year: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-  };
-  const len = LEN[timeRange],
-    xl = XL[timeRange];
-  const mainData = genPts(base, len);
-  const cur = mainData[mainData.length - 1],
-    prev = mainData[mainData.length - 2] || cur;
-  const trend = cur >= prev ? "up" : "down";
-  const trendPct = Math.abs(((cur - prev) / prev) * 100).toFixed(1);
-  const RATE_MULTS: Record<string, number> = {
-    "Farm Rate": 0.88,
-    "Broker Rate": 0.95,
-    "Mill Rate": 1.0,
-    "Stock Rate": 1.08,
-    "Dealer Rate": 1.05,
-    "Mandi Rate": 1.0,
-    "Export Rate": 1.12,
-    "Retail Rate": 1.18,
-    "Wholesale Rate": 1.02,
-  };
-  const allRateSeries = ALL_RATE_TYPES.map((rt) => ({
-    label: rt,
-    color: RATE_COLORS[rt],
-    data: genPts(base * (RATE_MULTS[rt] || 1), len, 0.025),
-  }));
-  const MANDI_MULT: Record<string, number> = {
-    Pakpattan: 1.0,
-    Sahiwal: 0.98,
-    Lahore: 1.02,
-    Multan: 1.01,
-    Faisalabad: 1.015,
-  };
-  const compareSeries = compareSel.map((m) => ({
-    label: m,
-    color: MANDI_COLORS[A_MANDIS_LIST.indexOf(m) % MANDI_COLORS.length],
-    data: genPts(base * (MANDI_MULT[m] || 1), len, 0.03),
-  }));
+  const tResult = useMemo(() => {
+    return getExcelTimeline({
+      product,
+      byproduct: analyticsSelectedBP || "",
+      rateType: priceType,
+      range: timeRange,
+    });
+  }, [product, analyticsSelectedBP, priceType, timeRange]);
+
+  const mainData = tResult.prices;
+  const cur = tResult.latestPrice;
+  const prev = mainData.length >= 2 ? mainData[mainData.length - 2] : cur;
+  const trend = tResult.trend;
+  const trendPct = tResult.trendPct.toFixed(1);
+
+  const allRateSeries = useMemo(() => {
+    return ALL_RATE_TYPES.map((rt) => {
+      const res = getExcelTimeline({
+        product,
+        byproduct: analyticsSelectedBP || "",
+        rateType: rt,
+        range: timeRange,
+      });
+      return {
+        label: rt,
+        color: RATE_COLORS[rt] || "#087F63",
+        data: res.prices,
+      };
+    });
+  }, [product, analyticsSelectedBP, timeRange]);
+
+  const compareSeries = useMemo(() => {
+    return compareSel.map((m) => {
+      const res = getExcelTimeline({
+        product,
+        byproduct: analyticsSelectedBP || "",
+        locationLabel: m,
+        locationKind: "mandi",
+        rateType: priceType,
+        range: timeRange,
+      });
+      return {
+        label: m,
+        color: MANDI_COLORS[A_MANDIS_LIST.indexOf(m) % MANDI_COLORS.length] || "#2FAE68",
+        data: res.prices,
+      };
+    });
+  }, [compareSel, product, analyticsSelectedBP, priceType, timeRange]);
+
   const regionStations = LOCATIONS[regionProvince]?.[regionDistrict] || [];
-  const regionData = regionStations.map((s, i) => ({
-    station: s,
-    price: Math.round(base * (0.96 + i * 0.015 + Math.random() * 0.02)),
-    spark: genPts(base * (0.96 + i * 0.015), 8, 0.02),
-    trend: Math.random() > 0.5 ? ("up" as const) : ("down" as const),
-  }));
+  const regionData = useMemo(() => {
+    return regionStations.map((s) => {
+      const res = getExcelTimeline({
+        product,
+        byproduct: analyticsSelectedBP || "",
+        locationLabel: s,
+        locationKind: "mandi",
+        range: "week",
+      });
+      return {
+        station: s,
+        price: res.latestPrice,
+        spark: res.prices,
+        trend: res.trend === "down" ? ("down" as const) : ("up" as const),
+      };
+    });
+  }, [regionStations, product, analyticsSelectedBP]);
+
   const decision =
     trend === "up"
       ? ` ${product} rising at ${priceType} level. Selling recommended next 2–3 days.`
