@@ -9735,156 +9735,143 @@ type CompRow = {
   trendPct: number;
 };
 
-// Helper to generate realistic curve and axis data for Mandi Graph Popup modal
-function getMandiModalGraphData(
-  minVal: number,
-  maxVal: number,
-  trend: "up" | "down" | "flat" | "stable",
-  timeframe: "24h" | "72h" | "7d" | "30d",
-  lang: string,
-) {
-  const diff = Math.max(maxVal - minVal, 50);
-  let pattern: number[];
-  if (trend === "up") {
-    // Upward curve matching the user screenshot:
-    // Starts low around min, dips slightly or stabilizes, then climbs steadily to near max
-    pattern = [0.08, 0.35, 0.28, 0.45, 0.72, 0.74, 0.95];
-  } else if (trend === "down") {
-    // Downward curve
-    pattern = [0.92, 0.78, 0.70, 0.55, 0.32, 0.30, 0.08];
-  } else {
-    // Flat / stable
-    pattern = [0.45, 0.55, 0.42, 0.58, 0.48, 0.52, 0.50];
-  }
+// Helper to generate 100% real Excel-derived curve, arrival, and axis data for Mandi Graph inline drawer
+function getRealMandiInlineGraphData(options: {
+  product: string;
+  byproduct?: string;
+  mandiName: string;
+  rateType: string;
+  timeframe: "24h" | "72h" | "7d" | "30d";
+  lang: string;
+  view: "price" | "arrival";
+}) {
+  const { product, byproduct, mandiName, rateType, timeframe, lang, view } = options;
 
-  const tfShift =
-    timeframe === "24h"
-      ? [0, 0, 0, 0, 0, 0, 0]
-      : timeframe === "72h"
-        ? [-0.02, 0.03, -0.01, 0.04, -0.01, 0.02, 0]
-        : timeframe === "7d"
-          ? [0.03, -0.02, 0.04, -0.02, 0.03, -0.01, 0]
-          : [-0.04, 0.02, -0.03, 0.05, -0.02, 0.03, 0];
-
-  const points = pattern.map((p, i) => {
-    const val = minVal + diff * Math.max(0.02, Math.min(0.98, p + tfShift[i]));
-    return Math.round(val);
+  const timeline = getExcelTimeline({
+    product,
+    byproduct,
+    locationLabel: mandiName,
+    locationKind: "mandi",
+    rateType,
+    range: "year",
   });
 
-  if (trend === "up") {
-    points[0] = Math.round(minVal + diff * 0.08);
-    points[6] = Math.round(maxVal - diff * 0.04);
-  } else if (trend === "down") {
-    points[0] = Math.round(maxVal - diff * 0.06);
-    points[6] = Math.round(minVal + diff * 0.08);
-  }
+  const sliceCount =
+    timeframe === "24h" ? 2 :
+    timeframe === "72h" ? 4 :
+    timeframe === "7d" ? 7 :
+    31;
 
-  let xLabels: string[] = [];
-  if (timeframe === "24h") {
-    xLabels = ["06:00", "09:00", "12:00", "15:00", "18:00", "21:00", "Now"];
-  } else if (timeframe === "72h") {
-    xLabels =
-      lang === "ur"
-        ? ["دن 1", "12:00", "دن 2", "12:00", "دن 3", "12:00", "اب"]
-        : ["Day 1", "12:00", "Day 2", "12:00", "Day 3", "12:00", "Now"];
-  } else if (timeframe === "7d") {
-    xLabels =
-      lang === "ur"
-        ? ["پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ", "اتوار"]
-        : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  } else {
-    xLabels =
-      lang === "ur"
-        ? ["یکم", "5ویں", "10ویں", "15ویں", "20ویں", "25ویں", "آج"]
-        : ["1st", "5th", "10th", "15th", "20th", "25th", "Today"];
-  }
+  const rawDates = timeline.dates.slice(-sliceCount);
+  const rawPrices = timeline.prices.slice(-sliceCount);
+  const rawMins = timeline.mins.slice(-sliceCount);
+  const rawMaxs = timeline.maxs.slice(-sliceCount);
+  const rawArrivals = timeline.arrivals.slice(-sliceCount);
 
-  const yMinBound = minVal - diff * 0.12;
-  const yMaxBound = maxVal + diff * 0.12;
-  const yMidVal = (minVal + maxVal) / 2;
+  const urDays = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"];
+  const enDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const urMonths = [
+    "جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون",
+    "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"
+  ];
+  const enMonths = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+
+  const xLabels = rawDates.map((dateStr, i) => {
+    const parts = dateStr.split("-");
+    const y = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10) - 1;
+    const d = parseInt(parts[2], 10);
+    const dt = new Date(y, m, d);
+    const dayName = lang === "ur" ? urDays[dt.getDay()] : enDays[dt.getDay()];
+    const mName = lang === "ur" ? urMonths[m] : enMonths[m];
+    const dayNumStr = lang === "ur" ? toUrduDigits(d) : String(d);
+
+    if (timeframe === "24h" || timeframe === "72h") {
+      return lang === "ur" ? `${dayName} ${dayNumStr}` : `${dayName} ${d}`;
+    } else if (timeframe === "7d") {
+      return lang === "ur" ? `${dayName}` : `${dayName}`;
+    } else {
+      if (i % 6 === 0 || i === rawDates.length - 1) {
+        return lang === "ur" ? `${dayNumStr} ${mName}` : `${d} ${mName}`;
+      }
+      return "";
+    }
+  });
 
   const fmtK = (v: number) =>
     v >= 1000 ? (v / 1000).toFixed(1) + "k" : String(Math.round(v));
 
-  const yLabels = [
-    { label: fmtK(yMaxBound), val: yMaxBound },
-    { label: fmtK(yMidVal), val: yMidVal },
-    { label: fmtK(yMinBound), val: yMinBound },
-  ];
+  if (view === "price") {
+    const points = rawPrices;
+    const validMins = rawMins.filter((v) => v > 0);
+    const validMaxs = rawMaxs.filter((v) => v > 0);
+    const minVal = validMins.length > 0 ? Math.min(...validMins) : Math.min(...points);
+    const maxVal = validMaxs.length > 0 ? Math.max(...validMaxs) : Math.max(...points);
+    const diff = Math.max(maxVal - minVal, 50);
 
-  return { points, xLabels, yLabels, yMinBound, yMaxBound };
-}
+    const yMinBound = Math.max(0, Math.round(minVal - diff * 0.1));
+    const yMaxBound = Math.round(maxVal + diff * 0.1);
+    const yMidVal = Math.round((yMinBound + yMaxBound) / 2);
 
-// Helper to generate realistic arrival volume curve and axis data for Mandi Graph Popup modal
-function getMandiArrivalModalGraphData(
-  arrivalCountStr: string | number | undefined,
-  timeframe: "24h" | "72h" | "7d" | "30d",
-  lang: string,
-) {
-  const baseArrival = (() => {
-    if (typeof arrivalCountStr === "number") return arrivalCountStr;
-    if (!arrivalCountStr) return 8400;
-    const match = String(arrivalCountStr).trim().match(/^([0-9,]+)/);
-    return match ? parseInt(match[1].replace(/,/g, ""), 10) || 8400 : 8400;
-  })();
+    const yLabels = [
+      { label: fmtK(yMaxBound), val: yMaxBound },
+      { label: fmtK(yMidVal), val: yMidVal },
+      { label: fmtK(yMinBound), val: yMinBound },
+    ];
 
-  const minVal = Math.round(baseArrival * 0.55);
-  const maxVal = Math.round(baseArrival * 1.35);
-  const diff = Math.max(maxVal - minVal, 500);
+    const latestPrice = points[points.length - 1] ?? 0;
+    const prevPrice = points.length >= 2 ? points[0] : latestPrice;
+    let trend: "up" | "down" | "stable" = "stable";
+    let trendPct = 0;
+    if (prevPrice > 0 && latestPrice > 0) {
+      const delta = latestPrice - prevPrice;
+      trendPct = Math.round((Math.abs(delta) / prevPrice) * 1000) / 10;
+      if (delta > 0.01) trend = "up";
+      else if (delta < -0.01) trend = "down";
+    }
 
-  const pattern = [0.28, 0.52, 0.88, 0.65, 0.95, 0.72, 0.82];
-
-  const tfShift =
-    timeframe === "24h"
-      ? [0, 0, 0, 0, 0, 0, 0]
-      : timeframe === "72h"
-        ? [0.04, -0.03, 0.02, -0.04, 0.03, -0.02, 0]
-        : timeframe === "7d"
-          ? [-0.03, 0.04, -0.02, 0.05, -0.03, 0.02, 0]
-          : [0.04, -0.03, 0.05, -0.02, 0.03, -0.04, 0];
-
-  const points = pattern.map((p, i) => {
-    const val = minVal + diff * Math.max(0.08, Math.min(0.98, p + tfShift[i]));
-    return Math.round(val);
-  });
-
-  let xLabels: string[] = [];
-  if (timeframe === "24h") {
-    xLabels = ["06:00", "09:00", "12:00", "15:00", "18:00", "21:00", "Now"];
-  } else if (timeframe === "72h") {
-    xLabels =
-      lang === "ur"
-        ? ["دن 1", "12:00", "دن 2", "12:00", "دن 3", "12:00", "اب"]
-        : ["Day 1", "12:00", "Day 2", "12:00", "Day 3", "12:00", "Now"];
-  } else if (timeframe === "7d") {
-    xLabels =
-      lang === "ur"
-        ? ["پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ", "اتوار"]
-        : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    return {
+      points,
+      dates: rawDates,
+      xLabels,
+      yLabels,
+      yMinBound,
+      yMaxBound,
+      latestPrice,
+      latestMin: rawMins[rawMins.length - 1] ?? latestPrice,
+      latestMax: rawMaxs[rawMaxs.length - 1] ?? latestPrice,
+      trend,
+      trendPct,
+    };
   } else {
-    xLabels =
-      lang === "ur"
-        ? ["یکم", "5ویں", "10ویں", "15ویں", "20ویں", "25ویں", "آج"]
-        : ["1st", "5th", "10th", "15th", "20th", "25th", "Today"];
+    const points = rawArrivals;
+    const peakArrival = points.length > 0 ? Math.max(...points, 0) : 0;
+    const totalArrival = points.reduce((acc, curr) => acc + curr, 0);
+    const yMinBound = 0;
+    const yMaxBound = peakArrival > 0 ? Math.ceil((peakArrival * 1.25) / 100) * 100 : 1000;
+    const yMidVal = Math.round(yMaxBound / 2);
+
+    const yLabels = [
+      { label: fmtK(yMaxBound), val: yMaxBound },
+      { label: fmtK(yMidVal), val: yMidVal },
+      { label: "0", val: 0 },
+    ];
+
+    return {
+      points,
+      dates: rawDates,
+      xLabels,
+      yLabels,
+      yMinBound,
+      yMaxBound,
+      totalArrival,
+      peakArrival,
+      latestArrival: points[points.length - 1] ?? 0,
+    };
   }
-
-  const yMinBound = 0;
-  const yMaxBound = Math.ceil((maxVal * 1.15) / 1000) * 1000;
-  const yMidVal = Math.round(yMaxBound / 2);
-
-  const fmtK = (v: number) =>
-    v >= 1000 ? (v / 1000).toFixed(1) + "k" : String(Math.round(v));
-
-  const yLabels = [
-    { label: fmtK(yMaxBound), val: yMaxBound },
-    { label: fmtK(yMidVal), val: yMidVal },
-    { label: "0", val: 0 },
-  ];
-
-  const totalArrival = points.reduce((a, b) => a + b, 0);
-  const peakArrival = Math.max(...points);
-
-  return { points, xLabels, yLabels, yMinBound, yMaxBound, totalArrival, peakArrival, baseArrival };
 }
 
 function ProductRatesScreen({
@@ -12370,12 +12357,43 @@ function ProductRatesScreen({
                           </thead>
                           <tbody>
                             {tableRows.map((r, ci) => {
+                              // Multi-interval trend calculation derived from real Excel observations
+                              const rowTimeline = getExcelTimeline({
+                                product,
+                                byproduct: r.byproduct || byproduct,
+                                locationLabel: r.mandiName,
+                                locationKind: "mandi",
+                                rateType: r.rateType,
+                                range: "year",
+                              });
+                              const pSeries = rowTimeline.prices;
+                              const pLatest = pSeries[pSeries.length - 1] ?? r.min;
+
+                              // 24h = 1 trading observation prior, 72h = 3 observations prior, weekly = 7 observations prior, monthly = earliest available observation (up to 30 days)
+                              const pPrev =
+                                tableTrendInterval === "72h"
+                                  ? (pSeries[pSeries.length - 4] ?? pSeries[0] ?? pLatest)
+                                  : tableTrendInterval === "weekly"
+                                    ? (pSeries[pSeries.length - 8] ?? pSeries[0] ?? pLatest)
+                                    : tableTrendInterval === "monthly"
+                                      ? (pSeries[0] ?? pLatest)
+                                      : (pSeries[pSeries.length - 2] ?? pLatest);
+
+                              let intervalPct = 0;
+                              let intervalTrend: "up" | "down" | "stable" = "stable";
+                              if (pPrev > 0 && pLatest > 0) {
+                                const delta = pLatest - pPrev;
+                                intervalPct = Math.round((Math.abs(delta) / pPrev) * 1000) / 10;
+                                if (delta > 0.01) intervalTrend = "up";
+                                else if (delta < -0.01) intervalTrend = "down";
+                              }
+
                               const trendArrow =
-                                r.trend === "up" ? "▲" : r.trend === "down" ? "▼" : "—";
+                                intervalTrend === "up" ? "▲" : intervalTrend === "down" ? "▼" : "—";
                               const trendColor =
-                                r.trend === "up"
+                                intervalTrend === "up"
                                   ? "#16A34A"
-                                  : r.trend === "down"
+                                  : intervalTrend === "down"
                                     ? "#C94A43"
                                     : "#52635F";
                               const rtColor = RATE_COLORS[r.rateType] || "#52635F";
@@ -12389,15 +12407,6 @@ function ProductRatesScreen({
                                   (locScope.label === r.mandiName ||
                                     locScope.label.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "") ===
                                     r.mandiName.replace(/\s*mandi$/i, "").replace(/\s*منڈی$/i, "")));
-                              // Each row uses its exact real attributes directly from Excel
-                              const intervalPct =
-                                tableTrendInterval === "72h"
-                                  ? Math.round(r.trendPct * 2.2 * 10) / 10
-                                  : tableTrendInterval === "weekly"
-                                    ? Math.round(r.trendPct * 3.1 * 10) / 10
-                                    : tableTrendInterval === "monthly"
-                                      ? Math.round(r.trendPct * 5.4 * 10) / 10
-                                      : r.trendPct;
                               const rowBg = isSelected
                                 ? "#E4F2EC"
                                 : ci % 2 === 0
@@ -12421,8 +12430,9 @@ function ProductRatesScreen({
                                           rateType: r.rateType,
                                           min: r.min,
                                           max: r.max,
-                                          trend: r.trend as any,
+                                          trend: intervalTrend,
                                           trendPct: intervalPct,
+                                          arrival: r.arrival,
                                         };
                                       });
 
@@ -12458,14 +12468,17 @@ function ProductRatesScreen({
                                         textOverflow: "ellipsis",
                                         maxWidth: 90,
                                         borderRight: "1px solid #D5E2DD",
-                                        fontSize: lang === "ur" ? 13.5 : 11,
                                         fontFamily:
                                           lang === "ur"
                                             ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
-                                      {tm(r.mandiName.replace(" Mandi", ""))}
+                                      {tm(
+                                        r.mandiName
+                                          .replace(/\s*mandi$/i, "")
+                                          .replace(/\s*منڈی$/i, ""),
+                                      )}
                                     </td>
 
                                     {/* 2. Min – Max */}
@@ -12473,13 +12486,14 @@ function ProductRatesScreen({
                                       style={{
                                         padding: "7px 4px",
                                         textAlign: "center",
-                                        whiteSpace: "nowrap",
-                                        fontWeight: 800,
                                         color: "#087F63",
-                                        fontSize: lang === "ur" ? 12.5 : 11,
+                                        fontWeight: 800,
+                                        fontSize: 11,
+                                        whiteSpace: "nowrap",
                                       }}
                                     >
-                                      {fmt(r.min)} – {fmt(r.max)}
+                                      {r.min.toLocaleString("en-PK")} –{" "}
+                                      {r.max.toLocaleString("en-PK")}
                                     </td>
 
                                     {/* 3. Price Type */}
@@ -12491,12 +12505,10 @@ function ProductRatesScreen({
                                       }}
                                     >
                                       <span
-                                        className="font-bold px-1.5 py-0.5 rounded-full"
+                                        className="px-1.5 py-0.5 rounded-md font-bold text-[9px]"
                                         style={{
-                                          background: rtColor + "1A",
+                                          background: `${rtColor}15`,
                                           color: rtColor,
-                                          border: `1px solid ${rtColor}30`,
-                                          fontSize: lang === "ur" ? 11 : 9,
                                           fontFamily:
                                             lang === "ur"
                                               ? URDU_FONT
@@ -12543,11 +12555,7 @@ function ProductRatesScreen({
                                               : "inherit",
                                         }}
                                       >
-                                        {lang === "ur"
-                                          ? (r.newOld || r.quality) === "New"
-                                            ? "نیا"
-                                            : (r.newOld || r.quality)
-                                          : (r.newOld || r.quality || "—")}
+                                        {r.newOld || r.quality || "—"}
                                       </span>
                                     </td>
 
@@ -12556,17 +12564,15 @@ function ProductRatesScreen({
                                       style={{
                                         padding: "7px 4px",
                                         textAlign: "center",
-                                        color: "#2F4A43",
-                                        fontWeight: 600,
+                                        color: r.arrival ? "#087F63" : "#80918B",
+                                        fontWeight: 700,
+                                        fontSize: 10,
                                         whiteSpace: "nowrap",
-                                        fontSize: lang === "ur" ? 13 : 10.5,
-                                        fontFamily:
-                                          lang === "ur"
-                                            ? URDU_FONT
-                                            : "inherit",
                                       }}
                                     >
-                                      {r.arrival || "—"}
+                                      {r.arrival
+                                        ? `${r.arrival} ${lang === "ur" ? "تھیلے" : "Bags"}`
+                                        : "—"}
                                     </td>
 
                                     {/* 7. Color */}
@@ -12574,19 +12580,17 @@ function ProductRatesScreen({
                                       style={{
                                         padding: "7px 4px",
                                         textAlign: "center",
-                                        color: "#2F4A43",
+                                        color: "#52635F",
                                         fontWeight: 600,
+                                        fontSize: 10,
                                         whiteSpace: "nowrap",
-                                        fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
                                             ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
-                                      {lang === "ur"
-                                        ? t(r.color) || r.color || "—"
-                                        : r.color || "—"}
+                                      {r.color ? tc(r.color) : "—"}
                                     </td>
 
                                     {/* 8. Variety */}
@@ -12594,19 +12598,17 @@ function ProductRatesScreen({
                                       style={{
                                         padding: "7px 4px",
                                         textAlign: "center",
-                                        color: "#075E4F",
-                                        fontWeight: 700,
+                                        color: "#52635F",
+                                        fontWeight: 600,
+                                        fontSize: 10,
                                         whiteSpace: "nowrap",
-                                        fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
                                             ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
-                                      {lang === "ur"
-                                        ? t(r.variety) || r.variety || "—"
-                                        : r.variety || "—"}
+                                      {r.variety || "—"}
                                     </td>
 
                                     {/* 9. Condition */}
@@ -12614,19 +12616,17 @@ function ProductRatesScreen({
                                       style={{
                                         padding: "7px 4px",
                                         textAlign: "center",
-                                        color: "#2F4A43",
+                                        color: "#52635F",
                                         fontWeight: 600,
+                                        fontSize: 10,
                                         whiteSpace: "nowrap",
-                                        fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
                                             ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
-                                      {lang === "ur"
-                                        ? t(r.condition || r.quality) || r.condition || r.quality || "—"
-                                        : r.condition || r.quality || "—"}
+                                      {r.condition || r.quality || "—"}
                                     </td>
 
                                     {/* 10. Specification */}
@@ -12634,163 +12634,157 @@ function ProductRatesScreen({
                                       style={{
                                         padding: "7px 4px",
                                         textAlign: "center",
-                                        color: "#2F4A43",
+                                        color: "#52635F",
                                         fontWeight: 600,
+                                        fontSize: 10,
                                         whiteSpace: "nowrap",
-                                        fontSize: lang === "ur" ? 13 : 10.5,
                                         fontFamily:
                                           lang === "ur"
                                             ? URDU_FONT
                                             : "inherit",
                                       }}
                                     >
-                                      {lang === "ur"
-                                        ? t(r.spec) || r.spec || "—"
-                                        : r.spec || "—"}
+                                      {r.spec || "—"}
                                     </td>
                                   </tr>
 
                                   {/* Inline Expandable Trend Graph Row directly below this clicked row */}
                                   {isRowModalActive && (
-                                    <tr
-                                      style={{
-                                        background: "#F1F8F5",
-                                        borderBottom: "1.5px solid #C7E8D8",
-                                      }}
-                                    >
+                                    <tr>
                                       <td
                                         colSpan={10}
-                                        style={{
-                                          padding: "8px 6px 10px 6px",
-                                          background: "#F4FAF7",
-                                          borderBottom: "1.5px solid #C7E8D8",
-                                        }}
+                                        className="p-0 border-b-2 border-[#10B981]"
+                                        style={{ background: "#F4FAF7" }}
                                       >
-                                        <div
-                                          style={{
-                                            position: "sticky",
-                                            left: 6,
-                                            width: "calc(min(100vw, 448px) - 16px)",
-                                            maxWidth: "calc(100vw - 16px)",
-                                            boxSizing: "border-box",
-                                          }}
-                                          className="bg-white rounded-2xl border border-[#D5E2DD] p-3 shadow-md flex flex-col gap-2 relative overflow-hidden zm-beam-border zm-beam-border-card animate-in fade-in slide-in-from-top-1 duration-200"
-                                        >
+                                        <div className="p-2.5 flex flex-col gap-2 shadow-inner">
                                           {/* 1. Header: Dot + Mandi Title + Tabs (Price vs Arrival) + Close 'X' */}
-                                          <div className="flex items-center justify-between gap-2">
-                                            <div className="flex items-center gap-1.5 min-w-0">
-                                              <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] flex-shrink-0 animate-pulse" />
-                                              <h3
-                                                className="font-black text-[13.5px] text-[#111827] truncate"
+                                          <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-1.5">
+                                              <span
+                                                className="w-2.5 h-2.5 rounded-full inline-block animate-pulse"
+                                                style={{
+                                                  background:
+                                                    tableGraphView === "price"
+                                                      ? "#10B981"
+                                                      : "#059669",
+                                                }}
+                                              />
+                                              <span
+                                                className="font-black text-xs text-[#064D40]"
                                                 style={{
                                                   fontFamily:
                                                     lang === "ur"
                                                       ? URDU_FONT
                                                       : "inherit",
-                                                  fontSize: lang === "ur" ? 15.5 : 13.5,
                                                 }}
                                               >
-                                                {lang === "ur"
-                                                  ? tm(r.mandiName)
-                                                  : r.mandiName.includes("Mandi")
-                                                    ? r.mandiName
-                                                    : `${r.mandiName} Mandi`}
-                                              </h3>
+                                                {tm(
+                                                  r.mandiName
+                                                    .replace(/\s*mandi$/i, "")
+                                                    .replace(/\s*منڈی$/i, ""),
+                                                )}{" "}
+                                                ({tr(r.rateType)})
+                                              </span>
                                             </div>
 
                                             {/* Graph View Switcher Tabs: Price vs Arrival */}
-                                            <div className="flex items-center bg-[#EAF5F0] p-1 rounded-full border border-[#CDE5DC] flex-shrink-0 gap-1">
+                                            <div className="flex items-center gap-1.5">
+                                              <div className="flex items-center bg-[#E5EFEA] p-0.5 rounded-lg border border-[#CCE2D7]">
+                                                <button
+                                                  type="button"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setTableGraphView("price");
+                                                  }}
+                                                  className="tap-target px-2 py-0.5 rounded-md text-[9.5px] font-extrabold transition"
+                                                  style={{
+                                                    background:
+                                                      tableGraphView === "price"
+                                                        ? "#10B981"
+                                                        : "transparent",
+                                                    color:
+                                                      tableGraphView === "price"
+                                                        ? "#FFFFFF"
+                                                        : "#4E665E",
+                                                    fontFamily:
+                                                      lang === "ur"
+                                                        ? URDU_FONT
+                                                        : "inherit",
+                                                  }}
+                                                >
+                                                  {lang === "ur" ? "ریٹ" : "Price"}
+                                                </button>
+                                                <button
+                                                  type="button"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setTableGraphView("arrival");
+                                                  }}
+                                                  className="tap-target px-2 py-0.5 rounded-md text-[9.5px] font-extrabold transition"
+                                                  style={{
+                                                    background:
+                                                      tableGraphView === "arrival"
+                                                        ? "#059669"
+                                                        : "transparent",
+                                                    color:
+                                                      tableGraphView === "arrival"
+                                                        ? "#FFFFFF"
+                                                        : "#4E665E",
+                                                    fontFamily:
+                                                      lang === "ur"
+                                                        ? URDU_FONT
+                                                        : "inherit",
+                                                  }}
+                                                >
+                                                  {lang === "ur" ? "آمد" : "Arrival"}
+                                                </button>
+                                              </div>
+
                                               <button
                                                 type="button"
                                                 onClick={(e) => {
                                                   e.stopPropagation();
-                                                  setTableGraphView("price");
+                                                  setSelectedMandiGraphRow(null);
                                                 }}
-                                                className={`px-3 py-1 rounded-full text-xs font-black transition active:scale-95 ${tableGraphView === "price"
-                                                  ? "zm-beam-border bg-[#087F63] text-white shadow-sm"
-                                                  : "text-[#2D5A4C] hover:text-[#087F63] bg-transparent"
-                                                  }`}
-                                                style={{
-                                                  fontFamily: lang === "ur" ? URDU_FONT : "inherit",
-                                                  fontSize: lang === "ur" ? 13 : 11.5,
-                                                }}
+                                                className="tap-target w-5 h-5 rounded-full bg-[#E5EFEA] hover:bg-[#D5E5DE] text-[#064D40] text-xs font-bold flex items-center justify-center transition"
+                                                title="Close"
                                               >
-                                                {lang === "ur" ? "قیمت" : "Price"}
-                                              </button>
-                                              <button
-                                                type="button"
-                                                onClick={(e) => {
-                                                  e.stopPropagation();
-                                                  setTableGraphView("arrival");
-                                                }}
-                                                className={`px-3 py-1 rounded-full text-xs font-black transition active:scale-95 ${tableGraphView === "arrival"
-                                                  ? "zm-beam-border bg-[#087F63] text-white shadow-sm"
-                                                  : "text-[#2D5A4C] hover:text-[#087F63] bg-transparent"
-                                                  }`}
-                                                style={{
-                                                  fontFamily: lang === "ur" ? URDU_FONT : "inherit",
-                                                  fontSize: lang === "ur" ? 13 : 11.5,
-                                                }}
-                                              >
-                                                {lang === "ur" ? "آمد" : "Arrival"}
+                                                ✕
                                               </button>
                                             </div>
-
-                                            <button
-                                              type="button"
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                setSelectedMandiGraphRow(null);
-                                              }}
-                                              className="tap-target w-6 h-6 rounded-full bg-[#F3F4F6] hover:bg-[#E5E7EB] active:scale-95 flex items-center justify-center text-[#6B7280] transition flex-shrink-0"
-                                              title={lang === "ur" ? "گراف بند کریں" : "Close graph"}
-                                            >
-                                              <svg
-                                                width="11"
-                                                height="11"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2.5"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                              >
-                                                <line x1="18" y1="6" x2="6" y2="18" />
-                                                <line x1="6" y1="6" x2="18" y2="18" />
-                                              </svg>
-                                            </button>
                                           </div>
 
                                           {/* 2. Timeframe Filter Pills */}
-                                          <div className="flex items-center gap-1 w-full justify-between">
-                                            {[
-                                              { id: "24h", labelEn: "24H", labelUr: "24 گھنٹے" },
-                                              { id: "72h", labelEn: "72H", labelUr: "72 گھنٹے" },
-                                              { id: "7d", labelEn: "7D", labelUr: "7 دن" },
-                                              { id: "30d", labelEn: "30D", labelUr: "30 دن" },
-                                            ].map((tf) => {
-                                              const isActive = graphTimeframe === tf.id;
+                                          <div className="flex items-center gap-1">
+                                            {(
+                                              [
+                                                { id: "24h", labelUr: "24گھنٹے", labelEn: "24h" },
+                                                { id: "72h", labelUr: "72گھنٹے", labelEn: "72h" },
+                                                { id: "7d", labelUr: "7 دن", labelEn: "7D" },
+                                                { id: "30d", labelUr: "30 دن", labelEn: "30D" },
+                                              ] as const
+                                            ).map((tf) => {
+                                              const active = graphTimeframe === tf.id;
                                               return (
                                                 <button
                                                   key={tf.id}
                                                   type="button"
                                                   onClick={(e) => {
                                                     e.stopPropagation();
-                                                    setGraphTimeframe(tf.id as any);
+                                                    setGraphTimeframe(tf.id);
                                                   }}
-                                                  className={`flex-1 py-0.5 px-1 rounded-full font-extrabold text-[9.5px] transition text-center active:scale-[0.97] ${isActive ? "zm-beam-border" : ""
-                                                    }`}
+                                                  className="tap-target px-2 py-0.5 rounded-md text-[9.5px] font-extrabold transition"
                                                   style={{
-                                                    background: isActive ? "#087F63" : "#F4FAF7",
-                                                    color: isActive ? "#FFFFFF" : "#374151",
-                                                    border: isActive
-                                                      ? "1px solid #087F63"
-                                                      : "1px solid #D5E2DD",
+                                                    background: active
+                                                      ? tableGraphView === "price"
+                                                        ? "#10B981"
+                                                        : "#059669"
+                                                      : "#E5EFEA",
+                                                    color: active ? "#FFFFFF" : "#4E665E",
                                                     fontFamily:
                                                       lang === "ur"
                                                         ? URDU_FONT
                                                         : "inherit",
-                                                    fontSize: lang === "ur" ? 11 : 9.5,
                                                   }}
                                                 >
                                                   {lang === "ur" ? tf.labelUr : tf.labelEn}
@@ -12803,222 +12797,230 @@ function ProductRatesScreen({
                                           {tableGraphView === "price" ? (
                                             <>
                                               {/* Price Rates Summary Box */}
-                                              <div className="rounded-lg p-1.5 px-2 bg-[#F4FAF7] border border-[#D5E2DD] flex items-center justify-between">
-                                                <div className="flex items-center gap-2.5">
-                                                  <div>
-                                                    <span className="text-[8.5px] font-bold text-[#6B7280] uppercase tracking-wider block leading-none">
-                                                      {lang === "ur" ? "کم سے کم ریٹ" : "Min Rate"}
-                                                    </span>
-                                                    <span className="text-xs font-black text-[#1F2937] block mt-0.5 leading-tight">
-                                                      Rs.{Math.round(r.min * effMult).toLocaleString()}
-                                                    </span>
-                                                  </div>
-                                                  <div className="w-[1px] h-5 bg-[#D5E2DD]" />
-                                                  <div>
-                                                    <span className="text-[8.5px] font-bold text-[#6B7280] uppercase tracking-wider block leading-none">
-                                                      {lang === "ur" ? "زیادہ سے زیادہ ریٹ" : "Max Rate"}
-                                                    </span>
-                                                    <span className="text-xs font-black text-[#087F63] block mt-0.5 leading-tight">
-                                                      Rs.{Math.round(r.max * effMult).toLocaleString()}
-                                                    </span>
-                                                  </div>
-                                                </div>
-                                                <div
-                                                  className="px-2 py-0.5 rounded-md text-[10.5px] font-black flex items-center gap-1"
-                                                  style={{
-                                                    background:
-                                                      r.trend === "down" ? "#FEE2E2" : "#E8F8F0",
-                                                    color:
-                                                      r.trend === "down" ? "#DC2626" : "#059669",
-                                                  }}
-                                                >
-                                                  <span>
-                                                    {r.trend === "up"
-                                                      ? "▲"
-                                                      : r.trend === "down"
-                                                        ? "▼"
-                                                        : "—"}
-                                                  </span>
-                                                  <span>
-                                                    {intervalPct > 0 ? `${intervalPct}%` : "1.8%"}
-                                                  </span>
-                                                </div>
-                                              </div>
-
-                                              {/* Price Visual Line Chart */}
                                               {(() => {
-                                                const graphData = getMandiModalGraphData(
-                                                  Math.round(r.min * effMult),
-                                                  Math.round(r.max * effMult),
-                                                  r.trend as any,
-                                                  graphTimeframe,
+                                                const graphData = getRealMandiInlineGraphData({
+                                                  product,
+                                                  byproduct: r.byproduct || byproduct,
+                                                  mandiName: r.mandiName,
+                                                  rateType: r.rateType,
+                                                  timeframe: graphTimeframe,
                                                   lang,
-                                                );
-                                                const W = 350;
-                                                const H = 115;
-                                                const xLeft = 34;
-                                                const xRight = 334;
-                                                const yTop = 12;
-                                                const yBottom = 84;
-
-                                                const coords = graphData.points.map((p, i) => {
-                                                  const x =
-                                                    xLeft + (i / (graphData.points.length - 1)) * (xRight - xLeft);
-                                                  const y =
-                                                    yBottom -
-                                                    ((p - graphData.yMinBound) /
-                                                      (graphData.yMaxBound - graphData.yMinBound)) *
-                                                    (yBottom - yTop);
-                                                  return { x, y, val: p };
+                                                  view: "price",
                                                 });
-
-                                                const linePath = coords
-                                                  .map((c, i) => (i === 0 ? `M ${c.x} ${c.y}` : `L ${c.x} ${c.y}`))
-                                                  .join(" ");
-                                                const areaPath = `${linePath} L ${coords[coords.length - 1].x} ${yBottom + 6} L ${coords[0].x} ${yBottom + 6} Z`;
-                                                const yMidY = (yTop + yBottom) / 2;
-
                                                 return (
-                                                  <div className="rounded-lg border border-[#D5E2DD] p-1 bg-white flex flex-col justify-center">
-                                                    <svg
-                                                      viewBox={`0 0 ${W} ${H}`}
-                                                      className="w-full h-auto"
-                                                      style={{ maxHeight: 110, overflow: "visible" }}
-                                                    >
-                                                      <defs>
-                                                        <linearGradient
-                                                          id={`mandiInlineGraphGrad-${ci}`}
-                                                          x1="0"
-                                                          y1="0"
-                                                          x2="0"
-                                                          y2="1"
-                                                        >
-                                                          <stop
-                                                            offset="0%"
-                                                            stopColor="#10B981"
-                                                            stopOpacity="0.25"
-                                                          />
-                                                          <stop
-                                                            offset="100%"
-                                                            stopColor="#10B981"
-                                                            stopOpacity="0.0"
-                                                          />
-                                                        </linearGradient>
-                                                      </defs>
-
-                                                      {/* Top Grid */}
-                                                      <line
-                                                        x1={xLeft}
-                                                        y1={yTop}
-                                                        x2={xRight}
-                                                        y2={yTop}
-                                                        stroke="#E5E7EB"
-                                                        strokeDasharray="3 3"
-                                                        strokeWidth="1"
-                                                      />
-                                                      <text
-                                                        x={xLeft - 5}
-                                                        y={yTop + 3}
-                                                        textAnchor="end"
-                                                        fill="#9CA3AF"
-                                                        fontSize="7.5"
-                                                        fontWeight="600"
+                                                  <>
+                                                    <div className="rounded-lg p-1.5 px-2 bg-[#F0FDF4] border border-[#BBF7D0] flex items-center justify-between">
+                                                      <div className="flex items-center gap-2.5">
+                                                        <div>
+                                                          <span className="text-[8.5px] font-bold text-[#15803D] uppercase tracking-wider block leading-none">
+                                                            {lang === "ur" ? "کم سے کم" : "Min Rate"}
+                                                          </span>
+                                                          <span className="text-xs font-black text-[#14532D] block mt-0.5 leading-tight">
+                                                            Rs.{graphData.latestMin.toLocaleString()}
+                                                          </span>
+                                                        </div>
+                                                        <div className="w-[1px] h-5 bg-[#BBF7D0]" />
+                                                        <div>
+                                                          <span className="text-[8.5px] font-bold text-[#15803D] uppercase tracking-wider block leading-none">
+                                                            {lang === "ur" ? "زیادہ سے زیادہ" : "Max Rate"}
+                                                          </span>
+                                                          <span className="text-xs font-black text-[#087F63] block mt-0.5 leading-tight">
+                                                            Rs.{graphData.latestMax.toLocaleString()}
+                                                          </span>
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        className="px-2 py-0.5 rounded-md text-[10.5px] font-black flex items-center gap-1"
+                                                        style={{
+                                                          background:
+                                                            graphData.trend === "down" ? "#FEE2E2" : "#E8F8F0",
+                                                          color:
+                                                            graphData.trend === "down" ? "#DC2626" : "#059669",
+                                                        }}
                                                       >
-                                                        {graphData.yLabels[0].label}
-                                                      </text>
+                                                        <span>
+                                                          {graphData.trend === "up"
+                                                            ? "▲"
+                                                            : graphData.trend === "down"
+                                                              ? "▼"
+                                                              : "—"}
+                                                        </span>
+                                                        <span>
+                                                          {graphData.trendPct > 0 ? `${graphData.trendPct}%` : "0.0%"}
+                                                        </span>
+                                                      </div>
+                                                    </div>
 
-                                                      {/* Mid Grid */}
-                                                      <line
-                                                        x1={xLeft}
-                                                        y1={yMidY}
-                                                        x2={xRight}
-                                                        y2={yMidY}
-                                                        stroke="#E5E7EB"
-                                                        strokeDasharray="3 3"
-                                                        strokeWidth="1"
-                                                      />
-                                                      <text
-                                                        x={xLeft - 5}
-                                                        y={yMidY + 3}
-                                                        textAnchor="end"
-                                                        fill="#9CA3AF"
-                                                        fontSize="7.5"
-                                                        fontWeight="600"
-                                                      >
-                                                        {graphData.yLabels[1].label}
-                                                      </text>
+                                                    {/* Price Visual Line Chart */}
+                                                    {(() => {
+                                                      const W = 350;
+                                                      const H = 115;
+                                                      const xLeft = 34;
+                                                      const xRight = 334;
+                                                      const yTop = 12;
+                                                      const yBottom = 84;
 
-                                                      {/* Bot Grid */}
-                                                      <line
-                                                        x1={xLeft}
-                                                        y1={yBottom}
-                                                        x2={xRight}
-                                                        y2={yBottom}
-                                                        stroke="#E5E7EB"
-                                                        strokeDasharray="3 3"
-                                                        strokeWidth="1"
-                                                      />
-                                                      <text
-                                                        x={xLeft - 5}
-                                                        y={yBottom + 3}
-                                                        textAnchor="end"
-                                                        fill="#9CA3AF"
-                                                        fontSize="7.5"
-                                                        fontWeight="600"
-                                                      >
-                                                        {graphData.yLabels[2].label}
-                                                      </text>
+                                                      const coords = graphData.points.map((p, i) => {
+                                                        const x =
+                                                          xLeft + (i / (graphData.points.length - 1 || 1)) * (xRight - xLeft);
+                                                        const y =
+                                                          yBottom -
+                                                          ((p - graphData.yMinBound) /
+                                                            (graphData.yMaxBound - graphData.yMinBound || 1)) *
+                                                          (yBottom - yTop);
+                                                        return { x, y, val: p };
+                                                      });
 
-                                                      {/* Area under curve */}
-                                                      <path
-                                                        d={areaPath}
-                                                        fill={`url(#mandiInlineGraphGrad-${ci})`}
-                                                      />
+                                                      const linePath = coords
+                                                        .map((c, i) => (i === 0 ? `M ${c.x} ${c.y}` : `L ${c.x} ${c.y}`))
+                                                        .join(" ");
+                                                      const areaPath = `${linePath} L ${coords[coords.length - 1].x} ${yBottom + 6} L ${coords[0].x} ${yBottom + 6} Z`;
+                                                      const yMidY = (yTop + yBottom) / 2;
 
-                                                      {/* Line curve */}
-                                                      <path
-                                                        d={linePath}
-                                                        fill="none"
-                                                        stroke="#10B981"
-                                                        strokeWidth="2"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                      />
+                                                      return (
+                                                        <div className="rounded-lg border border-[#D5E2DD] p-1 bg-white flex flex-col justify-center">
+                                                          <svg
+                                                            viewBox={`0 0 ${W} ${H}`}
+                                                            className="w-full h-auto"
+                                                            style={{ maxHeight: 110, overflow: "visible" }}
+                                                          >
+                                                            <defs>
+                                                              <linearGradient
+                                                                id={`mandiInlineGraphGrad-${ci}`}
+                                                                x1="0"
+                                                                y1="0"
+                                                                x2="0"
+                                                                y2="1"
+                                                              >
+                                                                <stop
+                                                                  offset="0%"
+                                                                  stopColor="#10B981"
+                                                                  stopOpacity="0.25"
+                                                                />
+                                                                <stop
+                                                                  offset="100%"
+                                                                  stopColor="#10B981"
+                                                                  stopOpacity="0.0"
+                                                                />
+                                                              </linearGradient>
+                                                            </defs>
 
-                                                      {/* Node points */}
-                                                      {coords.map((c, i) => (
-                                                        <circle
-                                                          key={i}
-                                                          cx={c.x}
-                                                          cy={c.y}
-                                                          r="2.8"
-                                                          fill="#FFFFFF"
-                                                          stroke="#10B981"
-                                                          strokeWidth="1.8"
-                                                        />
-                                                      ))}
+                                                            {/* Top Grid */}
+                                                            <line
+                                                              x1={xLeft}
+                                                              y1={yTop}
+                                                              x2={xRight}
+                                                              y2={yTop}
+                                                              stroke="#E5E7EB"
+                                                              strokeDasharray="3 3"
+                                                              strokeWidth="1"
+                                                            />
+                                                            <text
+                                                              x={xLeft - 5}
+                                                              y={yTop + 3}
+                                                              textAnchor="end"
+                                                              fill="#9CA3AF"
+                                                              fontSize="7.5"
+                                                              fontWeight="600"
+                                                            >
+                                                              {graphData.yLabels[0].label}
+                                                            </text>
 
-                                                      {/* X-axis Labels */}
-                                                      {graphData.xLabels.map((lbl, i) => (
-                                                        <text
-                                                          key={i}
-                                                          x={coords[i].x}
-                                                          y={H - 5}
-                                                          textAnchor="middle"
-                                                          fill="#9CA3AF"
-                                                          fontSize="7.5"
-                                                          fontWeight="600"
-                                                          fontFamily={
-                                                            lang === "ur"
-                                                              ? URDU_FONT
-                                                              : "inherit"
-                                                          }
-                                                        >
-                                                          {lbl}
-                                                        </text>
-                                                      ))}
-                                                    </svg>
-                                                  </div>
+                                                            {/* Mid Grid */}
+                                                            <line
+                                                              x1={xLeft}
+                                                              y1={yMidY}
+                                                              x2={xRight}
+                                                              y2={yMidY}
+                                                              stroke="#E5E7EB"
+                                                              strokeDasharray="3 3"
+                                                              strokeWidth="1"
+                                                            />
+                                                            <text
+                                                              x={xLeft - 5}
+                                                              y={yMidY + 3}
+                                                              textAnchor="end"
+                                                              fill="#9CA3AF"
+                                                              fontSize="7.5"
+                                                              fontWeight="600"
+                                                            >
+                                                              {graphData.yLabels[1].label}
+                                                            </text>
+
+                                                            {/* Bot Grid */}
+                                                            <line
+                                                              x1={xLeft}
+                                                              y1={yBottom}
+                                                              x2={xRight}
+                                                              y2={yBottom}
+                                                              stroke="#E5E7EB"
+                                                              strokeDasharray="3 3"
+                                                              strokeWidth="1"
+                                                            />
+                                                            <text
+                                                              x={xLeft - 5}
+                                                              y={yBottom + 3}
+                                                              textAnchor="end"
+                                                              fill="#9CA3AF"
+                                                              fontSize="7.5"
+                                                              fontWeight="600"
+                                                            >
+                                                              {graphData.yLabels[2].label}
+                                                            </text>
+
+                                                            {/* Area under curve */}
+                                                            <path
+                                                              d={areaPath}
+                                                              fill={`url(#mandiInlineGraphGrad-${ci})`}
+                                                            />
+
+                                                            {/* Line curve */}
+                                                            <path
+                                                              d={linePath}
+                                                              fill="none"
+                                                              stroke="#10B981"
+                                                              strokeWidth="2"
+                                                              strokeLinecap="round"
+                                                              strokeLinejoin="round"
+                                                            />
+
+                                                            {/* Node points */}
+                                                            {coords.map((c, i) => (
+                                                              <circle
+                                                                key={i}
+                                                                cx={c.x}
+                                                                cy={c.y}
+                                                                r="2.8"
+                                                                fill="#FFFFFF"
+                                                                stroke="#10B981"
+                                                                strokeWidth="1.8"
+                                                              />
+                                                            ))}
+
+                                                            {/* X-axis Labels */}
+                                                            {graphData.xLabels.map((lbl, i) => (
+                                                              <text
+                                                                key={i}
+                                                                x={coords[i]?.x ?? xLeft}
+                                                                y={H - 5}
+                                                                textAnchor="middle"
+                                                                fill="#9CA3AF"
+                                                                fontSize="7.5"
+                                                                fontWeight="600"
+                                                                fontFamily={
+                                                                  lang === "ur"
+                                                                    ? URDU_FONT
+                                                                    : "inherit"
+                                                                }
+                                                              >
+                                                                {lbl}
+                                                              </text>
+                                                            ))}
+                                                          </svg>
+                                                        </div>
+                                                      );
+                                                    })()}
+                                                  </>
                                                 );
                                               })()}
                                             </>
@@ -13026,11 +13028,15 @@ function ProductRatesScreen({
                                             <>
                                               {/* Arrival Volume Summary Box */}
                                               {(() => {
-                                                const arrivalData = getMandiArrivalModalGraphData(
-                                                  (r as any).arrival || (r as any).arrivalCount || "8,400",
-                                                  graphTimeframe,
+                                                const arrivalData = getRealMandiInlineGraphData({
+                                                  product,
+                                                  byproduct: r.byproduct || byproduct,
+                                                  mandiName: r.mandiName,
+                                                  rateType: r.rateType,
+                                                  timeframe: graphTimeframe,
                                                   lang,
-                                                );
+                                                  view: "arrival",
+                                                });
 
                                                 return (
                                                   <>
@@ -13041,7 +13047,7 @@ function ProductRatesScreen({
                                                             {lang === "ur" ? "کل آمد" : "Total Arrivals"}
                                                           </span>
                                                           <span className="text-xs font-black text-[#14532D] block mt-0.5 leading-tight">
-                                                            {arrivalData.totalArrival.toLocaleString()}{" "}
+                                                            {arrivalData.latestArrival.toLocaleString()}{" "}
                                                             <span className="text-[9px] font-semibold text-[#16A34A]">
                                                               {lang === "ur" ? "تھیلے" : "Bags"}
                                                             </span>
@@ -13076,10 +13082,12 @@ function ProductRatesScreen({
 
                                                       const coords = arrivalData.points.map((p, i) => {
                                                         const x =
-                                                          xLeft + (i / (arrivalData.points.length - 1)) * (xRight - xLeft);
+                                                          xLeft + (i / (arrivalData.points.length - 1 || 1)) * (xRight - xLeft);
                                                         const y =
                                                           yBottom -
-                                                          (p / arrivalData.yMaxBound) * (yBottom - yTop);
+                                                          ((p - arrivalData.yMinBound) /
+                                                            (arrivalData.yMaxBound - arrivalData.yMinBound || 1)) *
+                                                          (yBottom - yTop);
                                                         return { x, y, val: p };
                                                       });
 
@@ -13213,7 +13221,7 @@ function ProductRatesScreen({
                                                             {arrivalData.xLabels.map((lbl, i) => (
                                                               <text
                                                                 key={i}
-                                                                x={coords[i].x}
+                                                                x={coords[i]?.x ?? xLeft}
                                                                 y={H - 5}
                                                                 textAnchor="middle"
                                                                 fill="#9CA3AF"
@@ -13477,28 +13485,41 @@ function ProductRatesScreen({
                   (r) => !byproduct || isMatchByproduct(r.byproduct, byproduct),
                 );
 
-                // Apply column filters
-                // Date-seeded variance: different days show slightly different prices
-                const dateSeed =
-                  dtSelDate.getFullYear() * 10000 +
-                  (dtSelDate.getMonth() + 1) * 100 +
-                  dtSelDate.getDate();
-                const dateVariance = (base: number) => {
-                  const hash = ((dateSeed * 2654435761) >>> 0) % 1000;
-                  const pct = (hash / 1000 - 0.5) * 0.08; // ±4% variance
-                  return Math.round(base * (1 + pct));
-                };
+                // Query actual real Excel observations for the selected historical date
+                const selYear = dtSelDate.getFullYear();
+                const selMonth = String(dtSelDate.getMonth() + 1).padStart(2, "0");
+                const selDay = String(dtSelDate.getDate()).padStart(2, "0");
+                const targetDateKey = `${selYear}-${selMonth}-${selDay}`;
+
+                const dateIdx = REAL_DATES_TIMELINE.indexOf(targetDateKey);
 
                 const filteredTableRows = allTableRows
                   .filter((r) => {
                     if (dtPriceType && r.rateType !== dtPriceType) return false;
                     return true;
                   })
-                  .map((r) => ({
-                    ...r,
-                    min: dateVariance(r.min),
-                    max: dateVariance(r.max),
-                  }));
+                  .map((r) => {
+                    if (dateIdx >= 0) {
+                      const rowTimeline = getExcelTimeline({
+                        product,
+                        byproduct: r.byproduct || byproduct,
+                        locationLabel: r.mandiName,
+                        locationKind: "mandi",
+                        rateType: r.rateType,
+                        range: "year",
+                      });
+                      const mi = rowTimeline.mins[dateIdx] ?? r.min;
+                      const mx = rowTimeline.maxs[dateIdx] ?? r.max;
+                      const arr = rowTimeline.arrivals[dateIdx] ?? 0;
+                      return {
+                        ...r,
+                        min: mi,
+                        max: mx,
+                        arrival: arr > 0 ? arr.toLocaleString("en-PK") : "—",
+                      };
+                    }
+                    return r;
+                  });
 
                 const allPriceTypes = [
                   ...new Set(allTableRows.map((r) => r.rateType)),
